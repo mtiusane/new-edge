@@ -1,0 +1,170 @@
+#include "ui/menudef.h"
+
+{
+  \\ score_menu \\
+
+#define W         500
+#define H         338
+#define BORDER    10
+
+#define TOFF      10
+#define SPEC_W    75
+#define BAR_H     30
+
+#define LLIST_L   0
+#define LLIST_R   (W/2)
+#define RLIST_L   (W/2)
+#define RLIST_R   W
+
+
+  menuDef
+  {
+    name "teamscore_menu"
+    visible MENU_FALSE
+    fullscreen MENU_FALSE
+    rect (320-(W/2)) (260-(H/2)) W H
+    focusColor 1 .75 0 1
+    style WINDOW_STYLE_EMPTY
+
+	
+    // TEAM NAME  //
+
+	itemDef
+    {
+      name "scoreye"
+      style WINDOW_STYLE_SHADER
+      rect -50 40 595 300 
+      visible 1
+	  background "ui/assets/score_baseb"
+      decoration
+    }	
+	
+    //flicker light
+	itemDef
+    {
+      name "score_addlight"
+      style WINDOW_STYLE_SHADER
+      rect 209 116 50 100
+      visible 1
+	  background "scripts/scoreaddlight"
+      decoration
+    }
+	itemDef
+    {
+      name confirm5
+      type ITEM_TYPE_BUTTON
+      text "WWW.YE.BOARDS.NET"
+      style WINDOW_STYLE_EMPTY
+      textscale .30
+	  rect 1 341 W 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 1 1 1 1
+      visible MENU_TRUE
+      decoration
+    }
+	itemDef
+    {
+      name "score_add"
+      style WINDOW_STYLE_SHADER
+      rect -51 -21 600 397
+      visible 1
+	  background "scripts/scoreadd"
+      decoration
+    }	
+	
+    //  TEAM HEADINGS  //
+	
+    itemDef
+    {
+      name leftlist
+      rect -42 (((2*BAR_H)+BORDER)+5) ((W/1.6)+40) (H-((3*BAR_H)+(2*BORDER)))
+//      rect 255 (((2*BAR_H)+BORDER)+5) ((W/1.6)+40) (H-((3*BAR_H)+(2*BORDER)))
+	  style WINDOW_STYLE_FILLED
+	  backcolor 0.00 1.35 2.55 0
+      border WINDOW_BORDER_NONE
+      borderSize 1.0
+      bordercolor .5 .5 .5 1
+      forecolor 1 0 0 1
+      visible MENU_TRUE
+      type ITEM_TYPE_LISTBOX
+      elementwidth 140
+      elementheight 16
+      textscale .26
+	  textstyle   ITEM_TEXTSTYLE_SHADOWED
+      elementtype LISTBOX_TEXT
+      feeder FEEDER_ALIENTEAM_LIST
+      columns 7
+        10             10            ALIGN_LEFT
+        23             10            ALIGN_LEFT
+         5             30            ALIGN_LEFT
+        55             80            ALIGN_LEFT
+        138            50            ALIGN_RIGHT
+        205            29            ALIGN_RIGHT
+        244            36            ALIGN_RIGHT
+    }
+
+    itemDef
+    {
+      name rightlist
+//      rect -42 (((2*BAR_H)+BORDER)+5) ((W/1.6)+40) (H-((3*BAR_H)+(2*BORDER)))
+	  rect 255 (((2*BAR_H)+BORDER)+5) ((W/1.6)+40) (H-((3*BAR_H)+(2*BORDER)))
+	  style WINDOW_STYLE_FILLED
+	  backcolor 0.00 1.35 2.55 0
+      border WINDOW_BORDER_NONE
+      borderSize 1.0
+      bordercolor .5 .5 .5 1
+      forecolor 0 0.6 1 1
+      visible MENU_TRUE
+      type ITEM_TYPE_LISTBOX
+      elementwidth 140
+      elementheight 16
+      textscale .26
+	  textstyle   ITEM_TEXTSTYLE_SHADOWED
+      elementtype LISTBOX_TEXT
+      feeder FEEDER_HUMANTEAM_LIST
+
+      columns 7
+        10             10            ALIGN_LEFT
+        23             10            ALIGN_LEFT
+         5             30            ALIGN_LEFT
+        55             80            ALIGN_LEFT
+        138            50            ALIGN_RIGHT
+        205            29            ALIGN_RIGHT
+        244            36            ALIGN_RIGHT
+	}
+
+    itemDef
+    {
+      name window
+      rect -22 ((H-BAR_H)) 540 31
+      style WINDOW_STYLE_FILLED
+	  backcolor 0.00 1.35 2.55 0
+	  textstyle   ITEM_TEXTSTYLE_SHADOWED
+      forecolor 1 1 1 1
+      textscale .40
+      textvalign VALIGN_CENTER
+      visible MENU_TRUE
+      ownerdraw CG_SPECTATORS
+      decoration
+    }
+
+    itemDef
+    {
+      name winner
+      type ITEM_TYPE_TEXT
+      rect ((W/2)-10) -0 0 0
+      style WINDOW_STYLE_EMPTY
+      forecolor 0 0.6 1 1
+      textscale 0.7
+      textalign ALIGN_CENTER
+      textvalign VALIGN_TOP
+	  textstyle   ITEM_TEXTSTYLE_SHADOWED
+      visible MENU_TRUE
+      cvar "ui_winner"
+      decoration
+    }
+	
+
+  }
+}

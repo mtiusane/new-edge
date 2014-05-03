@@ -1,0 +1,145 @@
+massdriver2ndPS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync models/powerfield_base/blue_particle
+
+      displacement 0 0 0 ~2.0
+      normalDisplacement 15.0
+      parentVelocityFraction 0.5
+      dynamicLight    0 180 0 { 0.0 0.3 0.8 }
+      radius 0 12 0.0
+      alpha  0 1.0 0.0
+      bounce 0.5
+	  bounceMark  1 64 gfx/blaster/bluevap_mark
+	  childSystem massdriver2ndPSb
+      lifeTime 400
+	  overdrawProtection
+    }
+    count infinite
+    delay 0
+    period 10 - ~0%
+  }
+}
+
+massdriver2ndPS_muzzle
+{
+  ejector
+  {
+    particle
+    {
+      shader sync models/powerfield_base/blue_particle
+      displacement 0 0 0 ~6.0
+      normalDisplacement 15.0
+      parentVelocityFraction 0.5
+      dynamicLight    0 100 0 { 0.0 0.2 1 }
+      radius 0 50 0.0
+      alpha  0 1.0 0.0
+      lifeTime 250
+	  overdrawProtection 
+    }
+    count 5
+    delay 0
+    period 10 - ~0%
+  }
+}
+
+massdriver2ndPSb
+{
+  ejector
+  {
+    particle
+    {
+      shader sync models/powerfield_base/blue_particle
+      displacement 0 0 0 ~12.0
+      normalDisplacement 5.5
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 300
+      acceleration          0 0 -1 0
+      radius 0 3.0 0.0
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+      bounce 0.5
+      lifeTime 40~4000
+	  overdrawProtection
+    }
+    count 1
+    delay 50
+    period 35 - ~0%
+  }
+}
+
+models/weapons/mdriver/impactPS_b
+{
+  ejector
+  {
+    particle
+    {
+      shader sync models/powerfield_base/blue_particle
+
+      displacement 0 0 0 ~2.0
+
+      normalDisplacement 10.0
+
+      velocityType      normal
+      velocityDir       linear
+      velocityMagnitude 400
+      velocity          0 0 0 ~80
+
+      accelerationType      normal
+      accelerationDir       linear
+      accelerationMagnitude 200
+      acceleration          0 0 1 ~360
+
+      radius 0 6.0 4.0
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+      bounce 0.5
+
+      lifeTime 1000
+    }
+
+    count 10
+    delay 0
+    period 0 - ~0%
+  }
+}
+
+models/weapons/mdriver/impactPS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/mdriver/green_particle
+
+      displacement 0 0 0 ~2.0
+
+      normalDisplacement 10.0
+
+      velocityType      normal
+      velocityDir       linear
+      velocityMagnitude 400
+      velocity          0 0 0 ~80
+
+      accelerationType      normal
+      accelerationDir       linear
+      accelerationMagnitude 200
+      acceleration          0 0 1 ~360
+
+      radius 0 6.0 4.0
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+      bounce 0.5
+
+      lifeTime 1000
+    }
+
+    count 10
+    delay 0
+    period 0 - ~0%
+  }
+}

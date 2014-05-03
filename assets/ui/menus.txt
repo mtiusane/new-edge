@@ -1,0 +1,16 @@
+// menu defs
+//
+{
+  loadMenu { "ui/main.menu" }
+  loadMenu { "ui/options.menu" }
+  loadMenu { "ui/connect.menu" }
+  loadMenu { "ui/error.menu" }
+  loadMenu { "ui/drop.menu" }
+  loadMenu { "ui/joinserver.menu" }
+  loadMenu { "ui/createserver.menu" }
+  loadMenu { "ui/password.menu" }
+  loadMenu { "ui/download.menu" }
+  loadMenu { "ui/serverinfo.menu" }
+  loadMenu { "ui/findplayer.menu" }
+  loadMenu { "ui/createfavorite.menu" }
+}

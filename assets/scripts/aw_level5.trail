@@ -1,0 +1,12 @@
+models/weapons/level5/trail
+{
+  beam
+  {
+    shader        level5/trailshader
+    segments      5
+    width         1.0 0.5
+    alpha         1.0 0.1
+    segmentTime   30
+    textureType   stretch 0.0 1.0
+  }
+}

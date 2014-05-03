@@ -1,0 +1,141 @@
+#include "ui/menudef.h"
+{
+#define W       999
+#define H       210
+#define A       200
+  menuDef
+  {
+    name "ingame_leave"
+    visible MENU_FALSE
+    fullscreen MENU_FALSE
+	outOfBoundsClick
+    rect (320-(W/2)) (240-(H/2)) W H
+    focusColor 1 1 1 1
+    style WINDOW_STYLE_FILLED
+    border WINDOW_BORDER_FULL
+    popup
+	onOpen
+    {
+	close ingame;
+    }
+    onESC
+    {
+      play "sound/misc/menu1.wav";
+      close ingame
+    }
+	
+	itemDef
+    {
+      name "aurora_add"
+      style WINDOW_STYLE_SHADER
+      rect 0 -150 1000 600
+      visible 1
+	  background "ui/menu_main_aurora_base_stars"
+      decoration
+    }
+	
+	itemDef
+    {
+      name "aurora"
+      style WINDOW_STYLE_SHADER
+      rect 0 -150 1000 600
+      visible 1
+	  background "ui/menu_main_aurora_base"
+      decoration
+    }
+	
+	itemDef
+    {
+      name "dist"
+      style WINDOW_STYLE_SHADER
+      rect -50 -150 1000 600
+      visible 1
+	  background "gfx/edge/basi_invisble_overlay"
+      decoration
+    }
+
+    itemDef
+    {
+    name "window"
+      rect 0 100 1280 120
+      style WINDOW_STYLE_FILLED
+      backcolor 0 0 0 .9
+      visible 1
+      decoration
+    }
+//BUTTONSMENU
+			    itemDef
+    {
+      name confirm4
+      type ITEM_TYPE_TEXT
+	  textstyle   ITEM_TEXTSTYLE_BLINK
+      text "DISCONNECT?"
+      style WINDOW_STYLE_EMPTY
+      textscale .5
+ 	  rect 446 110 50 20
+      textalign ALIGN_LEFT
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible MENU_TRUE
+	  decoration
+	  }
+ itemDef
+    {
+      name confirm6
+      type ITEM_TYPE_BUTTON
+      text "BACK TO GAME"
+      style WINDOW_STYLE_EMPTY
+      textscale .35
+ 	  rect 475 165 50 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible MENU_TRUE
+      action
+      {
+        play "sound/misc/menu1.wav";
+        close ingame_leave
+		open ingame
+      }
+    }
+	itemDef
+    {
+      name confirm6
+      type ITEM_TYPE_BUTTON
+      text "QUIT GAME"
+      style WINDOW_STYLE_EMPTY
+      textscale 0.35
+ 	  rect 475 185 50 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible MENU_TRUE
+      action
+      {
+        play "sound/misc/menu1.wav";
+        uiScript quit
+      }
+    }
+
+	
+	    itemDef
+    {
+      name leaveConfirm
+      type ITEM_TYPE_BUTTON
+      text "OPEN MAIN MENU"
+      group grpConfirm
+      style WINDOW_STYLE_EMPTY
+ 	  rect 475 145 50 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      textscale .35
+      forecolor 0 0.8 1 1
+      visible MENU_TRUE
+	  action
+	       {
+        play "sound/misc/menu1.wav";
+        uiScript leave
+      }}
+
+  }
+}

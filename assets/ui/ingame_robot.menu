@@ -1,0 +1,440 @@
+#include "ui/menudef.h"
+{
+#define W       999
+#define H       210
+  menuDef
+  {
+    name "ingame_robot"
+    visible 1
+	outOfBoundsClick
+    rect (320-(W/2)) 75 W H
+    focusColor 1 1 1 1
+    style WINDOW_STYLE_FILLED
+    popup
+	onOpen
+	{
+    close ingame;
+	}
+    onESC
+    {
+      play "sound/misc/menu1.wav";
+      close ingame_robot
+      open ingame
+    }
+	
+	itemDef
+    {
+      name "aurora_add"
+      style WINDOW_STYLE_SHADER
+      rect 0 -125 1000 500
+      visible 1
+	  background "ui/menu_main_aurora_base_stars"
+      decoration
+    }
+	
+	itemDef
+    {
+      name "aurora"
+      style WINDOW_STYLE_SHADER
+      rect 0 0 1000 480
+      visible 1
+	  background "ui/menu_main_aurora_base"
+      decoration
+    }
+	
+	itemDef
+    {
+      name "dist"
+      style WINDOW_STYLE_SHADER
+      rect -150 -150 1000 600
+      visible 1
+	  background "gfx/edge/basi_invisble_overlay"
+      decoration
+    }
+
+    itemDef
+    {
+    name "window"
+      rect -10 -50 1000 430
+      style WINDOW_STYLE_FILLED
+      backcolor 0 0 0 .9
+      visible 1
+      decoration
+    }
+    itemDef
+    {
+      name "confirm1"
+      type ITEM_TYPE_BUTTON
+      text "VOTE DRAW GAME"
+      style WINDOW_STYLE_EMPTY
+      textscale .3
+      textstyle   ITEM_TEXTSTYLE_NORMAL
+      rect 0 ((0.4*H)/2) W 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible 1
+      action
+       {
+        play "sound/misc/menu1.wav";
+        exec "cmd callvote draw draw draw";
+      }
+    }
+	itemDef
+    {
+      name "confirm2"
+      type ITEM_TYPE_BUTTON
+      text "VOTE SUDDEN DEATH"
+      style WINDOW_STYLE_EMPTY
+      textscale .3
+      textstyle   ITEM_TEXTSTYLE_NORMAL
+      rect 0 ((0.2*H)/2) W 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible 1
+      action
+      {
+        play "sound/misc/menu1.wav";
+        exec "cmd callvote sudden_death Now!";
+      }
+    }
+	itemDef
+    {
+      name "confirm3"
+      type ITEM_TYPE_BUTTON
+      text "REGISTER"
+      style WINDOW_STYLE_EMPTY
+      textscale .3
+      textstyle   ITEM_TEXTSTYLE_NORMAL
+      rect 0 ((0*H)/2) W 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible 1
+      action
+      {
+        play "sound/misc/menu1.wav";
+        exec "register";
+      }
+	 }
+    itemDef
+    {
+      name "confirm4"
+      type ITEM_TYPE_BUTTON
+      text "APPLY LAG FIX"
+      style WINDOW_STYLE_EMPTY
+      textscale .3
+      textstyle   ITEM_TEXTSTYLE_NORMAL
+      rect 0 ((1*H)/2) W 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible 1
+      action
+      {
+        play "sound/misc/menu1.wav";
+		setcvar cg_EDGEFPSFIX 1;
+		setcvar cl_maxpackets 100;
+		setcvar cg_lagometer 1;
+		setcvar cl_nodelta 0;
+		setcvar snaps 40; 
+		setcvar com_maxfps 125; 
+		setcvar rate 25000; 
+		setcvar cl_packetdups 1;
+		exec "echo ^2Lag Fix applied!";
+      }
+	  }
+    itemDef
+    {
+      name "confirm5"
+      type ITEM_TYPE_BUTTON
+      text "UNDO LAG FIX"
+      style WINDOW_STYLE_EMPTY
+      textscale .3
+      textstyle   ITEM_TEXTSTYLE_NORMAL
+      rect 0 ((1.2*H)/2) W 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible 1
+      action
+      {
+        play "sound/misc/menu1.wav";
+		setcvar cg_EDGEFPSFIX 0;
+		setcvar cl_maxpackets 30; 
+		setcvar snaps 20; 
+		setcvar cl_nodelta 1;
+		setcvar com_maxfps 85; 
+		setcvar rate 25000; 
+		setcvar cl_packetdups 0;
+		exec "echo ^1Lag Fix undone!";
+      }
+    }
+    itemDef
+    {
+      name "confirm6"
+      type ITEM_TYPE_BUTTON
+      text "RECORD DEMO"
+      style WINDOW_STYLE_EMPTY
+      textscale .3
+      textstyle   ITEM_TEXTSTYLE_NORMAL
+      rect 0 ((1.4*H)/2) W 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible 1
+      action
+      {
+        play "sound/misc/menu1.wav";
+        exec "record demo_edge";
+      }
+    }
+    itemDef
+    {
+      name "confirm7"
+      type ITEM_TYPE_BUTTON
+      text "STOP DEMO"
+      style WINDOW_STYLE_EMPTY
+      textscale .3
+      textstyle   ITEM_TEXTSTYLE_NORMAL
+      rect 0 ((1.6*H)/2) W 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible 1
+      action
+      {
+        play "sound/misc/menu1.wav";
+        exec "stoprecord";
+      }
+    }
+    itemDef
+    {
+      name "confirm8"
+      type ITEM_TYPE_BUTTON
+      text "CREATE CONDUMP"
+      style WINDOW_STYLE_EMPTY
+      textscale .3
+      textstyle   ITEM_TEXTSTYLE_NORMAL
+      rect 0 ((1.8*H)/2) W 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible 1
+      action
+      {
+        play "sound/misc/menu1.wav";
+        exec "condump condump_edge.txt";
+      }
+    }
+    itemDef
+    {
+      name "confirm9"
+      type ITEM_TYPE_BUTTON
+      text "TOGGLE CONSOLE"
+      style WINDOW_STYLE_EMPTY
+      textscale .3
+      textstyle   ITEM_TEXTSTYLE_NORMAL
+      rect 0 ((2*H)/2) W 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible 1
+      action
+      {
+        play "sound/misc/menu1.wav";
+        exec "toggleconsole; echo ^1Use /toggleconsole to close console";
+      }
+    }
+	itemDef
+	  {
+      name "confirm10"
+      type ITEM_TYPE_BUTTON
+      text "TURN MAIN CHAT ON"
+      style WINDOW_STYLE_EMPTY
+      textscale .3
+      textstyle   ITEM_TEXTSTYLE_NORMAL
+      rect 0 ((2.2*H)/2) W 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible 1
+      action
+      {
+        play "sound/misc/menu1.wav";
+        setcvar cl_noprint 0;
+	    exec "echo ^2MAIN CHAT ON!";
+      }
+    }
+	itemDef
+    {
+      name "confirm11"
+      type ITEM_TYPE_BUTTON
+      text "TURN MAIN CHAT OFF"
+      style WINDOW_STYLE_EMPTY
+      textscale .3
+      textstyle   ITEM_TEXTSTYLE_NORMAL
+      rect 0 ((2.4*H)/2) W 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible 1
+      action
+      {
+        play "sound/misc/menu1.wav";
+		exec "echo ^1MAIN CHAT OFF!";
+        setcvar cl_noprint 1;
+      }
+    }
+	itemDef
+    {
+      name "confirm12"
+      type ITEM_TYPE_BUTTON
+      text "ENABLE THIRD PERSON MODE"
+      style WINDOW_STYLE_EMPTY
+      textscale .3
+      textstyle   ITEM_TEXTSTYLE_NORMAL
+      rect 0 ((2.6*H)/2) W 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible 1
+      action
+      {
+        play "sound/misc/menu1.wav";
+		exec "echo ^2THIRD PERSON MODE ENABLED";
+        setcvar cg_thirdPerson 1;
+      }
+    }
+	itemDef
+    {
+      name "confirm13"
+      type ITEM_TYPE_BUTTON
+      text "DISABLE THIRD PERSON MODE"
+      style WINDOW_STYLE_EMPTY
+      textscale .3
+      textstyle   ITEM_TEXTSTYLE_NORMAL
+      rect 0 ((2.8*H)/2) W 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible 1
+      action
+      {
+        play "sound/misc/menu1.wav";
+		exec "echo ^1THIRD PERSON MODE DISABLED";
+        setcvar cg_thirdPerson 0;
+      }
+    }
+	itemDef
+    {
+      name "confirm13x"
+      type ITEM_TYPE_BUTTON
+      text "TURN NOCLIP OFF"
+      style WINDOW_STYLE_EMPTY
+      textscale .3
+      textstyle   ITEM_TEXTSTYLE_NORMAL
+      rect 0 ((3.2*H)/2) W 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible 1
+      action
+      {
+        play "sound/misc/menu1.wav";
+		exec "echo ^1NOCLIP OFF";
+		exec "cmd noclip 0";
+      }
+    }
+	itemDef
+    {
+      name "confirm13c"
+      type ITEM_TYPE_BUTTON
+      text "TURN NOCLIP ON"
+      style WINDOW_STYLE_EMPTY
+      textscale .3
+      textstyle   ITEM_TEXTSTYLE_NORMAL
+      rect 0 ((3.0*H)/2) W 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible 1
+      action
+      {
+        play "sound/misc/menu1.wav";
+		exec "echo ^2NOCLIP ON";
+		exec "cmd noclip 1";
+      }
+    }
+			    itemDef
+    {
+      name "confirm14"
+      type ITEM_TYPE_BUTTON
+      text "VOTE ARMAGEDDON"
+      style WINDOW_STYLE_EMPTY
+      textscale .3
+      textstyle   ITEM_TEXTSTYLE_NORMAL
+      rect 0 ((0.8*H)/2) W 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible 1
+      action
+      {
+        play "sound/misc/menu1.wav";
+        exec "cmd callvote armageddon";
+      }
+    }
+    itemDef
+    {
+      name "confirm15"
+      type ITEM_TYPE_BUTTON
+      text "VOTE TEAM ADMITDEFEAT"
+      style WINDOW_STYLE_EMPTY
+      textscale .3
+      textstyle   ITEM_TEXTSTYLE_NORMAL
+      rect 0 ((0.6*H)/2) W 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible 1
+      action
+      {
+        play "sound/misc/menu1.wav";
+        exec "cmd callteamvote admitdefeat";
+      }
+    }
+   itemDef
+    {
+      name "confirm16"
+      type ITEM_TYPE_BUTTON
+      textstyle   ITEM_TEXTSTYLE_BLINK
+      text "^5Yalt's"
+      style WINDOW_STYLE_EMPTY
+      textscale .40
+      rect 0 -43 W 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible 1
+	  decoration
+	  } 
+    itemDef
+    {
+      name        "maplist2"
+      group       grpidcredit
+      style       WINDOW_STYLE_EMPTY
+	  rect 		  0 -25 W 20
+      type        ITEM_TYPE_TEXT
+      textalign   ALIGN_CENTER
+      textscale   0.50
+      textstyle   ITEM_TEXTSTYLE_BLINK
+      text        "^5ROBOT HELPER"
+      forecolor   0 0.8 1 1
+      backcolor   1 0 0 1
+      visible     1
+      decoration
+    }
+  }
+}

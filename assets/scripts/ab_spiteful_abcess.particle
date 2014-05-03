@@ -1,0 +1,92 @@
+alienSpiteful_AbcessDestroyedPS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/sprites/poisoncloud
+
+      displacement 0 0 0 ~32.0
+
+      parentVelocityFraction  1.0
+      velocityType      static
+      velocityDir       linear
+      velocityMagnitude 10
+      velocity          0.0~0.5 0.0~0.5 1 ~0
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 100
+      acceleration          0 0 1 0
+
+      radius 0 10.0 40.0
+      alpha  0 0.5 0.0
+      rotation 0 ~360 -
+      bounce 0.0
+
+      lifeTime 1500
+    }
+
+    count 25
+    delay 0
+    period 20 - ~0%
+  }
+
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/sprites/poisoncloud
+
+      displacement 0 0 0 50.0
+      normalDisplacement 3.0
+
+      velocityType      normal
+      velocityDir       linear
+      velocityMagnitude 10
+      velocity          0 0 0 0
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 0.5
+      acceleration          0 0 0.5 0
+
+      radius 0 90.0 150.0
+      alpha  0 1 0.0
+      rotation 0 ~360 -
+      bounce 0.0
+
+      lifeTime 10000
+    }
+
+    count 4
+    delay 0
+    period 0 - ~0%
+  }
+    ejector
+  {
+    particle
+    {
+      shader sync gfx/sprites/poisoncloud
+
+      displacement 0 0 0 ~70
+      normalDisplacement  80
+
+      velocityType      static
+      velocityDir       linear
+      velocityMagnitude 10
+      velocity          0 0 -1 ~0
+
+      radius 0 70.0 15.0
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+      bounce 0.0
+
+      lifeTime 10000
+    }
+
+    count 20
+    delay 0
+    period 0 - ~0%
+  }
+}

@@ -1,0 +1,14 @@
+//slime hook
+models/buildables/infestationslime
+{
+  beam
+  {
+    shader        models/infestationslimezunge
+    segments      6
+    width         10.0 1.0
+    color         { 1 1 1 } -
+	segmentTime 50
+    textureType   repeat front 100.0
+    jitter        1.0 5
+  }
+}

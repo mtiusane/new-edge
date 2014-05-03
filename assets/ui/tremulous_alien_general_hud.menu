@@ -1,0 +1,79 @@
+#include "ui/menudef.h"
+
+{
+
+#define W         640
+#define H         480
+
+  menuDef
+  {
+    name "alien_general_hud"
+    fullScreen MENU_FALSE
+    visible MENU_TRUE
+    rect 0 0 W H
+    aspectBias ASPECT_NONE
+
+#include "ui/tremulous_alien_common_hud.h"
+
+    //BLOB
+    itemDef
+    {
+      name "blob"
+      rect 497 419 52 18
+      aspectBias ALIGN_RIGHT
+      visible MENU_TRUE
+      forecolor 1.0 0.0 0.0 0.5
+      background "ui/assets/alien/tremublob.tga"
+      ownerdraw CG_PLAYER_POISON_BARBS
+    }
+    //BOMBS
+    itemDef
+    {
+      name "bombs"
+      rect 528 421 52 18
+      aspectBias ALIGN_RIGHT
+      visible MENU_TRUE
+      forecolor 1.0 0.0 0.0 0.5
+      background "ui/assets/alien/trembombs.tga"
+      ownerdraw CG_PLAYER_BOMBS
+    }
+    //FBREATH
+    itemDef
+    {
+      name "fbreath"
+      rect 495 416 55 21
+      aspectBias ALIGN_RIGHT
+      visible MENU_TRUE
+      forecolor 1.0 0.0 0.0 0.5
+      background "ui/assets/alien/tremfbreath.tga"
+      ownerdraw CG_PLAYER_FBREATH
+    }
+    //PRICKLES
+    itemDef
+    {
+      name "prickles"
+      rect 475 419 80 21
+      aspectBias ALIGN_RIGHT
+      visible MENU_TRUE
+      forecolor 1.0 0.0 0.0 0.5
+      background "ui/assets/alien/prickles.tga"
+      ownerdraw CG_PLAYER_PRICKLES
+    }
+    //lvl1upginvi
+    itemDef
+    {
+      name "lvl1upginvi"
+      rect 580 320 50 50
+      visible MENU_TRUE
+      ownerdraw CG_DRAW_INVI_STAT
+    }
+    //lvl1upginvi
+    itemDef
+    {
+      name "basioverlay"
+      rect 0 0 W H
+      visible MENU_TRUE
+      ownerdraw CG_DRAW_INVI_OVERLAY
+    }
+  }
+}

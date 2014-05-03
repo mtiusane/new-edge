@@ -1,0 +1,22 @@
+models/weapons/mdriver/fireTS
+{
+  beam
+  {
+    shader        gfx/mdriver/trail
+    width         3.0 3.0
+    textureType   stretch 0.94 0.03
+  }
+  lifeTime 70
+}
+
+models/weapons/mdriver/impactTS
+{
+	beam {
+		shader gfx/mdriver/purple_trail
+    		textureType   stretch 0.0 0.5
+		segments 5
+    		segmentTime 500
+		alpha 0.8 0
+		width 1.0 1.0
+	}
+}

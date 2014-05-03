@@ -1,0 +1,45 @@
+models/weapons/prifle/impactPS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/prifle/red_blob
+      
+      radius 0 3.0 6.0
+      alpha  70 1.0 0.0
+      rotation 0 ~360 -
+
+      lifeTime 140
+    }
+
+    count 1
+    delay 0
+    period 0 - ~0%
+  }
+}
+
+
+
+models/weapons/prifle/missilePS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/prifle/red_blob
+
+      parentVelocityFraction 0.8
+
+      radius 0 2.0 1.5
+      alpha  0 0.8 0.0
+      bounce 0.01
+
+      lifeTime 400
+    }
+
+    count infinite
+    delay 0
+    period 10 - ~0%
+  }
+}

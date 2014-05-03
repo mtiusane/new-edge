@@ -1,0 +1,59 @@
+models/weapons/flamerturret/muzzlePS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync flame3 flame4 flame5 flame6 flame7 flame8 flame9 flame10 flame11 flame12 flame13 flame14 flame15 flame16 flame17 flame18 flame19 flame20 flame21 flame22 flame23 flame24 flame25
+      displacement 0 0 0 ~0.0
+
+
+
+      velocityType      static
+      velocityDir       point
+      velocityMagnitude 0
+      velocity          0 0 0 ~0
+
+      physicsRadius 100
+
+      radius 40 40 0
+      alpha  1.0 1.0 1.0
+      rotation 0 ~360 -
+      bounce 0
+      lifeTime 800
+    }
+
+    count 50
+    delay 0
+    period 15 - ~0%
+  }
+ 
+}
+
+models/weapons/FT/lagfl
+  {
+  ejector
+  {
+    particle
+    {
+      shader sync textures/yeflamer/flamesadd
+        displacement 0 0 0 ~0
+
+      parentVelocityFraction  0.0~0.00
+      velocityType      static
+      velocityDir       linear
+      velocityMagnitude 0
+      velocity          0 0 -50 ~360
+
+      radius  50 25 0
+      alpha  0 1 0.0
+      rotation 0 ~360 -
+      lifeTime 2000
+    }
+
+    count 1
+    delay 0
+    period 0 - ~0%
+  }
+}
+

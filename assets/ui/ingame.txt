@@ -1,0 +1,16 @@
+// menu defs
+//
+{
+loadMenu { "ui/ingame.menu" }
+loadMenu { "ui/ingame_game.menu" }
+loadMenu { "ui/ingame_options.menu" }
+loadMenu { "ui/ingame_leave.menu" }
+loadMenu { "ui/ingame_map.menu" }
+loadMenu { "ui/ingame_yehelp.menu" }
+loadMenu { "ui/ingame_map640480.menu" }
+loadMenu { "ui/ingame_map19201080.menu" }
+loadMenu { "ui/ingame_ignore.menu" }
+loadMenu { "ui/ingame_sbrowser.menu" }
+loadMenu { "ui/ingame_robot.menu" }
+loadMenu { "ui/teamscore.menu" }
+}

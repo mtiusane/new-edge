@@ -1,0 +1,252 @@
+#include "ui/menudef.h"
+
+{
+  \\ INGAME GAME BOX \\
+
+#define X           10
+#define Y           60
+#define BORDER      10
+
+#define TOPBUTT_W   80
+#define TOPBUTT_H   30
+
+#define SIDEBUTT_W  50
+#define SIDEBUTT_H  25
+
+#define MAP_X       (SIDEBUTT_W+BORDER)
+#define MAP_Y       ((2*BORDER)+TOPBUTT_H)
+#define MAP_W       124
+#define MAP_H       93
+#define MAPLIST_X   MAP_X
+#define MAPLIST_Y   ((3*BORDER)+TOPBUTT_H+MAP_H)
+#define MAPLIST_W   (W-((2*BORDER)+SIDEBUTT_W))
+#define MAPLIST_H   (H-((4*BORDER)+MAP_H+TOPBUTT_H))
+#define MAPBUTT_X   (MAP_X+MAP_W+BORDER)
+#define MAPBUTT_Y   MAP_Y
+#define MAPBUTT_W   (W-(MAPBUTT_X+BORDER))
+#define MAPBUTT_H   20
+
+#define PBUTT_X     MAP_X
+#define PBUTT_Y     (H-((2*PBUTT_H)+BORDER))
+#define PBUTT_W     (W-((2*BORDER)+SIDEBUTT_W))
+#define PBUTT_H     45
+#define PLIST_X     PBUTT_X
+#define PLIST_Y     ((2*BORDER)+TOPBUTT_H)
+#define PLIST_W     PBUTT_W
+#define PLIST_H     ((H-((4*BORDER)+(2*PBUTT_H)+TOPBUTT_H)))
+
+#define PLAYER_C    0.7
+#define IGN_C       0.15
+#define IGNY_C      0.15
+#define IGNHEAD_H   15
+#define IGNHEAD_Y   ((2*BORDER)+TOPBUTT_H)
+#define IGNBUTT_W   ((W-(2*BORDER))/2)
+#define IGNBUTT_H   25
+#define IGNBUTT_X   BORDER
+#define IGNBUTT_Y   (H-(BORDER+IGNBUTT_H))
+#define IGNORE_W    (W-(2*BORDER))
+#define IGNORE_W2   ((W-(2*BORDER))-15)
+#define IGNORE_H    (H-((4*BORDER)+TOPBUTT_H+IGNHEAD_H+IGNBUTT_H))
+#define IGNORE_X    BORDER
+#define IGNORE_Y    ((2*BORDER)+TOPBUTT_H+IGNHEAD_H)
+#define IGNORE_TOFF 5
+
+#define INFO_Y      ((2*BORDER)+TOPBUTT_H+10)
+#define INFOELEM_H  15
+#define INFO_OFF    (0-(W-90))
+#define W       999
+#define H       210
+#define A       200
+
+  assetGlobalDef
+  {
+    font "fonts/font" 26        // font
+    smallFont "fonts/smallfont" 20        // font
+    bigFont "fonts/bigfont" 34        // font
+    cursor "ui/assets/3_cursor3"      // cursor
+    gradientBar "ui/assets/gradientbar2.tga"  // gradient bar
+    itemFocusSound "sound/misc/menu2.wav"   // sound for item getting focus (via keyboard or mouse )
+
+    fadeClamp 1.0         // sets the fadeup alpha
+    fadeCycle 1         // how often fade happens in milliseconds
+    fadeAmount 0.1          // amount to adjust alpha per cycle
+
+    shadowColor 0.1 0.1 0.1 0.25      // shadow color
+  }
+
+  menuDef
+  {
+    name "ingame_ignore"
+    visible MENU_FALSE
+    fullscreen MENU_FALSE
+	outOfBoundsClick
+    rect (320-(W/2)) (240-(H/2)) W H
+    focusColor 0 0 0 1
+    style WINDOW_STYLE_FILLED
+    border WINDOW_BORDER_FULL
+    popup
+    onESC
+    {
+      play "sound/misc/menu1.wav";
+      close ingame_ignore
+	  open ingame
+    }
+    onopen
+    {
+      uiScript InitIgnoreList;
+      show vote;
+	  close ingame;
+
+      setitemcolor voteBtn       forecolor 0.2 0.2 0.2 1.0;
+      setitemcolor ignoreBtn     forecolor 1.0 1.0 1.0 1.0;
+      setitemcolor infoBtn      forecolor 1.0 1.0 1.0 1.0
+    }
+	
+	itemDef
+    {
+      name "aurora_add"
+      style WINDOW_STYLE_SHADER
+      rect 0 -125 1000 500
+      visible 1
+	  background "ui/menu_main_aurora_base_stars"
+      decoration
+    }
+	
+	itemDef
+    {
+      name "aurora"
+      style WINDOW_STYLE_SHADER
+      rect 0 0 1000 480
+      visible 1
+	  background "ui/menu_main_aurora_base"
+      decoration
+    }
+	
+	itemDef
+    {
+      name "dist"
+      style WINDOW_STYLE_SHADER
+      rect -50 -150 1000 600
+      visible 1
+	  background "gfx/edge/basi_invisble_overlay"
+      decoration
+    }
+
+    itemDef
+    {
+    name "window"
+      rect 0 -50 1280 340
+      style WINDOW_STYLE_FILLED
+      backcolor 0 0 0 .9
+      visible 1
+      decoration
+    }
+ itemDef
+    {
+      name ignore
+      group gameGrp
+      rect 310 -40 80 25
+      text "Player Name"
+      textalign ALIGN_LEFT
+      textvalign VALIGN_CENTER
+      textalignx IGNORE_TOFF
+      visible MENU_TRUE
+      type ITEM_TYPE_TEXT
+      textscale .225
+    }
+    itemDef
+    {
+      name ignore
+      group gameGrp
+      rect 490 -40 80 25
+      text "Ignored by you"
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      visible MENU_TRUE
+      type ITEM_TYPE_TEXT
+      textscale .225
+    }
+    itemDef
+    {
+      name ignore
+      group gameGrp
+      rect 595 -40 80 25
+      text "Ignoring you"
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      visible MENU_TRUE
+      type ITEM_TYPE_TEXT
+      textscale .225
+    }
+    itemDef
+    {
+      name ignore
+      group gameGrp
+      rect 300 -20 400 260
+      type ITEM_TYPE_LISTBOX
+      style WINDOW_STYLE_EMPTY
+      elementwidth 120
+      elementheight 16
+      textscale .225
+      border WINDOW_BORDER_FULL
+      bordercolor   0.5 0.5 0.5 0.5
+      forecolor     1   1   1   1
+      backcolor     0.2 0.2 0.2 1
+      outlinecolor  0.1 0.1 0.1 0.5
+      elementtype LISTBOX_TEXT
+      feeder FEEDER_IGNORE_LIST
+      visible MENU_TRUE
+      columns 3
+       5 200    ALIGN_LEFT
+       300 50    ALIGN_CENTER
+       172 100   ALIGN_CENTER
+      doubleClick
+      {
+        play "sound/misc/menu1.wav";
+        uiScript ToggleIgnore
+      }
+    }
+/////////////////////////////
+    itemDef
+    {
+      name ignore
+      text "Ignore Player"
+      style WINDOW_STYLE_EMPTY
+      rect 340 250 80 25
+      type ITEM_TYPE_BUTTON
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      textscale .4
+      forecolor 0 0.8 1 1
+      visible MENU_TRUE
+      action
+      {
+        play "sound/misc/menu1.wav";
+        uiScript IgnorePlayer
+      }
+    }
+
+    itemDef
+    {
+      name ignore
+      text "Stop Ignoring Player"
+      group gameGrp
+      style WINDOW_STYLE_EMPTY
+      rect 570 250 80 25
+      type ITEM_TYPE_BUTTON
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      textscale .4
+      forecolor 0 0.8 1 1
+      visible MENU_TRUE
+      action
+      {
+        play "sound/misc/menu1.wav";
+        uiScript UnIgnorePlayer
+      }
+    }
+
+
+
+  }
+}

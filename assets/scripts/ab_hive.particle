@@ -1,0 +1,33 @@
+models/weapons/hive/missilePS
+{
+  ejector
+  {
+    particle
+    {
+      shader 20 models/weapons/hive/sprite1.tga models/weapons/hive/sprite2.tga
+
+      displacement 0 0 0 ~4.0
+
+      parentVelocityFraction  0.5
+      velocityType      static
+      velocityDir       linear
+      velocityMagnitude 100
+      velocity          0 0 1 ~180
+
+      accelerationType      cent
+      accelerationDir       point
+      accelerationMagnitude 2000
+
+      rotation 0 -20.0~40.0 -20.0~40.0
+      radius 0 2.0 2.0
+      alpha  0 1.0 0.0
+      bounce 0.5
+
+      lifeTime 4000
+    }
+
+    count infinite
+    delay 0
+    period 100 - ~0%
+  }
+}

@@ -1,0 +1,91 @@
+
+models/weapons/blaster/missilePS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/blaster/orange_particle
+
+      displacement 0 0 0 ~2.0
+
+      parentVelocityFraction 0.5
+
+      radius 0 1.5 0.0
+      alpha  0 1.0 0.0
+      bounce 0.01
+
+      lifeTime 400
+    }
+
+    count infinite
+    delay 0
+    period 10 - ~0%
+  }
+}
+models/weapons/blaster/impactPS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/sprites/smoke
+
+      displacement 0 0 0 ~3.0
+      normalDisplacement 3.0
+
+      velocityType      normal
+      velocityDir       linear
+      velocityMagnitude 20
+      velocity          0 0 0 0
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 300
+      acceleration          0 0 1 0
+
+      radius 0 4.0 6.0
+      alpha  0 0.5 0.0
+      rotation 0 ~360 -
+      bounce 0.0
+
+      lifeTime 500
+    }
+
+    count 20
+    delay ~150
+    period 10 - ~0%
+  }
+
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/blaster/orange_particle
+
+      normalDisplacement 3.0
+      dynamicLight    20 20 0 { 0.3 0.3 0.0 }
+
+      velocityType      normal
+      velocityDir       linear
+      velocityMagnitude 200
+      velocity          0 0 0 ~160
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 600
+      acceleration          0 0 -1 0
+
+      radius 0 3.0 0.0
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+      bounce 0.2
+
+      lifeTime 400
+    }
+
+    count 3~6
+    delay 0
+    period 0 - ~0%
+  }
+}

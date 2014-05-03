@@ -1,0 +1,214 @@
+#include "ui/menudef.h"
+{
+#define W  1000
+#define H  800
+  menuDef
+  {
+    name "ingame_map19201080"
+    visible MENU_TRUE
+    rect 0 0 H W
+    focusColor 1 1 1 1
+    aspectBias ALIGN_LEFT
+	fullscreen 0
+    style WINDOW_STYLE_FILLED
+	onclose
+	{exec stopmusic}
+    onopen
+    {
+	  playlooped "ui/assets/maporama.wav"
+      uiScript loadArenas;
+      show mapvote;
+    }
+    onESC
+    {
+    uiScript closeingame
+	exec stopmusic
+    }
+	
+	itemDef
+    {
+      name "aurora_add"
+      style WINDOW_STYLE_SHADER
+      rect -50 0 1000 480
+      visible 1
+	  background "ui/menu_main_aurora_base_stars"
+      decoration
+    }
+	
+	itemDef
+    {
+      name "aurora"
+      style WINDOW_STYLE_SHADER
+      rect -50 0 1000 480
+      visible 1
+	  background "ui/menu_main_aurora_base"
+      decoration
+    }
+	
+	itemDef
+    {
+      name "dist"
+      style WINDOW_STYLE_SHADER
+      rect -50 0 1000 480
+      visible 1
+	  background "gfx/edge/basi_invisble_overlay"
+      decoration
+    }
+
+	itemDef
+    {
+      name "lsm"
+      text "Load Selected Map"
+      type ITEM_TYPE_BUTTON
+      textscale .42
+      rect  215 80 120 45
+      textalign ALIGN_LEFT
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible 1
+      action
+    {
+        play "ui/assets/fart.wav";
+        uiScript voteMap;
+        uiScript closeingame
+		exec stopmusic
+    }
+    }
+    itemDef
+    {
+      name "lsmn"
+      text "Load Selected Map Next"
+      type ITEM_TYPE_BUTTON
+      textscale .42
+      rect  350 80 150 45
+      textalign ALIGN_LEFT
+      textvalign VALIGN_CENTER
+      textstyle   ITEM_TEXTSTYLE_SHADOWED
+      forecolor 0 0.8 1 1
+      visible 1
+      action
+      {
+        play "ui/assets/fart.wav";
+        uiScript voteNextMap;
+        uiScript closeingame
+		exec stopmusic
+      }
+    }
+    itemDef
+    {
+      name "rcm"
+      type ITEM_TYPE_BUTTON
+      text "Restart Current Map"
+      textstyle   ITEM_TEXTSTYLE_SHADOWED
+      textscale .42
+      rect  525 65 150 45
+      forecolor 0 0.8 1 1
+      visible 1
+      action
+    {
+        play "ui/assets/fart.wav";
+        exec "cmd callvote map_restart";
+        uiScript closeingame
+		exec stopmusic
+    }
+    }
+	itemDef
+    {
+      name mappreview
+      ownerdraw UI_SELECTEDMAPPREVIEW
+      rect 420 130 280 280
+      visible 1
+    }
+	itemDef
+    {
+      name "boy"
+	  type ITEM_TYPE_OWNERDRAW
+      style WINDOW_STYLE_SHADER
+      rect 600 10 100 95
+      visible 1
+      background "scripts/yboy"
+    }   
+ 
+	itemDef
+    {
+      name "listbox"
+      rect 140 130 280 280
+      type ITEM_TYPE_LISTBOX
+      style WINDOW_STYLE_FILLED
+      textstyle   ITEM_TEXTSTYLE_SHADOWED
+      backcolor 0.00 1.35 2.55 0.2
+      elementwidth 100
+      elementheight 25
+      textscale .35
+      elementtype LISTBOX_TEXT
+      feeder FEEDER_MAPS
+      border WINDOW_BORDER_NONE
+      forecolor 0 0.8 1 1
+      backcolor    0 0.8 1 0.1
+	  outlinecolor  1 1 1 0.1
+      visible 1
+      doubleclick
+      {
+        play "sound/misc/menu1.wav";
+        uiScript voteMap;
+        uiScript closeingame
+		exec stopmusic
+      }
+	}
+	itemDef
+    {
+      name        "MOR"
+      rect        425 60 10 -20
+      type        ITEM_TYPE_TEXT
+      textalign   ALIGN_CENTER
+      textscale   0.25
+	  textstyle   ITEM_TEXTSTYLE_BLINK
+      text        "Yalt's"
+      forecolor 0 0.8 1 1
+      backcolor   1 0 0 1
+      visible     1
+      decoration
+    }
+    itemDef
+    {
+      name        "MOR"
+      rect        425 60 10 1
+      type        ITEM_TYPE_TEXT
+      textalign   ALIGN_CENTER
+      textscale   0.50
+      textstyle   ITEM_TEXTSTYLE_BLINK
+      text        "MAP-O-RAMA"
+      forecolor 0 0.8 1 1
+      backcolor   1 0 0 1
+      visible     1
+      decoration
+    }
+    itemDef
+    {
+      name        "MOR"
+      rect        425 55 10 15
+      type        ITEM_TYPE_TEXT
+      textalign   ALIGN_CENTER
+      textscale   0.25
+      textstyle   ITEM_TEXTSTYLE_BLINK
+      text        "The easiest way to vote maps!"
+      forecolor 0 0.8 1 1
+      visible     1
+      decoration
+    }
+	 itemDef
+    {
+      name        "legende"
+      rect        410 420 10 20
+      type        ITEM_TYPE_TEXT
+      textalign   ALIGN_CENTER
+      textscale   0.22
+      textstyle   ITEM_TEXTSTYLE_SHADOWED
+      text        "[yedge]^7=Yalt's Edge Maps  [official]^7=Original Tremulous Maps  [z]^7=Contributed Maps  [xyedge]^7=Ported Maps  ^5Maps without any tag = Not on server but on your system!"
+      forecolor   1 1 1 1
+      backcolor   1 0 0 1
+      visible     1
+      decoration
+    }
+  }
+}

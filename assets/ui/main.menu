@@ -1,0 +1,196 @@
+#include "ui/menudef.h"
+
+{
+  assetGlobalDef
+  {
+    font "fonts/font" 26      
+    smallFont "fonts/smallfont" 20    
+    bigFont "fonts/bigfont" 34  
+	
+    cursor "ui/assets/3_cursor3"              // cursor
+    gradientBar "ui/assets/gradientbar2.tga"  // gradient bar
+    itemFocusSound "sound/misc/menu2.wav"     // sound for item getting focus (via keyboard or mouse )
+    fadeClamp 1.0          					  // sets the fadeup alpha
+    fadeCycle 1             				  // how often fade happens in milliseconds
+    fadeAmount 0.1          			   	  // amount to adjust alpha per cycle
+    shadowColor 1 1 1 1    		          // shadow color
+  }
+
+  menuDef
+  {
+    name main
+    fullScreen MENU_TRUE
+    rect 0 0 640 480      		  // Size and position of the menu
+    visible MENU_TRUE      		  // Visible on open
+    focusColor 1 1 1 1        // Menu focus color for text and items
+	background "ui/assets/warp_splash_m.jpg"
+    aspectBias ASPECT_NONE
+    onOpen { uiScript stopRefresh ; playlooped "ui/assets/edge_heartbeat.wav" }
+    onESC { open quit_popmenu }
+
+	itemDef
+    {
+      name "aurora_add"
+      style WINDOW_STYLE_SHADER
+      rect 0 13 640 442
+      visible 1
+	  background "ui/menu_main_aurora_base_stars"
+      decoration
+    }
+	
+	itemDef
+    {
+      name "aurora"
+      style WINDOW_STYLE_SHADER
+      rect 0 12 640 442
+      visible 1
+	  background "ui/menu_main_aurora_base"
+      decoration
+    }
+	
+	itemDef
+    {
+      name "dist"
+      style WINDOW_STYLE_SHADER
+      rect 0 13 640 440
+      visible 1
+	  background "gfx/edge/basi_invisble_overlay"
+      decoration
+    }
+	
+    itemDef
+    { 
+      name window
+      rect 70 0 500 500
+      style WINDOW_STYLE_GRADIENT
+      backcolor 0.0 1.35 2.55 0
+      visible 1
+      decoration
+    }
+	
+	itemDef
+    {
+      name "edge_logo"
+      style WINDOW_STYLE_SHADER
+      rect 215 75 212 140
+      visible 1
+	  background "ui/edge_logo"
+      decoration
+    }
+	
+	itemDef
+    {
+      name mainmenu
+      text "ENTER New EDGE SERVER"
+      type ITEM_TYPE_BUTTON
+      style WINDOW_STYLE_EMPTY
+	  textstyle ITEM_TEXTSTYLE_NORMAL
+      rect 270 210 100 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      textscale .40
+      forecolor 0 0.8 1 1
+      visible MENU_TRUE
+      action
+      {
+	    exec stopmusic
+        exec "connect 95.85.34.7:30720";
+      }
+    }
+	
+    itemDef
+    {
+      name mainmenu
+      text "SERVER BROWSER"
+      type ITEM_TYPE_BUTTON
+      style WINDOW_STYLE_EMPTY
+      textstyle ITEM_TEXTSTYLE_NORMAL
+      rect 270 230 100 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      textscale .4
+      forecolor 0 0.8 1 1
+      visible MENU_TRUE
+      action
+      {
+        open joinserver
+      }
+    }
+
+    itemDef
+    {
+      name mainmenu
+      text "OPTIONS"
+      type ITEM_TYPE_BUTTON
+      style WINDOW_STYLE_EMPTY
+      textstyle ITEM_TEXTSTYLE_NORMAL
+      textscale .4
+      rect 270 250 100 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      backcolor 0 0 0 0
+      forecolor 0 0.8 1 1
+      visible MENU_TRUE
+      action
+      {
+        open simple_options
+      }
+    }
+
+    itemDef
+    {
+      name mainmenu
+      text "QUIT"
+      type ITEM_TYPE_BUTTON
+      style WINDOW_STYLE_EMPTY
+      textstyle ITEM_TEXTSTYLE_NORMAL
+      rect 270 270 100 20
+      textscale .4
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible MENU_TRUE
+      action
+      {
+        uiScript "quit"
+      }
+    }
+    itemDef
+    {
+      name copyright
+      type ITEM_TYPE_TEXT
+      text "Tremulous (C) 2005-2009 darklegion development | EDGE (C) 2012-2013 yalt"
+      style WINDOW_STYLE_EMPTY
+      textstyle ITEM_TEXTSTYLE_NORMAL
+      textscale .22
+      rect 0 467 640 10
+      textalign ALIGN_CENTER
+      forecolor 0.5 0.5 0.5 1
+      visible MENU_TRUE
+      decoration
+    }
+	itemDef
+    {
+      name "terminal"
+      style WINDOW_STYLE_SHADER
+      rect 210 374 220 80
+      visible 1
+	  background "ui/edgeterminal"
+      decoration
+    }
+	itemDef
+    {
+      name copyright
+      type ITEM_TYPE_TEXT
+      text "www.new-edge.org"
+      style WINDOW_STYLE_EMPTY
+      textstyle ITEM_TEXTSTYLE_BLINK
+      textscale .35
+      rect 0 423 635 10
+      textalign ALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible MENU_TRUE
+      decoration
+    }
+  }
+}

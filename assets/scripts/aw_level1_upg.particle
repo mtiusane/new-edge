@@ -1,0 +1,337 @@
+firstPersonPoisonCloudPS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/sprites/poisoncloud
+
+      displacement 0 0 0 ~32.0
+
+      parentVelocityFraction  1.0
+      velocityType      static
+      velocityDir       linear
+      velocityMagnitude 16
+      velocity          0 0 1 ~0
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 300
+      acceleration          0 0 1 0
+
+      radius 0 10.0 40.0
+      alpha  0 0.5 0.0
+      rotation 0 ~360 -
+      bounce 0.5
+
+      lifeTime 1000
+    }
+
+    count 400
+    delay 0
+    period 20 - ~0%
+  }
+}
+
+models/weapons/acidbomb/impactPSBIG
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/sprites/green_acid
+
+      displacement 0 0 0 ~80
+      normalDisplacement  80
+
+      velocityType      static
+      velocityDir       linear
+      velocityMagnitude 45
+      velocity          0 0 -1 ~0
+
+      radius 0 25.0 15.0
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+      bounce 0.0
+
+      lifeTime 1000~50%
+    }
+
+    count 35
+    delay 0
+    period 0 - ~0%
+  }
+  ejector
+  {
+    particle
+    {
+      shader sync 	greenblood01frame01 greenblood01frame02 greenblood01frame03 greenblood01frame04 greenblood01frame05 greenblood01frame06 greenblood01frame07 greenblood01frame08
+
+      displacement 0 0 0 ~25.0
+      normalDisplacement  35
+
+      velocityType      normal
+      velocityDir       linear
+      velocityMagnitude 300~75%
+      velocity          0 0 1 ~10
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 850
+      acceleration          0 0 -1 ~30
+
+      radius 0 10.0 20.0
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+      bounce 0.2
+
+      lifeTime 700~50%
+    }
+
+    count 50
+    delay 0
+    period 5 - ~0%
+  }
+  ejector
+  {
+    particle
+    {
+      shader sync 	greenblood01frame01
+
+      displacement 0 0 0 ~45.0
+      normalDisplacement  35
+
+      velocityType      normal
+      velocityDir       linear
+      velocityMagnitude 300~75%
+      velocity          0 0 1 ~10
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 900
+      acceleration          0 0 -1 ~30
+
+      radius 0 0 0
+      alpha  0 0 1
+      rotation 0 ~360 -
+      bounce 0.3
+	  bounceMark      1~1 64 acid_pool
+
+      lifeTime 2000~50%
+	  overdrawProtection 
+    }
+
+    count 30
+    delay 0
+    period 5 - ~0%
+}
+  ejector
+  {
+    particle
+    {
+      model models/weapons/level3upg/missile.md3
+
+      displacement 0 0 40 ~0
+
+      velocityType      static
+      velocityDir       linear
+      velocityMagnitude 300~75%
+      velocity          0 0 1 ~60
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 0
+      acceleration          0 0 -1 0
+
+      radius          0 1.0 -
+
+      lifeTime 3000
+    }
+
+    count 15
+    delay 0
+    period 1 - ~0%
+  }
+}
+
+models/weapons/acidbomb/impactPS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/sprites/green_acid
+
+      displacement 0 0 0 ~70
+      normalDisplacement  80
+
+      velocityType      static
+      velocityDir       linear
+      velocityMagnitude 35
+      velocity          0 0 -1 ~0
+
+      radius 0 20.0 15.0
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+      bounce 0.0
+
+      lifeTime 1000~50%
+    }
+
+    count 20
+    delay 0
+    period 0 - ~0%
+  }
+  ejector
+  {
+    particle
+    {
+      shader sync 	greenblood01frame01 greenblood01frame02 greenblood01frame03 greenblood01frame04 greenblood01frame05 greenblood01frame06 greenblood01frame07 greenblood01frame08
+
+      displacement 0 0 0 ~25.0
+      normalDisplacement  35
+
+      velocityType      normal
+      velocityDir       linear
+      velocityMagnitude 300~75%
+      velocity          0 0 1 ~10
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 800
+      acceleration          0 0 -1 ~30
+
+      radius 0 8.0 20.0
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+      bounce 0.2
+
+      lifeTime 650~50%
+    }
+
+    count 25
+    delay 0
+    period 5 - ~0%
+  }
+  ejector
+  {
+    particle
+    {
+      shader sync 	greenblood01frame01
+
+      displacement 0 0 0 ~32.0
+      normalDisplacement  35
+
+      velocityType      normal
+      velocityDir       linear
+      velocityMagnitude 300~75%
+      velocity          0 0 1 ~10
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 900
+      acceleration          0 0 -1 ~30
+
+      radius 0 0 0
+      alpha  0 0 1
+      rotation 0 ~360 -
+      bounce 0.3
+	  bounceMark      1~1 64 acid_pool
+
+      lifeTime 2000~50%
+	  overdrawProtection 
+    }
+
+    count 25
+    delay 0
+    period 5 - ~0%
+}
+  ejector
+  {
+    particle
+    {
+      model models/weapons/level3upg/missile.md3
+
+      displacement 0 0 40 ~0
+
+      velocityType      static
+      velocityDir       linear
+      velocityMagnitude 300~75%
+      velocity          0 0 1 ~60
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 0
+      acceleration          0 0 -1 0
+
+      radius          0 1.0 -
+
+      lifeTime 3000
+    }
+
+    count 15
+    delay 0
+    period 1 - ~0%
+  }
+}
+
+
+models/weapons/level1upg/muzzlePS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/sprites/poisoncloud
+
+      displacement 0 0 0 ~0.0
+
+      parentVelocityFraction 1.0
+
+      velocityType      cent
+      velocityDir       linear
+      velocityMagnitude 80
+      velocity          0 0 0 ~50
+
+      radius 0 10.0 25.0
+      alpha  0 0.5 0.0
+      rotation 0 ~360 -
+      bounce 1.0
+
+      lifeTime 800
+    }
+
+    count 20
+    delay 0
+    period 40 - ~0%
+  }
+}
+
+
+poisonCloudedPS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/sprites/poisoncloud
+
+      displacement 0 0 0 ~6.0
+
+      velocityType      static
+      velocityDir       linear
+      velocityMagnitude 60
+      velocity          0 0 0 ~50
+
+      radius 0 4.0 12.0
+      alpha  0 0.25 0.0
+      rotation 0 ~360 -
+
+      lifeTime 800
+    }
+
+    count 100
+    delay 0
+    period 50 200 ~0%
+  }
+}

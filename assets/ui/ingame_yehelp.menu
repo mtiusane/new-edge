@@ -1,0 +1,87 @@
+#include "ui/menudef.h"
+{
+#define W       800
+#define H       300
+  menuDef
+  {
+    name "ingame_yehelp"
+    visible 1
+	outOfBoundsClick
+    rect 0 0 W 450
+	fullscreen 0
+    style WINDOW_STYLE_FILLED
+	onopen
+    {
+	  close ingame;
+    }
+    onESC
+    {
+      play "sound/misc/menu1.wav";
+	  close "ingame_yehelp"
+    }
+	
+	itemDef
+    {
+      name "aurora_add"
+      style WINDOW_STYLE_SHADER
+      rect -180 0 1000 480
+      visible 1
+	  background "ui/menu_main_aurora_base_stars"
+      decoration
+    }
+	
+	itemDef
+    {
+      name "aurora"
+      style WINDOW_STYLE_SHADER
+      rect -160 0 1000 480
+      visible 1
+	  background "ui/menu_main_aurora_base"
+      decoration
+    }
+	
+	itemDef
+    {
+      name "dist"
+      style WINDOW_STYLE_SHADER
+      rect -250 0 1000 480
+      visible 1
+	  background "gfx/edge/basi_invisble_overlay"
+      decoration
+    }
+
+    itemDef
+    {
+      name "list"
+	  rect 70 60 130 380
+      type ITEM_TYPE_LISTBOX
+      style WINDOW_STYLE_FILLED
+      forecolor 0 0.8 1 1
+	  outlinecolor  1 1 1 0.1
+      backcolor 0 0 0 .9
+      elementwidth 5
+      elementheight 20
+      textscale .33
+      elementtype LISTBOX_TEXT
+      feeder FEEDER_HELP_LIST
+      visible 1
+    }
+    itemDef
+    {
+      name infopane
+      ownerdraw UI_HELPINFOPANE
+      textstyle ITEM_TEXTSTYLE_SHADOWED
+      style WINDOW_STYLE_FILLED
+      backcolor 0 0 0 .9
+	  rect 210 60 420 380
+      textscale .28
+	  textaligny 25
+	  textalignx 25
+      textalign ALIGN_LEFT
+      textvalign VALIGN_TOP
+      forecolor 0 0.8 1 1
+      visible 1
+      decoration
+    }
+  }
+}

@@ -1,0 +1,79 @@
+airpounceblast
+{
+  ejector
+  {
+    particle
+    {
+      shader sync airpounceflash
+	  radius 0 1.0 70.0
+      alpha  50 1.0 0.0
+      lifeTime 300
+    }
+    count 1
+    delay 0
+    period 0 - ~0%
+  }
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/sprites/smoke
+      displacement 0 0 23 ~20
+      velocityType      static
+      velocityDir       linear
+      velocityMagnitude 60
+      velocity          0 0 1 ~360
+      realLight 
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 60
+      acceleration          0 0 -1 ~360
+      radius 8 20.0 300.0
+      alpha  0 0.5 0.0
+      rotation 0 0 -
+	  bounce 0.5
+      lifeTime 1000
+    }
+    count 2
+    delay 0
+    period 10 - ~0%
+    }
+}
+
+models/weapons/level5/impactsp
+{
+	ejector
+	{
+		particle
+		{
+			shader sync gfx/sprites/spark.tga
+
+			displacement 0 0 0 ~3.0
+
+			velocityType static
+			velocityDir linear
+			velocity 0 0 -1 ~35
+			velocityMagnitude 200
+
+			accelerationType static
+			accelerationDir linear
+			acceleration 0 0 -1 ~25
+			accelerationMagnitude 600
+
+			dynamicLight 100 16 4 { .9 .7 0 }
+			bounce .3
+			radius 75 3 4
+			alpha 0 .5 .0
+
+			lifeTime 1000
+
+			childTrailSystem models/weapons/level5/trail
+
+			overdrawProtection
+		}
+
+		count ~5
+		delay 0 
+		period 100 - ~50%
+	}
+}

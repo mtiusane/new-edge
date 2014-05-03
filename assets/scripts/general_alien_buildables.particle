@@ -1,0 +1,150 @@
+//AB BLEED
+alienBuildableBleedPS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/damage/blood.tga
+      displacement          0 0 0 0
+      velocityType          normal
+      velocityDir           linear
+      velocityMagnitude     15
+      velocity              0 0 0 ~35
+      accelerationType      static
+      accelerationDir       linear
+      acceleration          0 0 -1 ~5
+      accelerationMagnitude 25
+      radius                0 5 8
+      alpha                 250 .85 0
+      rotation              0 ~-15 ~15
+      bounce                0.0
+      color                 0 { 1.0 1.0 0.6 } -
+      lifeTime              400~100
+    }
+    particle
+    {
+      shader sync gfx/damage/blood.tga
+      displacement          0 0 0 0
+      velocityType          normal
+      velocityDir           linear
+      velocityMagnitude     15
+      velocity              0 0 0 ~35
+      accelerationType      static
+      accelerationDir       linear
+      acceleration          0 0 -1 ~5
+      accelerationMagnitude 25
+      radius                0 5 8
+      alpha                 250 .85 0
+      rotation              0 ~165 ~195
+      bounce                0.0
+      color                 0 { 1.0 1.0 0.6 } -
+      lifeTime              400~100
+    }
+    count   2
+    delay   0
+    period  0 - 0
+  }
+}
+
+//AB DAMAMGE
+alienBuildableDamagedPS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/sprites/green_acid
+      velocityType      normal
+      velocityDir       linear
+      velocityMagnitude 100
+      velocity          0 0 0 ~40
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 200
+      acceleration          0 0 -1 0
+      radius 0 4.0 20.0
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+      bounce 0.0
+      lifeTime 1000~50%
+    }
+    count infinite
+    delay 0
+    period 750 - ~0%
+  }
+}
+
+//AB DESTROYED
+alienBuildableDestroyedPS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/sprites/green_acid
+      displacement 0 0 0 ~70
+      normalDisplacement  80
+      velocityType      static
+      velocityDir       linear
+      velocityMagnitude 30
+      velocity          0 0 -1 ~0
+      radius 0 20.0 15.0
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+      bounce 0.0
+      lifeTime 1000~50%
+    }
+    count 16
+    delay 0
+    period 0 - ~0%
+  }
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/sprites/green_acid
+      displacement 0 0 40 ~0
+      velocityType      static
+      velocityDir       linear
+      velocityMagnitude 300~75%
+      velocity          0 0 1 ~60
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 800
+      acceleration          0 0 -1 0
+      radius 0 20.0 30.0
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+      bounce 0.2
+      lifeTime 1000
+    }
+    count 10
+    delay 0
+    period 10 - ~0%
+  }
+  ejector
+  {
+    particle
+    {
+      model models/fx/alien_gibs/a_gib1.md3 models/fx/alien_gibs/a_gib2.md3 models/fx/alien_gibs/a_gib3.md3 models/fx/alien_gibs/a_gib4.md3
+      displacement 0 0 40 ~0
+      velocityType      static
+      velocityDir       linear
+      velocityMagnitude 300~75%
+      velocity          0 0 1 ~60
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 800
+      acceleration          0 0 -1 0
+      radius          0 1.0 -
+      bounce          0.2
+      bounceMark      1~1 16 creep
+      bounceSound     ~1 sound/misc/organic_bounce.wav
+      lifeTime 5000~1000
+    }
+    count 8
+    delay 0
+    period 10 - ~0%
+  }
+}

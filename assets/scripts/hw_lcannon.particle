@@ -1,0 +1,382 @@
+
+models/weapons/lcannon/missilePS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/blaster/orange_particle
+
+      displacement 0 0 0 ~3.0
+
+      parentVelocityFraction  1.0
+      velocityType      static
+      velocityDir       linear
+      velocityMagnitude 120
+      velocity          0 0 1 ~360
+
+      radius 0 1.0 5.0
+      alpha  0 1.0 0.0
+      bounce 0.1
+
+      lifeTime 1000
+    }
+
+    count infinite
+    delay 0
+    period 50 - ~0%
+  }
+}
+
+models/weapons/lcannon/impactPS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/blaster/orange_particle
+
+      displacement 0 0 0 ~2.0
+
+      normalDisplacement 10.0
+
+      velocityType      normal
+      velocityDir       linear
+      velocityMagnitude 200
+      velocity          0 0 0 ~160
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 300
+      acceleration          0 0 -1 0
+
+      radius 0 1.0 5.0
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+      bounce 0.8
+
+      lifeTime 2000~1000
+    }
+
+    count 30
+    delay 0
+    period 0 - ~0%
+  }
+
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/lcannon/primary
+
+      displacement 0 0 0 ~10.0
+
+      normalDisplacement 15.0
+
+      velocityType      normal
+      velocityDir       linear
+      velocityMagnitude 100
+      velocity          0 0 0 ~160
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 150
+      acceleration          0 0 -1 0
+
+      radius 0 25.0 0.0
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+      bounce 1.0
+
+      lifeTime 1000~1000
+    }
+
+    count 6
+    delay 0
+    period 0 - ~0%
+  }
+}
+
+models/weapons/lcannon/secondaryImpactPS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/blaster/orange_particle
+
+      displacement 0 0 0 ~2.0
+
+      normalDisplacement 10.0
+
+      velocityType      normal
+      velocityDir       linear
+      velocityMagnitude 150
+      velocity          0 0 0 ~160
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 300
+      acceleration          0 0 -1 0
+
+      radius 0 1.0 5.0
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+      bounce 0.8
+
+      lifeTime 2000~1000
+    }
+
+    count 10
+    delay 0
+    period 0 - ~0%
+  }
+}
+
+
+models/weapons/lcannon/missilePS2
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/blaster/orange_particle
+
+      displacement 0 0 0 ~3.0
+
+      parentVelocityFraction  1.0
+      velocityType      static
+      velocityDir       linear
+      velocityMagnitude 120
+      velocity          0 0 1 ~360
+
+      radius 0 1.0 5.0
+      alpha  0 1.0 0.0
+      bounce 0.1
+
+      lifeTime 1000
+    }
+
+    count infinite
+    delay 0
+    period 50 - ~0%
+  }
+}
+
+models/weapons/lcannon/secondaryMissilePS2
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/blaster/orange_particle
+
+      displacement 0 0 0 ~3.0
+
+      parentVelocityFraction  0.5
+
+      radius 0 2.0 0.0
+      alpha  0 1.0 0.0
+      bounce 0.1
+
+      lifeTime 400
+    }
+
+    count infinite
+    delay 0
+    period 25 - ~0%
+  }
+}
+
+models/weapons/lcannon/impactPS2
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/blaster/orange_particle
+      
+      radius 0 8.0 16.0
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+      
+      scaleWithCharge 0.10
+
+      lifeTime 250
+    }
+
+    count 1
+    delay 0
+    period 0 - ~0%
+  }
+
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/blaster/orange_particle
+
+      displacement 0 0 0 ~2.0
+
+      normalDisplacement 10.0
+
+      velocityType      normal
+      velocityDir       linear
+      velocityMagnitude 200
+      velocity          0 0 0 ~160
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 300
+      acceleration          0 0 -1 0
+
+      radius 0 1.0 5.0
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+      bounce 0.8
+
+      lifeTime 2000~1000
+    }
+
+    count 30
+    delay 0
+    period 0 - ~0%
+  }
+  
+    ejector
+  {
+    particle
+    {
+      shader sync radialblast
+	  
+      radius 0 1.0 150.0
+      alpha  50 1.0 0.0
+
+      lifeTime 300
+	  
+	  bounce 0.1
+	  bouncemark 1 150 radialmark
+    }
+
+    count 1
+    delay 0
+    period 0 - ~0%
+  }
+
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/lcannon/primary
+
+      displacement 0 0 0 ~10.0
+
+      normalDisplacement 15.0
+
+      velocityType      normal
+      velocityDir       linear
+      velocityMagnitude 100
+      velocity          0 0 0 ~160
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 150
+      acceleration          0 0 -1 0
+
+      radius 0 1.0 0.0
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+      bounce 1.0
+      
+      scaleWithCharge 0.10
+
+      lifeTime 1000~1000
+    }
+
+    count 6
+    delay 0
+    period 0 - ~0%
+  }
+}
+
+models/weapons/lcannon/secondaryImpactPS2
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/blaster/orange_particle
+      
+      radius 0 8.0 16.0
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+
+      lifeTime 250
+    }
+    count 1
+    delay 0
+    period 0 - ~0%
+  }
+
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/blaster/orange_particle
+
+      displacement 0 0 0 ~2.0
+
+      normalDisplacement 10.0
+
+      velocityType      normal
+      velocityDir       linear
+      velocityMagnitude 150
+      velocity          0 0 0 ~160
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 300
+      acceleration          0 0 -1 0
+
+      radius 0 1.0 5.0
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+      bounce 0.8
+
+      lifeTime 2000~1000
+    }
+    count 10
+    delay 0
+    period 0 - ~0%
+  }
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/blaster/orange_particle
+
+      velocityType      normal
+      velocityDir       linear
+      velocityMagnitude 750
+      velocity          0 0 0 ~400
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 300
+      acceleration          0 0 0 0
+	  
+	  scalewithcharge 0.1
+
+      radius 0 2.0 2.0
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+      bounce cull
+
+      lifeTime 100
+    }
+    count 100
+    delay 0
+    period 0 - ~0%
+  }
+
+}

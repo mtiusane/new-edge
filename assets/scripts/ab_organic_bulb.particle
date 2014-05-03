@@ -1,0 +1,16 @@
+organicbulbPS
+{
+
+	
+  ejector
+  {
+    particle
+    {
+      dynamicLight    0 300 300 { 1.0 0.75 0.0 }
+      lifeTime        10000
+    }
+    count 1
+    delay 0
+    period ~22% ~22% ~22%
+  }
+} 

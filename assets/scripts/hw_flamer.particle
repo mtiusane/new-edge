@@ -1,0 +1,298 @@
+
+models/weapons/flamer/muzzlePS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync flame3 flame4 flame5 flame6 flame7 flame8 flame9 flame10 flame11 flame12 flame13 flame14 flame15 flame16 flame17 flame18 flame19 flame20 flame21 flame22 flame23 flame24 flame25
+      displacement 0 0 0 ~0.0
+
+      parentVelocityFraction 0.65
+
+      velocityType      cent
+      velocityDir       linear
+      velocityMagnitude 200
+      velocity          0 0 0 ~0
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 50
+      acceleration          0 0 1 ~0
+
+      radius 0 4.0 40.0
+      alpha  0 1.0 1.0
+      rotation 0 ~360 -
+      bounce 0.1
+
+      lifeTime 1000
+    }
+
+    count infinite
+    delay 0
+    period 15 - ~0%
+  }
+}
+
+
+models/weapons/flamer/impactbigPS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/sprites/smoke
+
+      displacement 0 0 0 50.0
+      normalDisplacement 3.0
+
+      velocityType      normal
+      velocityDir       linear
+      velocityMagnitude 10
+      velocity          0 0 0 0
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 1
+      acceleration          0 0 1 0
+
+      radius 0 20.0 70.0
+      alpha  0 1 0.0
+      rotation 0 ~360 -
+      bounce 0.0
+
+      lifeTime 10000
+    }
+
+    count 1
+    delay 0
+    period 0 - ~0%
+  }
+  
+      ejector
+  {
+    particle
+    {
+      shader sync gfx/sprites/smoke
+      displacement 0 0 23 ~0
+      velocityType      static
+      velocityDir       linear
+      velocityMagnitude 60
+      velocity          0 0 1 ~360
+      realLight 
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 60
+      acceleration          0 0 -1 ~360
+      radius 8 20.0 150.0
+      alpha  0 0.5 0.0
+      rotation 0 0 -
+	  bounce 0.5
+      lifeTime 4000
+	  childSystem models/weapons/smoke/addimpactPS4
+    }
+
+    count 1
+    delay 0
+    period 10 - ~0%
+      }
+	  
+  ejector
+  {
+    particle
+    {
+      shader sync flame3 flame4 flame5 flame6 flame7 flame8 flame9 flame10 flame11 flame12 flame13 flame14 flame15 flame16 flame17 flame18 flame19 flame20 flame21 flame22 flame23 flame24 flame25
+
+      displacement 0 0 11 ~0
+
+      velocityType      static
+      velocityDir       linear
+      velocityMagnitude 200~75%
+      velocity          0 0 1 ~10
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 300
+      acceleration          0 0 -1 0
+
+      radius 0 110.0 70.0
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+      bounce 0
+
+      lifeTime 500
+
+      childSystem models/weapons/grenade/impactTrailPS2
+    }
+
+    count 4
+    delay 0
+    period 10 - ~0%
+  }
+  
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/sprites/spark
+
+      displacement 0 0 8 ~20
+
+      velocityType      static
+      velocityDir       linear
+      velocityMagnitude 700~3%
+      velocity          0 0 1 ~320
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 800
+      acceleration          0 0 1 0
+
+      radius 0 80.0 5.0
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+      bounce 0.1
+      bounceMark      2~2 32 gfx/marks/burn_mrk
+
+      lifeTime 180
+	  onDeathSystem  models/weapons/smoke/addimpactFlamePSsm
+    }
+
+    count 6
+    delay 0
+    period 0 - ~0%
+  }
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/sprites/spark
+
+      displacement 0 0 8 ~0
+
+      velocityType      static
+      velocityDir       linear
+      velocityMagnitude 400~20%
+      velocity          0 0 -1 ~190
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 800
+      acceleration          0 0 -1 0
+
+      radius 0 5.5 1.5
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+      bounce 0.1
+
+      lifeTime 3000
+	  onDeathSystem  models/weapons/smoke/addimpactFlamePSsm
+    }
+
+    count 25
+    delay 0
+    period 0 - ~0%
+  }
+}
+
+
+models/weapons/flamer/pMissilePS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/sprites/spark
+
+      displacement 0 0 8 ~0
+
+      velocityType      static
+      velocityDir       linear
+      velocityMagnitude 400~20%
+      velocity          0 0 -1 ~190
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 800
+      acceleration          0 0 -1 0
+
+      radius 0 5.5 1.5
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+      bounce 0.1
+
+      lifeTime 3000
+    }
+
+    count infinite
+    delay 0
+    period 25 - ~0%
+  }
+}
+
+fireCloudPS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/sprites/firecloud
+
+      displacement 0 0 0 ~32.0
+
+      parentVelocityFraction  1.0
+      velocityType      static
+      velocityDir       linear
+      velocityMagnitude 16
+      velocity          0 0 1 ~0
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 300
+      acceleration          0 0 1 0
+
+      radius 0 10.0 40.0
+      alpha  0 0.5 0.0
+      rotation 0 ~360 -
+      bounce 0.5
+
+      lifeTime 1000
+    }
+
+    count 400
+    delay 0
+    period 20 - ~0%
+  }
+}
+
+models/weapons/flamer/muzzlePS2
+{
+  ejector
+  {
+    particle
+    {
+      shader sync flame3 flame4 flame5 flame6 flame7 flame8 flame9 flame10 flame11 flame12 flame13 flame14 flame15 flame16 flame17 flame18 flame19 flame20 flame21 flame22 flame23 flame24 flame25
+      displacement 0 0 0 ~0.0
+
+      parentVelocityFraction 0.65
+
+      velocityType      cent
+      velocityDir       linear
+      velocityMagnitude 500
+      velocity          0 0 0 ~0
+
+      physicsRadius 15
+
+      radius 0 4.0 40.0
+      alpha  0 1.0 1.0
+      rotation 0 ~360 -
+      bounce 0.1
+
+      lifeTime 800
+    }
+
+    count infinite
+    delay 0
+    period 15 - ~0%
+  }
+}

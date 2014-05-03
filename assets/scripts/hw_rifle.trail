@@ -1,0 +1,13 @@
+models/weapons/rifle/impactTS
+{
+	beam {
+		shader gfx/rifle/purple_trail
+    		textureType   stretch 0.0 0.5
+		segments 5
+    		segmentTime 5
+		alpha 0.8 0
+		width 0.3 0.3
+	}
+}
+
+

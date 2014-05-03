@@ -1,0 +1,114 @@
+forcefieldPS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync models/powerfield_base/blue_particle
+
+      displacement 0 0 0 ~2.0
+
+      normalDisplacement 15.0
+
+      velocityType      normal
+      velocityDir       linear
+      velocityMagnitude 400
+      velocity          0 0 0 ~80
+
+      accelerationType      normal
+      accelerationDir       linear
+      accelerationMagnitude 200
+      acceleration          0 0 1 ~360
+
+      radius 0 6.0 4.0
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+      bounce 0.5
+
+      lifeTime 1000
+    }
+
+    count 15
+    delay 0
+    period 0 - ~0%
+  }
+
+  ejector
+  {
+    particle
+    {
+      shader sync models/powerfield_base/blue_particle
+
+      displacement 0 0 0 ~0.0
+
+      velocityType      normal
+      velocityDir       linear
+      velocityMagnitude 750
+      velocity          0 0 0 ~80
+
+      accelerationType      normal
+      accelerationDir       linear
+      accelerationMagnitude 900~650
+      acceleration          0 0 1 ~360
+
+      radius 0 3.0 0.0
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+      bounce 0.5
+
+      lifeTime 120~20
+    }
+
+    count 4~15
+    delay 0
+    period 0 - ~0%
+  }
+
+  ejector
+  {
+    particle
+    {
+      shader sync models/powerfield_base/blue_particle
+
+      displacement 0 0 0 ~2.5
+
+      normalDisplacement 5.5
+
+      velocityType      normal
+      velocityDir       linear
+      velocityMagnitude 200
+      velocity          0 0 0 ~160
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 600
+      acceleration          0 0 -1 0
+
+      radius 0 3.0 0.0
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+      bounce 0.5
+
+      lifeTime 40~4000
+    }
+
+    count 3~15
+    delay 0
+    period 0 - ~0%
+  }
+  ejector
+  {
+    particle
+    {
+      parentVelocityFraction 0.7
+
+      dynamicLight    0 0 800 { 0.0 0.6 1 }
+
+      lifeTime        100~300
+    }
+
+    count 1
+    delay 0
+    period 0 - ~0%
+  }
+}

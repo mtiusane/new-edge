@@ -1,0 +1,71 @@
+
+models/weapons/lasgun/impactPS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/lasgun/purple_particle
+
+      displacement 0 0 0 ~2.0
+      normalDisplacement  7.0
+
+      velocityType      normal
+      velocityDir       linear
+      velocityMagnitude 100
+      velocity          0 0 0 ~90
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 600
+      acceleration          0 0 -1 ~10
+
+      radius 0 3.0~2.0 0.0
+      alpha  0 1.0 1.0
+      rotation 0 ~360 -
+      bounce 0.5
+
+      lifeTime 500
+    }
+
+    count 3
+    delay 0
+    period 0 - ~0%
+  }
+}
+
+
+models/weapons/lasgun/impactPS2
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/lasgun/purple_particle
+
+      displacement 0 0 0 ~2.0
+      normalDisplacement  7.0
+
+      velocityType      normal
+      velocityDir       linear
+      velocityMagnitude 100
+      velocity          0 0 0 ~90
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 600
+      acceleration          0 0 -1 ~10
+
+      radius 0 3.0~2.0 0.0
+      alpha  0 1.0 1.0
+      rotation 0 ~360 -
+      bounce 0.5
+
+      lifeTime 500
+    }
+
+    count 3
+    delay 0
+    period 0 - ~0%
+  }
+}

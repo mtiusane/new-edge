@@ -1,0 +1,14 @@
+models/weapons/flamer/missileTS
+{
+  beam
+  {
+    shader        gfx/flamer/trail
+
+    segments      3
+    width         80.0 20.0
+    alpha         1.0 0.1
+    segmentTime   120
+
+    textureType   stretch 0.0 1.0
+  }
+}

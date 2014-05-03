@@ -1,0 +1,104 @@
+#include "ui/menudef.h"
+{
+#define W       640
+#define H       480
+  menuDef
+  {
+    name "ingame_map"
+    visible MENU_FALSE
+	outOfBoundsClick
+    style WINDOW_STYLE_FILLED
+    rect 0 0 W H
+    focusColor 1 1 1 1
+	onopen
+    {
+	  close ingame;
+    }
+    onESC
+    {
+      play "sound/misc/menu1.wav";
+      close ingame_map
+	  open ingame
+    }
+	
+	itemDef
+    {
+      name "aurora_add"
+      style WINDOW_STYLE_SHADER
+      rect -180 0 1000 480
+      visible 1
+	  background "ui/menu_main_aurora_base_stars"
+      decoration
+    }
+	
+	itemDef
+    {
+      name "aurora"
+      style WINDOW_STYLE_SHADER
+      rect -160 0 1000 480
+      visible 1
+	  background "ui/menu_main_aurora_base"
+      decoration
+    }
+	
+	itemDef
+    {
+      name "dist"
+      style WINDOW_STYLE_SHADER
+      rect -250 0 1000 480
+      visible 1
+	  background "gfx/edge/basi_invisble_overlay"
+      decoration
+    }
+
+    itemDef
+    {
+    name "window"
+      rect -480 250 1280 100
+      style WINDOW_STYLE_FILLED
+      backcolor 0 0 0 .9
+      visible 1
+      decoration
+    }
+    itemDef
+    {
+    name "but1"
+      type ITEM_TYPE_BUTTON
+      text "Widescreen Resolution (16:9)"
+      style WINDOW_STYLE_EMPTY
+      textscale .5
+      textstyle   ITEM_TEXTSTYLE_NORMAL
+      rect 230 265 200 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible 1
+      action
+    {
+      play "sound/misc/menu1.wav";
+	  close ingame_map
+	  open ingame_map19201080
+    }
+    }
+	itemDef
+    {
+    name "but2"
+      type ITEM_TYPE_BUTTON
+      text "Normal Resolution (4:3)"
+      style WINDOW_STYLE_EMPTY
+      textscale .5
+      textstyle   ITEM_TEXTSTYLE_NORMAL
+      rect 230 305 200 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible MENU_TRUE
+      action
+    {
+      play "sound/misc/menu1.wav";
+	  close ingame_map
+	  open ingame_map640480
+    }
+    }
+  }
+}

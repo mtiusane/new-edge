@@ -1,0 +1,234 @@
+#include "ui/menudef.h"
+{
+#define W       640
+#define H       480
+menuDef
+  {
+    name "ingame"
+    visible 1
+	outOfBoundsClick
+    rect 0 0 640 480 
+    focusColor 1 1 1 1
+    style WINDOW_STYLE_FILLED
+	onOpen { uiScript stopRefresh ; }
+    onESC
+    {
+      play "sound/misc/menu1.wav";
+      close ingame
+    }
+	
+	itemDef
+    {
+      name "aurora_add"
+      style WINDOW_STYLE_SHADER
+      rect -180 0 1000 480
+      visible 1
+	  background "ui/menu_main_aurora_base_stars"
+      decoration
+    }
+	
+	itemDef
+    {
+      name "aurora"
+      style WINDOW_STYLE_SHADER
+      rect -160 0 1000 480
+      visible 1
+	  background "ui/menu_main_aurora_base"
+      decoration
+    }
+	
+	itemDef
+    {
+      name "dist"
+      style WINDOW_STYLE_SHADER
+      rect -250 0 1000 480
+      visible 1
+	  background "gfx/edge/basi_invisble_overlay"
+      decoration
+    }
+	
+	itemDef
+    {
+      name "edgesplash"
+      rect 250 50 680 680
+      type ITEM_TYPE_MODEL
+      style WINDOW_STYLE_FILLED
+      asset_model "ui/assets/e6.md3"
+      model_fovx 30.0
+      model_fovy 30.0
+      model_angle 180
+      visible 1
+      decoration
+    }
+	itemDef
+    {
+      name "menu"
+      style WINDOW_STYLE_SHADER
+      rect 270 160 110 190
+      visible 1
+	  background "ui/assets/main_base.png"
+      decoration
+    }
+	itemDef
+    {
+      name "menu_add"
+      style WINDOW_STYLE_SHADER
+      rect 245 132 160 238
+      visible 1
+	  background "scripts/main_add"
+      decoration
+    }	
+	itemDef
+    {
+      name "menu_add_pulse"
+      style WINDOW_STYLE_SHADER
+      rect 245 132 160 238
+      visible 1
+	  background "scripts/main_add_pulse"
+      decoration
+    }
+	itemDef
+    {
+      name "bu1"
+      type ITEM_TYPE_BUTTON
+      text "MANUAL"
+      style WINDOW_STYLE_EMPTY
+      textscale .3
+      rect 300 190 50 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible 1
+      action
+    {
+      play "sound/misc/menu1.wav";
+	  open ingame_yehelp
+    }
+    }
+	itemDef
+    {
+      name "bu2"
+      type ITEM_TYPE_BUTTON
+      text "VOTE MAPS"
+      style WINDOW_STYLE_EMPTY
+      textscale .3
+      rect 300 205 50 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible 1
+      action
+    {
+      play "sound/misc/menu1.wav";
+	  open ingame_map
+    }
+    }
+	 itemDef
+    {
+      name "bu3"
+      type ITEM_TYPE_BUTTON
+      text "VOTE PLAYERS"
+      style WINDOW_STYLE_EMPTY
+      textscale .3
+      rect 300 220 50 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible 1
+      action
+    {
+      play "sound/misc/menu1.wav";
+	  open ingame_game
+    }
+    }
+	 itemDef
+    {
+      name "bu4"
+      type ITEM_TYPE_TEXT
+      text "IGNORE PLAYERS"
+      style WINDOW_STYLE_EMPTY
+      textscale .3
+      rect 300 235 50 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible 1
+      action
+    {
+      play "sound/misc/menu1.wav";
+	  open ingame_ignore
+    }
+    }
+    itemDef
+    {
+      name "bu5x"
+      type ITEM_TYPE_BUTTON
+      text "SERVER BROWSER"
+      style WINDOW_STYLE_EMPTY
+      textscale .3
+      rect 300 250 50 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible 1
+      action
+    {
+      play "sound/misc/menu1.wav";
+	  open ingame_sbrowser
+    }
+    }
+    itemDef
+    {
+      name "bu5"
+      type ITEM_TYPE_BUTTON
+      text "ROBOT HELPER"
+      style WINDOW_STYLE_EMPTY
+      textscale .3
+	  rect 300 265 50 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible 1
+      action
+    {
+      play "sound/misc/menu1.wav";
+	  open ingame_robot
+    }
+    }
+	 itemDef
+    {
+      name "bu6"
+      type ITEM_TYPE_BUTTON
+      text "OPTIONS"
+      style WINDOW_STYLE_EMPTY
+      textscale .3
+      rect 300 280 50 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible 1
+      action
+    {
+      play "sound/misc/menu1.wav";
+	  open ingame_options
+    }
+    }
+	itemDef
+    {
+      name "bu7"
+      type ITEM_TYPE_TEXT
+      text "EXIT"
+      style WINDOW_STYLE_EMPTY
+      textscale .3
+      rect 300 295 50 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      forecolor 0 0.8 1 1
+      visible 1
+      action
+    {
+      play "sound/misc/menu1.wav";
+	  open ingame_leave
+    }
+	}
+}

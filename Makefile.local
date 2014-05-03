@@ -1,0 +1,3 @@
+CC=gcc
+USE_CURL=1
+BUILD_GAME_QVM=1

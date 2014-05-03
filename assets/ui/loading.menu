@@ -1,0 +1,146 @@
+#include "ui/menudef.h"
+
+{
+
+#define W         640
+#define H         480
+#define BORDER    10
+
+#define SHOT_W    320
+#define SHOT_H    240
+#define SHOT_X    (W-(BORDER+SHOT_W))
+#define SHOT_Y    BORDER
+
+#define INFO_X    BORDER
+#define INFO_W    (W-((3*BORDER)+SHOT_W))
+#define LEVEL_Y   BORDER
+#define LEVEL_H   30
+#define HOST_Y    (LEVEL_H+(2*BORDER))
+#define HOST_H    30
+#define MOTD_Y    (LEVEL_H+HOST_H+(3*BORDER))
+#define MOTD_H    ((BORDER+SHOT_H)-MOTD_Y)
+
+#define MAIN_W    (W-(2*BORDER))
+#define LABEL_W   180
+#define LABEL_X   (W-(LABEL_W+BORDER))
+#define BAR_H     ((H-((6*BORDER)+SHOT_H))/4)
+#define BAR_W     (MAIN_W-(LABEL_W+BORDER))
+#define BAR_X     BORDER
+#define MEDIA_Y   (H-((4*BORDER)+(4*BAR_H)))
+#define BUILD_Y   (H-((3*BORDER)+(3*BAR_H)))
+#define CHAR_Y    (H-((2*BORDER)+(2*BAR_H)))
+#define OVER_Y    (H-(BORDER+BAR_H))
+
+  assetGlobalDef
+  {
+    cursor "ui/assets/3_cursor3"    
+    gradientBar "ui/assets/gradientbar2.tga"  
+    fadeClamp 1.0      
+    fadeCycle 1         
+    fadeAmount 0.1   
+    shadowX  5         
+    shadowY  5         
+    shadowColor 0.1 0.1 0.1 0.25     
+    font "fonts/font" 26      
+    smallFont "fonts/smallfont" 20    
+    bigFont "fonts/bigfont" 34    
+  }
+
+  menuDef
+  {
+    name "Loading"
+    rect 0 0 W H
+	style WINDOW_STYLE_FILLED
+	background "ui/assets/warp_splash_m.jpg"
+    fullScreen MENU_TRUE
+    aspectBias ASPECT_NONE
+
+	
+    itemDef
+    {
+      name background
+      rect 0 11 W 442
+      style WINDOW_STYLE_FILLED
+	  ownerdraw CG_LOAD_LEVELSHOT
+      visible 1
+      decoration
+    }
+
+
+	itemDef
+    {
+      name "aurora_add"
+      style WINDOW_STYLE_SHADER
+      rect 0 13 640 442
+      visible 1
+	  background "ui/menu_main_aurora_base_stars"
+      decoration
+    }
+	
+	itemDef
+    {
+      name "aurora"
+      style WINDOW_STYLE_SHADER
+      rect 0 12 640 442
+      visible 1
+	  background "ui/menu_main_aurora_base"
+      decoration
+    }
+	
+	itemDef
+    {
+      name "dist"
+      style WINDOW_STYLE_SHADER
+      rect 0 13 640 440
+      visible 1
+	  background "gfx/edge/basi_invisble_overlay"
+      decoration
+    }
+	
+    itemDef
+    { 
+      name window
+      rect 70 0 500 500
+      style WINDOW_STYLE_GRADIENT
+      backcolor 0.0 1.35 2.55 0
+      visible 1
+      decoration
+    }
+
+	itemDef
+    {
+      name "loading_add"
+      style WINDOW_STYLE_SHADER
+      rect 148 443 345 55
+      visible 1
+	  background "scripts/loading_add"
+      decoration
+    }	
+	
+	itemDef
+    {
+      name "lvlname"
+      rect 180 454 280 30
+      visible MENU_TRUE
+      forecolor 1 1 1 1
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      textstyle ITEM_TEXTSTYLE_NORMAL
+      textscale 0.3
+      ownerdraw CG_LOAD_LEVELNAME
+      style WINDOW_STYLE_FILLED
+      decoration
+    }
+	
+	itemDef
+    {
+      name "loading"
+      style WINDOW_STYLE_SHADER
+      rect 370 162 300 400
+      visible 1
+	  background "scripts/e6"
+      decoration
+    }
+	
+  }
+}

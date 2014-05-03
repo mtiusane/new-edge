@@ -1,0 +1,144 @@
+#include "ui/menudef.h"
+{
+#define W         550
+#define H         250
+menuDef
+  {
+    name "tremulous_humanarmoury"
+    visible MENU_FALSE
+    focuscolor 1 1 1 1
+    fullscreen MENU_FALSE
+    outOfBoundsClick
+    rect (320-(W/2)) (240-(H/2)) W H
+    style WINDOW_STYLE_FILLED
+    popup
+    onOpen
+    {
+      uiScript LoadHumanArmouryBuys;
+      uiScript LoadHumanArmourySells;
+      setFocus list
+    }
+    itemDef
+    {
+    name "window"
+      rect -250 -30 1280 300
+      style WINDOW_STYLE_FILLED
+      backcolor 0 0 0 .9
+      visible 1
+      decoration
+    }
+    itemDef
+    {
+      name "buylist"
+      rect 50 -20 160 260
+      type ITEM_TYPE_LISTBOX
+      style WINDOW_STYLE_EMPTY
+      elementwidth 120
+      elementheight 20
+      textscale .38
+      elementtype LISTBOX_TEXT
+      feeder FEEDER_TREMHUMANARMOURYBUY
+      forecolor 0 0.8 1 1
+      backcolor     0.2 0.2 0.2 1
+	  outlinecolor  1 1 1 0.1
+      visible MENU_TRUE
+      resetonfeederchange
+      doubleclick
+      {
+        play "sound/misc/menu1.wav";
+        uiScript BuyFromArmoury;
+      }
+    }
+    itemDef
+    {
+      name "selllist"
+      rect 210 -20 140 260
+      type ITEM_TYPE_LISTBOX
+      style WINDOW_STYLE_EMPTY
+      elementwidth 120
+      elementheight 20
+      textscale .38
+      elementtype LISTBOX_TEXT
+      feeder FEEDER_TREMHUMANARMOURYSELL
+      forecolor 0 0.8 1 1
+      backcolor     0.2 0.2 0.2 1
+	  outlinecolor  1 1 1 0.1
+      visible MENU_TRUE
+      resetonfeederchange
+      doubleclick
+      {
+        play "sound/misc/menu1.wav";
+        uiScript SellToArmoury;
+      }
+    }
+    itemDef
+    {
+      name infopane
+      ownerdraw UI_HBUYINFOPANE
+      textstyle ITEM_TEXTSTYLE_NORMAL
+      style WINDOW_STYLE_EMPTY
+      rect 370 -20 200 260
+      textscale .33
+      textalign ALIGN_LEFT
+      textvalign VALIGN_TOP
+      textalignx 6
+      textaligny 6
+      forecolor 0 0.8 1 1
+      backcolor     0.2 0.2 0.2 1
+	  outlinecolor  1 1 1 0.1
+      visible MENU_TRUE
+      decoration
+    }
+    itemDef
+    {
+      name "Buy"
+      text "BUY"
+      type ITEM_TYPE_BUTTON
+      style WINDOW_STYLE_EMPTY
+      rect 220 242 30 20
+      textalign ALIGN_LEFT
+      textvalign VALIGN_CENTER
+      textscale .4
+      forecolor 0 0.8 1 1
+      visible MENU_TRUE
+      action
+      {
+        uiScript BuyFromArmoury;
+      }
+    }
+    itemDef
+    {
+      name "Close"
+      text "CLOSE"
+      type ITEM_TYPE_BUTTON
+      style WINDOW_STYLE_EMPTY
+      rect 320 242 30 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      textscale .4
+      forecolor 0 0.8 1 1
+      visible MENU_TRUE
+      action
+      {
+        close tremulous_humanarmoury
+      }
+    }
+    itemDef
+    {
+      name "Sell"
+      text "SELL"
+      type ITEM_TYPE_BUTTON
+      style WINDOW_STYLE_EMPTY
+      rect 265 242 30 20
+      textalign ALIGN_RIGHT
+      textvalign VALIGN_CENTER
+      textscale .4
+      forecolor 0 0.8 1 1
+      visible MENU_TRUE
+      action
+      {
+        uiScript SellToArmoury;
+      }
+    }
+  }
+}
