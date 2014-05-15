@@ -1789,23 +1789,23 @@ void FireWeapon2( gentity_t *ent )
       areaZapFire( ent );
       break;
 
-	case WP_PAIN_SAW:
+    case WP_PAIN_SAW:
       painSawFire2( ent );
       break; 
 	  
-	case WP_LUCIFER_CANNON:
-		 LCChargeFire( ent, qtrue );
+    case WP_LUCIFER_CANNON:
+      LCChargeFire( ent, qtrue );
       break;
 	  
-	 case WP_CHAINGUN:
-	  bulletFire( ent, CHAINGUN_SPREAD2, CHAINGUN_DMG2, MOD_CHAINGUN );
+    case WP_CHAINGUN:
+      bulletFire( ent, CHAINGUN_SPREAD2, CHAINGUN_DMG2, MOD_CHAINGUN );
       break;
 	  
-     case WP_FLAMER:
+    case WP_FLAMER:
       FlamerNormal( ent );
       break;
 	  
-	case WP_PULSE_RIFLE:
+    case WP_PULSE_RIFLE:
       prifleStasisFire( ent );
       break;
 	  

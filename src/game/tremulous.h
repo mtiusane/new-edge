@@ -291,14 +291,14 @@ TREMULOUS EDGE MOD SRC FILE
 //Hummel
 #define LEVEL5_UPG_SPEED            1.1f
 #define LEVEL5_UPG_VALUE            AVM(400)
-#define LEVEL5_UPG_HEALTH           AHM(200)
+#define LEVEL5_UPG_HEALTH           AHM(180)
 #define LEVEL5_UPG_REGEN            (0.03f * LEVEL5_UPG_HEALTH)
 #define LEVEL5_UPG_COST             2
-#define LEVEL5_CLAW_U_REPEAT        500
+#define LEVEL5_CLAW_U_REPEAT        333
 #define LEVEL5_CLAW_U_K_SCALE       1.0f
 #define LEVEL5_CLAW_U_RANGE         70.0f
 #define LEVEL5_CLAW_WIDTH           12.0f
-#define LEVEL5_CLAW_DMG             ADM(40)
+#define LEVEL5_CLAW_DMG             ADM(30)
 #define LEVEL5_PRICKLES_REPEAT      200
 #define LEVEL5_PRICKLES_NEXTTHINK   6000
 #define LEVEL5_PRICKLES_RADIUS	    50
@@ -307,14 +307,14 @@ TREMULOUS EDGE MOD SRC FILE
 #define LEVEL5_PRICKLES_DMG	    6
 #define LEVEL5_PRICKLES_RELOADTIME  2300
 #define LEVEL5_PRICKLES_AMMO 	    10
-#define LEVEL5_POUNCE_JUMP_MAG      500
-#define LEVEL5_POUNCE_REPEAT        1000
-#define LEVEL5_POUNCE_TIME          600
+#define LEVEL5_POUNCE_JUMP_MAG      800
+#define LEVEL5_POUNCE_REPEAT        300
+#define LEVEL5_POUNCE_TIME          800
 #define LEVEL5_POUNCE_TIME_MIN      200 
 #define LEVEL5_POUNCE_DMG           40
-#define LEVEL5_POUNCE_RANGE         48.0f
-#define LEVEL5_POUNCE_WIDTH         14.0f
-#define LEVEL5_POUNCE_SPEED_MOD     0.75f
+#define LEVEL5_POUNCE_RANGE         40.0f
+#define LEVEL5_POUNCE_WIDTH         12.0f
+#define LEVEL5_POUNCE_SPEED_MOD     0.8f
 /*
  * HUMAN
  */

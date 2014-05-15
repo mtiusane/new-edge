@@ -579,6 +579,13 @@ PM_CheckCharge
 */
 static void PM_CheckCharge( void )
 {
+  // Reset hummel pounce payload when walking
+  if (pm->ps->weapon == WP_ALEVEL5)
+  {
+    pm->ps->stats[ STAT_STATE ] &= ~SS_CHARGING;
+    pm->pmext->pouncePayload = 0;
+  }
+
   if( pm->ps->weapon != WP_ALEVEL4 )
     return;
 
@@ -707,12 +714,11 @@ static qboolean PM_CheckAirPounce( void )
     return qfalse;
 
   // We were pouncing, but we've landed
-  if( /*pm->ps->groundEntityNum != ENTITYNUM_NONE &&*/
+  if( /* pm->ps->groundEntityNum != ENTITYNUM_NONE && */
       ( pm->ps->pm_flags & PMF_CHARGE ) )
   {
     pm->ps->pm_flags &= ~PMF_CHARGE;
     pm->ps->weaponTime += LEVEL5_POUNCE_REPEAT;
-    pm->pmext->pouncePayload = 0;
     return qfalse;
   }
 
@@ -3058,6 +3064,7 @@ static void PM_Weapon( void )
   qboolean      attack1 = pm->cmd.buttons & BUTTON_ATTACK;
   qboolean      attack2 = pm->cmd.buttons & BUTTON_ATTACK2;
   qboolean      attack3 = pm->cmd.buttons & BUTTON_USE_HOLDABLE;
+  qboolean      walk = pm->cmd.buttons & BUTTON_WALKING;
 
   // Ignore weapons in some cases
   if( pm->ps->persistant[ PERS_SPECSTATE ] != SPECTATOR_NOT )
@@ -3071,7 +3078,7 @@ static void PM_Weapon( void )
   }
 
   // Charging for or canceling a pounce/drill attack
-  if( pm->ps->weapon == WP_ALEVEL3 || pm->ps->weapon == WP_ALEVEL3_UPG || 
+  if( pm->ps->weapon == WP_ALEVEL3 || pm->ps->weapon == WP_ALEVEL3_UPG ||
       pm->ps->weapon == WP_ALEVEL5 || pm->ps->weapon == WP_ALEVEL0_UPG )
   {
     int max;
@@ -3090,19 +3097,21 @@ static void PM_Weapon( void )
       max = LEVEL0_DRILL_TIME;
       break;
     }
-    if( pm->cmd.buttons & BUTTON_ATTACK2 )
+    
+    if( attack2 && (pm->ps->weapon != WP_ALEVEL5 || walk) )
       pm->ps->stats[ STAT_MISC ] += pml.msec;
     else
       pm->ps->stats[ STAT_MISC ] -= pml.msec;
 
     if( pm->ps->stats[ STAT_MISC ] > max )
       pm->ps->stats[ STAT_MISC ] = max;
-    else if( pm->ps->stats[ STAT_MISC ] < 0 )
+    else if( pm->ps->stats[ STAT_MISC ] <= 0 ) {
       pm->ps->stats[ STAT_MISC ] = 0;
+    }
   }
 
   // Trample charge mechanics
-  if( pm->ps->weapon == WP_ALEVEL4 )
+  else if( pm->ps->weapon == WP_ALEVEL4 )
   {
     // Charging up
     if( !( pm->ps->stats[ STAT_STATE ] & SS_CHARGING ) )
@@ -3223,7 +3232,7 @@ static void PM_Weapon( void )
     return;
 	
   // no bite during pounce
-  if( ( pm->ps->weapon == WP_ALEVEL3 || pm->ps->weapon == WP_ALEVEL3_UPG )
+  if( ( pm->ps->weapon == WP_ALEVEL3 || pm->ps->weapon == WP_ALEVEL3_UPG || pm->ps->weapon == WP_ALEVEL5)
       && ( pm->cmd.buttons & BUTTON_ATTACK )
       && ( pm->ps->pm_flags & PMF_CHARGE ) )
     return;
@@ -3521,12 +3530,12 @@ static void PM_Weapon( void )
   {
     if( BG_Weapon( pm->ps->weapon )->hasThirdMode )
     {
-	  if( pm->ps->weapon == WP_MASS_DRIVER )
-       {
+      if( pm->ps->weapon == WP_MASS_DRIVER )
+      {
         attack3 = qtrue;
-       }
+      }
 	  
-	  if( pm->ps->weapon == WP_ALEVEL5 && !pm->ps->ammo )
+      if( pm->ps->weapon == WP_ALEVEL5 && !pm->ps->ammo )
       {
         pm->ps->weaponTime += 400;
         return;
@@ -3608,10 +3617,10 @@ static void PM_Weapon( void )
         PM_AddEvent( EV_FIRE_WEAPON );
         addTime = BG_Weapon( pm->ps->weapon )->repeatRate1;
         break;
-		
+      	
       case WP_ALEVEL5:
         pm->ps->generic1 = WPM_SECONDARY;
-        PM_AddEvent( EV_FIRE_WEAPON );
+        PM_AddEvent( EV_FIRE_WEAPON2 );
         addTime = BG_Weapon( pm->ps->weapon )->repeatRate2;
         break;
 		

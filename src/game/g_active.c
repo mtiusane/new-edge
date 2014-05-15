@@ -1197,9 +1197,9 @@ void ClientEvents( gentity_t *ent, int oldEventSequence )
         FireWeapon2( ent );
         break;
 
-    case EV_FIRE_WEAPON3:
-    FireWeapon3( ent );
-    break;
+      case EV_FIRE_WEAPON3:
+        FireWeapon3( ent );
+        break;
 
       case EV_NOAMMO:
         break;
@@ -2000,7 +2000,7 @@ client->ps.pm_type = PM_HUMMEL;
       }
       break;
 	  
-	  case WP_ALEVEL5:
+    case WP_ALEVEL5:
       if( !CheckPounceAttack( ent ) )
       {
         client->ps.weaponstate = WEAPON_READY;
