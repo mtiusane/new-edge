@@ -3470,11 +3470,8 @@ static const weaponAttributes_t bg_weapons[ ] =
     "mdriver",            //char      *weaponName;
     "[yefarms]Mass Driver",        //char      *humanName;
     "A portable particle accelerator which causes minor nuclear "
-      "reactions at the point of impact. It has a very large "
-	  "payload, but fires slowly. The secondary fire mode is "
-	  "triggered with a combo of [primary attack] and [activate upgrade]. "
-	  "It needs a full clip and fires a target seeking ball-lightning "
-      "towarads the enemy. It is available at S3",
+    "reactions at the point of impact. It has a very large "
+    "payload, but fires slowly.",
     MDRIVER_CLIPSIZE,     //int       maxAmmo;
     MDRIVER_MAXCLIPS,     //int       maxClips;
     qfalse,               //int       infiniteAmmo;
@@ -3485,7 +3482,7 @@ static const weaponAttributes_t bg_weapons[ ] =
     MDRIVER_RELOAD,       //int       reloadTime;
     MDRIVER_K_SCALE,      //float     knockbackScale;
     qfalse,               //qboolean  hasAltMode;
-    qtrue,                //qboolean  hasThirdMode;
+    qfalse,               //qboolean  hasThirdMode;
     qtrue,                //qboolean  canZoom;
     25.0f,                //float     zoomFov;
     qtrue,                //qboolean  purchasable;
