@@ -476,25 +476,30 @@ static float PM_CmdScale( usercmd_t *cmd )
                          ( LEVEL4_TRAMPLE_SPEED - 1.0f ) /
                          LEVEL4_TRAMPLE_DURATION );
 
-  //slow player if charging up for a pounce
-  if( ( pm->ps->weapon == WP_ALEVEL3 || pm->ps->weapon == WP_ALEVEL3_UPG ) &&
-      cmd->buttons & BUTTON_ATTACK2 )
-    modifier *= LEVEL3_POUNCE_SPEED_MOD;
-
-  //slow player if using 2nd rifle mode
-  if( ( pm->ps->weapon == WP_MACHINEGUN ) && cmd->buttons & BUTTON_ATTACK2 && pm->ps->weaponstate != WEAPON_RELOADING )
-    modifier *= RIFLE_2NDMOD;
-
-  //slow player if charging up for a drill
-  if( pm->ps->weapon == WP_ALEVEL0_UPG && cmd->buttons & BUTTON_ATTACK2 )
-    modifier *= LEVEL0_DRILL_SPEED_MOD;
-			  
-  //slow the player if slow locked
-  if( pm->ps->stats[ STAT_STATE ] & SS_SLOWLOCKED )
-    modifier *= ABUILDER_BLOB_SPEED_MOD;
-
-  if( pm->ps->pm_type == PM_GRABBED )
+  // Stop player if grabbed by something
+  if( pm->ps->pm_type == PM_GRABBED ) {
     modifier = 0.0f;
+  } else {
+    // Attack related slow-downs
+    if( cmd->buttons & BUTTON_ATTACK2 ) {
+      //slow player if charging up for a pounce
+      if( pm->ps->weapon == WP_ALEVEL3 || pm->ps->weapon == WP_ALEVEL3_UPG )
+	modifier *= LEVEL3_POUNCE_SPEED_MOD;
+      else if( pm->ps->weapon == WP_ALEVEL5 )
+	modifier *= LEVEL5_POUNCE_SPEED_MOD;
+
+      //slow player if using 2nd rifle mode
+      else if( pm->ps->weapon == WP_MACHINEGUN && pm->ps->weaponstate != WEAPON_RELOADING )
+	modifier *= RIFLE_2NDMOD;
+
+      //slow player if charging up for a drill
+      else if( pm->ps->weapon == WP_ALEVEL0_UPG )
+	modifier *= LEVEL0_DRILL_SPEED_MOD;
+    }
+    //slow the player if slow locked
+    if( pm->ps->stats[ STAT_STATE ] & SS_SLOWLOCKED )
+      modifier *= ABUILDER_BLOB_SPEED_MOD;
+  }
 
   if( pm->ps->pm_type != PM_SPECTATOR && pm->ps->pm_type != PM_NOCLIP )
   {
@@ -699,13 +704,15 @@ static qboolean PM_CheckAirPounce( void )
   int jumpMagnitude;
   
   if( pm->ps->weapon != WP_ALEVEL5 )
-  return qfalse;
+    return qfalse;
 
   // We were pouncing, but we've landed
-  if(( pm->ps->pm_flags & PMF_CHARGE ) )
+  if( /*pm->ps->groundEntityNum != ENTITYNUM_NONE &&*/
+      ( pm->ps->pm_flags & PMF_CHARGE ) )
   {
     pm->ps->pm_flags &= ~PMF_CHARGE;
     pm->ps->weaponTime += LEVEL5_POUNCE_REPEAT;
+    pm->pmext->pouncePayload = 0;
     return qfalse;
   }
 
@@ -719,8 +726,8 @@ static qboolean PM_CheckAirPounce( void )
   // Can't start a pounce
   if( pm->ps->weapon == WP_ALEVEL5 )
   {
-  if( pm->ps->stats[ STAT_MISC ] < 500)
-    return qfalse;
+    if( pm->ps->stats[ STAT_MISC ] < LEVEL5_POUNCE_TIME_MIN)
+      return qfalse;
   }
 
   // Give the player forward velocity and simulate a jump
@@ -1187,6 +1194,7 @@ static void PM_WaterMove( void )
     PM_WaterJumpMove();
     return;
   }
+     
 #if 0
   // jump = head for surface
   if ( pm->cmd.upmove >= 10 ) {
@@ -1201,6 +1209,7 @@ static void PM_WaterMove( void )
     }
   }
 #endif
+      
   PM_Friction( );
 
   scale = PM_CmdScale( &pm->cmd );
@@ -1307,7 +1316,7 @@ static void PM_HUMMELFLY( void )
   vec3_t  wishdir;
   float   scale;
   
-    if( PM_CheckAirPounce( ) )
+  if( PM_CheckAirPounce( ) )
   {
     pm->ps->torsoTimer = 1200;
     return;
@@ -1330,8 +1339,8 @@ static void PM_HUMMELFLY( void )
   else
   {
     for( i = 0; i < 3; i++ )
-    wishvel[ i ] = scale * pml.forward[ i ] * pm->cmd.forwardmove + scale * pml.right[ i ] * pm->cmd.rightmove;
-    wishvel[ i ] += scale * pm->cmd.upmove;
+      wishvel[ i ] = scale * pml.forward[ i ] * pm->cmd.forwardmove + scale * pml.right[ i ] * pm->cmd.rightmove;
+    wishvel[ 2 ] += scale * pm->cmd.upmove;
   }
 
   VectorCopy( wishvel, wishdir );
@@ -1342,14 +1351,13 @@ static void PM_HUMMELFLY( void )
   PM_StepSlideMove( qfalse, qtrue );
   
   
-    if( !( pm->ps->persistant[ PERS_STATE ] & PS_NONSEGMODEL ) )
+  if( !( pm->ps->persistant[ PERS_STATE ] & PS_NONSEGMODEL ) )
     PM_ContinueLegsAnim( LEGS_LAND );
-    else
+  else
     PM_ContinueLegsAnim( NSPA_LAND );
-	//Fly 
-	if( pm->ps->weapon == WP_ALEVEL5 && pm->cmd.buttons &  BUTTON_WALKING )
+  //Fly 
+  if( pm->ps->weapon == WP_ALEVEL5 && pm->cmd.buttons &  BUTTON_WALKING )
     PM_ContinueLegsAnim( NSPA_SWIM );
-	
 
 }
 
@@ -2967,7 +2975,7 @@ static void PM_BeginWeaponChange( int weapon )
     pm->ps->weaponTime = 0;
 
   //special case to prevent storing a charged up lcannon
-    if( (pm->ps->weapon == WP_LUCIFER_CANNON || pm->ps->weapon == WP_FLAMER) )
+  if( (pm->ps->weapon == WP_LUCIFER_CANNON || pm->ps->weapon == WP_FLAMER) )
     pm->ps->stats[ STAT_MISC ] = 0;
 
   pm->ps->weaponstate = WEAPON_DROPPING;
@@ -3062,13 +3070,26 @@ static void PM_Weapon( void )
     return;
   }
 
-  // Charging for a pounce or canceling a pounce
-  if( pm->ps->weapon == WP_ALEVEL3 || pm->ps->weapon == WP_ALEVEL3_UPG )
+  // Charging for or canceling a pounce/drill attack
+  if( pm->ps->weapon == WP_ALEVEL3 || pm->ps->weapon == WP_ALEVEL3_UPG || 
+      pm->ps->weapon == WP_ALEVEL5 || pm->ps->weapon == WP_ALEVEL0_UPG )
   {
     int max;
     
-    max = pm->ps->weapon == WP_ALEVEL3 ? LEVEL3_POUNCE_TIME :
-                                         LEVEL3_POUNCE_TIME_UPG;
+    switch(pm->ps->weapon) {
+    case WP_ALEVEL3:
+      max = LEVEL3_POUNCE_TIME_UPG;
+      break;
+    case WP_ALEVEL3_UPG:
+      max = LEVEL3_POUNCE_TIME;
+      break;
+    case WP_ALEVEL5:
+      max = LEVEL5_POUNCE_TIME;
+      break;
+    default:
+      max = LEVEL0_DRILL_TIME;
+      break;
+    }
     if( pm->cmd.buttons & BUTTON_ATTACK2 )
       pm->ps->stats[ STAT_MISC ] += pml.msec;
     else
@@ -3077,22 +3098,6 @@ static void PM_Weapon( void )
     if( pm->ps->stats[ STAT_MISC ] > max )
       pm->ps->stats[ STAT_MISC ] = max;
     else if( pm->ps->stats[ STAT_MISC ] < 0 )
-      pm->ps->stats[ STAT_MISC ] = 0;
-  }
-
-  // Charging for a drill or canceling a drill
-  if( pm->ps->weapon == WP_ALEVEL0_UPG || pm->ps->weapon == WP_ALEVEL5 )
-  {
-    int max;
-    
-    max = LEVEL0_DRILL_TIME;
-    if( pm->cmd.buttons & BUTTON_ATTACK2 )
-      pm->ps->stats[ STAT_MISC ] += pml.msec;
-    else
-      pm->ps->stats[ STAT_MISC ] -= pml.msec;
-    if( pm->ps->stats[ STAT_MISC ] > max )
-      pm->ps->stats[ STAT_MISC ] = max;
-    if( pm->ps->stats[ STAT_MISC ] < 0 )
       pm->ps->stats[ STAT_MISC ] = 0;
   }
 
@@ -3367,15 +3372,15 @@ static void PM_Weapon( void )
       return;
 
     case WP_ALEVEL3:
-	case WP_ALEVEL5:
     case WP_ALEVEL3_UPG:
+    case WP_ALEVEL5:
       //pouncing has primary secondary AND autohit procedures
       // pounce is autohit
       if( !attack1 && !attack2 && !attack3 )
         return;
       break;
 
-	      case WP_FLAMER:
+    case WP_FLAMER:
       attack3 = qfalse;
       
       // Prevent firing of the Lucifer Cannon after an overcharge

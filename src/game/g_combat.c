@@ -1233,8 +1233,8 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
   }
 
   // don't do friendly fire on movement attacks
-  if( ( mod == MOD_LEVEL4_TRAMPLE || mod == MOD_LEVEL3_POUNCE ||
-        mod == MOD_LEVEL4_CRUSH ) &&
+  if( ( mod == MOD_LEVEL4_TRAMPLE || mod == MOD_LEVEL3_POUNCE || 
+	mod == MOD_LEVEL5_POUNCE || mod == MOD_LEVEL4_CRUSH ) &&
       targ->s.eType == ET_BUILDABLE && targ->buildableTeam == TEAM_ALIENS )
   {
     return;
@@ -1286,8 +1286,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
       // don't do friendly fire on movement attacks
 
       else if( mod == MOD_LEVEL4_TRAMPLE || mod == MOD_LEVEL3_POUNCE ||
-
-          mod == MOD_LEVEL4_CRUSH )
+	       mod == MOD_LEVEL5_POUNCE || mod == MOD_LEVEL4_CRUSH )
 
         return;
 	  

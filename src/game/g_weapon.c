@@ -1478,14 +1478,14 @@ qboolean CheckPounceAttack( gentity_t *ent )
 {
   trace_t tr;
   gentity_t *traceEnt;
-  int damage, timeMax, pounceRange, payload;
+  int damage, timeMax, pounceRange, pounceWidth, payload;
 
   if( ent->client->pmext.pouncePayload <= 0 )
     return qfalse;
 
   // In case the goon lands on his target, he get's one shot after landing
-    payload = ent->client->pmext.pouncePayload;
-    if( !( ent->client->ps.pm_flags & PMF_CHARGE || ent->client->ps.weapon == WP_ALEVEL5 ) )
+  payload = ent->client->pmext.pouncePayload;
+  if( !( ent->client->ps.pm_flags & PMF_CHARGE || ent->client->ps.weapon == WP_ALEVEL5 ) )
     ent->client->pmext.pouncePayload = 0;
 
   // Calculate muzzle point
@@ -1493,10 +1493,17 @@ qboolean CheckPounceAttack( gentity_t *ent )
   CalcMuzzlePoint( ent, forward, right, up, muzzle );
 
   // Trace from muzzle to see what we hit
-  pounceRange = ent->client->ps.weapon == WP_ALEVEL3 ? LEVEL3_POUNCE_RANGE :
-                                                       LEVEL3_POUNCE_UPG_RANGE;
-  G_WideTrace( &tr, ent, pounceRange, LEVEL3_POUNCE_WIDTH,
-               LEVEL3_POUNCE_WIDTH, &traceEnt );
+  if( ent->client->ps.weapon == WP_ALEVEL5)
+  {
+      pounceRange = LEVEL5_POUNCE_RANGE;
+      pounceWidth = LEVEL5_POUNCE_WIDTH;
+  }
+  else
+  {
+      pounceRange = ent->client->ps.weapon == WP_ALEVEL3 ? LEVEL3_POUNCE_RANGE : LEVEL3_POUNCE_UPG_RANGE;
+      pounceWidth = LEVEL3_POUNCE_WIDTH;
+  }
+  G_WideTrace( &tr, ent, pounceRange, pounceWidth, pounceWidth, &traceEnt );
   if( traceEnt == NULL )
     return qfalse;
 
@@ -1508,29 +1515,21 @@ qboolean CheckPounceAttack( gentity_t *ent )
     return qfalse;
     
   // Deal damage
- if( ent->client->ps.weapon == WP_ALEVEL5)
-  //{
-  //damage = payload * LEVEL5_POUNCE_DMG / LEVEL5_POUNCE_TIME;
-  //ent->client->pmext.pouncePayload = 0;
-  //G_Damage( traceEnt, ent, ent, forward, tr.endpos, damage,
-  //DAMAGE_NO_LOCDAMAGE, MOD_LEVEL5_POUNCE );
-  //}
+  if( ent->client->ps.weapon == WP_ALEVEL5)
   {
-  timeMax = ent->client->ps.weapon == WP_ALEVEL5 ? LEVEL5_POUNCE_TIME :
-                                                   LEVEL3_POUNCE_TIME_UPG;
-  damage = payload * LEVEL5_POUNCE_DMG / timeMax;
-  ent->client->pmext.pouncePayload = 0;
-  G_Damage( traceEnt, ent, ent, forward, tr.endpos, damage,
-            DAMAGE_NO_LOCDAMAGE, MOD_LEVEL5_POUNCE );
+    timeMax = LEVEL5_POUNCE_TIME;
+    damage = payload * LEVEL5_POUNCE_DMG / timeMax;
+    ent->client->pmext.pouncePayload = 0;
+    G_Damage( traceEnt, ent, ent, forward, tr.endpos, damage,
+	      DAMAGE_NO_LOCDAMAGE, MOD_LEVEL5_POUNCE );
   }
   else
   {
-    timeMax = ent->client->ps.weapon == WP_ALEVEL3 ? LEVEL3_POUNCE_TIME :
-                                                   LEVEL3_POUNCE_TIME_UPG;
-  damage = payload * LEVEL3_POUNCE_DMG / timeMax;
-  ent->client->pmext.pouncePayload = 0;
-  G_Damage( traceEnt, ent, ent, forward, tr.endpos, damage,
-            DAMAGE_NO_LOCDAMAGE, MOD_LEVEL3_POUNCE );
+    timeMax = ent->client->ps.weapon == WP_ALEVEL3 ? LEVEL3_POUNCE_TIME : LEVEL3_POUNCE_TIME_UPG;
+    damage = payload * LEVEL3_POUNCE_DMG / timeMax;
+    ent->client->pmext.pouncePayload = 0;
+    G_Damage( traceEnt, ent, ent, forward, tr.endpos, damage,
+	      DAMAGE_NO_LOCDAMAGE, MOD_LEVEL3_POUNCE );
   }
   return qtrue;
 }
@@ -1722,8 +1721,8 @@ gclient_t *client;
       bounceBallFire_level2( ent );
       break;
 
-	case WP_ALEVEL5:
-	     Prickles( ent );
+  case WP_ALEVEL5:
+      Prickles( ent );
       break;
 	  
     case WP_ALEVEL4:
@@ -1868,7 +1867,7 @@ void FireWeapon( gentity_t *ent )
                    LEVEL2_CLAW_UPG_DMG, MOD_LEVEL2_CLAW );
       break;
 	  
-	case WP_ALEVEL5:
+  case WP_ALEVEL5:
       meleeAttack( ent, LEVEL5_CLAW_U_RANGE, LEVEL5_CLAW_WIDTH, LEVEL5_CLAW_WIDTH,
                    LEVEL5_CLAW_DMG, MOD_LEVEL5_CLAW );			   
       break;
