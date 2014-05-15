@@ -3620,7 +3620,7 @@ static const weaponAttributes_t bg_weapons[ ] =
     qfalse,               //qboolean  longRanged;
     TEAM_HUMANS           //team_t    team;
   },
-    {
+  {
     WP_SMOKE,         	  //int       weaponNum;
     SMOKE_PRICE,          //int       price;
     ( 1 << S1 )|( 1 << S2 )|( 1 << S3 ), //int  stages

@@ -520,7 +520,9 @@ void G_ProcessMine(gentity_t *ent) {
 	// Loop entities looking for an enemy body
 	for(i=0; i<total_entities; i++) {
 		target = &g_entities[entityList[i]];
-		if(target->client && target->client->ps.stats[ STAT_TEAM ] == TEAM_ALIENS) {
+		if(target->client && 
+		   target->client->ps.stats[ STAT_TEAM ] == TEAM_ALIENS &&
+		   target->client->ps.weapon > WP_ALEVEL1_UPG ) {
 			if (G_Visible( ent, target, MASK_SHOT ))
 			{
   			// Found an enemy, boom time!

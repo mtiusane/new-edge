@@ -57,9 +57,9 @@ void CG_UpdateEntityPositions( void )
   for( i = 0; i < cg.snap->numEntities; i++ )
   {
     cent = &cg_entities[ cg.snap->entities[ i ].number ];
-     //make adv basilisk invisble to human helmet if invisble
+    //make adv basilisk invisble to human helmet if invisble
     if( cent->currentState.eType == ET_BUILDABLE &&
-     !( cent->currentState.eFlags & EF_DEAD ))
+	!( cent->currentState.eFlags & EF_DEAD ))
     {
       // add to list of item positions (for creep)
       if( cent->currentState.modelindex2 == TEAM_ALIENS )
@@ -84,7 +84,7 @@ void CG_UpdateEntityPositions( void )
     else if( cent->currentState.eType == ET_PLAYER  )
     {
       int team = cent->currentState.misc & 0x00FF;
-    //make adv basilisk invisble to radar if invisble
+      //make adv basilisk invisble to radar if invisble
       if( team == TEAM_ALIENS && !(cent->invisible ) )
       {
         VectorCopy( cent->lerpOrigin, entityPositions.alienClientPos[
