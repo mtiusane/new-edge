@@ -53,7 +53,7 @@
     {
       name confirm5
       type ITEM_TYPE_BUTTON
-      text "WWW.YE.BOARDS.NET"
+      text "www.new-edge.org"
       style WINDOW_STYLE_EMPTY
       textscale .30
 	  rect 1 341 W 20

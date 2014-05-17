@@ -76,7 +76,7 @@
       name dropinfo
       rect BORDER (BORDER+70) INFO_W BUTT_H
       type ITEM_TYPE_TEXT
-      text "Visit our forum: www.ye.boards.net"
+      text "Visit our forum: www.new-edge.org"
       textalign ALIGN_CENTER
       textvalign VALIGN_CENTER
       textscale .4
