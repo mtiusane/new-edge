@@ -1485,7 +1485,7 @@ qboolean CheckPounceAttack( gentity_t *ent )
 
   // In case the goon lands on his target, he get's one shot after landing
   payload = ent->client->pmext.pouncePayload;
-  if( !( ent->client->ps.pm_flags & PMF_CHARGE || ent->client->ps.weapon == WP_ALEVEL5 ) )
+  if( !( ent->client->ps.pm_flags & PMF_CHARGE/* || ent->client->ps.weapon == WP_ALEVEL5 */) )
     ent->client->pmext.pouncePayload = 0;
 
   // Calculate muzzle point
@@ -1866,8 +1866,8 @@ void FireWeapon( gentity_t *ent )
       meleeAttack( ent, LEVEL2_CLAW_U_RANGE_UPG, LEVEL2_CLAW_WIDTH, LEVEL2_CLAW_WIDTH,
                    LEVEL2_CLAW_UPG_DMG, MOD_LEVEL2_CLAW );
       break;
-	  
-  case WP_ALEVEL5:
+      
+    case WP_ALEVEL5:
       meleeAttack( ent, LEVEL5_CLAW_U_RANGE, LEVEL5_CLAW_WIDTH, LEVEL5_CLAW_WIDTH,
                    LEVEL5_CLAW_DMG, MOD_LEVEL5_CLAW );			   
       break;

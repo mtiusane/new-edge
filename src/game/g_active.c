@@ -691,10 +691,10 @@ void ClientTimerActions( gentity_t *ent, int msec )
         client->ps.eFlags &= ~EF_MOVER_STOP;
       else
         if( stopped && !jumping && !( ucmd->buttons & BUTTON_ATTACK ) && ent->health >= 80 ){
-      client->ps.eFlags |= EF_MOVER_STOP;
+	  client->ps.eFlags |= EF_MOVER_STOP;
 	  client->ps.stats[ STAT_STATE ] |= SS_INVI;
-	  }
-	  else
+	}
+	else
 	  client->ps.stats[ STAT_STATE ] &= ~SS_INVI;
     }
 
@@ -950,7 +950,7 @@ void ClientTimerActions( gentity_t *ent, int msec )
       }
     }
 	
-// Regenerate Adv. Dragoon barbs
+    // Regenerate Adv. Dragoon barbs
     if( client->ps.weapon == WP_ALEVEL3_UPG )
     {
       if( client->ps.ammo < BG_Weapon( WP_ALEVEL3_UPG )->maxAmmo )
@@ -987,7 +987,7 @@ void ClientTimerActions( gentity_t *ent, int msec )
       AddScore( ent, HUMAN_BUILDER_SCOREINC );
     }
 
-// Give score to basis that healed other aliens
+    // Give score to basis that healed other aliens
     if( ent->client->pers.hasHealed )
     {
       if( client->ps.weapon == WP_ALEVEL1 )
@@ -999,8 +999,8 @@ void ClientTimerActions( gentity_t *ent, int msec )
     }
   }
 
-//LVL2UPG barb regen (new)
-     if( client->ps.weapon == WP_ALEVEL2_UPG )
+  //LVL2UPG barb regen (new)
+  if( client->ps.weapon == WP_ALEVEL2_UPG )
   {
     if( client->ps.ammo < BG_Weapon( WP_ALEVEL2_UPG )->maxAmmo )
     {
@@ -1022,15 +1022,15 @@ void ClientTimerActions( gentity_t *ent, int msec )
       ent->timestamp = level.time;
    }
  
-// Regenerate Hummel Prickles
+  // Regenerate Hummel Prickles
   if( client->ps.weapon == WP_ALEVEL5 )
   {
     if( client->ps.ammo < BG_Weapon( WP_ALEVEL5 )->maxAmmo )
     {
-      if( ent->timestamp + LEVEL5_PRICKLES_RELOADTIME < level.time )
+      while( ent->timestamp + LEVEL5_PRICKLES_RELOADTIME < level.time )
       {
         client->ps.ammo++;
-        ent->timestamp = level.time;
+        ent->timestamp += LEVEL5_PRICKLES_RELOADTIME;
       }
     }
     else if( client->ps.ammo < BG_Weapon( WP_ALEVEL5 )->maxAmmo )
@@ -1069,7 +1069,7 @@ void ClientTimerActions( gentity_t *ent, int msec )
       ent->timestamp = level.time;
    }
    
-// Regenerate Tyrant FireBreath
+  // Regenerate Tyrant FireBreath
   if( client->ps.weapon == WP_ALEVEL4 )
   {
     if( client->ps.ammo < BG_Weapon( WP_ALEVEL4 )->maxAmmo )
@@ -1644,6 +1644,9 @@ void ClientThink_real( gentity_t *ent )
     client->ps.pm_type = PM_GRABBED;
   else if( BG_InventoryContainsUpgrade( UP_JETPACK, client->ps.stats ) && BG_UpgradeIsActive( UP_JETPACK, client->ps.stats ) )
     client->ps.pm_type = PM_JETPACK;
+  else if( client->ps.weapon == WP_ALEVEL5 /*&& client->buttons &  BUTTON_WALKING*/ )
+    //hummel fly
+    client->ps.pm_type = PM_HUMMEL;
   else
     client->ps.pm_type = PM_NORMAL;
 
@@ -1659,10 +1662,6 @@ void ClientThink_real( gentity_t *ent )
       client->lastSlowTime + ABUILDER_BLOB_TIME < level.time )
     client->ps.stats[ STAT_STATE ] &= ~SS_SLOWLOCKED;
 
-//hummel fly
-if(  client->ps.weapon == WP_ALEVEL5 && client->buttons &  BUTTON_WALKING )
-client->ps.pm_type = PM_HUMMEL;
-	
   // Update boosted state flags
   client->ps.stats[ STAT_STATE ] &= ~SS_BOOSTEDWARNING;
   if( client->ps.stats[ STAT_STATE ] & SS_BOOSTED )

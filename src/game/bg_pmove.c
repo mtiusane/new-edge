@@ -50,6 +50,7 @@ float pm_flyaccelerate = 4.0f;
 float pm_friction = 6.0f;
 float pm_waterfriction = 1.0f;
 float pm_flightfriction = 6.0f;
+float pm_hummelfriction = 2.5f;
 float pm_spectatorfriction = 5.0f;
 
 int   c_pmove = 0;
@@ -311,6 +312,7 @@ static void PM_Friction( void )
     drop += speed * pm_spectatorfriction * pml.frametime;
 
   //smooth airpounce 
+  /* TODO: This causes speed up when using primary attack if using torso
   if( pm->ps->pm_type == PM_HUMMEL && pm->ps->torsoTimer > 0 )
   {
     pm->ps->torsoTimer -= pml.msec;
@@ -319,10 +321,9 @@ static void PM_Friction( void )
       pm->ps->torsoTimer = 0;
     }
   }
-  if( pm->ps->pm_type == PM_HUMMEL && pm->ps->torsoTimer <= 0 )
-  drop += speed * pm_flightfriction * pml.frametime;
-
-
+  */
+  if( pm->ps->pm_type == PM_HUMMEL /*&& pm->ps->torsoTimer <= 0*/ )
+    drop += speed * pm_hummelfriction * pml.frametime;
 
   // scale the velocity
   newspeed = speed - drop;
@@ -579,12 +580,14 @@ PM_CheckCharge
 */
 static void PM_CheckCharge( void )
 {
+  /*
   // Reset hummel pounce payload when walking
   if (pm->ps->weapon == WP_ALEVEL5)
   {
     pm->ps->stats[ STAT_STATE ] &= ~SS_CHARGING;
     pm->pmext->pouncePayload = 0;
   }
+  */
 
   if( pm->ps->weapon != WP_ALEVEL4 )
     return;
@@ -714,7 +717,7 @@ static qboolean PM_CheckAirPounce( void )
     return qfalse;
 
   // We were pouncing, but we've landed
-  if( /* pm->ps->groundEntityNum != ENTITYNUM_NONE && */
+  if( pm->ps->groundEntityNum != ENTITYNUM_NONE && 
       ( pm->ps->pm_flags & PMF_CHARGE ) )
   {
     pm->ps->pm_flags &= ~PMF_CHARGE;
@@ -1354,17 +1357,14 @@ static void PM_HUMMELFLY( void )
   wishspeed *= scale ;
 
   PM_Accelerate( wishdir, wishspeed, BG_Class( pm->ps->stats[ STAT_CLASS ] )->airAcceleration  );
-  PM_StepSlideMove( qfalse, qtrue );
+  PM_StepSlideMove( qfalse, qfalse );
   
-  
-  if( !( pm->ps->persistant[ PERS_STATE ] & PS_NONSEGMODEL ) )
+  if( pm->ps->weapon == WP_ALEVEL5 /*&& pm->cmd.buttons &  BUTTON_WALKING*/ ) {
+    PM_ContinueLegsAnim( NSPA_SWIM );
+  } else if( !( pm->ps->persistant[ PERS_STATE ] & PS_NONSEGMODEL ) )
     PM_ContinueLegsAnim( LEGS_LAND );
   else
     PM_ContinueLegsAnim( NSPA_LAND );
-  //Fly 
-  if( pm->ps->weapon == WP_ALEVEL5 && pm->cmd.buttons &  BUTTON_WALKING )
-    PM_ContinueLegsAnim( NSPA_SWIM );
-
 }
 
 /*
@@ -2386,7 +2386,7 @@ static void PM_GroundClimbTrace( void )
   }
 
   pml.groundPlane = qtrue;
-  pml.walking = qtrue;
+  pml.walking = BG_ClassHasAbility( pm->ps->stats[ STAT_CLASS ], SCA_FLYING ) ? qfalse : qtrue;
 
   // hitting solid ground will end a waterjump
   if( pm->ps->pm_flags & PMF_TIME_WATERJUMP )
@@ -2561,7 +2561,7 @@ static void PM_GroundTrace( void )
   }
 
   pml.groundPlane = qtrue;
-  pml.walking = qtrue;
+  pml.walking = BG_ClassHasAbility( pm->ps->stats[ STAT_CLASS ], SCA_FLYING ) ? qfalse : qtrue;
 
   // hitting solid ground will end a waterjump
   if( pm->ps->pm_flags & PMF_TIME_WATERJUMP )
@@ -3064,7 +3064,6 @@ static void PM_Weapon( void )
   qboolean      attack1 = pm->cmd.buttons & BUTTON_ATTACK;
   qboolean      attack2 = pm->cmd.buttons & BUTTON_ATTACK2;
   qboolean      attack3 = pm->cmd.buttons & BUTTON_USE_HOLDABLE;
-  qboolean      walk = pm->cmd.buttons & BUTTON_WALKING;
 
   // Ignore weapons in some cases
   if( pm->ps->persistant[ PERS_SPECSTATE ] != SPECTATOR_NOT )
@@ -3098,7 +3097,7 @@ static void PM_Weapon( void )
       break;
     }
     
-    if( attack2 && (pm->ps->weapon != WP_ALEVEL5 || walk) )
+    if( attack2 )
       pm->ps->stats[ STAT_MISC ] += pml.msec;
     else
       pm->ps->stats[ STAT_MISC ] -= pml.msec;
@@ -3231,8 +3230,8 @@ static void PM_Weapon( void )
   if( pm->ps->pm_flags & PMF_RESPAWNED )
     return;
 	
-  // no bite during pounce
-  if( ( pm->ps->weapon == WP_ALEVEL3 || pm->ps->weapon == WP_ALEVEL3_UPG || pm->ps->weapon == WP_ALEVEL5)
+  // no bite during pounce (except for level5)
+  if( ( pm->ps->weapon == WP_ALEVEL3 || pm->ps->weapon == WP_ALEVEL3_UPG )
       && ( pm->cmd.buttons & BUTTON_ATTACK )
       && ( pm->ps->pm_flags & PMF_CHARGE ) )
     return;
@@ -3721,14 +3720,14 @@ static void PM_Weapon( void )
   if( !BG_Weapon( pm->ps->weapon )->infiniteAmmo ||
       ( pm->ps->weapon == WP_ALEVEL3_UPG && attack3 ) ||
       ( pm->ps->weapon == WP_ALEVEL2_UPG && attack3 ) || 
-	  ( pm->ps->weapon == WP_ALEVEL4 && attack3 )|| 
-	  ( pm->ps->weapon == WP_ALEVEL5 && attack3 ))
+      ( pm->ps->weapon == WP_ALEVEL4 && attack3 )|| 
+      ( pm->ps->weapon == WP_ALEVEL5 && attack3 ))
   {
     // Special case for md third mode, need a bat for function (6+1)
     if( (pm->ps->weapon == WP_MASS_DRIVER) && attack3 )
       pm->ps->ammo -= 7;
-	  //prevent removing ammo from player if plasma isnt working yet but still eats all ammo if player has ammo >6 and no s3
-	 if( (pm->ps->weapon == WP_MASS_DRIVER) && attack3 && pm->ps->ammo < 7 )
+    //prevent removing ammo from player if plasma isnt working yet but still eats all ammo if player has ammo >6 and no s3
+    if( (pm->ps->weapon == WP_MASS_DRIVER) && attack3 && pm->ps->ammo < 7 )
       pm->ps->ammo += 1;  
     // Special case for lcannon
     if( (pm->ps->weapon == WP_LUCIFER_CANNON) && attack1 && !attack2 )

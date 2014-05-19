@@ -118,10 +118,10 @@ char *modNames[ ] =
   "MOD_LEVEL3_BOUNCEBALL",
   "MOD_LEVEL2_CLAW",
   "MOD_LEVEL2_ZAP",
-  "MOD_LEVEL2_BOUNCEBALL",
   "MOD_LEVEL5_CLAW",
   "MOD_LEVEL5_ZAP",
   "MOD_LEVEL5_BOUNCEBALL",
+  "MOD_LEVEL2_BOUNCEBALL",
   "MOD_LEVEL4_CLAW",
   "MOD_LEVEL4_TRAMPLE",
   "MOD_LEVEL4_CRUSH",
@@ -1284,7 +1284,6 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 		
 
       // don't do friendly fire on movement attacks
-
       else if( mod == MOD_LEVEL4_TRAMPLE || mod == MOD_LEVEL3_POUNCE ||
 	       mod == MOD_LEVEL5_POUNCE || mod == MOD_LEVEL4_CRUSH )
 

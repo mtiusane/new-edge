@@ -289,32 +289,32 @@ TREMULOUS EDGE MOD SRC FILE
 #define LEVEL4_FIREBREATHDMG 		50
 
 //Hummel
-#define LEVEL5_UPG_SPEED            1.1f
+#define LEVEL5_UPG_SPEED            0.875f
 #define LEVEL5_UPG_VALUE            AVM(400)
-#define LEVEL5_UPG_HEALTH           AHM(180)
-#define LEVEL5_UPG_REGEN            (0.03f * LEVEL5_UPG_HEALTH)
+#define LEVEL5_UPG_HEALTH           AHM(140)
+#define LEVEL5_UPG_REGEN            (0.04f * LEVEL5_UPG_HEALTH)
 #define LEVEL5_UPG_COST             2
-#define LEVEL5_CLAW_U_REPEAT        333
+#define LEVEL5_CLAW_U_REPEAT        300
 #define LEVEL5_CLAW_U_K_SCALE       1.0f
-#define LEVEL5_CLAW_U_RANGE         70.0f
+#define LEVEL5_CLAW_U_RANGE         85.0f
 #define LEVEL5_CLAW_WIDTH           12.0f
-#define LEVEL5_CLAW_DMG             ADM(30)
-#define LEVEL5_PRICKLES_REPEAT      200
+#define LEVEL5_CLAW_DMG             ADM(36)
+#define LEVEL5_PRICKLES_REPEAT      160
 #define LEVEL5_PRICKLES_NEXTTHINK   6000
 #define LEVEL5_PRICKLES_RADIUS	    50
 #define LEVEL5_PRICKLES_SPEED	    1600.0f
-#define LEVEL5_PRICKLESSPLASH_DMG   3
+#define LEVEL5_PRICKLESSPLASH_DMG   5
 #define LEVEL5_PRICKLES_DMG	    6
-#define LEVEL5_PRICKLES_RELOADTIME  2300
+#define LEVEL5_PRICKLES_RELOADTIME  160
 #define LEVEL5_PRICKLES_AMMO 	    10
-#define LEVEL5_POUNCE_JUMP_MAG      800
-#define LEVEL5_POUNCE_REPEAT        300
-#define LEVEL5_POUNCE_TIME          800
-#define LEVEL5_POUNCE_TIME_MIN      200 
+#define LEVEL5_POUNCE_JUMP_MAG      900
+#define LEVEL5_POUNCE_REPEAT        250
+#define LEVEL5_POUNCE_TIME          600
+#define LEVEL5_POUNCE_TIME_MIN      250 
 #define LEVEL5_POUNCE_DMG           40
-#define LEVEL5_POUNCE_RANGE         40.0f
-#define LEVEL5_POUNCE_WIDTH         12.0f
-#define LEVEL5_POUNCE_SPEED_MOD     0.8f
+#define LEVEL5_POUNCE_RANGE         48.0f
+#define LEVEL5_POUNCE_WIDTH         14.0f
+#define LEVEL5_POUNCE_SPEED_MOD     0.95f
 /*
  * HUMAN
  */

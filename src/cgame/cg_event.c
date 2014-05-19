@@ -387,7 +387,7 @@ static void CG_Obituary( entityState_t *ent )
             BG_ClassConfig( PCL_ALIEN_LEVEL5 )->humanName );
         message2 = className;
         break;
-		case MOD_LEVEL5_BOUNCEBALL:
+      case MOD_LEVEL5_BOUNCEBALL:
         message = "^5was sniped by^7";
         Com_sprintf( className, 64, "^5's %s",
             BG_ClassConfig( PCL_ALIEN_LEVEL5 )->humanName );
@@ -406,7 +406,7 @@ static void CG_Obituary( entityState_t *ent )
         message2 = className;
         break;
 		
-		case MOD_LEVEL5_POUNCE:
+      case MOD_LEVEL5_POUNCE:
         message = "^5was air pounced upon by^7";
         Com_sprintf( className, 64, "^5's %s",
             BG_ClassConfig( PCL_ALIEN_LEVEL5 )->humanName );
@@ -805,7 +805,7 @@ void CG_EntityEvent( centity_t *cent, vec3_t position )
 
       break;
 
-	  case EV_AIRPOUNCE:
+    case EV_AIRPOUNCE:
       trap_S_StartSound( NULL, es->number, CHAN_AUTO, cgs.media.airpounce);
 	  //airpounce gfx effect
 	  {
