@@ -1361,7 +1361,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
                                                dflags ) + 0.5f );
 
 
-	 // check possible poisoning
+    // check possible poisoning
     if( ( attacker->client ) && 
         ( targ->client->poisonImmunityTime < level.time ) &&
         ( targ->client->ps.stats[ STAT_TEAM ] == TEAM_HUMANS ) )
@@ -1369,15 +1369,16 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
       //if boosted poison every attack
       if( ( attacker->client->ps.stats[ STAT_STATE ] & SS_BOOSTED ) 
 	  
-	      && mod != MOD_POISON 
-		  && mod != MOD_LEVEL2_ZAP
-		  && mod != MOD_LEVEL5_ZAP
-		  && mod != MOD_LEVEL1_PCLOUD 
-		  && mod != MOD_HSPAWN 
-		  && mod != MOD_ASPAWN )
+	  && mod != MOD_POISON 
+	  && mod != MOD_LEVEL2_ZAP
+	  && mod != MOD_LEVEL5_ZAP
+	  && mod != MOD_LEVEL1_PCLOUD 
+	  && mod != MOD_HSPAWN 
+	  && mod != MOD_ASPAWN 
+	  && mod != MOD_LEVEL5_PRICKLES)
         poisonTime = level.time + ALIEN_POISON_TIME;
-  // no more zap poisen   
-	 else if( mod == MOD_LEVEL1_CLAW && ( mod != MOD_LEVEL2_ZAP ||  mod != MOD_LEVEL5_ZAP ||  mod != MOD_FLAMES ))
+      // no more zap poisen   
+      else if( mod == MOD_LEVEL1_CLAW && ( mod != MOD_LEVEL2_ZAP ||  mod != MOD_LEVEL5_ZAP ||  mod != MOD_FLAMES ))
       {
         if( attacker->client->ps.weapon == WP_ALEVEL1_UPG )
           poisonTime = level.time + g_basiPoisonTime.integer * 1000;
@@ -1387,7 +1388,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
       if( poisonTime > 0 ) 
       {
         targ->client->ps.stats[ STAT_STATE ] |= SS_POISONED;
-if( poisonTime > targ->client->poisonExpiryTime ) {
+	if( poisonTime > targ->client->poisonExpiryTime ) {
           targ->client->poisonExpiryTime = poisonTime;
           targ->client->lastPoisonClient = attacker;
 
