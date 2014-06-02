@@ -182,6 +182,9 @@ vmCvar_t  g_InstantRewardMultiplierA;
 vmCvar_t  g_InstantRewardMultiplierH;
 vmCvar_t  g_KillRewardMultiplierA;
 vmCvar_t  g_KillRewardMultiplierH;
+vmCvar_t  g_ConstantRewardFactor;
+vmCvar_t  g_TeamRewardFactor;
+vmCvar_t  g_PlayerRewardFactor;
 
 // copy cvars that can be set in worldspawn so they can be restored later
 static char cv_gravity[ MAX_CVAR_VALUE_STRING ];
@@ -261,7 +264,6 @@ static cvarTable_t   gameCvarTable[ ] =
   { &g_humanStage, "g_humanStage", "0", 0, 0, qfalse  },
   { &g_humanCredits, "g_humanCredits", "0", 0, 0, qfalse  },
   { &g_humanStage, "g_humanStage", "0", 0, 0, qfalse  },
-  { &g_humanCredits, "g_humanCredits", "0", 0, 0, qfalse  },
   { &g_humanMaxStage, "g_humanMaxStage", DEFAULT_HUMAN_MAX_STAGE, 0, 0, qfalse, cv_humanMaxStage },
   { &g_humanStage2Threshold, "g_humanStage2Threshold", DEFAULT_HUMAN_STAGE2_THRESH, 0, 0, qfalse  },
   { &g_humanStage3Threshold, "g_humanStage3Threshold", DEFAULT_HUMAN_STAGE3_THRESH, 0, 0, qfalse  },
@@ -336,6 +338,9 @@ static cvarTable_t   gameCvarTable[ ] =
   { &g_InstantRewardMultiplierH, "g_InstantRewardMultiplierH", "1", CVAR_ARCHIVE, 0, qfalse },
   { &g_KillRewardMultiplierA, "g_KillRewardMultiplierA", "1", CVAR_ARCHIVE, 0, qfalse },
   { &g_KillRewardMultiplierH, "g_KillRewardMultiplierH", "1", CVAR_ARCHIVE, 0, qfalse },
+  { &g_ConstantRewardFactor, "g_ConstantRewardFactor", "0.25", CVAR_ARCHIVE, 0, qfalse },
+  { &g_TeamRewardFactor, "g_TeamRewardFactor", "0.5", CVAR_ARCHIVE, 0, qfalse },
+  { &g_PlayerRewardFactor, "g_PlayerRewardFactor", "0.25", CVAR_ARCHIVE, 0, qfalse }
 };
 static int gameCvarTableSize = sizeof( gameCvarTable ) / sizeof( gameCvarTable[ 0 ] );
 void G_InitGame( int levelTime, int randomSeed, int restart );
@@ -610,6 +615,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
   level.alienStage2Time = level.alienStage3Time =
   level.humanStage2Time = level.humanStage3Time = level.startTime;
   level.snd_fry = G_SoundIndex( "sound/misc/fry.wav" ); // FIXME standing in lava / slime
+  level.humanRewardKills = level.alienRewardKills = 0.0f;
   trap_Cvar_Set( "g_version", G_MOD_VERSION );
   trap_Cvar_Set( "edge_version", EDGE_MOD_VERSION );
   if( g_logFile.string[ 0 ] )

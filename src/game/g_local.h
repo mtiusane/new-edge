@@ -344,6 +344,9 @@ typedef struct
   int                 floodDemerits;
   int                 floodTime;
 
+  float               kills;
+  int                 deaths;
+
   vec3_t              lastDeathLocation;
   char                guid[ 33 ];
   addr_t              ip;
@@ -649,6 +652,9 @@ typedef struct
 
   int               alienKills;
   int               humanKills;
+
+  float             alienRewardKills;
+  float             humanRewardKills;
 
   qboolean          overmindMuted;
 
@@ -1253,6 +1259,9 @@ extern  vmCvar_t  g_InstantRewardMultiplierA;
 extern  vmCvar_t  g_InstantRewardMultiplierH;
 extern  vmCvar_t  g_KillRewardMultiplierA;
 extern  vmCvar_t  g_KillRewardMultiplierH;
+extern  vmCvar_t  g_ConstantRewardFactor;
+extern  vmCvar_t  g_TeamRewardFactor;
+extern  vmCvar_t  g_PlayerRewardFactor;
 
 void      trap_Print( const char *fmt );
 void      trap_Error( const char *fmt );
