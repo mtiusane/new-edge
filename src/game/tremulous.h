@@ -296,7 +296,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define LEVEL5_UPG_COST             2
 #define LEVEL5_CLAW_U_REPEAT        300
 #define LEVEL5_CLAW_U_K_SCALE       1.0f
-#define LEVEL5_CLAW_U_RANGE         85.0f
+#define LEVEL5_CLAW_U_RANGE         80.0f
 #define LEVEL5_CLAW_WIDTH           12.0f
 #define LEVEL5_CLAW_DMG             ADM(30)
 #define LEVEL5_PRICKLES_REPEAT      160
@@ -1039,14 +1039,14 @@ TREMULOUS EDGE MOD SRC FILE
 #define BARRIER_LINE_VALUE              	  HBVM(BARRIER_LINE_BP)
 
 #define BARRIER_CORNER_BP                 	  2
-#define BARRIER_CORNER_BT                 	  13000
+#define BARRIER_CORNER_BT                 	  12000
 #define BARRIER_CORNER_HEALTH              	  HBHM(300)
 #define BARRIER_CORNER_SPLASHDAMAGE        	  10
 #define BARRIER_CORNER_SPLASHRADIUS        	  50
 #define BARRIER_CORNER_VALUE               	  HBVM(BARRIER_CORNER_BP)
 
 #define BARRIER_POINT_BP                 	  3
-#define BARRIER_POINT_BT                 	  15000
+#define BARRIER_POINT_BT                 	  12000
 #define BARRIER_POINT_HEALTH              	  HBHM(350)
 #define BARRIER_POINT_SPLASHDAMAGE        	  10
 #define BARRIER_POINT_SPLASHRADIUS        	  50

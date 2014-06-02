@@ -384,7 +384,7 @@ float G_RewardAttackers( gentity_t *self )
       // killing buildables earns score, but not credits
       if( self->s.eType != ET_BUILDABLE )
       {
-	Com_Printf(S_COLOR_YELLOW "Killer: kills = %f deaths = %f percent_of_damage = %f -> factor = %f\n",player->client->pers.kills,player->client->pers.deaths,killValue,G_RewardScaleFactor( player, self, teamFactor) );
+	// Com_Printf(S_COLOR_YELLOW "Killer: kills = %f deaths = %f percent_of_damage = %f -> factor = %f\n",player->client->pers.kills,player->client->pers.deaths,killValue,G_RewardScaleFactor( player, self, teamFactor) );
 	stageValue *= G_RewardScaleFactor( player, self, teamFactor );
 	player->client->pers.kills += killValue;
         // add to stage counters
@@ -403,8 +403,8 @@ float G_RewardAttackers( gentity_t *self )
   }
   ++self->client->pers.deaths;
 
-  Com_Printf(S_COLOR_YELLOW "Killed: kills = %f deaths = %d\n",self->client->pers.kills,self->client->pers.deaths);
-  Com_Printf(S_COLOR_YELLOW "Team: kills = %f deaths = %f\n",level.alienRewardKills,level.humanRewardKills);
+  // Com_Printf(S_COLOR_YELLOW "Killed: kills = %f deaths = %d\n",self->client->pers.kills,self->client->pers.deaths);
+  // Com_Printf(S_COLOR_YELLOW "Team: kills = %f deaths = %f\n",level.alienRewardKills,level.humanRewardKills);
   
   if( alienCredits )
   {

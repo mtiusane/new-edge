@@ -1731,9 +1731,9 @@ gclient_t *client;
       slowBlobFire( ent );
       break;
 
-    case WP_ALEVEL2_UPG:
-      bounceBallFire_level2( ent );
-      break;
+   //case WP_ALEVEL2_UPG:
+   //   bounceBallFire_level2( ent );
+   //   break;
 
   case WP_ALEVEL5:
       Prickles( ent );

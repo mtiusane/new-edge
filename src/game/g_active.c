@@ -1021,7 +1021,7 @@ void ClientTimerActions( gentity_t *ent, int msec )
     else
       ent->timestamp = level.time;
    }
- 
+
   // Regenerate Hummel Prickles
   if( client->ps.weapon == WP_ALEVEL5 )
   {

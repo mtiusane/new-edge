@@ -2385,7 +2385,7 @@ static const classAttributes_t bg_classList[ ] =
     LEVEL2_HEALTH,                                  //int     health;
     0.0f,                                           //float   fallDamage;
     LEVEL2_REGEN,                                   //float   regenRate;
-    SCA_WALLJUMPER|SCA_FOVWARPS|SCA_ALIENSENSE|SCA_WALLCLIMBER,     //int     abilities;
+    SCA_WALLJUMPER|SCA_FOVWARPS|SCA_ALIENSENSE,     //int     abilities;
     WP_ALEVEL2,                                     //weapon_t  startWeapon
     0.0f,                                           //float   buildDist;
     90,                                             //int     fov;
@@ -2407,14 +2407,12 @@ static const classAttributes_t bg_classList[ ] =
     PCL_ALIEN_LEVEL2_UPG,                           //int     classnum;
     "level2upg",                                    //char    *classname;
     "The Advanced Marauder has all the abilities of the basic Marauder "
-      "with the addition of an area effect electric shock attack. "
-      "It also has 3 barbs which may be used to attack humans "
-      "from a distance.",
+      "with the addition of an area effect electric shock attack.",
     ( 1 << S2 )|( 1 << S3 ),                        //int  stages
     LEVEL2_UPG_HEALTH,                              //int     health;
     0.0f,                                           //float   fallDamage;
     LEVEL2_UPG_REGEN,                               //float   regenRate;
-    SCA_WALLJUMPER|SCA_FOVWARPS|SCA_ALIENSENSE|SCA_WALLCLIMBER,     //int     abilities;
+    SCA_WALLJUMPER|SCA_FOVWARPS|SCA_ALIENSENSE,     //int     abilities;
     WP_ALEVEL2_UPG,                                 //weapon_t  startWeapon
     0.0f,                                           //float   buildDist;
     90,                                             //int     fov;
@@ -3213,17 +3211,17 @@ static const weaponAttributes_t bg_weapons[ ] =
     "level2upg",          //char      *weaponName;
     "Zap",                //char      *humanName;
     "",
-    3,                    //int       maxAmmo;
+    0,                    //int       maxAmmo;
     0,                    //int       maxClips;
     qtrue,                //int       infiniteAmmo;
     qfalse,               //int       usesEnergy;
     LEVEL2_CLAW_U_REPEAT, //int       repeatRate1;
     LEVEL2_AREAZAP_REPEAT,//int       repeatRate2;
-    LEVEL2_BOUNCEBALL_REPEAT,//int    repeatRate3;
+    0, //LEVEL2_BOUNCEBALL_REPEAT,//int    repeatRate3;
     0,                    //int       reloadTime;
     LEVEL2_CLAW_U_K_SCALE,//float     knockbackScale;
     qtrue,                //qboolean  hasAltMode;
-    qtrue,                //qboolean  hasThirdMode;
+    qfalse,               //qboolean  hasThirdMode;
     qfalse,               //qboolean  canZoom;
     90.0f,                //float     zoomFov;
     qfalse,               //qboolean  purchasable;
