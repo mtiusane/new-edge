@@ -1411,7 +1411,8 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	  && mod != MOD_LEVEL1_PCLOUD 
 	  && mod != MOD_HSPAWN 
 	  && mod != MOD_ASPAWN 
-	  && mod != MOD_LEVEL5_PRICKLES)
+	  && mod != MOD_LEVEL5_PRICKLES
+	  && mod != MOD_FLAMER_SPLASH)
         poisonTime = level.time + ALIEN_POISON_TIME;
       // no more zap poisen   
       else if( mod == MOD_LEVEL1_CLAW && ( mod != MOD_LEVEL2_ZAP ||  mod != MOD_LEVEL5_ZAP ||  mod != MOD_FLAMES ))
