@@ -401,7 +401,7 @@ float G_RewardAttackers( gentity_t *self )
     }
     self->credits[ i ] = 0;
   }
-  ++self->client->pers.deaths;
+  // ++self->client->pers.deaths;
 
   // Com_Printf(S_COLOR_YELLOW "Killed: kills = %f deaths = %d\n",self->client->pers.kills,self->client->pers.deaths);
   // Com_Printf(S_COLOR_YELLOW "Team: kills = %f deaths = %f\n",level.alienRewardKills,level.humanRewardKills);
