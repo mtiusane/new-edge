@@ -2192,11 +2192,11 @@ void CheckExitRules( void )
     G_MapLog_Result( 'a' );
   }
   else if( level.time > level.suddenDeathBeginTime/2 && 
-	   level.numConnectedClients == 0 )
+	   level.numAlienClients == 0 && level.numHumanClients == 0 )
   {
-    // Sudden death started but no clients connected
+    // Close to sudden death started but no clients connected
     level.lastWin = TEAM_NONE;
-    trap_SendServerCommand( -1, "print \"Half way to sudden death reached with no connected clients\n\"" );
+    trap_SendServerCommand( -1, "print \"Half way to sudden death reached with empty teams\n\"" );
       trap_SetConfigstring( CS_WINNER, "Stalemate" );
       LogExit( "Timelimit hit." );
       G_MapLog_Result( 't' );
