@@ -2191,6 +2191,16 @@ void CheckExitRules( void )
     LogExit( "Aliens win." );
     G_MapLog_Result( 'a' );
   }
+  else if( level.time > level.suddenDeathBeginTime && 
+	   level.numConnectedClients == 0 )
+  {
+    // Sudden death started but no clients connected
+    level.lastWin = TEAM_NONE;
+    trap_SendServerCommand( -1, "print \"Sudden death started with no connected clients\n\"" );
+      trap_SetConfigstring( CS_WINNER, "Stalemate" );
+      LogExit( "Timelimit hit." );
+      G_MapLog_Result( 't' );
+  }
 }
 
 /*
