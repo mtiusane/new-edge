@@ -542,7 +542,7 @@ void CheckTeamStatus( void )
       level.numTeamImbalanceWarnings++;
 	  G_BalanceTeams();
     }
-    else if( level.numHumanSpawns > 0 && 
+    else if( level.numHumanSpawns > 0 && level.numHumanArmouries > 0 &&
              level.numAlienClients - level.numHumanClients >= 2 )
     {
       trap_SendServerCommand ( -1, "print \"^5Teams are imbalanced. "

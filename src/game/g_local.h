@@ -625,6 +625,7 @@ typedef struct
 
   int               numAlienSpawns;
   int               numHumanSpawns;
+  int               numHumanArmouries;
 
   int               numAlienClients;
   int               numHumanClients;

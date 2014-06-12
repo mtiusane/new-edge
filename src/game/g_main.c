@@ -1093,6 +1093,7 @@ void G_CountSpawns( void )
 
   level.numAlienSpawns = 0;
   level.numHumanSpawns = 0;
+  level.numHumanArmouries = 0;
   for( i = 1, ent = g_entities + i ; i < level.num_entities ; i++, ent++ )
   {
     if( !ent->inuse || ent->s.eType != ET_BUILDABLE || ent->health <= 0 )
@@ -1103,6 +1104,9 @@ void G_CountSpawns( void )
 
     if( ent->s.modelindex == BA_H_SPAWN )
       level.numHumanSpawns++;
+
+    if( ent->powered && ent->s.modelindex == BA_H_ARMOURY )
+      level.numHumanArmouries++;
   }
 }
 
