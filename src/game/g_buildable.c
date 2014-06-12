@@ -1640,6 +1640,7 @@ void G_Push( gentity_t *self )
 #define PUSH_REPEAT 400
 #define PUSH_RANGE 140
 #define PUSH_FORCE -900
+#define WEAK_PUSH_FORCE -675
 
   int       entityList[ MAX_GENTITIES ];
   vec3_t    range = { PUSH_RANGE, PUSH_RANGE, PUSH_RANGE };
@@ -1648,7 +1649,7 @@ void G_Push( gentity_t *self )
 //  int       a;
   gentity_t *enemy;
   vec3_t start,dir,end;
-  
+  float     force;
  
  
   self->nextthink = level.time + PUSH_REPEAT;
@@ -1702,11 +1703,16 @@ void G_Push( gentity_t *self )
 		if (!enemy->takedamage) 
 			continue;
 
+		if ( enemy->client->ps.stats[ STAT_CLASS ] == PCL_ALIEN_LEVEL5 )
+		  force = PUSH_FORCE;
+		else
+		  force = WEAK_PUSH_FORCE;
+
 		VectorCopy(enemy->r.currentOrigin, start); 
 		VectorCopy(self->r.currentOrigin, end); 
 		VectorSubtract(end, start, dir); 
 		VectorNormalize(dir); 
-		VectorScale(dir,PUSH_FORCE, enemy->client->ps.velocity); 
+		VectorScale(dir, force, enemy->client->ps.velocity); 
 		VectorCopy(dir, enemy->movedir); 
 	  }
 
