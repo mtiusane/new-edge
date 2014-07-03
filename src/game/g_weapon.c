@@ -1274,7 +1274,12 @@ static void G_FindZapChainTargets( zap_t *zap )
     if( ( ( enemy->client &&
             enemy->client->ps.stats[ STAT_TEAM ] == TEAM_HUMANS ) ||
           ( enemy->s.eType == ET_BUILDABLE &&
-            BG_Buildable( enemy->s.modelindex )->team == TEAM_HUMANS ) ) &&
+            BG_Buildable( enemy->s.modelindex )->team == TEAM_HUMANS ) ||
+	  ( enemy->s.eType == ET_MISSILE &&
+	    enemy->s.weapon == WP_MINE ) ||
+	  ( enemy->client &&
+	    enemy->client->ps.stats[ STAT_TEAM ] == TEAM_ALIENS &&
+	    enemy->client->ps.stats[ STAT_CLASS ] == PCL_ALIEN_LEVEL2_UPG ) ) &&
         enemy->health > 0 && // only chain to living targets
         distance <= LEVEL2_AREAZAP_CHAIN_RANGE )
     {
@@ -1341,20 +1346,22 @@ static void G_CreateNewZap( gentity_t *creator, gentity_t *target )
     // the zap chains only through living entities
     if( target->health > 0 )
     {
-      G_Damage( target, creator, creator, forward,
-                target->s.origin, LEVEL2_AREAZAP_DMG,
-                DAMAGE_NO_KNOCKBACK | DAMAGE_NO_LOCDAMAGE,
-                MOD_LEVEL2_ZAP );
+      if (target->client->ps.stats[ STAT_TEAM ] != TEAM_ALIENS)
+	G_Damage( target, creator, creator, forward,
+		  target->s.origin, LEVEL2_AREAZAP_DMG,
+		  DAMAGE_NO_KNOCKBACK | DAMAGE_NO_LOCDAMAGE,
+		  MOD_LEVEL2_ZAP );
 
       G_FindZapChainTargets( zap );
 
       for( i = 1; i < zap->numTargets; i++ )
       {
-        G_Damage( zap->targets[ i ], target, zap->creator, forward, target->s.origin,
-                  LEVEL2_AREAZAP_DMG * ( 1 - pow( (zap->distances[ i ] /
+	if (zap->targets[ i ]->client->ps.stats[ STAT_TEAM ] != TEAM_ALIENS)
+	  G_Damage( zap->targets[ i ], target, zap->creator, forward, target->s.origin,
+		    LEVEL2_AREAZAP_DMG * ( 1 - pow( (zap->distances[ i ] /
                     LEVEL2_AREAZAP_CHAIN_RANGE ), LEVEL2_AREAZAP_CHAIN_FALLOFF ) ) + 1,
-                  DAMAGE_NO_KNOCKBACK | DAMAGE_NO_LOCDAMAGE,
-                  MOD_LEVEL2_ZAP );
+                    DAMAGE_NO_KNOCKBACK | DAMAGE_NO_LOCDAMAGE,
+                    MOD_LEVEL2_ZAP );
       }
     }
 
@@ -1457,7 +1464,11 @@ void areaZapFire( gentity_t *ent )
 
   if( ( traceEnt->client && traceEnt->client->ps.stats[ STAT_TEAM ] == TEAM_HUMANS ) ||
       ( traceEnt->s.eType == ET_BUILDABLE &&
-        BG_Buildable( traceEnt->s.modelindex )->team == TEAM_HUMANS ) )
+        BG_Buildable( traceEnt->s.modelindex )->team == TEAM_HUMANS ) ||
+      ( traceEnt->s.eType == ET_MISSILE &&
+	traceEnt->s.weapon == WP_MINE ) ||
+      ( traceEnt->client && traceEnt->client->ps.stats[ STAT_TEAM ] == TEAM_ALIENS &&
+	traceEnt->client->ps.stats[ STAT_CLASS ] == PCL_ALIEN_LEVEL2_UPG ) )
   {
     G_CreateNewZap( ent, traceEnt );
   }
