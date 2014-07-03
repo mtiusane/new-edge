@@ -79,6 +79,11 @@ g_admin_cmd_t g_admin_cmds[ ] =
       "[^5name|slot#|IP(/mask)^5] (^5duration^5) (^5reason^5)"
     },
 
+    {"broadcast", G_admin_broadcast, qfalse, "broadcast",
+      "display a console message to all users, optionally specifying team(s) to send to",
+      "(^5-A|H|S^5) [^5message^5]"
+    },
+
     {"builder", G_admin_builder, qtrue, "builder",
       "show who built a structure",
       ""
@@ -2343,9 +2348,8 @@ qboolean G_admin_changemap( gentity_t *ent )
   return qtrue;
 }
 
-qboolean G_admin_cp( gentity_t *ent )
-{
-  char     message[ 64 ];
+qboolean cp_broadcast( gentity_t *ent, qboolean cp ) {
+  char     *message;
   char     arg[ 8 ];
   int      team = -1;
   int      i;
@@ -2353,7 +2357,7 @@ qboolean G_admin_cp( gentity_t *ent )
 
   if( trap_Argc( ) < 2 )
   {
-    ADMP( "^5cpa: ^5usage: cpa (-AHS) [message]\n" );
+    ADMP( "^5broadcast: ^5usage: broadcast (-AHS) [message]\n" );
     return qfalse;
   }
   trap_Argv( 1, arg, sizeof( arg ) );
@@ -2371,18 +2375,21 @@ qboolean G_admin_cp( gentity_t *ent )
         team = TEAM_NONE;
         break;
       default:
-        ADMP( "^5cpa: ^5team not recognized as -a -h or -s\n" );
+        ADMP( "^5broadcast: ^5team not recognized as -a -h or -s\n" );
         return qfalse;
     }
     if( trap_Argc( ) < 2 )
     {
-      ADMP( "^5cpa: ^5no message\n" );
+      ADMP( "^5broadcast: ^5no message\n" );
       return qfalse;
     }
-    G_DecolorString( ConcatArgs( 2 ), message, sizeof( message ) );
+
+    message = ConcatArgs( 2 );
   }
   else
-    G_DecolorString( ConcatArgs( 1 ), message, sizeof( message ) );
+  {
+    message = ConcatArgs( 1 );
+  }
 
   for( i = 0; i < level.maxclients; i++ )
   {
@@ -2393,22 +2400,38 @@ qboolean G_admin_cp( gentity_t *ent )
     if( team < 0 || level.clients[ i ].pers.teamSelection == team ||
         ( admin = G_admin_permission( &g_entities[ i ], ADMF_ADMINCHAT ) ) )
     {
-      if( !admin )
-        trap_SendServerCommand( i, va( "cp \"^%s%s\"",
-          ( team < 0 ) ? "2" : "5", message ) );
-      trap_SendServerCommand( i, va( "print \"%s^5CPA: ^5%s%s^5%s%s%s: %c%s\n\"",
-        ( admin ) ? "[ADMIN] " : "",
-        ( team >= 0 ) ? "(" : "",
-        admin_name( ent ),
-        ( team >= 0 ) ? ")" : "",
-        ( admin ) ? " to " : "",
-        ( admin ) ? BG_TeamName( team ) : "",
-        INDENT_MARKER,
-        message ) );
+      if( cp ) {
+        if( !admin )
+          trap_SendServerCommand( i, va( "cp \"^%s%s\"",
+            ( team < 0 ) ? "2" : "5", message ) );
+        trap_SendServerCommand( i, va( "print \"%s^5CPA: ^5%s%s^5%s%s%s: %c%s\n\"",
+          ( admin ) ? "[ADMIN] " : "",
+          ( team >= 0 ) ? "(" : "",
+          admin_name( ent ),
+          ( team >= 0 ) ? ")" : "",
+          ( admin ) ? " to " : "",
+          ( admin ) ? BG_TeamName( team ) : "",
+          INDENT_MARKER,
+          message ) );
+      }
+      else if( !admin )
+      {
+	trap_SendServerCommand( i, va( "print \"^5%s\n\"", message ) );
+      }
     }
   }
 
   return qtrue;
+}
+
+qboolean G_admin_broadcast( gentity_t *ent )
+{
+  return cp_broadcast( ent, qfalse );
+}
+
+qboolean G_admin_cp( gentity_t *ent )
+{
+  return cp_broadcast( ent, qtrue );
 }
 
 qboolean G_admin_warn( gentity_t *ent )
@@ -2698,6 +2721,10 @@ qboolean G_admin_listplayers( gentity_t *ent )
                           name2cleaned, sizeof( name2cleaned ) );
         if( Q_stricmp( namecleaned, name2cleaned ) )
           registeredname = p->pers.admin->name;
+      }
+      else
+      {
+	l = G_admin_level( 2 ); // Display 'Verified Player' level
       }
     }
 
