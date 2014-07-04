@@ -3957,7 +3957,7 @@ static const upgradeAttributes_t bg_upgrades[ ] =
     "[yemed]Medkit",               //char  *humanName;
     "Basic health kit. ",
     "icons/iconu_atoxin",
-    qtrue,                  //qboolean purchasable
+    (SPAWN_WITH_MEDKIT ? qfalse : qtrue), //qboolean purchasable
     qtrue,                 //qboolean usable
     TEAM_HUMANS             //team_t  team;
   },
@@ -4072,7 +4072,7 @@ static const upgradeAttributes_t bg_upgrades[ ] =
     "[yenade]Smoke Grenade",              //char  *upgradeHumanName;
     "",
     0,
-    qtrue,                  //qboolean purchasable
+    qfalse,                 //qboolean purchasable
     qtrue,                  //qboolean usable
     TEAM_HUMANS              //WUTeam_t  team;
   },

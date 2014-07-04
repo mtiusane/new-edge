@@ -2846,7 +2846,8 @@ void HMedistat_Think( gentity_t *self )
       //if they're completely healed, give them a medkit
       if( self->enemy->health >= self->enemy->client->ps.stats[ STAT_MAX_HEALTH ] )
       {
-        self->enemy->health =  self->enemy->client->ps.stats[ STAT_MAX_HEALTH ];
+        self->enemy->health = self->enemy->client->ps.stats[ STAT_MAX_HEALTH ];
+	if (SPAWN_WITH_MEDKIT) BG_AddUpgradeToInventory( UP_MEDKIT, self->enemy->client->ps.stats );
       }
     }
   }
