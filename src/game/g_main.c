@@ -185,6 +185,8 @@ vmCvar_t  g_KillRewardMultiplierH;
 vmCvar_t  g_ConstantRewardFactor;
 vmCvar_t  g_TeamRewardFactor;
 vmCvar_t  g_PlayerRewardFactor;
+vmCvar_t  g_TimerPeriod;
+vmCvar_t  g_TimerCommand;
 
 // copy cvars that can be set in worldspawn so they can be restored later
 static char cv_gravity[ MAX_CVAR_VALUE_STRING ];
@@ -340,6 +342,8 @@ static cvarTable_t   gameCvarTable[ ] =
   { &g_ConstantRewardFactor, "g_ConstantRewardFactor", "0.25", CVAR_ARCHIVE, 0, qfalse },
   { &g_TeamRewardFactor, "g_TeamRewardFactor", "0.5", CVAR_ARCHIVE, 0, qfalse },
   { &g_PlayerRewardFactor, "g_PlayerRewardFactor", "0.25", CVAR_ARCHIVE, 0, qfalse },
+  { &g_TimerPeriod, "g_TimerPeriod", "0", CVAR_ARCHIVE, 0, qfalse },
+  { &g_TimerCommand, "g_TimerCommand", "", CVAR_ARCHIVE, 0, qfalse }
 };
 static int gameCvarTableSize = sizeof( gameCvarTable ) / sizeof( gameCvarTable[ 0 ] );
 void G_InitGame( int levelTime, int randomSeed, int restart );
@@ -700,6 +704,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
   trap_Cvar_Set( "g_humanCredits", 0 );
   level.suddenDeathBeginTime = g_suddenDeathTime.integer * 60000;
   level.nextArmageddonKillTime = (g_suddenDeathTime.integer+g_armageddonInitialTimeStep.integer) * 60000;
+  level.nextCommandTime = g_TimerPeriod.integer;
   G_Printf( "-----------------------------------\n" );
   G_Printf( "EDGE LOADED SUCCESSFULLY\n" );
   // So the server counts the spawns without a client attached
@@ -2673,6 +2678,15 @@ void G_RunFrame( int levelTime )
   G_CalculateAvgPlayers( );
   G_UpdateZaps( msec );
 
+  // Execute timed commands
+  if( !level.intermissiontime &&
+      g_TimerPeriod.integer > 0 && 
+      level.time > level.nextCommandTime)
+  {
+    trap_SendConsoleCommand( EXEC_APPEND, va( "%s\n", g_TimerCommand.string ) );
+    level.nextCommandTime += g_TimerPeriod.integer;
+  }
+  
   // see if it is time to end the level
   CheckExitRules( );
 

@@ -676,6 +676,8 @@ typedef struct
   int               humanStage2Time;
   int               humanStage3Time;
 
+  int               nextCommandTime;
+
   qboolean          uncondAlienWin;
   qboolean          uncondHumanWin;
   qboolean          alienTeamLocked;
