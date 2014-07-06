@@ -2821,6 +2821,9 @@ void HMedistat_Think( gentity_t *self )
               player->client->ps.stats[ STAT_STATE ] |= SS_HEALING_ACTIVE;
             }
           }
+	  else if( SPAWN_WITH_MEDKIT && 
+		   !BG_InventoryContainsUpgrade( UP_MEDKIT, player->client->ps.stats ) ) 
+	    BG_AddUpgradeToInventory( UP_MEDKIT, self->enemy->client->ps.stats );
         }
       }
     }
@@ -2847,7 +2850,9 @@ void HMedistat_Think( gentity_t *self )
       if( self->enemy->health >= self->enemy->client->ps.stats[ STAT_MAX_HEALTH ] )
       {
         self->enemy->health = self->enemy->client->ps.stats[ STAT_MAX_HEALTH ];
-	if (SPAWN_WITH_MEDKIT) BG_AddUpgradeToInventory( UP_MEDKIT, self->enemy->client->ps.stats );
+	if( SPAWN_WITH_MEDKIT &&
+	    !BG_InventoryContainsUpgrade( UP_MEDKIT, self->enemy->client->ps.stats ) ) 
+	  BG_AddUpgradeToInventory( UP_MEDKIT, self->enemy->client->ps.stats );
       }
     }
   }
