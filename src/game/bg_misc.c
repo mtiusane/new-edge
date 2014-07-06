@@ -2407,7 +2407,8 @@ static const classAttributes_t bg_classList[ ] =
     PCL_ALIEN_LEVEL2_UPG,                           //int     classnum;
     "level2upg",                                    //char    *classname;
     "The Advanced Marauder has all the abilities of the basic Marauder "
-      "with the addition of an area effect electric shock attack.",
+      "with the addition of a zap attack that chains through other "
+      "adv. marauders and can explode mines.",
     ( 1 << S2 )|( 1 << S3 ),                        //int  stages
     LEVEL2_UPG_HEALTH,                              //int     health;
     0.0f,                                           //float   fallDamage;
@@ -2433,9 +2434,9 @@ static const classAttributes_t bg_classList[ ] =
   {
     PCL_ALIEN_LEVEL5,                               //int     classnum;
     "level5",                                       //char    *classname;
-    "The Hummel can fly by pressing run / walk button"
-	"or bind a button with /bind BUTTON +speed /"
-	"set a key in Options/Controls/HummelFly",
+    "The Hummel is a flying alien with air pounce ability, "
+      "fast melee attacks and unlimited low damage shooting attack "
+      "that does not spread poison.",
     ( 1 << S2 )|( 1 << S3 ),                        //int  stages
     LEVEL5_UPG_HEALTH,                              //int     health;
     0.0f,                                           //float   fallDamage;
