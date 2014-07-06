@@ -1052,7 +1052,7 @@ void G_SpawnClients( team_t team )
     if( g_teamForceBalance.integer == 2 &&
 	!level.humanTeamLocked && 
 	!level.alienTeamLocked &&
-	level.numAlienClients-level.numHumanClients > 1 )
+	level.numLiveAlienClients-level.numHumanClients > 0 )
       numSpawns = -1;
   }
   else if( team == TEAM_HUMANS )
@@ -1062,7 +1062,7 @@ void G_SpawnClients( team_t team )
     if( g_teamForceBalance.integer == 2 &&
 	!level.humanTeamLocked && 
 	!level.alienTeamLocked &&
-	level.numHumanClients-level.numAlienClients > 1 )
+	level.numLiveHumanClients-level.numAlienClients > 0 )
       numSpawns = -1;
   }
 
