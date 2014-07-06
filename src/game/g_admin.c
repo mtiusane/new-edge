@@ -3663,7 +3663,7 @@ qboolean G_admin_slap( gentity_t *ent )
 			  va( "cp \"[yesmad] %s^1 is not amused! [yesmad]\n^7%s\n\"", 
 			      admin_name( ent ),
 			      reason ) );
-  AP( va( "print \"^3slap: ^7%s^7 has been slapped by %s with the reason: ^7%s\n\"",
+  AP( va( "print \"^3slap: ^7%s^7 has been slapped by %s^7 with the reason: ^7%s\n\"",
           vic->client->pers.netname,
           admin_name( ent ),
           ( *reason ) ? reason : "No reason specified" ) );
