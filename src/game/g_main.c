@@ -1049,11 +1049,25 @@ void G_SpawnClients( team_t team )
   {
     sq = &level.alienSpawnQueue;
     numSpawns = level.numAlienSpawns;
+    if( g_teamForceBalance.integer == 2 &&
+	!level.humanTeamLocked && 
+	!level.alienTeamLocked &&
+	level.numAlienClients-level.numHumanClients > 1 )
+    {
+      return;
+    }
   }
   else if( team == TEAM_HUMANS )
   {
     sq = &level.humanSpawnQueue;
     numSpawns = level.numHumanSpawns;
+    if( g_teamForceBalance.integer == 2 &&
+	!level.humanTeamLocked && 
+	!level.alienTeamLocked &&
+	level.numHumanClients-level.numAlienClients > 1 )
+    {
+      return;
+    }
   }
 
   if( G_GetSpawnQueueLength( sq ) > 0 && numSpawns > 0 )

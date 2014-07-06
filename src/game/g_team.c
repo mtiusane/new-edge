@@ -279,9 +279,9 @@ void G_ChangeTeam( gentity_t *ent, team_t newTeam )
 }
 
 
-  /*
+/*
   Call this method to balance teams
- */
+*/
 void G_BalanceTeams()
 {
   team_t sourceTeam;
@@ -540,7 +540,10 @@ void CheckTeamStatus( void )
       trap_SendServerCommand( -1, "print \"^5Teams are imbalanced. "
                                   "^5Humans have more players.\n\"");
       level.numTeamImbalanceWarnings++;
-	  G_BalanceTeams();
+      if ( !level.humanTeamLocked && 
+	   !level.alienTeamLocked &&
+	   g_teamForceBalance.integer == 1) 
+	G_BalanceTeams();
     }
     else if( level.numHumanSpawns > 0 && level.numHumanArmouries > 0 &&
              level.numAlienClients - level.numHumanClients >= 2 )
@@ -548,7 +551,10 @@ void CheckTeamStatus( void )
       trap_SendServerCommand ( -1, "print \"^5Teams are imbalanced. "
                                    "^5Aliens have more players.\n\"");
       level.numTeamImbalanceWarnings++;
-	  G_BalanceTeams();
+      if ( !level.humanTeamLocked && 
+	   !level.alienTeamLocked &&
+	   g_teamForceBalance.integer == 1) 
+      G_BalanceTeams();
     }
     else
     {
