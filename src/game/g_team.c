@@ -528,7 +528,9 @@ void CheckTeamStatus( void )
   }
 
   // Warn on imbalanced teams
-  if( g_teamImbalanceWarnings.integer && !level.intermissiontime &&
+  if( !level.humanTeamLocked && !level.alienTeamLocked &&
+      g_teamForceBalance.integer == 1 &&
+      g_teamImbalanceWarnings.integer && !level.intermissiontime &&
       ( level.time - level.lastTeamImbalancedTime >
         ( g_teamImbalanceWarnings.integer * 1000 ) ) &&
       level.numTeamImbalanceWarnings < 3 && !level.restarted )
@@ -540,10 +542,7 @@ void CheckTeamStatus( void )
       trap_SendServerCommand( -1, "print \"^5Teams are imbalanced. "
                                   "^5Humans have more players.\n\"");
       level.numTeamImbalanceWarnings++;
-      if ( !level.humanTeamLocked && 
-	   !level.alienTeamLocked &&
-	   g_teamForceBalance.integer == 1) 
-	G_BalanceTeams();
+      G_BalanceTeams();
     }
     else if( level.numHumanSpawns > 0 && level.numHumanArmouries > 0 &&
              level.numAlienClients - level.numHumanClients >= 2 )
@@ -551,9 +550,6 @@ void CheckTeamStatus( void )
       trap_SendServerCommand ( -1, "print \"^5Teams are imbalanced. "
                                    "^5Aliens have more players.\n\"");
       level.numTeamImbalanceWarnings++;
-      if ( !level.humanTeamLocked && 
-	   !level.alienTeamLocked &&
-	   g_teamForceBalance.integer == 1) 
       G_BalanceTeams();
     }
     else

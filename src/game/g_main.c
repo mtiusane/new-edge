@@ -1039,7 +1039,7 @@ Spawn queued clients
 */
 void G_SpawnClients( team_t team )
 {
-  int           clientNum;
+  int           i, clientNum;
   gentity_t     *ent, *spawn;
   vec3_t        spawn_origin, spawn_angles;
   spawnQueue_t  *sq = NULL;
@@ -1053,9 +1053,7 @@ void G_SpawnClients( team_t team )
 	!level.humanTeamLocked && 
 	!level.alienTeamLocked &&
 	level.numAlienClients-level.numHumanClients > 1 )
-    {
-      return;
-    }
+      numSpawns = -1;
   }
   else if( team == TEAM_HUMANS )
   {
@@ -1065,11 +1063,26 @@ void G_SpawnClients( team_t team )
 	!level.humanTeamLocked && 
 	!level.alienTeamLocked &&
 	level.numHumanClients-level.numAlienClients > 1 )
+      numSpawns = -1;
+  }
+
+  if( numSpawns == -1 )
+  {
+    for( i = 0; i < MAX_CLIENTS; i++ )
     {
+      clientNum = sq->clients[ i ];
+      if (clientNum == -1) continue;
+      ent = &g_entities[ clientNum ];
+      // NOTE: Using notrackendtime for the client spawn warning counter as it gets reset on client spawn.
+      if ( level.time >= ent->client->notrackEndTime )
+	{
+	  trap_SendServerCommand( ent->client - level.clients, "print \"Your team has more players. Either switch to the other team or wait for someone in your team to die....\n\"");
+	  ent->client->notrackEndTime = level.time+10000;
+	}
       return;
     }
   }
-
+  
   if( G_GetSpawnQueueLength( sq ) > 0 && numSpawns > 0 )
   {
     clientNum = G_PeekSpawnQueue( sq );

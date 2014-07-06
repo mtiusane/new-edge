@@ -470,7 +470,7 @@ struct gclient_s
   int                 lastCrushTime;        // Tyrant crush
   
   int                 notrackEndTime;       // Time when the current no track period ends
-      int                 blobs;
+  int                 blobs;
 };
 
 

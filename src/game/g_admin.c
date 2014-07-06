@@ -1959,7 +1959,7 @@ qboolean G_admin_ban( gentity_t *ent )
 
   if( trap_Argc() < 2 )
   {
-    ADMP( "^3ban: usage: ban [name|slot|IP(/mask)] [duration] [reason]\n" );
+    ADMP( "^3ban: ^7usage: ban [name|slot|IP(/mask)] [duration] [reason]\n" );
     return qfalse;
   }
   trap_Argv( 1, search, sizeof( search ) );
@@ -3627,7 +3627,7 @@ qboolean G_admin_slap( gentity_t *ent )
 
   if( trap_Argc() < minargc )
   {
-    ADMP( "^3slap: ^6usage: slap [^7name|slot^7] <reason>\n" );
+    ADMP( "^3slap: ^7usage: slap [^7name|slot^7] <reason>\n" );
     return qfalse;
   }
 
@@ -3660,28 +3660,27 @@ qboolean G_admin_slap( gentity_t *ent )
   G_Knockback( vic, dir, 100 );
 
   trap_SendServerCommand( vic-g_entities,
-    va( "cp \"[yesmad] %s^1 is not amused! [yesmad]:\n%s\"", 
-	admin_name( ent )),
-    reason
-	);
-	  AP( va( "print \"^3slap: ^7%s^7 has been slapped by %s with the reason \"%s\"\n\"",
+			  va( "cp \"[yesmad] %s^1 is not amused! [yesmad]\n^7%s\n\"", 
+			      admin_name( ent ),
+			      reason ) );
+  AP( va( "print \"^3slap: ^7%s^7 has been slapped by %s with the reason: ^7%s\n\"",
           vic->client->pers.netname,
-          admin_name( ent ) ) )
-          ( *reason ) ? reason : "no reason specified" );
+          admin_name( ent ),
+          ( *reason ) ? reason : "No reason specified" ) );
 
-    vic->health -= 25;
-    vic->client->ps.stats[ STAT_HEALTH ] = vic->health;
-    vic->lastDamageTime = level.time;
-    if( vic->health <= 1 )
-    {
-      vic->flags |= FL_NO_KNOCKBACK;
-      vic->enemy = &g_entities[ pids[ 0 ] ];
-      vic->die( vic, ent, ent, 25, MOD_SLAP );
-    }
-    else if( vic->pain )
-    {
-      vic->pain( vic, &g_entities[ pids[ 0 ] ], 2 );
-    }
+  vic->health -= 25;
+  vic->client->ps.stats[ STAT_HEALTH ] = vic->health;
+  vic->lastDamageTime = level.time;
+  if( vic->health <= 1 )
+  {
+    vic->flags |= FL_NO_KNOCKBACK;
+    vic->enemy = &g_entities[ pids[ 0 ] ];
+    vic->die( vic, ent, ent, 25, MOD_SLAP );
+  }
+  else if( vic->pain )
+  {
+    vic->pain( vic, &g_entities[ pids[ 0 ] ], 2 );
+  }
 
   return qtrue;
 }
