@@ -1649,6 +1649,7 @@ void G_Push( gentity_t *self )
   gentity_t *enemy;
   vec3_t start,dir,end;
   float     force;
+  qboolean  active = qfalse;
  
   self->nextthink = level.time + PUSH_REPEAT;
   
@@ -1669,20 +1670,19 @@ void G_Push( gentity_t *self )
   if( self->spawned && self->health > 0 && self->powered )
   {
     num = trap_EntitiesInBox( mins, maxs, entityList, MAX_GENTITIES );
+
     for( i = 0; i < num; i++ )
     {
       enemy = &g_entities[ entityList[ i ] ];
 
       if( enemy->flags & FL_NOTARGET )
         continue;
-
       if( !G_Visible( self, enemy, CONTENTS_SOLID ) )
 	continue;
-
       if (enemy->client && enemy->client->notrackEndTime >= level.time)
       	continue;
 
-      if( enemy->client && enemy->client->ps.stats[ STAT_TEAM ] != TEAM_NONE )
+      if( enemy->client && enemy->client->ps.stats[ STAT_TEAM ] != TEAM_HUMANS )
       {
 	if (enemy == self) 
 	  continue;
@@ -1696,30 +1696,61 @@ void G_Push( gentity_t *self )
 	if (!enemy->takedamage) 
 	  continue;
 
-	if ( enemy->client->ps.stats[ STAT_CLASS ] == PCL_ALIEN_LEVEL5 )
-	  force = PUSH_FORCE;
-	else
-	  force = WEAK_PUSH_FORCE;
-
-	VectorCopy(enemy->r.currentOrigin, start); 
-	VectorCopy(self->r.currentOrigin, end); 
-	VectorSubtract(end, start, dir); 
-	VectorNormalize(dir); 
-	VectorScale(dir, force, enemy->client->ps.velocity); 
-	VectorCopy(dir, enemy->movedir); 
+	active = qtrue;
+	break;
       }
+    }
 
-      if( enemy->client && enemy->client->ps.stats[ STAT_TEAM ] != TEAM_NONE )
+    if (active) 
+    {
+      for( i = 0; i < num; i++ )
       {
-        // start the attack animation
-	G_AddEvent( self, EV_FORCE_FIELD, DirToByte( self->s.origin2 ) );
+	enemy = &g_entities[ entityList[ i ] ];
+
+	if( enemy->flags & FL_NOTARGET )
+	  continue;
+
+	if( !G_Visible( self, enemy, CONTENTS_SOLID ) )
+	  continue;
+
+	if (enemy->client && enemy->client->notrackEndTime >= level.time)
+	  continue;
+
+	if( enemy->client && enemy->client->ps.stats[ STAT_TEAM ] != TEAM_NONE )
+	{
+	  if (enemy == self) 
+	    continue;
+
+	  if (!enemy->client)
+	    continue;
+
+	  if (enemy == self->parent) 
+	    continue;
+
+	  if (!enemy->takedamage) 
+	    continue;
+
+	  if ( enemy->client->ps.stats[ STAT_CLASS ] == PCL_ALIEN_LEVEL5 )
+	    force = PUSH_FORCE;
+	  else
+	    force = WEAK_PUSH_FORCE;
+	  
+	  VectorCopy(enemy->r.currentOrigin, start); 
+	  VectorCopy(self->r.currentOrigin, end); 
+	  VectorSubtract(end, start, dir); 
+	  VectorNormalize(dir); 
+	  VectorScale(dir, force, enemy->client->ps.velocity); 
+	  VectorCopy(dir, enemy->movedir); 
+	}
+      }
+     
+      // start the attack animation
+      G_AddEvent( self, EV_FORCE_FIELD, DirToByte( self->s.origin2 ) );
   
-        if( level.time >= self->timestamp + 500 )
-        {
-          self->timestamp = level.time;
-          G_SetBuildableAnim( self, BANIM_ATTACK1, qfalse );
-        }
-        return;
+      if( level.time >= self->timestamp + 500 )
+      {
+	self->timestamp = level.time;
+	G_SetBuildableAnim( self, BANIM_ATTACK1, qfalse );
       }
     }
   }
