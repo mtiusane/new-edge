@@ -1100,16 +1100,15 @@ void G_ArmaFreeLove( gentity_t *ent )
   
   for( i = 0; i < g_maxclients.integer; i++ )
   {
-  cl = level.clients + i;
+    cl = level.clients + i;
   
-        if( cl->ps.stats[ STAT_TEAM ] == TEAM_ALIENS )
-          G_AddCreditToClient( cl, 7200, qtrue );
-        else if( cl->ps.stats[ STAT_TEAM ] == TEAM_HUMANS )
-          G_AddCreditToClient( cl, 4000, qtrue );
-   }
-	trap_SendServerCommand( -1, "print \"^5A flying hotdog does its weener magic and converts buildings into pure joy!\n\"" );
-    G_Sound( ent, CHAN_VOICE, G_SoundIndex( "sound/edge/hdoglove.wav" ) );
-
+    if( cl->ps.stats[ STAT_TEAM ] == TEAM_ALIENS )
+      G_AddCreditToClient( cl, g_armageddonCreditAmount.integer, qtrue );
+    else if( cl->ps.stats[ STAT_TEAM ] == TEAM_HUMANS )
+      G_AddCreditToClient( cl, g_armageddonCreditAmount.integer, qtrue );
+  }
+  trap_SendServerCommand( -1, "print \"^5A flying hotdog does its weener magic and converts buildings into pure joy!\n\"" );
+  G_Sound( ent, CHAN_VOICE, G_SoundIndex( "sound/edge/hdoglove.wav" ) );
 }
 
 

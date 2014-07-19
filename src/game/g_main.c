@@ -55,6 +55,7 @@ vmCvar_t  g_armageddonTimeStep;
 vmCvar_t  g_armageddonInitialTimeStep;
 vmCvar_t  g_armageddonDefensiveKillPercent;
 vmCvar_t  g_armageddonOtherKillPercent;
+vmCvar_t  g_armageddonCreditAmount;
 vmCvar_t  g_friendlyFire;
 vmCvar_t  g_friendlyBuildableFire;
 vmCvar_t  g_dretchPunt;
@@ -217,6 +218,7 @@ static cvarTable_t   gameCvarTable[ ] =
   { &g_armageddonInitialTimeStep, "g_armageddonInitialTimeStep", "10", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
   { &g_armageddonDefensiveKillPercent, "g_armageddonDefensiveKillPercent", "10", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
   { &g_armageddonOtherKillPercent, "g_armageddonOtherKillPercent", "5", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
+  { &g_armageddonCreditAmount, "g_armageddonCreditAmount", "500", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
   { &g_synchronousClients, "g_synchronousClients", "0", CVAR_SYSTEMINFO, 0, qfalse  },
   { &g_friendlyFreeze, "g_friendlyFreeze", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse  },
   { &g_friendlyFire, "g_friendlyFire", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qtrue  },
