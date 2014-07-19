@@ -2213,7 +2213,7 @@ static const classAttributes_t bg_classList[ ] =
     ABUILDER_HEALTH,                                //int     health;
     0.0f,                                           //float   fallDamage;
     ABUILDER_REGEN,                                 //float   regenRate;
-    SCA_TAKESFALLDAMAGE|SCA_FOVWARPS|SCA_ALIENSENSE,//int     abilities;
+    SCA_FOVWARPS|SCA_ALIENSENSE,                    //int     abilities;
     WP_ABUILD,                                      //weapon_t  startWeapon
     95.0f,                                          //float   buildDist;
     110,                                            //int     fov;
@@ -2241,7 +2241,7 @@ static const classAttributes_t bg_classList[ ] =
     ABUILDER_UPG_HEALTH,                            //int     health;
     0.0f,                                           //float   fallDamage;
     ABUILDER_UPG_REGEN,                             //float   regenRate;
-    SCA_TAKESFALLDAMAGE|SCA_FOVWARPS|SCA_WALLCLIMBER|SCA_ALIENSENSE,    //int     abilities;
+    SCA_FOVWARPS|SCA_WALLCLIMBER|SCA_ALIENSENSE,    //int     abilities;
     WP_ABUILD2,                                     //weapon_t  startWeapon
     105.0f,                                         //float   buildDist;
     110,                                            //int     fov;
