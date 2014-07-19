@@ -2320,8 +2320,9 @@ static const classAttributes_t bg_classList[ ] =
     "A support class able to crawl on walls and ceilings. Its melee "
       "attack is most effective when combined with the ability to grab "
       "and hold its victims in place. Provides a weak healing aura "
-      "that accelerates the healing rate of nearby aliens."
-	  "It has an Acid Bomb in his Butt wich can be used as a grenade.",
+      "that accelerates the healing rate of nearby aliens. It also has "
+      "an acid bomb that can be used to deal moderate area damage. "
+      "The basilisk is also resistant to flamer.",
     ( 1 << S1 )|( 1 << S2 )|( 1 << S3 ),            //int  stages
     LEVEL1_HEALTH,                                  //int     health;
     0.0f,                                           //float   fallDamage;
@@ -2347,13 +2348,13 @@ static const classAttributes_t bg_classList[ ] =
   {
     PCL_ALIEN_LEVEL1_UPG,                           //int     classnum;
     "level1upg",                                    //char    *classname;
-     "In addition to the basic Basilisk abilities, the Advanced"
-      "Basilisk sprays a poisonous gas which disorients any"
-      "nearby humans. Has a strong healing aura that"
-      "that accelerates the healing rate of nearby aliens."
-      "It becomes invisible if stays still and has full health."
-      "It will become visible once Overmind is dead or it has < full health."
-	  "It has an (powerful) Acid Bomb in his Butt wich can be used as a grenade.",
+    "In addition to the basic Basilisk abilities, the Advanced "
+      "Basilisk sprays a poisonous gas which slows down and disorients "
+      "nearby humans. Has a strong healing aura that that accelerates "
+      "the healing rate of nearby aliens. It is invisible while staying "
+      "still and at full health as long as there is an overmind around. "
+      "It also has an acid bomb similar to basilisk's one but stronger."
+      "The adv. basilisk is also resistant to flamer.",
     ( 1 << S2 )|( 1 << S3 ),                        //int  stages
     LEVEL1_UPG_HEALTH,                              //int     health;
     0.0f,                                           //float   fallDamage;
@@ -2492,7 +2493,7 @@ static const classAttributes_t bg_classList[ ] =
     "level3upg",                                    //char    *classname;
     "In addition to the basic Dragoon abilities, the Advanced "
       "Dragoon has 3 barbs which may be used to attack humans "
-      "from a distance and it has a higher jump high.",
+      "from a distance and it has a higher jump height.",
     ( 1 << S2 )|( 1 << S3 ),                        //int  stages
     LEVEL3_UPG_HEALTH,                              //int     health;
     0.0f,                                           //float   fallDamage;
@@ -2518,10 +2519,10 @@ static const classAttributes_t bg_classList[ ] =
   {
     PCL_ALIEN_LEVEL4,                               //int     classnum;
     "level4",                                       //char    *classname;
-    "A large alien with a strong melee attack, this class can "
-      "also charge at enemy humans and structures, inflicting "
-      "great damage. Any humans or their structures caught under "
-      "a falling Tyrant will be crushed by its weight.",
+    "A large alien with a strong melee attack and a weak flame blast. "
+      "This class can also charge at enemy players and structures, "
+      "inflicting great damage. Any humans caught under a falling "
+      "Tyrant will be crushed by its weight.",
     ( 1 << S3 ),                                    //int  stages
     LEVEL4_HEALTH,                                  //int     health;
     0.0f,                                           //float   fallDamage;
