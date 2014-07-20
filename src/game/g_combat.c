@@ -299,8 +299,18 @@ float G_InstantRewardAttacker( gentity_t *self, gentity_t *target, float damage 
 
   value *= G_RewardScaleFactor( self, target, G_TeamRewardScaleFactor( target ) );
 
-  if( value > 0 )
+  if( value > 0 ) {
     G_AddCreditToClient( self->client, value, qtrue );
+    if( self->client->ps.stats[ STAT_TEAM ] == TEAM_ALIENS ) {
+      trap_Cvar_Set( "g_alienCredits",
+		     va( "%d", g_alienCredits.integer + value ) );
+      trap_Cvar_Update( &g_alienCredits );
+    } else {
+      trap_Cvar_Set( "g_humanCredits",
+		     va( "%d", g_humanCredits.integer + value ) );
+      trap_Cvar_Update( &g_humanCredits );
+    }
+  }
 
   return value;
 }
