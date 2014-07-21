@@ -754,6 +754,13 @@ void lasGunFire( gentity_t *ent )
     G_Damage( traceEnt, ent, ent, forward, tr.endpos, LASGUN_DAMAGE, 0, MOD_LASGUN );
 }
 
+// Lasgun 2ndary (shield)
+
+void lasGunFire2( gentity_t *ent )
+{
+  launch_shield( ent, muzzle, forward );
+}
+
 /*
 ======================================================================
 PAIN SAW
@@ -1802,7 +1809,7 @@ void FireWeapon2( gentity_t *ent )
   switch( ent->s.weapon )
   {
   
-      case WP_MACHINEGUN:
+    case WP_MACHINEGUN:
       bulletFire( ent, RIFLE_SPREAD2, RIFLE_DMG2, MOD_MACHINEGUN );
       break;
   
@@ -1828,6 +1835,10 @@ void FireWeapon2( gentity_t *ent )
 	  
     case WP_FLAMER:
       FlamerNormal( ent );
+      break;
+
+    case WP_LAS_GUN:
+      lasGunFire2( ent );
       break;
 	  
     case WP_PULSE_RIFLE:

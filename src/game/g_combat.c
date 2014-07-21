@@ -525,6 +525,12 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
       self->client->pers.netname, killerName ) );
     goto finish_dying;
   }
+	  
+  // Parent node on player used for tracking the shield projectile
+  if( self->parentNode )
+  {
+    G_FreeEntity(self->parentNode);
+  }
 
   // broadcast the death event to everyone
   ent = G_TempEntity( self->r.currentOrigin, EV_OBITUARY );

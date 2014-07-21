@@ -1206,7 +1206,6 @@ static void PM_WaterMove( void )
     return;
   }
      
-#if 0
   // jump = head for surface
   if ( pm->cmd.upmove >= 10 ) {
     if (pm->ps->velocity[2] > -300) {
@@ -1219,7 +1218,6 @@ static void PM_WaterMove( void )
       }
     }
   }
-#endif
       
   PM_Friction( );
 
@@ -3066,6 +3064,7 @@ static void PM_Weapon( void )
   qboolean      attack1 = pm->cmd.buttons & BUTTON_ATTACK;
   qboolean      attack2 = pm->cmd.buttons & BUTTON_ATTACK2;
   qboolean      attack3 = pm->cmd.buttons & BUTTON_USE_HOLDABLE;
+  int           minAmmo;
 
   // Ignore weapons in some cases
   if( pm->ps->persistant[ PERS_SPECSTATE ] != SPECTATOR_NOT )
@@ -3325,8 +3324,12 @@ static void PM_Weapon( void )
     return;
   }
 
+  if ( pm->ps->weapon == WP_LAS_GUN && attack2 )
+    minAmmo = 20;
+  else minAmmo = 1;
+
   // check for out of ammo
-  if( !pm->ps->ammo && !pm->ps->clips && !BG_Weapon( pm->ps->weapon )->infiniteAmmo )
+  if( pm->ps->ammo < minAmmo && !pm->ps->clips && !BG_Weapon( pm->ps->weapon )->infiniteAmmo )
   {
     if( attack1 || ( BG_Weapon( pm->ps->weapon )->hasAltMode && attack2 ) || ( BG_Weapon( pm->ps->weapon )->hasThirdMode && attack3 ) )
     {
@@ -3725,22 +3728,35 @@ static void PM_Weapon( void )
       ( pm->ps->weapon == WP_ALEVEL4 && attack3 )|| 
       ( pm->ps->weapon == WP_ALEVEL5 && attack3 ))
   {
-    // Special case for md third mode, need a bat for function (6+1)
-    if( (pm->ps->weapon == WP_MASS_DRIVER) && attack3 )
-      pm->ps->ammo -= 7;
-    //prevent removing ammo from player if plasma isnt working yet but still eats all ammo if player has ammo >6 and no s3
-    if( (pm->ps->weapon == WP_MASS_DRIVER) && attack3 && pm->ps->ammo < 7 )
-      pm->ps->ammo += 1;  
-    // Special case for lcannon
-    if( (pm->ps->weapon == WP_LUCIFER_CANNON) && attack1 && !attack2 )
-      pm->ps->ammo -= ( pm->ps->stats[ STAT_MISC ] * LCANNON_CHARGE_AMMO +
-                LCANNON_CHARGE_TIME_MAX - 1 ) / LCANNON_CHARGE_TIME_MAX;
-				
-	if( (pm->ps->weapon == WP_FLAMER) && attack1 && !attack2 )
-      pm->ps->ammo -= ( pm->ps->stats[ STAT_MISC ] * FLAMER_CHARGE_AMMO +
-                FLAMER_CHARGE_TIME_MAX - 1 ) / FLAMER_CHARGE_TIME_MAX;
-    else
-    pm->ps->ammo--;
+    switch( pm->ps->weapon ) {
+    case WP_MASS_DRIVER:
+      if( attack3 ) {
+	pm->ps->ammo -= 7;
+	if( pm->ps->ammo < 7 ) pm->ps->ammo += 1;
+      } else pm->ps->ammo--;
+      break;
+    case WP_LUCIFER_CANNON:
+      if( attack1 && !attack2 ) {
+	pm->ps->ammo -= ( pm->ps->stats[ STAT_MISC ] * LCANNON_CHARGE_AMMO +
+			  LCANNON_CHARGE_TIME_MAX - 1 ) / LCANNON_CHARGE_TIME_MAX;
+      } else pm->ps->ammo--;
+      break;
+    case WP_FLAMER:
+      if( attack1 && !attack2 ) {
+	pm->ps->ammo -= ( pm->ps->stats[ STAT_MISC ] * FLAMER_CHARGE_AMMO +
+			  FLAMER_CHARGE_TIME_MAX - 1 ) / FLAMER_CHARGE_TIME_MAX;
+      } else pm->ps->ammo--;
+      break;
+    case WP_LAS_GUN:
+      if( attack2 ) {
+	pm->ps->ammo -= 25;
+      } else pm->ps->ammo--;     
+      break;
+    default:
+      pm->ps->ammo--;
+      break;
+    }
+
     // Stay on the safe side
     if( pm->ps->ammo < 0 )
       pm->ps->ammo = 0;

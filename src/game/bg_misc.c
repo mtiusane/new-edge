@@ -3450,11 +3450,11 @@ static const weaponAttributes_t bg_weapons[ ] =
     qfalse,               //int       infiniteAmmo;
     qtrue,                //int       usesEnergy;
     LASGUN_REPEAT,        //int       repeatRate1;
-    0,                    //int       repeatRate2;
+    LASGUN_REPEAT2,       //int       repeatRate2;
     0,                    //int       repeatRate3;
     LASGUN_RELOAD,        //int       reloadTime;
     LASGUN_K_SCALE,       //float     knockbackScale;
-    qfalse,               //qboolean  hasAltMode;
+    qtrue,                //qboolean  hasAltMode;
     qfalse,               //qboolean  hasThirdMode;
     qfalse,               //qboolean  canZoom;
     90.0f,                //float     zoomFov;
@@ -3478,7 +3478,7 @@ static const weaponAttributes_t bg_weapons[ ] =
     qtrue,                //int       usesEnergy;
     MDRIVER_REPEAT,       //int       repeatRate1;
     0,                    //int       repeatRate2;
-    MDRIVER_REPEAT2,       //int       repeatRate3;
+    MDRIVER_REPEAT2,      //int       repeatRate3;
     MDRIVER_RELOAD,       //int       reloadTime;
     MDRIVER_K_SCALE,      //float     knockbackScale;
     qfalse,               //qboolean  hasAltMode;

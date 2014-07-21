@@ -1007,6 +1007,156 @@ gentity_t *launch_grenade( gentity_t *self, vec3_t start, vec3_t dir )
 }
 
 /*
+=============
+Lasgun shield
+=============
+*/
+
+void G_LasgunPush( gentity_t *self )
+{
+  int       entityList[ MAX_GENTITIES ];
+  vec3_t    range = { LASGUN_PUSH_RANGE, LASGUN_PUSH_RANGE, LASGUN_PUSH_RANGE };
+  vec3_t    mins, maxs;
+  int       i, num;
+  gentity_t *enemy;
+  vec3_t start,dir,end;
+  float     force;
+  qboolean  active = qfalse;
+
+  self->nextthink = level.time + LASGUN_PUSH_REPEAT;
+
+  VectorCopy( self->parent->s.origin, self->s.pos.trBase );
+  AngleVectors( self->parent->s.angles, self->s.pos.trDelta, NULL, NULL );
+  VectorCopy( self->parent->s.origin, self->r.currentOrigin );
+  
+  VectorAdd( self->r.currentOrigin, range, maxs );
+  VectorSubtract( self->r.currentOrigin, range, mins );
+
+  num = trap_EntitiesInBox( mins, maxs, entityList, MAX_GENTITIES );
+
+  for( i = 0; i < num; i++ )
+  {
+    enemy = &g_entities[ entityList[ i ] ];
+
+    if( enemy->flags & FL_NOTARGET )
+      continue;
+
+    if( !G_Visible( self, enemy, CONTENTS_SOLID ) )
+      continue;
+
+    if( enemy->client && enemy->client->ps.stats[ STAT_TEAM ] != TEAM_HUMANS )
+    {
+      if (!enemy->client)
+	continue;
+
+      if (enemy == self->parent) 
+	continue;
+
+      if (!enemy->takedamage) 
+	continue;
+
+      active = qtrue;
+      break;
+    }
+  }
+
+  if (active) 
+  {
+    for( i = 0; i < num; i++ )
+    {
+      enemy = &g_entities[ entityList[ i ] ];
+    
+      if( enemy->flags & FL_NOTARGET )
+	continue;
+
+      if( !G_Visible( self, enemy, CONTENTS_SOLID ) )
+	continue;
+
+      if( enemy->client && enemy->client->ps.stats[ STAT_TEAM ] != TEAM_NONE )
+      {
+	if (!enemy->client)
+	  continue;
+      
+	if (enemy == self->parent) 
+	  continue;
+
+	if (!enemy->takedamage) 
+	  continue;
+
+	if ( enemy->client->ps.stats[ STAT_CLASS ] == PCL_ALIEN_LEVEL5 )
+	  force = LASGUN_PUSH_FORCE;
+	else
+	  force = LASGUN_WEAK_FORCE;
+
+	VectorSubtract( enemy->r.currentOrigin, self->r.currentOrigin, dir);
+	VectorNormalize( dir );
+	VectorScale( dir, force, enemy->client->ps.velocity );
+      }
+    }
+  }
+    /*
+    if( enemy->client && enemy->client->ps.stats[ STAT_TEAM ] == TEAM_ALIENS )
+    {
+      // start the attack animation
+      G_AddEvent( self, EV_FORCE_FIELD, DirToByte( self->s.origin2 ) );
+      
+      if( level.time >= self->timestamp + 500 )
+        {
+          self->timestamp = level.time;
+          G_SetBuildableAnim( self, BANIM_ATTACK1, qfalse );
+        }
+        return;
+      }
+    }
+    */
+  if( level.time >= self->timestamp ) {
+    self->freeAfterEvent = qtrue;
+    self->parent->parentNode = NULL;
+  }
+  trap_LinkEntity( self );
+}
+
+gentity_t *launch_shield( gentity_t *self, vec3_t start, vec3_t dir )
+{
+  vec3_t    range = { LASGUN_PUSH_RANGE, LASGUN_PUSH_RANGE, LASGUN_PUSH_RANGE };
+  gentity_t *bolt;
+  VectorNormalize( dir );
+  bolt = G_Spawn( );
+  bolt->classname = "light";
+  bolt->pointAgainstWorld = qfalse;
+  bolt->nextthink = level.time + LASGUN_PUSH_REPEAT;
+  bolt->timestamp = level.time + LASGUN_PUSH_DURATION;
+  bolt->think = G_LasgunPush;
+  bolt->s.eType = ET_MISSILE;
+  bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+  bolt->s.weapon = WP_LAS_GUN;
+  // bolt->s.eFlags |= EF_BOUNCE_HALF | EF_NO_BOUNCE_SOUND;
+  bolt->s.generic1 = WPM_SECONDARY; //weaponMode
+  bolt->r.ownerNum = self->s.number;
+  bolt->parent = self;
+  bolt->damage = bolt->splashDamage = 0;
+  bolt->splashRadius = 0;
+  bolt->methodOfDeath = MOD_UNKNOWN;
+  bolt->splashMethodOfDeath = MOD_UNKNOWN;
+  // bolt->clipmask = MASK_SHOT;
+  bolt->target_ent = NULL;
+  bolt->r.mins[ 0 ] = bolt->r.mins[ 1 ] = bolt->r.mins[ 2 ] = -4.0f;
+  bolt->r.maxs[ 0 ] = bolt->r.maxs[ 1 ] = bolt->r.maxs[ 2 ] = 4.0f;
+  bolt->r.ownerNum = self->s.number; // *
+  bolt->s.time = level.time;
+  bolt->s.pos.trType = TR_STATIONARY;
+  bolt->s.pos.trTime = level.time;
+  // bolt->s.pos.trType = TR_LINEAR;
+  // bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;   // move a bit on the very first frame
+  VectorCopy( start, bolt->s.pos.trBase );
+  VectorScale( dir, 1, bolt->s.pos.trDelta );
+  SnapVector( bolt->s.pos.trDelta );      // save net bandwidth
+  VectorCopy( start, bolt->r.currentOrigin );
+  self->parentNode = bolt;
+  return bolt;
+}
+
+/*
 =================
 launch_saw
 =================
