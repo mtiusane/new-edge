@@ -303,11 +303,11 @@ float G_InstantRewardAttacker( gentity_t *self, gentity_t *target, float damage 
     G_AddCreditToClient( self->client, value, qtrue );
     if( self->client->ps.stats[ STAT_TEAM ] == TEAM_ALIENS ) {
       trap_Cvar_Set( "g_alienCredits",
-		     va( "%d", g_alienCredits.integer + value ) );
+		     va( "%d", (int) (g_alienCredits.integer + value) ) );
       trap_Cvar_Update( &g_alienCredits );
     } else {
       trap_Cvar_Set( "g_humanCredits",
-		     va( "%d", g_humanCredits.integer + value ) );
+		     va( "%d", (int) (g_humanCredits.integer + value) ) );
       trap_Cvar_Update( &g_humanCredits );
     }
   }
@@ -401,11 +401,11 @@ float G_RewardAttackers( gentity_t *self )
         if( player->client->ps.stats[ STAT_TEAM ] == TEAM_ALIENS ) {
 	  level.alienRewardKills += killValue;
 	  G_AddCreditToClient( player->client, g_KillRewardMultiplierH.value*stageValue, qtrue );
-          alienCredits += stageValue;
+          alienCredits += g_KillRewardMultiplierH.value*stageValue;
 	} else if( player->client->ps.stats[ STAT_TEAM ] == TEAM_HUMANS ) {
 	  level.humanRewardKills += killValue;
 	  G_AddCreditToClient( player->client, g_KillRewardMultiplierA.value*stageValue, qtrue );
-          humanCredits += stageValue;
+          humanCredits += g_KillRewardMultiplierA.value*stageValue;
 	}
       }
     }
