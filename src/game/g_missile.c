@@ -1032,86 +1032,90 @@ void G_LasgunPush( gentity_t *self )
   VectorAdd( self->r.currentOrigin, range, maxs );
   VectorSubtract( self->r.currentOrigin, range, mins );
 
-  num = trap_EntitiesInBox( mins, maxs, entityList, MAX_GENTITIES );
-
-  for( i = 0; i < num; i++ )
+  if (self->count++ > LASGUN_PUSH_COUNT)
   {
-    enemy = &g_entities[ entityList[ i ] ];
+    num = trap_EntitiesInBox( mins, maxs, entityList, MAX_GENTITIES );
 
-    if( enemy->flags & FL_NOTARGET )
-      continue;
-
-    if( !G_Visible( self, enemy, CONTENTS_SOLID ) )
-      continue;
-
-    if( enemy->client && enemy->client->ps.stats[ STAT_TEAM ] != TEAM_HUMANS )
-    {
-      if (!enemy->client)
-	continue;
-
-      if (enemy == self->parent) 
-	continue;
-
-      if (!enemy->takedamage) 
-	continue;
-
-      active = qtrue;
-      break;
-    }
-  }
-
-  if (active) 
-  {
     for( i = 0; i < num; i++ )
     {
       enemy = &g_entities[ entityList[ i ] ];
-    
+
       if( enemy->flags & FL_NOTARGET )
 	continue;
 
       if( !G_Visible( self, enemy, CONTENTS_SOLID ) )
 	continue;
 
-      if( enemy->client && enemy->client->ps.stats[ STAT_TEAM ] != TEAM_NONE )
+      if( enemy->client && enemy->client->ps.stats[ STAT_TEAM ] != TEAM_HUMANS )
       {
 	if (!enemy->client)
 	  continue;
-      
+	
 	if (enemy == self->parent) 
 	  continue;
 
 	if (!enemy->takedamage) 
 	  continue;
 
-	if ( enemy->client->ps.stats[ STAT_CLASS ] == PCL_ALIEN_LEVEL5 )
-	  force = LASGUN_PUSH_FORCE;
-	else
-	  force = LASGUN_WEAK_FORCE;
-
-	VectorSubtract( enemy->r.currentOrigin, self->r.currentOrigin, dir);
-	VectorNormalize( dir );
-	VectorScale( dir, force, enemy->client->ps.velocity );
+	active = qtrue;
+	break;
       }
     }
-  }
-    /*
-    if( enemy->client && enemy->client->ps.stats[ STAT_TEAM ] == TEAM_ALIENS )
+
+    if (active) 
     {
+      for( i = 0; i < num; i++ )
+      {
+	enemy = &g_entities[ entityList[ i ] ];
+    
+	if( enemy->flags & FL_NOTARGET )
+	  continue;
+
+	if( !G_Visible( self, enemy, CONTENTS_SOLID ) )
+	  continue;
+	
+	if( enemy->client && enemy->client->ps.stats[ STAT_TEAM ] != TEAM_NONE )
+	{
+	  if (!enemy->client)
+	    continue;
+      
+	  if (enemy == self->parent) 
+	    continue;
+
+	  if (!enemy->takedamage) 
+	    continue;
+
+	  if ( enemy->client->ps.stats[ STAT_CLASS ] == PCL_ALIEN_LEVEL5 )
+	    force = LASGUN_PUSH_FORCE;
+	  else
+	    force = LASGUN_WEAK_FORCE;
+
+	  VectorSubtract( enemy->r.currentOrigin, self->r.currentOrigin, dir);
+	  VectorNormalize( dir );
+	  VectorScale( dir, force, enemy->client->ps.velocity );
+	}
+      }
+    }
+    self->count = 0;
+    /*
+      if( enemy->client && enemy->client->ps.stats[ STAT_TEAM ] == TEAM_ALIENS )
+      {
       // start the attack animation
       G_AddEvent( self, EV_FORCE_FIELD, DirToByte( self->s.origin2 ) );
       
       if( level.time >= self->timestamp + 500 )
-        {
-          self->timestamp = level.time;
-          G_SetBuildableAnim( self, BANIM_ATTACK1, qfalse );
-        }
-        return;
+      {
+      self->timestamp = level.time;
+      G_SetBuildableAnim( self, BANIM_ATTACK1, qfalse );
       }
-    }
+      return;
+      }
+      }
     */
-  if( level.time >= self->timestamp ) {
-    self->freeAfterEvent = qtrue;
-    self->parent->parentNode = NULL;
+    if( level.time >= self->timestamp ) {
+      self->freeAfterEvent = qtrue;
+      self->parent->parentNode = NULL;
+    }
   }
   trap_LinkEntity( self );
 }

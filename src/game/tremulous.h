@@ -453,7 +453,8 @@ TREMULOUS EDGE MOD SRC FILE
 
 #define LASGUN_REPEAT2              5000
 #define LASGUN_PUSH_DURATION        4000
-#define LASGUN_PUSH_REPEAT          400
+#define LASGUN_PUSH_REPEAT          40
+#define LASGUN_PUSH_COUNT           10
 #define LASGUN_PUSH_RANGE           140
 #define LASGUN_PUSH_FORCE           900
 #define LASGUN_WEAK_FORCE           675
