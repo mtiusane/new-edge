@@ -2229,7 +2229,8 @@ void CheckExitRules( void )
     LogExit( "Aliens win." );
     G_MapLog_Result( 'a' );
   }
-  else if( level.time > level.suddenDeathBeginTime/2 && 
+  else if( level.suddenDeathBeginTime != 0 && 
+	   level.time > level.suddenDeathBeginTime/2 && 
 	   level.numAlienClients == 0 && level.numHumanClients == 0 )
   {
     // Close to sudden death started but no clients connected
