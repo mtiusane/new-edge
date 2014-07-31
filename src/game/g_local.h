@@ -673,8 +673,12 @@ typedef struct
 
   int               alienStage2Time;
   int               alienStage3Time;
+  int               alienStage4Time;
+  int               alienStage5Time;
   int               humanStage2Time;
   int               humanStage3Time;
+  int               humanStage4Time;
+  int               humanStage5Time;
 
   int               nextCommandTime;
 
@@ -1198,11 +1202,15 @@ extern  vmCvar_t  g_humanCredits;
 extern  vmCvar_t  g_humanMaxStage;
 extern  vmCvar_t  g_humanStage2Threshold;
 extern  vmCvar_t  g_humanStage3Threshold;
+extern  vmCvar_t  g_humanStage4Threshold;
+extern  vmCvar_t  g_humanStage5Threshold;
 extern  vmCvar_t  g_alienStage;
 extern  vmCvar_t  g_alienCredits;
 extern  vmCvar_t  g_alienMaxStage;
 extern  vmCvar_t  g_alienStage2Threshold;
 extern  vmCvar_t  g_alienStage3Threshold;
+extern  vmCvar_t  g_alienStage4Threshold;
+extern  vmCvar_t  g_alienStage5Threshold;
 extern  vmCvar_t  g_alienBarbsRegen2x;
 extern  vmCvar_t  g_alienBarbsRegen3x;
 extern  vmCvar_t  g_alienGrangerDanceBonus;

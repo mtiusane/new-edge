@@ -1762,11 +1762,11 @@ gclient_t *client;
       break;
 
     case WP_MASS_DRIVER:
-if(g_humanStage.integer == S3 && BG_InventoryContainsUpgrade( UP_BATTPACK, ent->client->ps.stats ))
-{
-    massDriverFire2( ent );
-}
-  	break;
+      if(g_humanStage.integer == S5 && BG_InventoryContainsUpgrade( UP_BATTPACK, ent->client->ps.stats ))
+      {
+	  massDriverFire2( ent );
+      }
+      break;
 	  
     case WP_ALEVEL1:
     case WP_ALEVEL1_UPG:
