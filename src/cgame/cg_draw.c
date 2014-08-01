@@ -1746,7 +1746,7 @@ static void CG_DrawStageReport( rectDef_t *rect, float text_x, float text_y,
   if( cg.snap->ps.stats[ STAT_TEAM ] == TEAM_NONE )
 //    return;
   {
-      Com_sprintf( s, MAX_TOKEN_CHARS, " %d [ye2]HUMANS |STAGE| ALIENS[Ye] %d ", cgs.humanStage + 1 , cgs.alienStage + 1);
+      Com_sprintf( s, MAX_TOKEN_CHARS, " %d [ye2]ALIENS |STAGE| HUMANS[Ye] %d ", cgs.alienStage + 1 , cgs.humanStage + 1);
 
   }
 

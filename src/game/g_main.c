@@ -1499,9 +1499,9 @@ void G_CalculateStages( void )
   else if( g_alienStage.integer == S2 && g_alienMaxStage.integer > S2 )
     alienNextStageThreshold = (int)( ceil( (float)g_alienStage3Threshold.integer * alienPlayerCountMod ) );
   else if( g_alienStage.integer == S3 && g_alienMaxStage.integer > S3 )
-    alienNextStageThreshold = (int)( ceil( (float)g_alienStage3Threshold.integer * alienPlayerCountMod ) );
+    alienNextStageThreshold = (int)( ceil( (float)g_alienStage4Threshold.integer * alienPlayerCountMod ) );
   else if( g_alienStage.integer == S4 && g_alienMaxStage.integer > S4 )
-    alienNextStageThreshold = (int)( ceil( (float)g_alienStage3Threshold.integer * alienPlayerCountMod ) );
+    alienNextStageThreshold = (int)( ceil( (float)g_alienStage5Threshold.integer * alienPlayerCountMod ) );
   else
     alienNextStageThreshold = -1;
 
@@ -1510,9 +1510,9 @@ void G_CalculateStages( void )
   else if( g_humanStage.integer == S2 && g_humanMaxStage.integer > S2 )
     humanNextStageThreshold = (int)( ceil( (float)g_humanStage3Threshold.integer * humanPlayerCountMod ) );
   else if( g_humanStage.integer == S3 && g_humanMaxStage.integer > S3 )
-    humanNextStageThreshold = (int)( ceil( (float)g_humanStage3Threshold.integer * humanPlayerCountMod ) );
+    humanNextStageThreshold = (int)( ceil( (float)g_humanStage4Threshold.integer * humanPlayerCountMod ) );
   else if( g_humanStage.integer == S4 && g_humanMaxStage.integer > S4 )
-    humanNextStageThreshold = (int)( ceil( (float)g_humanStage3Threshold.integer * humanPlayerCountMod ) );
+    humanNextStageThreshold = (int)( ceil( (float)g_humanStage5Threshold.integer * humanPlayerCountMod ) );
   else
     humanNextStageThreshold = -1;
 
