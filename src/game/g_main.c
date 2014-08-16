@@ -86,6 +86,8 @@ vmCvar_t  g_suddenDeathVotePercent;
 vmCvar_t  g_suddenDeathVoteDelay;
 vmCvar_t  g_armageddonVotePercent;
 vmCvar_t  g_armageddonPercent; 
+vmCvar_t  g_humanMedkitRange;
+vmCvar_t  g_humanMedkitWidth;
 vmCvar_t  g_readyPercent;
 vmCvar_t  g_teamForceBalance;
 vmCvar_t  g_smoothClients;
@@ -217,6 +219,8 @@ static cvarTable_t   gameCvarTable[ ] =
   { &g_maxclients, "sv_maxclients", "8", CVAR_SERVERINFO | CVAR_LATCH | CVAR_ARCHIVE, 0, qfalse  },
   { &g_maxGameClients, "g_maxGameClients", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse  },
   { &g_timelimit, "timelimit", "0", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
+  { &g_humanMedkitRange, "g_humanMedkitRange", "200", CVAR_ARCHIVE, 0, qfalse },
+  { &g_humanMedkitWidth, "g_humanMedkitWidth", "20", CVAR_ARCHIVE, 0, qfalse },
   { &g_suddenDeathTime, "g_suddenDeathTime", "40", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
   { &g_armageddonTimeStep, "g_armageddonTimeStep", "5", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
   { &g_armageddonInitialTimeStep, "g_armageddonInitialTimeStep", "10", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
