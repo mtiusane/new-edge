@@ -609,6 +609,25 @@ static void PM_CheckCharge( void )
 
 /*
 =============
+PM_CheckWaterPounce
+=============
+*/
+static void PM_CheckWaterPounce( void )
+{
+  if( pm->ps->weapon != WP_ALEVEL3 &&
+      pm->ps->weapon != WP_ALEVEL3_UPG )
+    return;
+
+  // We were pouncing, but we've landed into water
+  if( ( pm->waterlevel > 1 ) && ( pm->ps->pm_flags & PMF_CHARGE ) )
+  {
+    pm->ps->pm_flags &= ~PMF_CHARGE;
+    pm->ps->weaponTime += LEVEL3_POUNCE_REPEAT;
+  }
+}
+
+/*
+=============
 PM_CheckPounce
 =============
 */
@@ -1188,7 +1207,6 @@ static void PM_WaterJumpMove( void )
 /*
 ===================
 PM_WaterMove
-
 ===================
 */
 static void PM_WaterMove( void )
@@ -1199,6 +1217,8 @@ static void PM_WaterMove( void )
   vec3_t  wishdir;
   float scale;
   float vel;
+
+  PM_CheckWaterPounce( );
 
   if( PM_CheckWaterJump( ) )
   {
