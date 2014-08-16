@@ -1042,6 +1042,7 @@ void      G_UnregisterCommands( void );
 void FireWeapon( gentity_t *ent );
 void FireWeapon2( gentity_t *ent );
 void FireWeapon3( gentity_t *ent );
+gentity_t *G_MedkitTarget( gentity_t *ent );
 
 //
 // g_main.c
@@ -1179,6 +1180,8 @@ extern  vmCvar_t  g_suddenDeathVoteDelay;
 extern  vmCvar_t  g_readyPercent;
 extern  vmCvar_t  g_armageddonVotePercent;
 extern  vmCvar_t  g_armageddonPercent;
+extern  vmCvar_t  g_humanMedkitRange;
+extern  vmCvar_t  g_humanMedkitWidth;
 extern  vmCvar_t  g_teamForceBalance;
 extern  vmCvar_t  g_smoothClients;
 extern  vmCvar_t  pmove_fixed;

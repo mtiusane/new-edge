@@ -1454,6 +1454,37 @@ void G_ClearPlayerZapEffects( gentity_t *player )
   }
 }
 
+
+/*
+===============
+G_MedkitTarget
+
+Look for a possible healing target (a client) in the front.
+===============
+*/
+gentity_t *G_MedkitTarget( gentity_t *ent )
+{
+  trace_t   tr;
+  gentity_t *targetEnt = NULL;
+
+  if( g_humanMedkitRange.value <= 0 ||
+      g_humanMedkitWidth.value <= 0 )
+    return NULL;
+
+  // Calculate muzzle point
+  AngleVectors( ent->client->ps.viewangles, forward, right, up );
+  CalcMuzzlePoint( ent, forward, right, up, muzzle );
+
+  G_WideTrace( &tr, ent, g_humanMedkitRange.value,
+      g_humanMedkitWidth.value, g_humanMedkitWidth.value, &targetEnt );
+
+  if( ( targetEnt != NULL ) &&
+      ( targetEnt->client != NULL ) )
+    return targetEnt;
+  else
+    return NULL;
+}
+
 /*
 ===============
 areaZapFire

@@ -1228,6 +1228,31 @@ void CG_EntityEvent( centity_t *cent, vec3_t position )
       break;
 
     case EV_MEDKIT_USED:
+      // the parameter is the healer's entity number
+      {
+        const int   healerNum = es->eventParm;
+        const char  *configstring;
+        const char  *name;
+
+        if( healerNum != clientNum )
+        {
+          if( healerNum == cg.clientNum )
+          {
+            configstring = CG_ConfigString( clientNum + CS_PLAYERS );
+            // isolate the player's name
+            name = Info_ValueForKey( configstring, "n" );
+
+            CG_Printf( S_COLOR_CYAN "You bandaged " S_COLOR_WHITE "%s" S_COLOR_CYAN "'s wounds.\n", name );
+          } else if( clientNum == cg.clientNum )
+          {
+            configstring = CG_ConfigString( healerNum + CS_PLAYERS );
+            // isolate the player's name
+            name = Info_ValueForKey( configstring, "n" );
+
+            CG_Printf( S_COLOR_WHITE "%s" S_COLOR_CYAN " bandaged your wounds.\n", name );
+          }
+        }
+      }
       trap_S_StartSound( NULL, es->number, CHAN_AUTO, cgs.media.medkitUseSound );
       break;
 
