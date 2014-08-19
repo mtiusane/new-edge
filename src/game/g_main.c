@@ -152,6 +152,7 @@ vmCvar_t  g_mapRotationNodes;
 vmCvar_t  g_mapRotationStack;
 vmCvar_t  g_mapLog;
 vmCvar_t  g_nextMap;
+vmCvar_t  g_nextLayout;
 vmCvar_t  g_initialMapRotation;
 vmCvar_t  g_debugVoices;
 vmCvar_t  g_voiceChats;
@@ -320,6 +321,7 @@ static cvarTable_t   gameCvarTable[ ] =
   { &g_mapRotationStack, "g_mapRotationStack", "", CVAR_ROM, 0, qfalse  },
   { &g_mapLog, "g_mapLog", "", CVAR_ROM, 0, qfalse  },
   { &g_nextMap, "g_nextMap", "", 0 , 0, qtrue  },
+  { &g_nextLayout, "g_nextLayout", "", 0, 0, qtrue },
   { &g_initialMapRotation, "g_initialMapRotation", "", CVAR_ARCHIVE, 0, qfalse  },
   { &g_debugVoices, "g_debugVoices", "0", 0, 0, qfalse  },
   { &g_voiceChats, "g_voiceChats", "1", CVAR_ARCHIVE, 0, qfalse },
@@ -1808,14 +1810,17 @@ void ExitLevel( void )
   int       i;
   gclient_t *cl;
 
-  if ( G_MapExists( g_nextMap.string ) )
-    trap_SendConsoleCommand( EXEC_APPEND, va("map \"%s\"\n", g_nextMap.string ) );
-  else if( G_MapRotationActive( ) )
+  if ( G_MapExists( g_nextMap.string ) ) {
+    if ( G_LayoutExists( g_nextMap.string, g_nextLayout.string ) ) {
+      trap_SendConsoleCommand( EXEC_APPEND, va("map \"%s\" \"%s\"\n", g_nextMap.string, g_nextLayout.string ) );
+    } else trap_SendConsoleCommand( EXEC_APPEND, va("map \"%s\"\n", g_nextMap.string ) );
+  } else if( G_MapRotationActive( ) )
     G_AdvanceMapRotation( 0 );
   else
     trap_SendConsoleCommand( EXEC_APPEND, "map_restart\n" );
 
   trap_Cvar_Set( "g_nextMap", "" );
+  trap_Cvar_Set( "g_nextLayout", "" );
 
   level.restarted = qtrue;
   level.changemap = NULL;

@@ -1476,8 +1476,8 @@ void Cmd_CallVote_f( gentity_t *ent )
       if( G_MapExists( g_nextMap.string ) )
       {
         trap_SendServerCommand( ent-g_entities,
-          va( "print \"%s: the next map is already set to '%s'\n\"",
-            cmd, g_nextMap.string ) );
+          va( "print \"%s: the next map is already set to '%s' layout '%s'\n\"",
+	    cmd, g_nextMap.string, g_nextLayout.string ) );
         return;
       }
 
@@ -1489,11 +1489,27 @@ void Cmd_CallVote_f( gentity_t *ent )
         return;
       }
 
-      Com_sprintf( level.voteString[ team ], sizeof( level.voteString[ team ] ),
-        "set g_nextMap \"%s\"", arg );
-      Com_sprintf( level.voteDisplayString[ team ],
-        sizeof( level.voteDisplayString[ team ] ),
-        "Set the ^1next^5 map to '%s'", arg );
+      if( reason[0] )
+      {
+	if( !G_LayoutExists( arg, reason ) )
+	{
+	  trap_SendServerCommand( ent-g_entities,
+	    va( "print \"%s: 'layouts/%s/%s.dat' could not be found on the server\n\"",
+	      cmd, arg, reason ) );
+	  return;
+	}
+	Com_sprintf( level.voteString[ team ], sizeof( level.voteString[ team ] ),
+	  "set g_nextMap \"%s\"; set g_nextLayout \"%s\"", arg, reason );
+        Com_sprintf( level.voteDisplayString[ team ],
+          sizeof( level.voteDisplayString[ team ] ),
+	  "Set the ^1next^5 map to '%s' layout '%s'", arg, reason );
+      } else {
+	Com_sprintf( level.voteString[ team ], sizeof( level.voteString[ team ] ),
+	  "set g_nextMap \"%s\"", arg );
+	Com_sprintf( level.voteDisplayString[ team ],
+          sizeof( level.voteDisplayString[ team ] ),
+          "Set the ^1next^5 map to '%s'", arg );
+      }
     }
     else if( !Q_stricmp( vote, "draw" ) )
     {
