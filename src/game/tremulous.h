@@ -694,6 +694,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define LOCKBLOB_LOCKTIME           5000
 #define LOCKBLOB_DOT                0.85f // max angle = acos( LOCKBLOB_DOT )
 #define LOCKBLOB_K_SCALE            1.0f
+#define TRAPPER_ACCURACY            9 // lower is better
 
 #define OVERMIND_BP                 0
 #define OVERMIND_BT                 30000

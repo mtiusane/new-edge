@@ -57,7 +57,7 @@ void CG_UpdateEntityPositions( void )
   for( i = 0; i < cg.snap->numEntities; i++ )
   {
     cent = &cg_entities[ cg.snap->entities[ i ].number ];
-    //make adv basilisk invisble to human helmet if invisble
+
     if( cent->currentState.eType == ET_BUILDABLE &&
 	!( cent->currentState.eFlags & EF_DEAD ))
     {

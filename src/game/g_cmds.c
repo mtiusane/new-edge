@@ -1426,8 +1426,7 @@ void Cmd_CallVote_f( gentity_t *ent )
     }
     else if( !Q_stricmp( vote, "map" ) )
     {
-      if( (( level.time - level.startTime ) < 60 * 1000 )
-        && ( level.numPlayingClients > 0 && level.numConnectedClients > 1 ) )
+      if( (( level.time - level.startTime ) < 60 * 1000 ) )
       {
          trap_SendServerCommand( ent-g_entities, "print \"You cannot call for a map change in the first minute.\n\"" );
          return;
@@ -1449,11 +1448,27 @@ void Cmd_CallVote_f( gentity_t *ent )
         return;
       }
 
-      Com_sprintf( level.voteString[ team ], sizeof( level.voteString ),
-        "%s \"%s\"", vote, arg );
-      Com_sprintf( level.voteDisplayString[ team ],
-        sizeof( level.voteDisplayString[ team ] ),
-        "Change to map '%s'", arg );
+      if( reason[0] )
+      {
+	if( !G_LayoutExists( arg, reason ) )
+	{
+	  trap_SendServerCommand( ent-g_entities,
+	    va( "print \"%s: 'layouts/%s/%s.dat' could not be found on the server\n\"",
+	      cmd, arg, reason ) );
+	  return;
+	}
+	Com_sprintf( level.voteString[ team ], sizeof( level.voteString ),
+	  "%s \"%s\" \"%s\"", vote, arg, reason );
+        Com_sprintf( level.voteDisplayString[ team ],
+          sizeof( level.voteDisplayString[ team ] ),
+          "Change to map '%s' (layout: '%s')", arg, reason );
+      } else {
+	Com_sprintf( level.voteString[ team ], sizeof( level.voteString ),
+	  "%s \"%s\"", vote, arg );
+        Com_sprintf( level.voteDisplayString[ team ],
+          sizeof( level.voteDisplayString[ team ] ),
+          "Change to map '%s'", arg );
+      }
       level.voteDelay[ team ] = 3000;
     }
     else if( !Q_stricmp( vote, "nextmap" ) )

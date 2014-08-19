@@ -2091,9 +2091,6 @@ void HNone_Think( gentity_t *self )
   self->nextthink = level.time + 1000;
 }
 
-
-#define TRAPPER_ACCURACY 9 // lower is better
-
 /*
 ================
 ATrapper_FireOnEnemy
@@ -5069,6 +5066,28 @@ static void G_LayoutBuildItem( buildable_t buildable, vec3_t origin,
   VectorCopy( origin2, builder->s.origin2 );
   VectorCopy( angles2, builder->s.angles2 );
   G_SpawnBuildable( builder, buildable );
+}
+
+/*
+==============
+G_LayoutExists
+
+Check if a layout with the given name exists for the given map.
+==============
+*/
+qboolean G_LayoutExists( char *mapName, char *layoutName )
+{
+  fileHandle_t f;
+  int len;
+  if( !layoutName[ 0 ] || !Q_stricmp( layoutName, "*BUILTIN*" ) )
+    return qtrue;
+
+  len = trap_FS_FOpenFile( va( "layouts/%s/%s.dat", mapName, layoutName ), &f, FS_READ );
+  if( len < 0 )
+    return qfalse;
+
+  trap_FS_FCloseFile( f );
+  return qtrue;
 }
 
 /*
