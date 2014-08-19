@@ -76,8 +76,14 @@ void P_DamageFeedback( gentity_t *player )
   // play an apropriate pain sound
   if( ( level.time > player->pain_debounce_time ) && !( player->flags & FL_GODMODE ) )
   {
+    int param;
     player->pain_debounce_time = level.time + 700;
-    G_AddEvent( player, EV_PAIN, player->health > 255 ? 255 : player->health );
+    param = player->health;
+    if( param >= EVENT_HEADSHOT_BIT )
+      param = EVENT_HEADSHOT_BIT - 1;
+    if( client->damage_headshot )
+      param |= EVENT_HEADSHOT_BIT;
+    G_AddEvent( player, EV_PAIN, param );
     client->ps.damageEvent++;
   }
 
@@ -90,7 +96,44 @@ void P_DamageFeedback( gentity_t *player )
   client->damage_blood = 0;
   client->damage_armor = 0;
   client->damage_knockback = 0;
+  client->damage_headshot = 0;
 }
+
+
+
+/*
+===============
+P_WoundsBleed
+
+===============
+*/
+void P_WoundsBleed( gentity_t *player )
+{
+  gclient_t *client;
+  int       maxHealth;
+  int       health;
+
+  if( player->nextBleedTime > level.time )
+    return;
+
+  client = player->client;
+  health = player->health;
+  maxHealth = client->ps.stats[ STAT_MAX_HEALTH ];
+  if( maxHealth > 100 )
+    maxHealth = 100;
+  maxHealth = maxHealth * 3 / 4;
+  if( ( health > maxHealth ) || ( health < 0 ) ) {
+    player->nextBleedTime = level.time + 2000;
+    return;
+  }
+
+  G_AddEvent( player, EV_BLEED, ( health > 255 ) ? 255 : health );
+
+  if( health < 20 )
+    health = 20;
+  player->nextBleedTime = level.time + 2000 * health / maxHealth;
+}
+
 
 
 
@@ -2291,6 +2334,9 @@ void ClientEndFrame( gentity_t *ent )
 
   // burn from lava, etc
   P_WorldEffects( ent );
+
+  // bleeding wounds
+  P_WoundsBleed( ent );
 
   // apply all the damage taken this frame
   P_DamageFeedback( ent );

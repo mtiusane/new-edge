@@ -687,8 +687,12 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
     }
 
     // use own entityid if killed by non-client to prevent uint8_t overflow
-    G_AddEvent( self, EV_DEATH1 + i,
-      ( killer < MAX_CLIENTS ) ? killer : self - g_entities );
+    {
+      int param = ( killer < MAX_CLIENTS ) ? killer : self - g_entities;
+      if( self->client->damage_headshot )
+        param |= EVENT_HEADSHOT_BIT;
+      G_AddEvent( self, EV_DEATH1 + i, param );
+    }
 
     // globally cycle through the different death animations
     i = ( i + 1 ) % 3;
@@ -1068,6 +1072,10 @@ static float G_CalcDamageModifier( vec3_t point, gentity_t *targ, gentity_t *att
   modifier = GetPointDamageModifier( targ, g_damageRegions[ class ],
                                      g_numDamageRegions[ class ],
                                      hitRotation, hitRatio );
+
+  // For headshots done by an enemy, make a client event
+  if( ( modifier >= 1.2f ) && !OnSameTeam( targ, attacker ) )
+    targ->client->damage_headshot ++;
 
   for( i = UP_NONE + 1; i < UP_NUM_UPGRADES; i++ )
   {
