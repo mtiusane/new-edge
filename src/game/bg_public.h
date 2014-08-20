@@ -478,6 +478,8 @@ typedef enum
 
 #define EVENT_VALID_MSEC  300
 
+#define EVENT_HEADSHOT_BIT 0x80
+
 const char *BG_EventName( int num );
 
 typedef enum
@@ -538,6 +540,7 @@ typedef enum
   EV_DEATH3,
   EV_OBITUARY,
   EV_GIB_PLAYER,      // gib a previously living player
+  EV_BLEED,
   EV_BUILD_CONSTRUCT,
   EV_BUILD_DESTROY,
   EV_BUILD_DELAY,     // can't build yet

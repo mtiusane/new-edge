@@ -532,6 +532,30 @@ void CG_PainEvent( centity_t *cent, int health )
 }
 
 /*
+================
+CG_HeadShotEvent
+
+Also called by playerstate transition
+================
+*/
+void CG_HeadShotEvent( centity_t *cent, int health )
+{
+  particleSystem_t *ps;
+
+  if( !cg_bleedSelfHeadShots.integer &&
+      cent->currentState.number == cg.snap->ps.clientNum )
+    return;
+
+  ps = CG_SpawnNewParticleSystem( cgs.media.headShotPS );
+  if( CG_IsParticleSystemValid( &ps ) )
+  {
+    CG_SetAttachmentCent( &ps->attachment, cent );
+    CG_AttachToCent( &ps->attachment );
+  }
+  //trap_S_StartSound( NULL, es->number, CHAN_VOICE, cgs.media.humanGibSound );
+}
+
+/*
 =========================
 CG_Level2Zap
 =========================
@@ -1074,10 +1098,15 @@ void CG_EntityEvent( centity_t *cent, vec3_t position )
       break;
 
     case EV_PAIN:
-      // local player sounds are triggered in CG_CheckLocalSounds,
-      // so ignore events on the player
-      if( cent->currentState.number != cg.snap->ps.clientNum )
-        CG_PainEvent( cent, es->eventParm );
+      {
+        const int health = es->eventParm & ~EVENT_HEADSHOT_BIT;
+        // local player sounds are triggered in CG_CheckLocalSounds,
+        // so ignore events on the player
+        if( cent->currentState.number != cg.snap->ps.clientNum )
+          CG_PainEvent( cent, health );
+        if( es->eventParm & EVENT_HEADSHOT_BIT )
+          CG_HeadShotEvent( cent, health );
+      }
       break;
 
     case EV_DEATH1:
@@ -1085,6 +1114,8 @@ void CG_EntityEvent( centity_t *cent, vec3_t position )
     case EV_DEATH3:
       trap_S_StartSound( NULL, es->number, CHAN_VOICE,
           CG_CustomSound( es->number, va( "*death%i.wav", event - EV_DEATH1 + 1 ) ) );
+      if( es->eventParm & EVENT_HEADSHOT_BIT )
+        CG_HeadShotEvent( cent, 0 );
       break;
 
     case EV_OBITUARY:
@@ -1093,6 +1124,24 @@ void CG_EntityEvent( centity_t *cent, vec3_t position )
 
     case EV_GIB_PLAYER:
       // no gibbing
+      break;
+
+    case EV_BLEED:
+      if( cg_bleedSelfWounds.integer ||
+          cent->currentState.number != cg.snap->ps.clientNum )
+      {
+        particleSystem_t *ps = NULL;
+        if( ci->team == TEAM_ALIENS )
+          ps = CG_SpawnNewParticleSystem( cgs.media.alienWoundsBleedPS );
+        else if( ci->team == TEAM_HUMANS )
+          ps = CG_SpawnNewParticleSystem( cgs.media.humanWoundsBleedPS );
+
+        if( ( ps != NULL ) && CG_IsParticleSystemValid( &ps ) )
+        {
+          CG_SetAttachmentCent( &ps->attachment, cent );
+          CG_AttachToCent( &ps->attachment );
+        }
+      }
       break;
 
     case EV_STOPLOOPINGSOUND:
