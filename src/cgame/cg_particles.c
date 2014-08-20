@@ -2156,6 +2156,19 @@ static void CG_EvaluateParticlePhysics( particle_t *p )
     return;
   }
 
+  if( bp->bounceMarkName[ 0 ] && p->bounceMarkCount > 0 )
+  {
+    CG_ImpactMark( bp->bounceMark, trace.endpos, trace.plane.normal,
+        random( ) * 360, 1, 1, 1, 1, qtrue, bp->bounceMarkRadius, qfalse );
+    p->bounceMarkCount--;
+  }
+
+  if( bp->bounceSoundName[ 0 ] && p->bounceSoundCount > 0 )
+  {
+    trap_S_StartSound( trace.endpos, ENTITYNUM_WORLD, CHAN_AUTO, bp->bounceSound );
+    p->bounceSoundCount--;
+  }
+
   //remove particles that get into a CONTENTS_NODROP brush
   if( ( trap_CM_PointContents( trace.endpos, 0 ) & CONTENTS_NODROP ) ||
       ( bp->cullOnStartSolid && trace.startsolid ) )

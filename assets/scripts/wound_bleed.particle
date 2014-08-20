@@ -1,0 +1,79 @@
+humanWoundBleedPS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/sprites/blood
+
+      displacement 0 0 0 ~2
+      parentVelocityFraction 1.0
+
+      velocityType      static_transform
+      velocityDir       linear
+      velocityMagnitude 50~100%
+      velocity          -0.5 0 -1 ~30
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 800
+      acceleration          0 0 -1 ~30
+
+      radius 0 4.0 10.0
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+      //bounce 0.2
+      bounce cull
+      bounceMark 1~1 10 gfx/marks/blood_mrk
+      //bounceSound ~1 sound/edge/blood_splat.wav
+
+      overdrawProtection
+
+      lifeTime 5000~50%
+    }
+
+    count 3
+    delay 0
+    period 1000 - ~100%
+  }
+}
+
+alienWoundBleedPS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/sprites/green_acid // TODO?
+
+      displacement 0 0 0 ~2
+      parentVelocityFraction 1.0
+
+      velocityType      static_transform
+      velocityDir       linear
+      velocityMagnitude 50~100%
+      velocity          -0.5 0 -1 ~30
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 800
+      acceleration          0 0 -1 ~30
+
+      radius 0 4.0 10.0
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+      //bounce 0.2
+      bounce cull
+      bounceMark 1~1 10 gfx/marks/ablood_mrk
+      //bounceSound ~1 sound/edge/blood_splat.wav // TODO?
+
+      overdrawProtection
+
+      lifeTime 5000~50%
+    }
+
+    count 3
+    delay 0
+    period 1000 - ~100%
+  }
+}

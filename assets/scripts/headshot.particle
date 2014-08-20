@@ -1,0 +1,37 @@
+headShotPS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/sprites/blood
+
+      displacement 0 0 20 ~2
+      parentVelocityFraction 1.0
+
+      velocityType      static_transform
+      velocityDir       linear
+      velocityMagnitude 150~75%
+      velocity          -1 0 1 ~60
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 800
+      acceleration          0 0 -1 ~30
+
+      radius 0 4.0 10.0
+      alpha  0 1.0 0.0
+      rotation 0 ~360 -
+      //bounce 0.2
+      bounce cull
+      bounceMark 1~1 10 gfx/marks/blood_mrk
+      bounceSound ~0.7 sound/edge/blood_splat.wav
+
+      lifeTime 1000~100%
+    }
+
+    count 50
+    delay 0
+    period 10 - ~0%
+  }
+}

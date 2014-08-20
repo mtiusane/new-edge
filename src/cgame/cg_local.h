@@ -1331,6 +1331,11 @@ typedef struct
   qhandle_t   healthCross3X;
   qhandle_t   healthCrossMedkit;
   qhandle_t   healthCrossPoisoned;
+
+  sfxHandle_t humanGibSound;
+  qhandle_t   headShotPS;
+  qhandle_t   humanWoundsBleedPS;
+  qhandle_t   alienWoundsBleedPS;
 } cgMedia_t;
 
 typedef struct
@@ -1540,6 +1545,8 @@ extern  vmCvar_t    cg_disableBuildDialogs;
 extern  vmCvar_t    cg_disableCommandDialogs;
 extern  vmCvar_t    cg_disableScannerPlane;
 extern  vmCvar_t    cg_tutorial;
+extern  vmCvar_t    cg_bleedSelfWounds;
+extern  vmCvar_t    cg_bleedSelfHeadShots;
 
 extern  vmCvar_t    cg_painBlendUpRate;
 extern  vmCvar_t    cg_painBlendDownRate;

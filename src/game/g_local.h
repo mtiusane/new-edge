@@ -245,6 +245,7 @@ struct gentity_s
 
   int               lastDamageTime;
   int               nextRegenTime;
+  int               nextBleedTime;
 
   qboolean          ownerClear;                     // used for missle tracking
 
@@ -399,6 +400,7 @@ struct gclient_s
   int                 damage_knockback; // impact damage
   vec3_t              damage_from;      // origin for vector calculation
   qboolean            damage_fromWorld; // if true, don't use the damage_from vector
+  int                 damage_headshot;  // the number of head-shots taken in a frame
 
   //
   int                 lastkilled_client;// last client that this client killed
