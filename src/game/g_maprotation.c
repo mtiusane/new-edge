@@ -762,8 +762,8 @@ void G_PrintCurrentRotation( gentity_t *ent, const char *command )
 
   if( g_nextMap.string[ 0 ] )
     ADMBP( va( "^3the next map has been set to %s\n", g_nextMap.string ) );
-  if( g_nextLayout.string[ 0 ] )
-    ADMBP( va( "^3the next layout has been set to %s\n", g_nextLayout.string ) );
+  if( g_layouts.string[ 0 ] )
+    ADMBP( va( "^3the next layout has been set to %s\n", g_layouts.string ) );
   ADMBP_end( );
 }
 

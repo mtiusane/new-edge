@@ -1477,7 +1477,7 @@ void Cmd_CallVote_f( gentity_t *ent )
       {
         trap_SendServerCommand( ent-g_entities,
           va( "print \"%s: the next map is already set to '%s' layout '%s'\n\"",
-	    cmd, g_nextMap.string, g_nextLayout.string ) );
+	    cmd, g_nextMap.string, g_layouts.string ) );
         return;
       }
 
@@ -1499,7 +1499,7 @@ void Cmd_CallVote_f( gentity_t *ent )
 	  return;
 	}
 	Com_sprintf( level.voteString[ team ], sizeof( level.voteString[ team ] ),
-	  "set g_nextMap \"%s\"; set g_nextLayout \"%s\"", arg, reason );
+	  "set g_nextMap \"%s\";set g_layouts \"%s\"", arg, reason );
         Com_sprintf( level.voteDisplayString[ team ],
           sizeof( level.voteDisplayString[ team ] ),
 	  "Set the ^1next^5 map to '%s' layout '%s'", arg, reason );

@@ -152,7 +152,6 @@ vmCvar_t  g_mapRotationNodes;
 vmCvar_t  g_mapRotationStack;
 vmCvar_t  g_mapLog;
 vmCvar_t  g_nextMap;
-vmCvar_t  g_nextLayout;
 vmCvar_t  g_initialMapRotation;
 vmCvar_t  g_debugVoices;
 vmCvar_t  g_voiceChats;
@@ -321,7 +320,6 @@ static cvarTable_t   gameCvarTable[ ] =
   { &g_mapRotationStack, "g_mapRotationStack", "", CVAR_ROM, 0, qfalse  },
   { &g_mapLog, "g_mapLog", "", CVAR_ROM, 0, qfalse  },
   { &g_nextMap, "g_nextMap", "", 0 , 0, qtrue  },
-  { &g_nextLayout, "g_nextLayout", "", 0, 0, qtrue },
   { &g_initialMapRotation, "g_initialMapRotation", "", CVAR_ARCHIVE, 0, qfalse  },
   { &g_debugVoices, "g_debugVoices", "0", 0, 0, qfalse  },
   { &g_voiceChats, "g_voiceChats", "1", CVAR_ARCHIVE, 0, qfalse },
@@ -1811,16 +1809,13 @@ void ExitLevel( void )
   gclient_t *cl;
 
   if ( G_MapExists( g_nextMap.string ) ) {
-    if ( G_LayoutExists( g_nextMap.string, g_nextLayout.string ) ) {
-      trap_SendConsoleCommand( EXEC_APPEND, va("map \"%s\" \"%s\"\n", g_nextMap.string, g_nextLayout.string ) );
-    } else trap_SendConsoleCommand( EXEC_APPEND, va("map \"%s\"\n", g_nextMap.string ) );
+    trap_SendConsoleCommand( EXEC_APPEND, va("map \"%s\"\n", g_nextMap.string ) );
   } else if( G_MapRotationActive( ) )
     G_AdvanceMapRotation( 0 );
   else
     trap_SendConsoleCommand( EXEC_APPEND, "map_restart\n" );
 
   trap_Cvar_Set( "g_nextMap", "" );
-  trap_Cvar_Set( "g_nextLayout", "" );
 
   level.restarted = qtrue;
   level.changemap = NULL;
@@ -2356,13 +2351,25 @@ FUNCTIONS CALLED EVERY FRAME
 ========================================================================
 */
 
-
 void G_ExecuteVote( team_t team )
 {
+  char cmd[ MAX_STRING_CHARS ],*start,*current;
+
   level.voteExecuteTime[ team ] = 0;
 
+  start = current = level.voteString[ team ];
+  while(*current) {
+    if (*current == ';') {
+      Q_strncpyz( cmd, start, current-start );
+      start = current+1;
+      trap_SendConsoleCommand( EXEC_APPEND, va( "%s\n",
+        cmd ) );
+    }
+    ++current;
+  }
+  Q_strncpyz( cmd, start, MAX_STRING_CHARS );
   trap_SendConsoleCommand( EXEC_APPEND, va( "%s\n",
-    level.voteString[ team ] ) );
+    cmd ) );
 
   if( !Q_stricmpn( level.voteString[ team ], "map", 3 ) )
     level.restarted = qtrue;
