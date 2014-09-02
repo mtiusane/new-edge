@@ -1732,8 +1732,6 @@ void Prickles( gentity_t *ent )
   vec3_t    end;
   float   r;
   float   u;
-  gentity_t *tent;
-  gentity_t *traceEnt;
 
   r = random( ) * M_PI * 2.0f;
   u = sin( r ) * crandom( ) * LEVEL5_PRICKLES_SPREAD * 16;

@@ -51,6 +51,7 @@ float pm_friction = 6.0f;
 float pm_waterfriction = 1.0f;
 float pm_flightfriction = 6.0f;
 float pm_hummelfriction = 2.5f;
+float pm_hummelwalkfriction = 8.0f;
 float pm_spectatorfriction = 5.0f;
 
 int   c_pmove = 0;
@@ -262,7 +263,7 @@ static void PM_Friction( void )
   vec3_t  vec;
   float   *vel;
   float   speed, newspeed, control;
-  float   drop;
+  float   drop, modifier;
 
   vel = pm->ps->velocity;
 
@@ -323,7 +324,10 @@ static void PM_Friction( void )
   }
   */
   if( pm->ps->pm_type == PM_HUMMEL /*&& pm->ps->torsoTimer <= 0*/ )
-    drop += speed * pm_hummelfriction * pml.frametime;
+  {
+    modifier = ( pm->cmd.buttons & BUTTON_WALKING ) ? pm_hummelwalkfriction : pm_hummelfriction;
+    drop += speed * modifier * pml.frametime;
+  }
 
   // scale the velocity
   newspeed = speed - drop;
@@ -336,7 +340,6 @@ static void PM_Friction( void )
   vel[ 1 ] = vel[ 1 ] * newspeed;
   vel[ 2 ] = vel[ 2 ] * newspeed;
 }
-
 
 /*
 ==============
