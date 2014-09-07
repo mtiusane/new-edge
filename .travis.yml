@@ -1,0 +1,6 @@
+language: c
+before_install:
+ - sudo apt-get update -qq
+ - sudo apt-get install -qq libc6-dev libcurl4-gnutls-dev libopenal-dev libsdl1.2-dev libgl1-mesa-dev
+script:
+  - make all BUILD_SERVER=1 BUILD_CLIENT=1 BUILD_CLIENT_SMP=1 BUILD_GAME_SO=1 BUILD_GAME_QVM=1 BUILD_STANDALONE=1
