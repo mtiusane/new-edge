@@ -188,6 +188,7 @@ into a wall.
 */
 void SnapVectorTowards( vec3_t v, vec3_t to )
 {
+  /*
   int   i;
 
   for( i = 0 ; i < 3 ; i++ )
@@ -197,10 +198,12 @@ void SnapVectorTowards( vec3_t v, vec3_t to )
     else
       v[ i ] = (int)( v[ i ] + ( to[ i ] <= v[ i ] ? -1 : 0 ) );
   }
+  */
 }
 
 void SnapVectorNormal( vec3_t v, vec3_t normal )
 {
+  /*
   int i;
 
   for( i = 0 ; i < 3 ; i++ )
@@ -210,6 +213,7 @@ void SnapVectorNormal( vec3_t v, vec3_t normal )
     else
       v[ i ] = (int)( v[ i ] + ( normal[ i ] <= 0 ? -1 : 0 ) );
   }
+  */
 }
 
 /*
