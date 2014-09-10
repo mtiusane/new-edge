@@ -1693,9 +1693,9 @@ gentity_t *Prickles_Fire( gentity_t *self, vec3_t start, vec3_t dir )
   gentity_t *bolt;
   VectorNormalize ( dir );
   
-  bolt 							= G_Spawn( );
+  bolt 				                = G_Spawn( );
   bolt->classname 				= "prickles";
-  bolt->pointAgainstWorld 		= qtrue;
+  bolt->pointAgainstWorld 		        = qtrue;
   bolt->nextthink 				= level.time + LEVEL5_PRICKLES_NEXTTHINK;
   bolt->think 					= G_ExplodeMissile;
   bolt->s.eType 				= ET_MISSILE;
@@ -1705,10 +1705,10 @@ gentity_t *Prickles_Fire( gentity_t *self, vec3_t start, vec3_t dir )
   bolt->r.ownerNum 				= self->s.number;
   bolt->parent 					= self;
   bolt->damage 					= LEVEL5_PRICKLES_DMG;
-  bolt->splashDamage 			= LEVEL5_PRICKLESSPLASH_DMG;
-  bolt->splashRadius 			= LEVEL5_PRICKLES_RADIUS;
-  bolt->methodOfDeath 			= MOD_LEVEL5_PRICKLES;
-  bolt->splashMethodOfDeath 	= MOD_LEVEL5_PRICKLES;
+  bolt->splashDamage 			        = LEVEL5_PRICKLESSPLASH_DMG;
+  bolt->splashRadius 			        = LEVEL5_PRICKLES_RADIUS;
+  bolt->methodOfDeath 			        = MOD_LEVEL5_PRICKLES;
+  bolt->splashMethodOfDeath 	                = MOD_LEVEL5_PRICKLES;
   bolt->clipmask 				= MASK_SHOT;
   bolt->target_ent 				= NULL;
   bolt->s.pos.trType = TR_LINEAR;

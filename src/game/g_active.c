@@ -716,16 +716,16 @@ static qboolean ClientInactivityTimer( gentity_t *ent, qboolean active )
             va( "print \"%s^7 moved from %s to spectators due to inactivity\n\"",
                 client->pers.netname,
                 BG_TeamName( client->pers.teamSelection ) ) );
-          G_LogPrintf( "Inactivity: %d", client - level.clients );
+          G_LogPrintf( "Inactivity: %d\n", client - level.clients );
           G_ChangeTeam( ent, TEAM_NONE );
         }
         else
        {
-	    trap_SendServerCommand( -1,
-        va( "print \"%s^7 moved from %s to spectators due to inactivity\n\"",
-                client->pers.netname,
-                BG_TeamName( client->pers.teamSelection ) ) );
-        G_LogPrintf( "Inactivity: %d", client - level.clients );
+	 trap_SendServerCommand( -1,
+           va( "print \"%s^7 moved from %s to spectators due to inactivity\n\"",
+               client->pers.netname,
+               BG_TeamName( client->pers.teamSelection ) ) );
+        G_LogPrintf( "Inactivity: %d\n", client - level.clients );
         G_ChangeTeam( ent, TEAM_NONE );
         //trap_DropClient( client - level.clients, "Dropped due to inactivity" );
         }
