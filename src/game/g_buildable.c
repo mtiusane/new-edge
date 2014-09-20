@@ -1135,9 +1135,12 @@ void ASpawn_Think( gentity_t *self )
     }
   }
 
-  G_CreepSlow( self );
-
   self->nextthink = level.time + BG_Buildable( self->s.modelindex )->nextthink;
+
+  if( G_SuicideIfNegativeBuildPoints( self ) )
+    return;
+
+  G_CreepSlow( self );
 }
 
 
