@@ -527,15 +527,15 @@ G_Suicide
 let the given buildable suicide
 ================
 */
-void G_Suicide( gentity_t *self )
+void G_Suicide( gentity_t *self, meansOfDeath_t death )
 {
   const gentity_t *parent = self->parentNode;
 
   if( parent )
     G_Damage( self, NULL, g_entities + parent->killedBy, NULL, NULL,
-              self->health, 0, MOD_NOCREEP );
+              self->health, 0, death );
   else
-    G_Damage( self, NULL, NULL, NULL, NULL, self->health, 0, MOD_NOCREEP );
+    G_Damage( self, NULL, NULL, NULL, NULL, self->health, 0, death );
 }
 
 /*
@@ -589,7 +589,7 @@ static qboolean G_SuicideIfNegativeBuildPoints( gentity_t *self )
   surviveprobcur = pow( surviveprob1min, thinkduration / 60000.0f );
   if( surviveprobcur * RAND_MAX < rand( ) )
   {
-    G_Suicide( self );
+    G_Suicide( self, MOD_NOBP );
     return qtrue;
   }
   else
@@ -1036,7 +1036,7 @@ void AGeneric_CreepCheck( gentity_t *self )
 {
   if( !G_FindCreep( self ) )
   {
-    G_Suicide( self );
+    G_Suicide( self, MOD_NOCREEP );
     return;
   }
 
@@ -2393,7 +2393,7 @@ static qboolean G_SuicideIfNoPower( gentity_t *self )
       self->count = level.time;
     else if( ( level.time - self->count ) >= HUMAN_BUILDABLE_INACTIVE_TIME )
     {
-      G_Suicide( self );
+      G_Suicide( self, MOD_NOCREEP );
       return qtrue;
     }
   }
