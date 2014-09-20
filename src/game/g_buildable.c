@@ -387,22 +387,25 @@ gentity_t *G_IsGathered( team_t team, vec3_t origin, qboolean omRcOnly, gentity_
 ==================
 G_GetBuildPoints
 
-Get the number of build points from a position
+Get the number of build points from a position.
+
+If sudden death has started, the returned value might be negative,
+but is never positive.
+
+Note: 'pos' can be NULL, in this case return the overall BP of the team.
 ==================
 */
 int G_GetBuildPoints( const vec3_t pos, team_t team )
 {
-  if( G_TimeTilSuddenDeath( ) <= 0 )
-  {
-    return 0;
-  }
-    else if( !G_Overmind( ) && team == TEAM_ALIENS )
+  int value = 0;
+
+  if( !G_Overmind( ) && team == TEAM_ALIENS )
   {
     return 0;
   }
   else if( team == TEAM_ALIENS )
   {
-    return level.alienBuildPoints;
+    value = level.alienBuildPoints;
   }
   else if( !G_Reactor( ) && team == TEAM_HUMANS )
   {
@@ -410,10 +413,15 @@ int G_GetBuildPoints( const vec3_t pos, team_t team )
   }
   else if( team == TEAM_HUMANS )
   {
-    return level.humanBuildPoints;
+    value = level.humanBuildPoints;
   }
+  else
+    return 0;
 
-  return 0;
+  if( ( value > 0 ) && ( G_TimeTilSuddenDeath( ) <= 0 ) )
+    return 0;
+  else
+    return value;
 }
 
 /*
@@ -512,6 +520,24 @@ gentity_t *G_InPowerZone( gentity_t *self )
   }
 
   return NULL;
+}
+
+/*
+================
+G_Suicide
+
+let the given buildable suicide
+================
+*/
+void G_Suicide( gentity_t *self, meansOfDeath_t death )
+{
+  const gentity_t *parent = self->parentNode;
+
+  if( parent )
+    G_Damage( self, NULL, g_entities + parent->killedBy, NULL, NULL,
+              self->health, 0, death );
+  else
+    G_Damage( self, NULL, NULL, NULL, NULL, self->health, 0, death );
 }
 
 /*
@@ -952,16 +978,9 @@ Tests for creep and kills the buildable if there is none
 */
 void AGeneric_CreepCheck( gentity_t *self )
 {
-  gentity_t *spawn;
-
-  spawn = self->parentNode;
   if( !G_FindCreep( self ) )
   {
-    if( spawn )
-      G_Damage( self, NULL, g_entities + spawn->killedBy, NULL, NULL,
-                self->health, 0, MOD_NOCREEP );
-    else
-      G_Damage( self, NULL, NULL, NULL, NULL, self->health, 0, MOD_NOCREEP );
+    G_Suicide( self, MOD_NOCREEP );
     return;
   }
   G_CreepSlow( self );
@@ -2314,11 +2333,7 @@ static qboolean G_SuicideIfNoPower( gentity_t *self )
       self->count = level.time;
     else if( ( level.time - self->count ) >= HUMAN_BUILDABLE_INACTIVE_TIME )
     {
-      if( self->parentNode )
-        G_Damage( self, NULL, g_entities + self->parentNode->killedBy,
-                  NULL, NULL, self->health, 0, MOD_NOCREEP );
-      else
-        G_Damage( self, NULL, NULL, NULL, NULL, self->health, 0, MOD_NOCREEP );
+      G_Suicide( self, MOD_NOCREEP );
       return qtrue;
     }
   }

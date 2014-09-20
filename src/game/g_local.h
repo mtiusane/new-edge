@@ -670,6 +670,7 @@ typedef struct
   timeWarning_t     timelimitWarning;
   
   int               nextArmageddonKillTime;
+  int               nextNegativeBPCheck;
   spawnQueue_t      alienSpawnQueue;
   spawnQueue_t      humanSpawnQueue;
 
