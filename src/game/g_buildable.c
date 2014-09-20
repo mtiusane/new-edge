@@ -387,22 +387,23 @@ gentity_t *G_IsGathered( team_t team, vec3_t origin, qboolean omRcOnly, gentity_
 ==================
 G_GetBuildPoints
 
-Get the number of build points from a position
+Get the number of build points from a position.
+
+If sudden death has started, the returned value might be negative,
+but is never positive.
 ==================
 */
 int G_GetBuildPoints( const vec3_t pos, team_t team )
 {
-  if( G_TimeTilSuddenDeath( ) <= 0 )
-  {
-    return 0;
-  }
-    else if( !G_Overmind( ) && team == TEAM_ALIENS )
+  int value = 0;
+
+  if( !G_Overmind( ) && team == TEAM_ALIENS )
   {
     return 0;
   }
   else if( team == TEAM_ALIENS )
   {
-    return level.alienBuildPoints;
+    value = level.alienBuildPoints;
   }
   else if( !G_Reactor( ) && team == TEAM_HUMANS )
   {
@@ -410,10 +411,15 @@ int G_GetBuildPoints( const vec3_t pos, team_t team )
   }
   else if( team == TEAM_HUMANS )
   {
-    return level.humanBuildPoints;
+    value = level.humanBuildPoints;
   }
+  else
+    return 0;
 
-  return 0;
+  if( ( value > 0 ) && ( G_TimeTilSuddenDeath( ) <= 0 ) )
+    return 0;
+  else
+    return value;
 }
 
 /*
