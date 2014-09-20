@@ -1377,8 +1377,8 @@ void G_CheckForNegativeBuildPoints( void )
     return;
   level.nextNegativeBPCheck += thinkduration;
 
-  a_bps = G_GetBuildPoints( NULL, TEAM_ALIENS );
-  h_bps = G_GetBuildPoints( NULL, TEAM_HUMANS );
+  a_bps = G_GetBuildPoints( NULL, TEAM_ALIENS ) + level.alienBuildPointQueue;
+  h_bps = G_GetBuildPoints( NULL, TEAM_HUMANS ) + level.humanBuildPointQueue;
 
   if( ( a_bps >= 0 ) && ( h_bps >= 0 ) )
     return;
