@@ -540,6 +540,64 @@ void G_Suicide( gentity_t *self )
 
 /*
 ================
+G_SuicideIfNegativeBuildPoints
+
+if the amount of build points is negative,
+================
+*/
+static qboolean G_SuicideIfNegativeBuildPoints( gentity_t *self )
+{
+  // since at this point nextthink should be already set,
+  // we can use it to determine how often this is called
+  const int thinkduration = self->nextthink - level.time;
+  const buildableAttributes_t *ba = BG_Buildable( self->s.modelindex );
+  float dieprob1min;
+  float surviveprob1min;
+  float surviveprobcur;
+
+  if( thinkduration <= 0 )
+    // we can't determine how often the think function is called
+    // this shouldn't happen, but if does, exit cleanly
+    return qfalse;
+
+  // no gain from a building without BPs
+  if( ba->buildPoints <= 0 )
+    return qfalse;
+
+  // TODO: Add a separate probability for each buildable.
+  // If it's 0, then they won't die at all, and the checks for building types
+  // won't be needed.
+  dieprob1min = 0.42f; /* hard-wired */
+  if( dieprob1min <= 0.0f )
+    return qfalse;
+  surviveprob1min = 1.0f - dieprob1min;
+  surviveprob1min = MAX( 0.0f, surviveprob1min );
+
+  // check for buildings that must not die
+  switch (self->s.modelindex) {
+    case BA_H_REACTOR:
+    case BA_H_REFINERY:
+    case BA_A_OVERMIND:
+    case BA_A_CREEPCOLONY:
+      return qfalse;
+  }
+  // TODO end
+
+  if( G_GetBuildPoints( self->s.origin, self->buildableTeam ) >= 0 )
+    return qfalse;
+
+  surviveprobcur = pow( surviveprob1min, thinkduration / 60000.0f );
+  if( surviveprobcur * RAND_MAX < rand( ) )
+  {
+    G_Suicide( self );
+    return qtrue;
+  }
+  else
+    return qfalse;
+}
+
+/*
+================
 G_FindDCC
 
 attempt to find a controlling DCC for self, return number found
@@ -981,6 +1039,10 @@ void AGeneric_CreepCheck( gentity_t *self )
     G_Suicide( self );
     return;
   }
+
+  if( G_SuicideIfNegativeBuildPoints( self ) )
+    return;
+
   G_CreepSlow( self );
 }
 
@@ -2338,7 +2400,7 @@ static qboolean G_SuicideIfNoPower( gentity_t *self )
   else
     self->count = 0;
 
-  return qfalse;
+  return G_SuicideIfNegativeBuildPoints( self );
 }
 
 /*
