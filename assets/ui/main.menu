@@ -23,12 +23,12 @@
     rect 0 0 640 480      		  // Size and position of the menu
     visible MENU_TRUE      		  // Visible on open
     focusColor 1 1 1 1        // Menu focus color for text and items
-	background "ui/assets/warp_splash_m.jpg"
+    background "ui/assets/warp_splash_m.jpg"
     aspectBias ASPECT_NONE
     onOpen { uiScript stopRefresh ; playlooped "ui/assets/edge_heartbeat.wav" }
     onESC { open quit_popmenu }
 
-	itemDef
+    itemDef
     {
       name "aurora_add"
       style WINDOW_STYLE_SHADER
@@ -38,7 +38,7 @@
       decoration
     }
 	
-	itemDef
+    itemDef
     {
       name "aurora"
       style WINDOW_STYLE_SHADER
@@ -68,7 +68,7 @@
       decoration
     }
 	
-	itemDef
+    itemDef
     {
       name "edge_logo"
       style WINDOW_STYLE_SHADER
@@ -78,13 +78,13 @@
       decoration
     }
 	
-	itemDef
+    itemDef
     {
       name mainmenu
-      text "ENTER New EDGE SERVER"
+      text "ENTER New EDGE EU SERVER"
       type ITEM_TYPE_BUTTON
       style WINDOW_STYLE_EMPTY
-	  textstyle ITEM_TEXTSTYLE_NORMAL
+      textstyle ITEM_TEXTSTYLE_NORMAL
       rect 270 210 100 20
       textalign ALIGN_CENTER
       textvalign VALIGN_CENTER
@@ -93,8 +93,28 @@
       visible MENU_TRUE
       action
       {
-	    exec stopmusic
+        exec stopmusic
         exec "connect 95.85.34.7:30720";
+      }
+    }
+
+    itemDef
+    {
+      name mainmenu
+      text "ENTER New EDGE US SERVER"
+      type ITEM_TYPE_BUTTON
+      style WINDOW_STYLE_EMPTY
+      textstyle ITEM_TEXTSTYLE_NORMAL
+      rect 270 230 100 20
+      textalign ALIGN_CENTER
+      textvalign VALIGN_CENTER
+      textscale .40
+      forecolor 0 0.8 1 1
+      visible MENU_TRUE
+      action
+      {
+        exec stopmusic
+        exec "connect 162.243.129.42:30720";
       }
     }
 	
@@ -105,7 +125,7 @@
       type ITEM_TYPE_BUTTON
       style WINDOW_STYLE_EMPTY
       textstyle ITEM_TEXTSTYLE_NORMAL
-      rect 270 230 100 20
+      rect 270 250 100 20
       textalign ALIGN_CENTER
       textvalign VALIGN_CENTER
       textscale .4
@@ -125,7 +145,7 @@
       style WINDOW_STYLE_EMPTY
       textstyle ITEM_TEXTSTYLE_NORMAL
       textscale .4
-      rect 270 250 100 20
+      rect 270 270 100 20
       textalign ALIGN_CENTER
       textvalign VALIGN_CENTER
       backcolor 0 0 0 0
@@ -144,7 +164,7 @@
       type ITEM_TYPE_BUTTON
       style WINDOW_STYLE_EMPTY
       textstyle ITEM_TEXTSTYLE_NORMAL
-      rect 270 270 100 20
+      rect 270 290 100 20
       textscale .4
       textalign ALIGN_CENTER
       textvalign VALIGN_CENTER
@@ -169,16 +189,18 @@
       visible MENU_TRUE
       decoration
     }
-	itemDef
+
+    itemDef
     {
       name "terminal"
       style WINDOW_STYLE_SHADER
       rect 210 374 220 80
       visible 1
-	  background "ui/edgeterminal"
+      background "ui/edgeterminal"
       decoration
     }
-	itemDef
+
+    itemDef
     {
       name copyright
       type ITEM_TYPE_TEXT
