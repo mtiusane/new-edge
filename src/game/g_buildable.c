@@ -2543,6 +2543,8 @@ void HSpawn_Think( gentity_t *self )
 {
   gentity_t *ent;
 
+  self->nextthink = level.time + BG_Buildable( self->s.modelindex )->nextthink;
+
   // set parentNode
   self->powered = G_FindPower( self, qfalse );
 
@@ -2582,8 +2584,6 @@ void HSpawn_Think( gentity_t *self )
         self->spawnBlockTime = 0;
     }
   }
-
-  self->nextthink = level.time + BG_Buildable( self->s.modelindex )->nextthink;
 }
 
 /*
