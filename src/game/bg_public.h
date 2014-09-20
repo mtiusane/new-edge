@@ -894,6 +894,7 @@ typedef enum
   MOD_DECONSTRUCT,
   MOD_REPLACE,
   MOD_NOCREEP,
+  MOD_NOBP,
   MOD_ABOMB
 } meansOfDeath_t;
 
