@@ -391,6 +391,8 @@ Get the number of build points from a position.
 
 If sudden death has started, the returned value might be negative,
 but is never positive.
+
+Note: 'pos' can be NULL, in this case return the overall BP of the team.
 ==================
 */
 int G_GetBuildPoints( const vec3_t pos, team_t team )

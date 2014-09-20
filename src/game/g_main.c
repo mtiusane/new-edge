@@ -366,6 +366,7 @@ void G_ShutdownGame( int restart );
 void CheckExitRules( void );
 void G_CountSpawns( void );
 void G_CalculateBuildPoints( void );
+void G_CheckForNegativeBuildPoints( void );
 
 /*
 ================
@@ -1353,6 +1354,75 @@ void G_CalculateBuildPoints( void )
 //  if( level.alienBuildPoints < 0 )
 //    level.alienBuildPoints = 0;
 }
+
+/*
+============
+G_CheckForNegativeBuildPoints
+
+Recalculate the quantity of building points available to the teams
+============
+*/
+void G_CheckForNegativeBuildPoints( void )
+{
+  static const int thinkduration = 1037;
+  int e;
+  gentity_t *ent;
+  const buildableAttributes_t *ba;
+  float dieprob1min;
+  float surviveprob1min;
+  float surviveprobcur;
+  int a_bps, h_bps;
+
+  if( level.nextNegativeBPCheck > level.time )
+    return;
+  level.nextNegativeBPCheck += thinkduration;
+
+  a_bps = G_GetBuildPoints( NULL, TEAM_ALIENS );
+  h_bps = G_GetBuildPoints( NULL, TEAM_HUMANS );
+
+  if( ( a_bps >= 0 ) && ( h_bps >= 0 ) )
+    return;
+
+  for( e = 0; e < level.num_entities; ++e ) {
+    ent = g_entities + e;
+
+    if (!ent->inuse)
+      continue;
+    ba = BG_Buildable( ent->s.modelindex );
+
+    // no gain from a building without BPs
+    if( ba->buildPoints <= 0 )
+      continue;
+
+    // TODO: Add a separate probability for each buildable.
+    // If it's 0, then they won't die at all, and the checks for building types
+    // won't be needed.
+    dieprob1min = 0.42f; /* hard-wired */
+    if( dieprob1min <= 0.0f )
+      continue;
+    surviveprob1min = 1.0f - dieprob1min;
+    surviveprob1min = MAX( 0.0f, surviveprob1min );
+
+    // check for buildings that must not die
+    switch( ent->s.modelindex ) {
+      case BA_H_REACTOR:
+      case BA_H_REFINERY:
+      case BA_A_OVERMIND:
+      case BA_A_CREEPCOLONY:
+        continue;
+    }
+    // TODO end
+
+    if( ( ( ent->buildableTeam == TEAM_ALIENS ) && ( a_bps < 0 ) ) ||
+        ( ( ent->buildableTeam == TEAM_HUMANS ) && ( h_bps < 0 ) ) )
+    {
+      surviveprobcur = pow( surviveprob1min, thinkduration / 60000.0f );
+      if( surviveprobcur * RAND_MAX < rand( ) )
+        G_Suicide( ent, MOD_NOBP );
+    }
+  }
+}
+
  /*
  ============
 G_HumanBuildPoints
@@ -2747,6 +2817,7 @@ void G_RunFrame( int levelTime )
 
   G_CountSpawns( );
   G_CalculateBuildPoints( );
+  G_CheckForNegativeBuildPoints( );
   G_CalculateStages( );
   G_SpawnClients( TEAM_ALIENS );
   G_SpawnClients( TEAM_HUMANS );
