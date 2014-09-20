@@ -143,7 +143,8 @@ char *modNames[ ] =
   "MOD_SLAP",
   "MOD_DECONSTRUCT",
   "MOD_REPLACE",
-  "MOD_NOCREEP", 
+  "MOD_NOCREEP",
+  "MOD_NOBP",
   "MOD_ABOMB"
 };
 
@@ -1353,7 +1354,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 
     if( targ->s.eType == ET_BUILDABLE && attacker->client &&
         mod != MOD_DECONSTRUCT && mod != MOD_SUICIDE &&
-        mod != MOD_REPLACE && mod != MOD_NOCREEP )
+        mod != MOD_REPLACE && mod != MOD_NOCREEP && mod != MOD_NOBP )
     {
       if( targ->buildableTeam == attacker->client->pers.teamSelection &&
         !g_friendlyBuildableFire.integer )
@@ -1781,6 +1782,9 @@ void G_LogDestruction( gentity_t *self, gentity_t *actor, int mod )
     case MOD_NOCREEP:
       fate = ( actor->client ) ? BF_UNPOWER : BF_AUTO;
       break;
+    case MOD_NOBP:
+      fate = BF_UNPOWER;
+      break;
     default:
       if( actor->client )
       {
@@ -1813,7 +1817,8 @@ void G_LogDestruction( gentity_t *self, gentity_t *actor, int mod )
 
   // No-power deaths for humans come after some minutes and it's confusing
   //  when the messages appear attributed to the deconner. Just don't print them.
-  if( mod == MOD_NOCREEP && actor->client && 
+  if( ( mod == MOD_NOCREEP && mod == MOD_NOBP ) &&
+      actor->client &&
       actor->client->pers.teamSelection == TEAM_HUMANS )
     return;
 
