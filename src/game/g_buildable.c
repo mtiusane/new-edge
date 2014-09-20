@@ -516,6 +516,24 @@ gentity_t *G_InPowerZone( gentity_t *self )
 
 /*
 ================
+G_Suicide
+
+let the given buildable suicide
+================
+*/
+void G_Suicide( gentity_t *self )
+{
+  const gentity_t *parent = self->parentNode;
+
+  if( parent )
+    G_Damage( self, NULL, g_entities + parent->killedBy, NULL, NULL,
+              self->health, 0, MOD_NOCREEP );
+  else
+    G_Damage( self, NULL, NULL, NULL, NULL, self->health, 0, MOD_NOCREEP );
+}
+
+/*
+================
 G_FindDCC
 
 attempt to find a controlling DCC for self, return number found
@@ -952,16 +970,9 @@ Tests for creep and kills the buildable if there is none
 */
 void AGeneric_CreepCheck( gentity_t *self )
 {
-  gentity_t *spawn;
-
-  spawn = self->parentNode;
   if( !G_FindCreep( self ) )
   {
-    if( spawn )
-      G_Damage( self, NULL, g_entities + spawn->killedBy, NULL, NULL,
-                self->health, 0, MOD_NOCREEP );
-    else
-      G_Damage( self, NULL, NULL, NULL, NULL, self->health, 0, MOD_NOCREEP );
+    G_Suicide( self );
     return;
   }
   G_CreepSlow( self );
@@ -2314,11 +2325,7 @@ static qboolean G_SuicideIfNoPower( gentity_t *self )
       self->count = level.time;
     else if( ( level.time - self->count ) >= HUMAN_BUILDABLE_INACTIVE_TIME )
     {
-      if( self->parentNode )
-        G_Damage( self, NULL, g_entities + self->parentNode->killedBy,
-                  NULL, NULL, self->health, 0, MOD_NOCREEP );
-      else
-        G_Damage( self, NULL, NULL, NULL, NULL, self->health, 0, MOD_NOCREEP );
+      G_Suicide( self );
       return qtrue;
     }
   }
