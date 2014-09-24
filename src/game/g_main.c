@@ -194,6 +194,7 @@ vmCvar_t  g_TeamRewardFactor;
 vmCvar_t  g_PlayerRewardFactor;
 vmCvar_t  g_TimerPeriod;
 vmCvar_t  g_TimerCommand;
+vmCvar_t  g_ForceRandomTeams;
 
 // copy cvars that can be set in worldspawn so they can be restored later
 static char cv_gravity[ MAX_CVAR_VALUE_STRING ];
@@ -357,7 +358,8 @@ static cvarTable_t   gameCvarTable[ ] =
   { &g_TeamRewardFactor, "g_TeamRewardFactor", "0.5", CVAR_ARCHIVE, 0, qfalse },
   { &g_PlayerRewardFactor, "g_PlayerRewardFactor", "0.25", CVAR_ARCHIVE, 0, qfalse },
   { &g_TimerPeriod, "g_TimerPeriod", "0", CVAR_ARCHIVE, 0, qfalse },
-  { &g_TimerCommand, "g_TimerCommand", "", CVAR_ARCHIVE, 0, qfalse }
+  { &g_TimerCommand, "g_TimerCommand", "", CVAR_ARCHIVE, 0, qfalse },
+  { &g_ForceRandomTeams, "g_ForceRandomTeams", "0", CVAR_ARCHIVE, 0, qfalse }
 };
 static int gameCvarTableSize = sizeof( gameCvarTable ) / sizeof( gameCvarTable[ 0 ] );
 void G_InitGame( int levelTime, int randomSeed, int restart );
@@ -717,6 +719,8 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
   trap_Cvar_Set( "g_humanStage", va( "%d", S1 ) );
   trap_Cvar_Set( "g_alienCredits", 0 );
   trap_Cvar_Set( "g_humanCredits", 0 );
+  if( g_ForceRandomTeams.integer == 2)
+    trap_Cvar_Set( "g_ForceRandomTeams", 0 );
   level.suddenDeathBeginTime = g_suddenDeathTime.integer * 60000;
   level.nextArmageddonKillTime = (g_suddenDeathTime.integer+g_armageddonInitialTimeStep.integer) * 60000;
   level.nextCommandTime = g_TimerPeriod.integer;

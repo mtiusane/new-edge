@@ -635,7 +635,7 @@ void SP_worldspawn( void )
 
   // see if we want a warmup time
   trap_SetConfigstring( CS_WARMUP, "-1" );
-  if( g_doWarmup.integer )
+  if( g_doWarmup.integer && !g_ForceRandomTeams.integer )
   {
     level.warmupTime = level.time - level.startTime + ( g_warmup.integer * 1000 );
     trap_SetConfigstring( CS_WARMUP, va( "%i", level.warmupTime ) );

@@ -1286,6 +1286,7 @@ extern  vmCvar_t  g_KillRewardMultiplierH;
 extern  vmCvar_t  g_ConstantRewardFactor;
 extern  vmCvar_t  g_TeamRewardFactor;
 extern  vmCvar_t  g_PlayerRewardFactor;
+extern  vmCvar_t  g_ForceRandomTeams;
 
 void      trap_Print( const char *fmt );
 void      trap_Error( const char *fmt );

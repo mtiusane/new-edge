@@ -1229,7 +1229,6 @@ char *ClientConnect( int clientNum, qboolean firstTime )
     G_ChangeTeam( ent, client->sess.restartTeam );
     client->sess.restartTeam = TEAM_NONE;
   }
-
   
   return NULL;
 }
@@ -1299,6 +1298,14 @@ void ClientBegin( int clientNum )
     client->sess.seenWelcome = 1;
     G_TriggerMenu( client->ps.clientNum, MN_WELCOME );
   } 
+
+  if ( g_ForceRandomTeams.integer ) {
+    if( level.numAlienClients > level.numHumanClients ) {
+      G_ChangeTeam( ent, TEAM_HUMANS );
+    } else if( level.numHumanClients > level.numAlienClients ) {
+      G_ChangeTeam( ent, TEAM_ALIENS );
+    } else G_ChangeTeam( ent, random() >= 0.5f ? TEAM_ALIENS : TEAM_HUMANS );
+  }
 }
 
 /*
