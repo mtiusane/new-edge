@@ -4855,6 +4855,12 @@ static void G_SpawnBuildableThink( gentity_t *ent )
   G_FreeEntity( ent );
 }
 
+static void G_ForceSpawnBuildableThink( gentity_t *ent )
+{
+  G_FinishSpawningBuildable( ent, qtrue );
+  G_FreeEntity( ent );
+}
+
 /*
 ============
 G_SpawnBuildable
@@ -4873,6 +4879,16 @@ void G_SpawnBuildable( gentity_t *ent, buildable_t buildable )
   // spawns until the third frame so they can ride trains
   ent->nextthink = level.time + FRAMETIME * 2;
   ent->think = G_SpawnBuildableThink;
+}
+
+void G_ForceSpawnBuildable( gentity_t *ent, buildable_t buildable )
+{
+  ent->s.modelindex = buildable;
+
+  // some movers spawn on the second frame, so delay item
+  // spawns until the third frame so they can ride trains
+  ent->nextthink = level.time + FRAMETIME * 2;
+  ent->think = G_ForceSpawnBuildableThink;
 }
 
 /*
@@ -5081,6 +5097,20 @@ static void G_LayoutBuildItem( buildable_t buildable, vec3_t origin,
   VectorCopy( origin2, builder->s.origin2 );
   VectorCopy( angles2, builder->s.angles2 );
   G_SpawnBuildable( builder, buildable );
+}
+
+static void G_LayoutForceBuildItem( buildable_t buildable, vec3_t origin,
+  vec3_t angles, vec3_t origin2, vec3_t angles2 )
+{
+  gentity_t *builder;
+
+  builder = G_Spawn( );
+  builder->client = 0;
+  VectorCopy( origin, builder->s.pos.trBase );
+  VectorCopy( angles, builder->s.angles );
+  VectorCopy( origin2, builder->s.origin2 );
+  VectorCopy( angles2, builder->s.angles2 );
+  G_ForceSpawnBuildable( builder, buildable );
 }
 
 /*

@@ -235,6 +235,11 @@ g_admin_cmd_t g_admin_cmds[ ] =
       "[^7name|slot^7]"
     },
 
+    {"spawn", G_admin_spawn, qtrue, "spawn",
+      "Spawn a buildable in front of admin",
+      "^7name"
+    },
+
     {"spec999", G_admin_spec999, qfalse, "spec999",
       "move 999 pingers to the spectator team",
       ""},
@@ -3685,6 +3690,66 @@ qboolean G_admin_slap( gentity_t *ent )
   return qtrue;
 }
 
+qboolean G_admin_spawn( gentity_t *ent )
+{
+  char name[ MAX_NAME_LENGTH ];
+  buildable_t buildable;
+
+  int i;
+  playerState_t* ps = NULL;
+
+  float buildDist;
+  vec3_t entityOrigin;
+  vec3_t forward,normal,angles;
+  if( trap_Argc() < 2 )
+  {
+    ADMP( "^3spawn: ^7usage: spawn ^7name\n" );
+    return qfalse;
+  }
+  
+  trap_Argv( 1, name, sizeof( name ) );
+
+  buildable = BG_BuildableByName( name )->number;
+  if( buildable <= BA_NONE || buildable >= BA_NUM_BUILDABLES )
+  {
+    ADMP( "^3spawn: ^7no such buildable\n" );
+    return qfalse;
+  }
+
+  if( !ent ) {
+    for( i = 0; i < level.maxclients; i++ )
+      {
+        if( level.clients[ i ].pers.connected != CON_DISCONNECTED )
+	  {
+	    ps = &level.clients[ i ].ps;
+	    break;
+	  }
+      }
+  } else {
+    ps = &ent->client->ps;
+  }
+
+  if (ps == NULL) {
+    ADMP( "^3spawn: ^7No (player-)entity with position found.\n" );
+    return qfalse;
+  } 
+
+  buildDist = BG_Class( ps->stats[ STAT_CLASS ] )->buildDist;
+
+  if( BG_Buildable( buildable )->traj == TR_BUOYANCY )
+    VectorSet( normal, 0.0f, 0.0f, -1.0f );
+  else
+    VectorSet( normal, 0.0f, 0.0f, 1.0f );
+
+  VectorSet( angles, 0.0f, 90.0f, 0.0f );
+
+  AngleVectors( ps->viewangles, forward, NULL, NULL );
+  VectorNormalize( forward );
+  VectorMA( ps->origin, buildDist, forward, entityOrigin );
+  ADMP( va( "^3spawn: ^7%s at %f %f %f\n", name, entityOrigin[0], entityOrigin[1], entityOrigin[2] ) );
+  G_LayoutForceBuildItem( buildable, entityOrigin, angles, normal, angles );
+  return qtrue;
+}
 
 qboolean G_admin_buildlog( gentity_t *ent )
 {

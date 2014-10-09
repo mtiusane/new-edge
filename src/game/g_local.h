@@ -833,6 +833,7 @@ qboolean          G_BuildIfValid( gentity_t *ent, buildable_t buildable );
 void              G_SetBuildableAnim( gentity_t *ent, buildableAnimNumber_t anim, qboolean force );
 void              G_SetIdleBuildableAnim( gentity_t *ent, buildableAnimNumber_t anim );
 void              G_SpawnBuildable(gentity_t *ent, buildable_t buildable);
+void              G_ForceSpawnBuildable(gentity_t *ent, buildable_t buildable);
 void              FinishSpawningBuildable( gentity_t *ent );
 void              G_LayoutSave( char *name );
 int               G_LayoutList( const char *map, char *list, int len );
