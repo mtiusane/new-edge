@@ -2742,6 +2742,7 @@ void Cmd_Build_f( gentity_t *ent )
       case IBE_NOPOWERHERE:
 	  case IBE_BLOCKEDBYENEMY:
       case IBE_GTHRBLOCKED: 
+      case IBE_WSD_INBASE:
         err = MN_NONE;
         break;
 
@@ -2776,6 +2777,10 @@ void Cmd_Build_f( gentity_t *ent )
 
       case IBE_LASTSPAWN:
         err = MN_B_LASTSPAWN;
+        break;
+
+      case IBE_WSD_REFSCOLS:
+        err = MN_B_WSD_REFSCOLS;
         break;
 
       default:

@@ -51,6 +51,7 @@ gclient_t   g_clients[ MAX_CLIENTS ];
 
 vmCvar_t  g_timelimit;
 vmCvar_t  g_suddenDeathTime;
+vmCvar_t  g_weakSuddenDeathTime;
 vmCvar_t  g_armageddonTimeStep;
 vmCvar_t  g_armageddonInitialTimeStep;
 vmCvar_t  g_armageddonDefensiveKillPercent;
@@ -225,6 +226,7 @@ static cvarTable_t   gameCvarTable[ ] =
   { &g_humanMedkitRange, "g_humanMedkitRange", "200", CVAR_ARCHIVE, 0, qfalse },
   { &g_humanMedkitWidth, "g_humanMedkitWidth", "20", CVAR_ARCHIVE, 0, qfalse },
   { &g_suddenDeathTime, "g_suddenDeathTime", "40", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
+  { &g_weakSuddenDeathTime, "g_weakSuddenDeathTime", "25", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
   { &g_armageddonTimeStep, "g_armageddonTimeStep", "5", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
   { &g_armageddonInitialTimeStep, "g_armageddonInitialTimeStep", "10", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
   { &g_armageddonDefensiveKillPercent, "g_armageddonDefensiveKillPercent", "10", CVAR_SERVERINFO | CVAR_ARCHIVE | CVAR_NORESTART, 0, qtrue },
@@ -726,6 +728,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
   if( g_ForceRandomTeams.integer == 2)
     trap_Cvar_Set( "g_ForceRandomTeams", 0 );
   level.suddenDeathBeginTime = g_suddenDeathTime.integer * 60000;
+  level.weakSuddenDeathBeginTime = g_weakSuddenDeathTime.integer * 60000;
   level.nextArmageddonKillTime = (g_suddenDeathTime.integer+g_armageddonInitialTimeStep.integer) * 60000;
   level.nextCommandTime = g_TimerPeriod.integer;
   G_Printf( "-----------------------------------\n" );
@@ -1168,6 +1171,20 @@ void G_CountSpawns( void )
 
 /*
 ============
+G_TimeTilWeakSuddenDeath
+============
+*/
+#define WEAKSUDDENDEATHWARNING 60000
+int G_TimeTilWeakSuddenDeath( void )
+{
+  if( ( !g_weakSuddenDeathTime.integer && level.weakSuddenDeathBeginTime == 0 ) ||
+      ( level.weakSuddenDeathBeginTime < 0 ) )
+    return WEAKSUDDENDEATHWARNING + 1; // Always some time away
+   return ( ( level.weakSuddenDeathBeginTime ) - ( level.time - level.startTime ) );
+}
+
+/*
+============
 G_TimeTilSuddenDeath
 ============
 */
@@ -1257,6 +1274,24 @@ void G_CalculateBuildPoints( void )
     level.humanNextQueueTime += G_NextQueueTime( level.humanBuildPointQueue,
                                                g_humanBuildPoints.integer,
                                                g_humanBuildQueueTime.integer );
+  }
+
+  // Weak Sudden Death checks
+  if( G_TimeTilWeakSuddenDeath( ) <= 0 && level.weakSuddenDeathWarning < TW_PASSED )
+  {
+    G_LogPrintf( "^5Beginning Weak Sudden Death\n" );
+    trap_SendServerCommand( -1, "cp \"^5Weak Sudden Death!\"" );
+    trap_SendServerCommand( -1, "print \"^5Beginning Weak Sudden Death.\n\"" );
+    level.weakSuddenDeathWarning = TW_PASSED;
+  }
+  else if( G_TimeTilWeakSuddenDeath( ) <= WEAKSUDDENDEATHWARNING &&
+    level.weakSuddenDeathWarning < TW_IMMINENT )
+  {
+    trap_SendServerCommand( -1, va( "cp \"Weak Sudden Death in %d seconds!\"",
+          (int)( G_TimeTilSuddenDeath( ) / 1000 ) ) );
+    trap_SendServerCommand( -1, va( "print \"Weak Sudden Death will begin in %d seconds.\n\"",
+          (int)( G_TimeTilSuddenDeath( ) / 1000 ) ) );
+    level.weakSuddenDeathWarning = TW_IMMINENT;
   }
 
   // Sudden Death checks
