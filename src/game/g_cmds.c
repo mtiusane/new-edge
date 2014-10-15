@@ -3637,6 +3637,7 @@ commands_t cmds[ ] = {
   { "m", CMD_MESSAGE|CMD_INTERMISSION, Cmd_PrivateMessage_f },
   { "maplog", CMD_MESSAGE|CMD_INTERMISSION, Cmd_MapLog_f },
   { "mt", CMD_MESSAGE|CMD_INTERMISSION, Cmd_PrivateMessage_f },
+  { "myscore", 0, Cmd_MyScore_f },
   { "noclip", CMD_CHEAT_TEAM, Cmd_Noclip_f },
   { "notarget", CMD_CHEAT|CMD_TEAM|CMD_LIVING, Cmd_Notarget_f },
   { "reload", CMD_HUMAN|CMD_LIVING, Cmd_Reload_f },
@@ -3810,6 +3811,24 @@ void G_UnEscapeString( char *in, char *out, int len )
     in++;
   }
   *out = '\0';
+}
+
+void Cmd_MyScore_f( gentity_t *ent )
+{
+  g_admin_level_t *n;
+  if ( !ent || !ent->client->pers.admin ) {
+    ADMP( "This command is only available for registered players.\n" );
+    return;
+  }
+  if ( n = G_admin_level_next( G_admin_level( ent->client->pers.admin->level ) ) ) {
+    ADMP( va( "^7Level %d (%s^7) total score earned: %d next level: %d\n", 
+      ent->client->pers.admin->level, G_admin_level( ent->client->pers.admin->level )->name, 
+      ent->client->pers.admin->score, n->score ) );
+  } else {
+    ADMP( va( "^7Level %d (%s^7) total score earned: %d (max level)\n", 
+      ent->client->pers.admin->level, G_admin_level( ent->client->pers.admin->level )->name,
+      ent->client->pers.admin->score ) );
+  }
 }
 
 void Cmd_PrivateMessage_f( gentity_t *ent )

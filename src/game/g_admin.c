@@ -220,6 +220,11 @@ g_admin_cmd_t g_admin_cmds[ ] =
       "[^7id^7]"
     },
 
+    {"score_info", G_admin_score_info, qtrue, "score_info",
+     "display information about player's accumulated score",
+     "(^7name|slot#^7)"
+    },
+
     {"setlevel", G_admin_setlevel, qfalse, "setlevel",
       "sets the admin level of a player",
       "[^7name|slot#|admin#^7] [^7level^7]"
@@ -384,6 +389,18 @@ g_admin_level_t *G_admin_level( const int l )
       return level;
   }
 
+  return NULL;
+}
+
+g_admin_level_t *G_admin_level_next( g_admin_level_t *level )
+{
+  g_admin_level_t *n;
+  if ( !level || ( level->score == -1 ) ) return NULL;
+  for( n = g_admin_levels; n; n = n->next )
+  {
+    if ( n->score == -1 ) continue;
+    if ( n->next && n->next == level ) return n;
+  }
   return NULL;
 }
 
@@ -592,6 +609,8 @@ static void admin_writeconfig( void )
     admin_writeconfig_string( l->name, f );
     trap_FS_Write( "flags   = ", 10, f );
     admin_writeconfig_string( l->flags, f );
+    trap_FS_Write( "score   = ", 10, f );
+    admin_writeconfig_int( l->score, f );
     trap_FS_Write( "\n", 1, f );
   }
   for( a = g_admin_admins; a; a = a->next )
@@ -609,6 +628,8 @@ static void admin_writeconfig( void )
     admin_writeconfig_int( a->level, f );
     trap_FS_Write( "flags   = ", 10, f );
     admin_writeconfig_string( a->flags, f );
+    trap_FS_Write( "score   = ", 10, f );
+    admin_writeconfig_int( a->score, f );
     trap_FS_Write( "\n", 1, f );
   }
   for( b = g_admin_bans; b; b = b->next )
@@ -1363,6 +1384,10 @@ qboolean G_admin_readconfig( gentity_t *ent )
       {
         admin_readconfig_string( &cnf, l->flags, sizeof( l->flags ) );
       }
+      else if( !Q_stricmp( t, "score" ) )
+      {
+	admin_readconfig_int( &cnf, &l->score );
+      }
       else
       {
         COM_ParseError( "[level] unrecognized token \"%s\"", t );
@@ -1385,6 +1410,10 @@ qboolean G_admin_readconfig( gentity_t *ent )
       else if( !Q_stricmp( t, "flags" ) )
       {
         admin_readconfig_string( &cnf, a->flags, sizeof( a->flags ) );
+      }
+      else if( !Q_stricmp( t, "score" ) )
+      {
+	admin_readconfig_int( &cnf, &a->score );
       }
       else
       {
@@ -3383,6 +3412,37 @@ qboolean G_admin_namelog( gentity_t *ent )
   return qtrue;
 }
 
+qboolean G_admin_score_info( gentity_t *ent )
+{
+  char      reason[ 64 ];
+  int       pid;
+  char      name[ MAX_NAME_LENGTH ], err[ MAX_STRING_CHARS ];
+  gentity_t *vic;
+
+  if( trap_Argc() < 2 )
+  {
+    ADMP( va( "^3score: ^7usage: score [name|slot#]\n" ) );
+    return qfalse;
+  }
+  trap_Argv( 1, name, sizeof( name ) );
+  if( ( pid = G_ClientNumberFromString( name, err, sizeof( err ) ) ) == -1 )
+  {
+    ADMP( va( "^3score: ^7%s\n", err ) );
+    return qfalse;
+  }
+  vic = &g_entities[ pid ];
+  if( vic->client->pers.admin )
+  {
+    ADMP( va( "score: ^7%s^7 level: %d score: %d\n\"",
+      vic->client->pers.netname,
+      vic->client->pers.admin->level,
+      vic->client->pers.admin->score ) );
+  } else {
+    ADMP( va( "score: ^7%s^7 does not have an admin record.\n" ) );
+  }
+  return qtrue;
+}
+
 /*
 ==================
 G_NamelogFromString
@@ -3749,6 +3809,64 @@ qboolean G_admin_spawn( gentity_t *ent )
   ADMP( va( "^3spawn: ^7%s at %f %f %f\n", name, entityOrigin[0], entityOrigin[1], entityOrigin[2] ) );
   G_LayoutForceBuildItem( buildable, entityOrigin, angles, normal, angles );
   return qtrue;
+}
+
+g_admin_level_t *G_admin_find_level_for_score( int score ) {
+  // NOTE: Assuming that levels are ordered in descending order
+  g_admin_level_t *level,*next;
+  for( level = g_admin_levels; level; level = next )
+  {
+    next = level->next;
+    if( next == NULL && level->score > 0) return level;
+    if( next->score < 0 ) continue;
+    if( /*level->score > score && */next->score <= score ) return next;
+  }
+  return NULL;
+}
+
+void G_admin_add_score( gentity_t *ent, int score ) {
+  g_admin_level_t *n;
+  g_admin_admin_t *a;
+  if( ent->client->pers.admin && level.numAlienClients >= g_AutoLevelMinTeamSize.integer && level.numHumanClients >= g_AutoLevelMinTeamSize.integer ) {
+    ent->client->pers.admin->score += score;
+    if (ent->client->pers.admin->level == -1) return;
+    n = G_admin_find_level_for_score( ent->client->pers.admin->score );
+    if( ( n != NULL ) && ( n->level > ent->client->pers.admin->level ) )
+    {
+      //trap_SendConsoleCommand( EXEC_APPEND,
+      //  va( "setlevel %d %d;", ent - g_entities, n->level ) );
+      
+      a = ent->client->pers.admin;
+      a->level = n->level;
+      admin_log( va( "^7%d (%s^7) \"%s" S_COLOR_WHITE "\"", a->level, a->guid, a->name ) );
+      AP( va("print \"^3setlevel: ^7%s^7 was given level %d admin rights (^7%s^7) through score gained\n\"",
+	     a->name, a->level, n->name ) );
+      admin_writeconfig();
+    }
+  }
+}
+
+void G_admin_reset_score( gentity_t *ent ) {
+  g_admin_level_t *l;
+  g_admin_admin_t *a;
+  if( g_RageQuitScorePenalty.integer == 0 ) return;
+  if( ent->client->pers.admin && level.numAlienClients >= g_AutoLevelMinTeamSize.integer && level.numHumanClients >= g_AutoLevelMinTeamSize.integer ) {
+    a = ent->client->pers.admin;
+    l = G_admin_find_level_for_score( a->score );
+    if( g_RageQuitScorePenalty.integer < 0 ) {
+      a->score = l->score;
+      admin_log( va( "score reset: %d (%s) \"%s" S_COLOR_WHITE "\"", a->level, a->guid, a->name ) );
+      AP( va("print \"^3score: ^7%s^7 score advance towards next level reset due to rage quit.\n\"",
+	     a->name ) );
+    } else {
+      a->score -= g_RageQuitScorePenalty.integer;
+      if( a->score < l->score ) a->score = l->score;
+      admin_log( va( "score penalty: %d (%s) \"%s" S_COLOR_WHITE "\"", a->level, a->guid, a->name ) );
+      AP( va("print \"^3score: ^7%s^7 score penalty of %d total score due to rage quit.\n\"",
+	     a->name, g_RageQuitScorePenalty.integer ) );
+    }
+    admin_writeconfig();
+  }
 }
 
 qboolean G_admin_buildlog( gentity_t *ent )
@@ -4273,7 +4391,6 @@ void G_admin_buffer_print( gentity_t *ent, char *m )
   Q_strcat( g_bfb, sizeof( g_bfb ), m );
 }
 
-
 void G_admin_cleanup( void )
 {
   g_admin_level_t *l;
@@ -4281,6 +4398,9 @@ void G_admin_cleanup( void )
   g_admin_ban_t *b;
   g_admin_command_t *c;
   void *n;
+
+  // Always save current data before cleanup so we won't lose the accumulated scores.
+  if ( g_admin_levels ) admin_writeconfig( );
 
   for( l = g_admin_levels; l; l = n )
   {

@@ -353,6 +353,9 @@ typedef struct
   addr_t              ip;
   char                voice[ MAX_VOICE_NAME_LEN ];
   qboolean            useUnlagged;  
+
+  // team change tracking
+  team_t              newTeam;
   // keep track of other players' info for tinfo
   char                cinfo[ MAX_CLIENTS ][ 16 ];
 } clientPersistant_t;
@@ -760,6 +763,7 @@ void      G_Say( gentity_t *ent, saymode_t mode, const char *chatText );
 void      G_DecolorString( char *in, char *out, int len );
 void      G_UnEscapeString( char *in, char *out, int len );
 void      G_SanitiseString( char *in, char *out, int len );
+void      Cmd_MyScore_f( gentity_t *ent );
 void      Cmd_PrivateMessage_f( gentity_t *ent );
 void      Cmd_ListMaps_f( gentity_t *ent );
 void      Cmd_ListEmoticons_f( gentity_t *ent );
@@ -1288,6 +1292,8 @@ extern  vmCvar_t  g_ConstantRewardFactor;
 extern  vmCvar_t  g_TeamRewardFactor;
 extern  vmCvar_t  g_PlayerRewardFactor;
 extern  vmCvar_t  g_ForceRandomTeams;
+extern  vmCvar_t  g_AutoLevelMinTeamSize;
+extern  vmCvar_t  g_RageQuitScorePenalty;
 
 void      trap_Print( const char *fmt );
 void      trap_Error( const char *fmt );

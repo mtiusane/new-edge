@@ -172,12 +172,17 @@ void G_LeaveTeam( gentity_t *self )
   gentity_t *ent;
   int       i;
 
-  if( team == TEAM_ALIENS )
+  if( team == TEAM_ALIENS ) {
     G_RemoveFromSpawnQueue( &level.alienSpawnQueue, self->client->ps.clientNum );
-  else if( team == TEAM_HUMANS )
+    if ( ( self->client->pers.newTeam == TEAM_NONE ) && !level.intermissiontime ) {
+      G_admin_reset_score( self );
+    }
+  } else if( team == TEAM_HUMANS ) {
     G_RemoveFromSpawnQueue( &level.humanSpawnQueue, self->client->ps.clientNum );
-  else
-  {
+    if ( ( self->client->pers.newTeam == TEAM_NONE ) && !level.intermissiontime ) {
+      G_admin_reset_score( self );
+    }
+  } else {
     if( self->client->sess.spectatorState == SPECTATOR_FOLLOW )
       G_StopFollowing( self );
     return;
@@ -188,10 +193,6 @@ void G_LeaveTeam( gentity_t *self )
 
   G_Vote( self, team, qfalse );
   self->suicideTime = 0;
-
-
-
-
 
   for( i = 0; i < level.num_entities; i++ )
   {
@@ -213,21 +214,17 @@ void G_LeaveTeam( gentity_t *self )
   // cut all relevant zap beams
   G_ClearPlayerZapEffects( self );
 
-      // cure infection
-      if( ent->client->ps.stats[ STAT_STATE ] & SS_INFECTED &&
-          ent->client->lastInfectionClient == self )
-        ent->client->ps.stats[ STAT_STATE ] &= ~SS_INFECTED;
-    
-    else if( ent->s.eType == ET_MISSILE && ent->r.ownerNum == self->s.number )
-      G_FreeEntity( ent );
+  // cure infection
+  if( ent->client->ps.stats[ STAT_STATE ] & SS_INFECTED &&
+      ent->client->lastInfectionClient == self )
+    ent->client->ps.stats[ STAT_STATE ] &= ~SS_INFECTED;
   
-
-
-
-
-
+  else if( ent->s.eType == ET_MISSILE && ent->r.ownerNum == self->s.number )
+    G_FreeEntity( ent );
+  
   G_namelog_update_score( self->client );
-  
+
+  ent->client->pers.newTeam = TEAM_NONE;
 }
 
 /*
@@ -242,12 +239,15 @@ void G_ChangeTeam( gentity_t *ent, team_t newTeam )
   if( oldTeam == newTeam )
     return;
 
+  ent->client->pers.newTeam = newTeam;
   G_LeaveTeam( ent );
+  ent->client->pers.newTeam = TEAM_NONE;
+
   ent->client->pers.teamChangeTime = level.time;
   ent->client->pers.teamSelection = newTeam;
   ent->client->pers.classSelection = PCL_NONE;
   ClientSpawn( ent, NULL, NULL, NULL );
-
+  
   if( oldTeam == TEAM_HUMANS && newTeam == TEAM_ALIENS )
   {
     // Convert from human to alien credits

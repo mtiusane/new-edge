@@ -95,6 +95,7 @@ typedef struct g_admin_level
 {
   struct g_admin_level *next;
   int level;
+  int score; // total score required for automatically gaining this level, -1 for disabled
   char name[ MAX_NAME_LENGTH ];
   char flags[ MAX_ADMIN_FLAGS ];
 }
@@ -104,6 +105,7 @@ typedef struct g_admin_admin
 {
   struct g_admin_admin *next;
   int level;
+  int score; // total score the player currently has
   char guid[ 33 ];
   char name[ MAX_NAME_LENGTH ];
   char flags[ MAX_ADMIN_FLAGS ];
@@ -190,11 +192,15 @@ qboolean G_admin_admintest( gentity_t *ent );
 qboolean G_admin_allready( gentity_t *ent );
 qboolean G_admin_endvote( gentity_t *ent );
 qboolean G_admin_spawn( gentity_t *ent );
+g_admin_level_t *G_admin_find_level_for_score( int score );
+void G_admin_add_score( gentity_t *ent, int score );
+void G_admin_reset_score( gentity_t *ent );
 qboolean G_admin_spec999( gentity_t *ent );
 qboolean G_admin_rename( gentity_t *ent );
 qboolean G_admin_restart( gentity_t *ent );
 qboolean G_admin_nextmap( gentity_t *ent );
 qboolean G_admin_namelog( gentity_t *ent );
+qboolean G_admin_score_info( gentity_t *ent );
 qboolean G_admin_lock( gentity_t *ent );
 qboolean G_admin_pause( gentity_t *ent );
 qboolean G_admin_builder( gentity_t *ent );
@@ -204,6 +210,8 @@ qboolean G_admin_flaglist( gentity_t *ent );
 qboolean G_admin_flag( gentity_t *ent );
 qboolean G_admin_slap( gentity_t *ent );
 
+g_admin_level_t *G_admin_level( const int l );
+g_admin_level_t *G_admin_level_next( g_admin_level_t *level );
 
 void G_admin_print( gentity_t *ent, char *m );
 void G_admin_buffer_print( gentity_t *ent, char *m );
