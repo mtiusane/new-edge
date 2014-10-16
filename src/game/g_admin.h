@@ -192,9 +192,6 @@ qboolean G_admin_admintest( gentity_t *ent );
 qboolean G_admin_allready( gentity_t *ent );
 qboolean G_admin_endvote( gentity_t *ent );
 qboolean G_admin_spawn( gentity_t *ent );
-g_admin_level_t *G_admin_find_level_for_score( int score );
-void G_admin_add_score( gentity_t *ent, int score );
-void G_admin_reset_score( gentity_t *ent );
 qboolean G_admin_spec999( gentity_t *ent );
 qboolean G_admin_rename( gentity_t *ent );
 qboolean G_admin_restart( gentity_t *ent );
@@ -210,6 +207,9 @@ qboolean G_admin_flaglist( gentity_t *ent );
 qboolean G_admin_flag( gentity_t *ent );
 qboolean G_admin_slap( gentity_t *ent );
 
+g_admin_level_t *G_admin_find_level_for_score( int score );
+void G_admin_add_score( gentity_t *ent, int score );
+void G_admin_reset_score( gentity_t *ent );
 g_admin_level_t *G_admin_level( const int l );
 g_admin_level_t *G_admin_level_next( g_admin_level_t *level );
 

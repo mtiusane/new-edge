@@ -225,6 +225,8 @@ void G_LeaveTeam( gentity_t *self )
   G_namelog_update_score( self->client );
 
   ent->client->pers.newTeam = TEAM_NONE;
+
+  admin_writeconfig();
 }
 
 /*

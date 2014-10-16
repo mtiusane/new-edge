@@ -3414,32 +3414,35 @@ qboolean G_admin_namelog( gentity_t *ent )
 
 qboolean G_admin_score_info( gentity_t *ent )
 {
-  char      reason[ 64 ];
   int       pid;
-  char      name[ MAX_NAME_LENGTH ], err[ MAX_STRING_CHARS ];
-  gentity_t *vic;
+  char      name[ MAX_NAME_LENGTH ];
+  g_admin_admin_t *target;
+  namelog_t *match;
 
   if( trap_Argc() < 2 )
   {
     ADMP( va( "^3score: ^7usage: score [name|slot#]\n" ) );
     return qfalse;
   }
+
   trap_Argv( 1, name, sizeof( name ) );
-  if( ( pid = G_ClientNumberFromString( name, err, sizeof( err ) ) ) == -1 )
+
+  if( !( match = G_NamelogFromString( ent, name ) ) )
   {
-    ADMP( va( "^3score: ^7%s\n", err ) );
+    ADMP( va( "^3score: ^7no namelog match for %s\n", name ) );
     return qfalse;
   }
-  vic = &g_entities[ pid ];
-  if( vic->client->pers.admin )
-  {
-    ADMP( va( "score: ^7%s^7 level: %d score: %d\n\"",
-      vic->client->pers.netname,
-      vic->client->pers.admin->level,
-      vic->client->pers.admin->score ) );
-  } else {
-    ADMP( va( "score: ^7%s^7 does not have an admin record.\n" ) );
+
+  target = G_admin_admin( match->guid );
+  if( target == NULL ) {
+    ADMP( va( "^3score: ^7no admin record found for %s\n", name ) );
+    return qfalse;
   }
+
+  ADMP( va( "score: ^7%s^7 level: %d score: %d\n",
+	    match->name[match->nameOffset],
+	    target->level,
+	    target->score ) );
   return qtrue;
 }
 
@@ -3839,9 +3842,9 @@ void G_admin_add_score( gentity_t *ent, int score ) {
       a = ent->client->pers.admin;
       a->level = n->level;
       admin_log( va( "^7%d (%s^7) \"%s" S_COLOR_WHITE "\"", a->level, a->guid, a->name ) );
-      AP( va("print \"^3setlevel: ^7%s^7 was given level %d admin rights (^7%s^7) through score gained\n\"",
+      AP( va("print \"^3setlevel: ^7%s^7 was given level %d admin rights (^7%s^7) through score gained\\\n\"",
 	     a->name, a->level, n->name ) );
-      admin_writeconfig();
+      // admin_writeconfig();
     }
   }
 }
@@ -3853,19 +3856,23 @@ void G_admin_reset_score( gentity_t *ent ) {
   if( ent->client->pers.admin && level.numAlienClients >= g_AutoLevelMinTeamSize.integer && level.numHumanClients >= g_AutoLevelMinTeamSize.integer ) {
     a = ent->client->pers.admin;
     l = G_admin_find_level_for_score( a->score );
-    if( g_RageQuitScorePenalty.integer < 0 ) {
+    admin_log( va( "score reset: %d (%s) \"%s" S_COLOR_WHITE "\"", a->level, a->guid, a->name ) );
+    if( g_RageQuitScorePenalty.integer == -1 ) {
       a->score = l->score;
-      admin_log( va( "score reset: %d (%s) \"%s" S_COLOR_WHITE "\"", a->level, a->guid, a->name ) );
       AP( va("print \"^3score: ^7%s^7 score advance towards next level reset due to rage quit.\n\"",
+	     a->name ) );
+    } else if( g_RageQuitScorePenalty.integer == -2 ) {
+      a->score -= ent->client->ps.persistant[ PERS_SCORE ];
+      if( a->score < l->score ) a->score = l->score;
+      AP( va("print \"^3score: ^7%s^7 score earned during this game has been lost.\n\"",
 	     a->name ) );
     } else {
       a->score -= g_RageQuitScorePenalty.integer;
       if( a->score < l->score ) a->score = l->score;
-      admin_log( va( "score penalty: %d (%s) \"%s" S_COLOR_WHITE "\"", a->level, a->guid, a->name ) );
       AP( va("print \"^3score: ^7%s^7 score penalty of %d total score due to rage quit.\n\"",
 	     a->name, g_RageQuitScorePenalty.integer ) );
     }
-    admin_writeconfig();
+    // admin_writeconfig();
   }
 }
 
