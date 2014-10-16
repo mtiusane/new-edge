@@ -222,7 +222,7 @@ g_admin_cmd_t g_admin_cmds[ ] =
 
     {"score_info", G_admin_score_info, qtrue, "score_info",
      "display information about player's accumulated score",
-     "(^7name|slot#^7)"
+     "(^7name|slot#^7) [^7newscore^7]"
     },
 
     {"setlevel", G_admin_setlevel, qfalse, "setlevel",
@@ -3414,15 +3414,20 @@ qboolean G_admin_namelog( gentity_t *ent )
 
 qboolean G_admin_score_info( gentity_t *ent )
 {
-  int       pid;
-  char      name[ MAX_NAME_LENGTH ];
+  char            name[ MAX_NAME_LENGTH ];
   g_admin_admin_t *target;
-  namelog_t *match;
+  namelog_t       *match;
+  int             newscore;
 
   if( trap_Argc() < 2 )
   {
     ADMP( va( "^3score: ^7usage: score [name|slot#]\n" ) );
     return qfalse;
+  }
+
+  if( trap_Argc() > 2 ){
+    trap_Argv( 2, name, sizeof( name ) );
+    newscore = atoi( name );
   }
 
   trap_Argv( 1, name, sizeof( name ) );
@@ -3439,10 +3444,22 @@ qboolean G_admin_score_info( gentity_t *ent )
     return qfalse;
   }
 
-  ADMP( va( "score: ^7%s^7 level: %d score: %d\n",
-	    match->name[match->nameOffset],
-	    target->level,
-	    target->score ) );
+  if( trap_Argc() > 2 ) {
+    target->score = newscore;
+    admin_writeconfig();
+
+    admin_log( va("print \"^3score set: ^7%s^7 %d.\n\"",
+      target->guid, target->score ) );
+    ADMP( va( "score set: ^7%s^7 level: %d score: %d\n",
+      match->name[match->nameOffset],
+      target->level,
+      target->score ) );
+  } else {
+    ADMP( va( "score: ^7%s^7 level: %d score: %d\n",
+      match->name[match->nameOffset],
+      target->level,
+      target->score ) );
+  }
   return qtrue;
 }
 
