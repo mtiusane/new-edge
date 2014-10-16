@@ -256,7 +256,7 @@ int trap_RealTime( qtime_t *qtime )
 
 void trap_SnapVector( float *v )
 {
-  // syscall( G_SNAPVECTOR, v );
+  syscall( G_SNAPVECTOR, v );
   return;
 }
 
