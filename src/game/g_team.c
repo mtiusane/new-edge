@@ -166,7 +166,7 @@ void G_UpdateTeamConfigStrings( void )
 G_LeaveTeam
 ==================
 */
-void G_LeaveTeam( gentity_t *self )
+void G_LeaveTeamReal( gentity_t *self, qboolean reset_score )
 {
   team_t    team = self->client->pers.teamSelection;
   gentity_t *ent;
@@ -174,12 +174,12 @@ void G_LeaveTeam( gentity_t *self )
 
   if( team == TEAM_ALIENS ) {
     G_RemoveFromSpawnQueue( &level.alienSpawnQueue, self->client->ps.clientNum );
-    if ( ( self->client->pers.newTeam == TEAM_NONE ) && !level.intermissiontime ) {
+    if ( reset_score && !level.intermissiontime ) {
       G_admin_reset_score( self );
     }
   } else if( team == TEAM_HUMANS ) {
     G_RemoveFromSpawnQueue( &level.humanSpawnQueue, self->client->ps.clientNum );
-    if ( ( self->client->pers.newTeam == TEAM_NONE ) && !level.intermissiontime ) {
+    if ( reset_score && !level.intermissiontime ) {
       G_admin_reset_score( self );
     }
   } else {
@@ -224,9 +224,12 @@ void G_LeaveTeam( gentity_t *self )
   
   G_namelog_update_score( self->client );
 
-  ent->client->pers.newTeam = TEAM_NONE;
-
   admin_writeconfig();
+}
+
+void G_LeaveTeam( gentity_t *self )
+{
+  G_LeaveTeamReal( self, qtrue );
 }
 
 /*
@@ -241,9 +244,7 @@ void G_ChangeTeam( gentity_t *ent, team_t newTeam )
   if( oldTeam == newTeam )
     return;
 
-  ent->client->pers.newTeam = newTeam;
-  G_LeaveTeam( ent );
-  ent->client->pers.newTeam = TEAM_NONE;
+  G_LeaveTeamReal( ent, ( newTeam == TEAM_NONE ) ? qtrue : qfalse );
 
   ent->client->pers.teamChangeTime = level.time;
   ent->client->pers.teamSelection = newTeam;

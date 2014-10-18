@@ -354,8 +354,6 @@ typedef struct
   char                voice[ MAX_VOICE_NAME_LEN ];
   qboolean            useUnlagged;  
 
-  // team change tracking
-  team_t              newTeam;
   // keep track of other players' info for tinfo
   char                cinfo[ MAX_CLIENTS ][ 16 ];
 } clientPersistant_t;
