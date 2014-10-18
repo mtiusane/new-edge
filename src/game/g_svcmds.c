@@ -541,6 +541,19 @@ static void Svcmd_MapLogWrapper( void )
   Cmd_MapLog_f( NULL );
 }
 
+static void Svcmd_WeakSuddenDeath_f( void )
+{
+  char secs[ 5 ];
+  int  offset;
+  trap_Argv( 1, secs, sizeof( secs ) );
+  offset = atoi( secs );
+
+  level.weakSuddenDeathBeginTime = level.time - level.startTime + offset * 1000;
+  trap_SendServerCommand( -1,
+    va( "cp \"Weak Sudden Death will begin in %d second%s\"",
+      offset, offset == 1 ? "" : "s" ) );
+}
+
 static void Svcmd_SuddenDeath_f( void )
 {
   char secs[ 5 ];
@@ -646,6 +659,7 @@ struct svcmd
   { "say_team", qtrue, Svcmd_TeamMessage_f },
   { "status", qfalse, Svcmd_Status_f },
   { "stopMapRotation", qfalse, G_StopMapRotation },
+  { "weaksuddendeath", qfalse, Svcmd_WeakSuddenDeath_f },
   { "suddendeath", qfalse, Svcmd_SuddenDeath_f }
 };
 

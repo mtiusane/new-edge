@@ -648,6 +648,24 @@ void CG_Menu( int menu, int arg )
 	  
 	  
 	  
+    case MN_B_WSD_INBASE:
+      longMsg   = "Neither team has prevailed after a certain time and the "
+                  "game has entered Weak Sudden Death. During Sudden Death "
+                  "building creep colonies or refineries is not allowed, "
+                  "and neither is allowed building near the Overmind or the Reactor.";
+      shortMsg  = "^5Cannot build near the Reactor/Overmind during Weak Sudden Death";
+      type      = DT_BUILD;
+      break;
+
+    case MN_B_WSD_REFSCOLS:
+      longMsg   = "Neither team has prevailed after a certain time and the "
+                  "game has entered Weak Sudden Death. During Weak Sudden Death "
+                  "building creep colonies or refineries is not allowed, "
+                  "and neither is allowed building near the Overmind or the Reactor.";
+      shortMsg  = "^5Cannot build refineries/colonies during Weak Sudden Death";
+      type      = DT_BUILD;
+      break;
+
     case MN_B_SUDDENDEATH:
       longMsg   = "Neither team has prevailed after a certain time and the "
                   "game has entered Sudden Death. During Sudden Death "

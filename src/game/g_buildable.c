@@ -3894,6 +3894,46 @@ static itemBuildError_t G_SufficientBPAvailable( buildable_t     buildable,
     return IBE_NONE;
   }
 
+  if( G_TimeTilWeakSuddenDeath( ) <= 0 )
+  {
+    // No refineries/colonies after WSD
+    if( ( buildable == BA_H_REFINERY ) || ( buildable == BA_A_CREEPCOLONY ) )
+      return IBE_WSD_REFSCOLS;
+
+    // No building near OM/RC after WSD, unless it's a replacement
+    if( buildable != core )
+    {
+      vec3_t    temp_v;
+
+      // Iterate through entities
+      distance = 0;
+      for( i = MAX_CLIENTS, ent = g_entities + i; i < level.num_entities; i++, ent++ )
+      {
+        if( ent->s.eType != ET_BUILDABLE )
+          continue;
+
+        // If entity is a power item calculate the distance to it
+        if( ent->s.modelindex == core )
+        {
+          if( ent->spawned && ent->health > 0 )
+          {
+            VectorSubtract( origin, ent->s.origin, temp_v );
+            distance = VectorLength( temp_v );
+          }
+          break;
+        }
+      }
+
+      if( distance > 0 ) // RC/OM found and it's alive
+      {
+        if( ( team == TEAM_ALIENS ) && ( distance <= CREEP_BASESIZE ) )
+          return IBE_WSD_INBASE;
+        if( ( team == TEAM_HUMANS ) && ( distance <= REACTOR_BASESIZE ) )
+          return IBE_WSD_INBASE;
+      }
+    }
+  }
+
   // Simple non-marking case
   if( !g_markDeconstruct.integer )
   {
@@ -4774,6 +4814,14 @@ qboolean G_BuildIfValid( gentity_t *ent, buildable_t buildable )
 
     case IBE_GTHRBLOCKED:
       G_TriggerMenu( ent->client->ps.clientNum, MN_B_GTHRBLOCKED );
+      return qfalse;
+
+    case IBE_WSD_INBASE:
+      G_TriggerMenu( ent->client->ps.clientNum, MN_B_WSD_INBASE );
+      return qfalse;
+
+    case IBE_WSD_REFSCOLS:
+      G_TriggerMenu( ent->client->ps.clientNum, MN_B_WSD_REFSCOLS );
       return qfalse;
 
     default:

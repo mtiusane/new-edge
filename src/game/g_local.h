@@ -666,6 +666,8 @@ typedef struct
 
   team_t            lastWin;
 
+  int               weakSuddenDeathBeginTime;
+  timeWarning_t     weakSuddenDeathWarning;
   int               suddenDeathBeginTime;
   timeWarning_t     suddenDeathWarning;
   timeWarning_t     timelimitWarning;
@@ -812,6 +814,9 @@ typedef enum
   IBE_LASTSPAWN,
   IBE_BLOCKEDBYENEMY,
   IBE_GTHRBLOCKED,
+  IBE_WSD_INBASE,
+  IBE_WSD_REFSCOLS,
+
   IBE_MAXERRORS
 } itemBuildError_t;
 
@@ -1159,6 +1164,7 @@ extern  vmCvar_t  g_minNameChangePeriod;
 extern  vmCvar_t  g_maxNameChanges;
 extern  vmCvar_t  g_timelimit;
 extern  vmCvar_t  g_suddenDeathTime;
+extern  vmCvar_t  g_weakSuddenDeathTime;
 extern  vmCvar_t  g_armageddonTimeStep;
 extern  vmCvar_t  g_armageddonInitialTimeStep;
 extern  vmCvar_t  g_armageddonDefensiveKillPercent;
