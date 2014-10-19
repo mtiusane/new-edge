@@ -1022,14 +1022,16 @@ qboolean CheckVenomAttack( gentity_t *ent )
   // only allow bites to work against buildings as they are constructing
   if( traceEnt->s.eType == ET_BUILDABLE )
   {
-
-    if ( !( traceEnt->s.modelindex == BA_H_MGTURRET || traceEnt->s.modelindex == BA_H_MGTURRET2 || traceEnt->s.modelindex == BA_H_TESLAGEN || !traceEnt->spawned ) )
-      return qfalse;
-
     if( traceEnt->buildableTeam == TEAM_ALIENS )
       return qfalse;
-      
-    damage = 3;
+
+    if ( !( traceEnt->s.modelindex == BA_H_MGTURRET || traceEnt->s.modelindex == BA_H_MGTURRET2 || traceEnt->s.modelindex == BA_H_TESLAGEN || !traceEnt->spawned ) )
+      damage = (int)(damage * g_DretchBuildingDamage.value);
+    else
+      damage = (int)(damage * g_DretchTurretDamage.value);
+
+    if (damage <= 0)
+      return qfalse;
   }
 
   if( traceEnt->client )

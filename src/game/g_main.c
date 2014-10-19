@@ -198,6 +198,8 @@ vmCvar_t  g_TimerCommand;
 vmCvar_t  g_ForceRandomTeams;
 vmCvar_t  g_AutoLevelMinTeamSize;
 vmCvar_t  g_RageQuitScorePenalty;
+vmCvar_t  g_DretchTurretDamage;
+vmCvar_t  g_DretchBuildingDamage;
 
 // copy cvars that can be set in worldspawn so they can be restored later
 static char cv_gravity[ MAX_CVAR_VALUE_STRING ];
@@ -365,7 +367,9 @@ static cvarTable_t   gameCvarTable[ ] =
   { &g_TimerCommand, "g_TimerCommand", "", CVAR_ARCHIVE, 0, qfalse },
   { &g_ForceRandomTeams, "g_ForceRandomTeams", "0", CVAR_ARCHIVE, 0, qfalse },
   { &g_AutoLevelMinTeamSize, "g_AutoLevelMinTeamSize", "3", CVAR_ARCHIVE, 0, qfalse },
-  { &g_RageQuitScorePenalty, "g_RageQuitScorePenalty", "2000", CVAR_ARCHIVE, 0, qfalse }
+  { &g_RageQuitScorePenalty, "g_RageQuitScorePenalty", "2000", CVAR_ARCHIVE, 0, qfalse },
+  { &g_DretchTurretDamage, "g_DretchTurretDamage", "1", CVAR_ARCHIVE, 0, qfalse },
+  { &g_DretchBuildingDamage, "g_DretchBuildingDamage", "0.5", CVAR_ARCHIVE, 0, qfalse }
 };
 static int gameCvarTableSize = sizeof( gameCvarTable ) / sizeof( gameCvarTable[ 0 ] );
 void G_InitGame( int levelTime, int randomSeed, int restart );
