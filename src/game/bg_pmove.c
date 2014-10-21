@@ -1400,10 +1400,8 @@ Only with the flight powerup
 static void PM_FlyMove( void )
 {
   int     i;
-  vec3_t  wishvel;
-  float   wishspeed;
-  vec3_t  wishdir;
-  float   scale;
+  vec3_t  wishvel,wishdir;
+  float   wishspeed,scale;
 
   // normal slowdown
   PM_Friction( );
@@ -1414,15 +1412,12 @@ static void PM_FlyMove( void )
   //
   if( !scale )
   {
-    wishvel[ 0 ] = 0;
-    wishvel[ 1 ] = 0;
-    wishvel[ 2 ] = 0;
+    VectorSet(wishvel,0.f,0.f,0.f);
   }
   else
   {
-    for( i = 0; i < 3; i++ )
-      wishvel[ i ] = scale * pml.forward[ i ] * pm->cmd.forwardmove + scale * pml.right[ i ] * pm->cmd.rightmove;
-
+    VectorScale(pml.forward,scale*pm->cmd.forwardmove,wishvel);
+    VectorMA(wishvel,scale*pm->cmd.rightmove,pml.right,wishvel);
     wishvel[ 2 ] += scale * pm->cmd.upmove;
   }
 

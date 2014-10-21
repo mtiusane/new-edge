@@ -479,15 +479,15 @@ TREMULOUS EDGE MOD SRC FILE
 #define MDRIVER_REPEAT2              2200
 
 #define CHAINGUN_PRICE              400
-#define CHAINGUN_BULLETS            350
+#define CHAINGUN_BULLETS            300
 #define CHAINGUN_REPEAT             80
 #define CHAINGUN_K_SCALE            1.0f
-#define CHAINGUN_SPREAD             900
+#define CHAINGUN_SPREAD             1100
 #define CHAINGUN_DMG                HDM(6)
 
 #define CHAINGUN_REPEAT2            120
-#define CHAINGUN_SPREAD2            450
-#define CHAINGUN_DMG2               HDM(8)
+#define CHAINGUN_SPREAD2            550
+#define CHAINGUN_DMG2               HDM(6)
 
 #define FLAMER_PRICE                550
 #define FLAMER_GAS                  200

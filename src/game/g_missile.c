@@ -503,36 +503,37 @@ If an enemy is close to the entity, go boom!
 ================
 */
 void G_ProcessMine(gentity_t *ent) {
-	int i, total_entities, entityList[MAX_GENTITIES];
-	vec3_t range, mins, maxs;
-	gentity_t *target;
+  int i, total_entities, entityList[MAX_GENTITIES];
+  vec3_t range, mins, maxs;
+  gentity_t *target;
 	
-	// Set the next time to run this check (can be overwritten below)
-	ent->nextthink = level.time + MINE_CHECK_FREQUENCY;
+  // Set the next time to run this check (can be overwritten below)
+  ent->nextthink = level.time + MINE_CHECK_FREQUENCY;
 	
-	// Grab all entities around us
-	VectorSet(range, MINE_DETECT, MINE_DETECT, MINE_DETECT);
-	VectorAdd(ent->s.origin, range, maxs);
-	VectorSubtract(ent->s.origin, range, mins);
+  // Grab all entities around us
+  VectorSet(range, MINE_DETECT, MINE_DETECT, MINE_DETECT);
+  VectorAdd(ent->s.origin, range, maxs);
+  VectorSubtract(ent->s.origin, range, mins);
 	
-	total_entities = trap_EntitiesInBox(mins, maxs, entityList, MAX_GENTITIES);
+  total_entities = trap_EntitiesInBox(mins, maxs, entityList, MAX_GENTITIES);
 	
-	// Loop entities looking for an enemy body
-	for(i=0; i<total_entities; i++) {
-		target = &g_entities[entityList[i]];
-		if(target->client && 
-		   target->client->ps.stats[ STAT_TEAM ] == TEAM_ALIENS &&
-		   target->client->ps.weapon > WP_ALEVEL1_UPG ) {
-			if (G_Visible( ent, target, MASK_SHOT ))
-			{
-  			// Found an enemy, boom time!
-  			ent->nextthink = level.time + MINE_BOOM_TIME;
-  			ent->think = G_ExplodeMissile;
-  			return;
-			}
-		}
-	}
-} 
+  // Loop entities looking for an enemy body
+  for(i=0; i<total_entities; i++) {
+    target = &g_entities[entityList[i]];
+    if(target->client && 
+       target->client->ps.stats[ STAT_TEAM ] == TEAM_ALIENS/* &&
+       target->client->ps.weapon > WP_ALEVEL1_UPG */)
+    {
+      if (G_Visible( ent, target, MASK_SHOT ))
+      {
+	// Found an enemy, boom time!
+	ent->nextthink = level.time + MINE_BOOM_TIME;
+	ent->think = G_ExplodeMissile;
+	return;
+      }
+    }
+  }
+}
 
 /*
 =================
