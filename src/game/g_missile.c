@@ -207,8 +207,7 @@ void G_MissileImpact( gentity_t *ent, trace_t *trace )
     if( other->client )
     {
       if( ( other->client->ps.stats[ STAT_STATE ] & SS_SLOWLOCKED ) 
-            && ( other->s.weapon < WP_ALEVEL3 
-            || ( other->s.weapon == WP_ABUILD2 || other->s.weapon == WP_ABUILD ) ) )
+            && ( other->s.weapon < WP_ALEVEL3 || other->s.weapon == WP_ABUILD ) )
       {
         other->client->ps.stats[ STAT_STATE ] |= SS_BLOBLOCKED;
         other->client->lastLockTime = level.time;
@@ -1502,7 +1501,7 @@ gentity_t *fire_slowBlob( gentity_t *self, vec3_t start, vec3_t dir )
   bolt->think = G_ExplodeMissile;
   bolt->s.eType = ET_MISSILE;
   bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
-  bolt->s.weapon = WP_ABUILD2;
+  bolt->s.weapon = WP_ABUILD;
   bolt->s.generic1 = self->s.generic1; //weaponMode
   bolt->r.ownerNum = self->s.number;
   bolt->parent = self;

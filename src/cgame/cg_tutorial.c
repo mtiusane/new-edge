@@ -455,6 +455,7 @@ static void CG_HumanText( char *text, playerState_t *ps )
       case WP_CHAINGUN:
       case WP_PULSE_RIFLE:
       case WP_FLAMER:
+      case WP_LUCIFER_CANNON:
         Q_strcat( text, MAX_TUTORIAL_TEXT,
             va( "Press %s to fire the %s\n",
               CG_KeyNameForCommand( "+attack" ),
@@ -476,17 +477,6 @@ static void CG_HumanText( char *text, playerState_t *ps )
         Q_strcat( text, MAX_TUTORIAL_TEXT,
             va( "Hold %s to activate the %s\n",
               CG_KeyNameForCommand( "+attack" ),
-              BG_Weapon( ps->weapon )->humanName ) );
-        break;
-
-      case WP_LUCIFER_CANNON:
-        Q_strcat( text, MAX_TUTORIAL_TEXT,
-            va( "Hold and release %s to fire a charged shot\n",
-              CG_KeyNameForCommand( "+attack" ) ) );
-
-        Q_strcat( text, MAX_TUTORIAL_TEXT,
-            va( "Press %s to fire the %s\n",
-              CG_KeyNameForCommand( "+button5" ),
               BG_Weapon( ps->weapon )->humanName ) );
         break;
 

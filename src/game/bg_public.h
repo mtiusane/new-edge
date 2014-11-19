@@ -366,7 +366,6 @@ typedef enum
   WP_MGTURRET,
   WP_MGTURRET2,
   WP_ABUILD,
-  WP_ABUILD2,
   WP_HBUILD,
   WP_NUM_WEAPONS
 } weapon_t;

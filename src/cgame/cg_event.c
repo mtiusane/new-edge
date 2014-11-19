@@ -1009,7 +1009,7 @@ void CG_EntityEvent( centity_t *cent, vec3_t position )
         CG_AlienSPITEFUL_ABCESSExplosion( position, dir );
       break;
 	  
-//Scleim greifer schwanz für slime
+//Scleim greifer schwanz f\FCr slime
     case EV_SLIMETRAIL:
       cent->currentState.weapon = WP_NONE;
       {

@@ -1550,7 +1550,6 @@ static const char *CG_FeederItemText( int feederID, int index, int column, qhand
           {
             switch( sp->weapon )
             {
-              case WP_ABUILD2:
               case WP_ALEVEL0_UPG:
               case WP_ALEVEL1_UPG:
               case WP_ALEVEL2_UPG:
