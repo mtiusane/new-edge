@@ -831,6 +831,19 @@ void LCChargeFire( gentity_t *ent, qboolean secondary )
 
 /*
 ======================================================================
+
+PULSE RIFLE
+
+======================================================================
+*/
+
+void rocketLauncherFire( gentity_t *ent )
+{
+  fire_rocket( ent, muzzle, forward );
+}
+
+/*
+======================================================================
 TESLA GENERATOR
 ======================================================================
 */
@@ -1971,6 +1984,9 @@ void FireWeapon( gentity_t *ent )
       break;
     case WP_PAIN_SAW:
       painSawFire( ent );
+      break;
+    case WP_ROCKET_LAUNCHER:
+      rocketLauncherFire( ent );
       break;
     case WP_GRENADE:
       throwGrenade( ent );

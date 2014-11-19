@@ -162,6 +162,16 @@ static void CG_Obituary( entityState_t *ent )
           message = "^5irradiated himself";
         break;
 
+
+      case MOD_ROCKETL_SPLASH:
+        if( gender == GENDER_FEMALE )
+          message = "^5blew herself up";
+        else if( gender == GENDER_NEUTER )
+          message = "^5blew itself up";
+        else
+          message = "^5blew himself up";
+        break;
+
       case MOD_PSAWBLADE:
         if( gender == GENDER_FEMALE )
           message = "^5sliced herself up";
@@ -319,6 +329,14 @@ static void CG_Obituary( entityState_t *ent )
       case MOD_LCANNON_SPLASH:
         message = "^5was caught in the fallout of^7";
         message2 = "^5's ^5lucifer cannon";
+        break;
+      case MOD_ROCKETL:
+        message = "^5ate^7";
+        message2 = "^5's ^5rocket";
+        break;
+      case MOD_ROCKETL_SPLASH:
+        message = "^5almost dodged^7";
+        message2 = "^5's ^5rocket";
         break;
       case MOD_GRENADE:
         message = "^5couldn't escape^7";
