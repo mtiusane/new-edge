@@ -3859,7 +3859,7 @@ void G_admin_add_score( gentity_t *ent, int score ) {
       a = ent->client->pers.admin;
       a->level = n->level;
       admin_log( va( "^7%d (%s^7) \"%s" S_COLOR_WHITE "\"", a->level, a->guid, a->name ) );
-      AP( va("print \"^3setlevel: ^7%s^7 was given level %d admin rights (^7%s^7) through score gained\\\n\"",
+      AP( va("print \"^3setlevel: ^7%s^7 was given level %d admin rights (^7%s^7) through score gained\n\"",
 	     a->name, a->level, n->name ) );
       // admin_writeconfig();
     }
