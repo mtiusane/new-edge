@@ -1,0 +1,135 @@
+models/weapons/rocketl/missilePS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/sprites/smoke
+
+      displacement 0 0 0 ~0
+
+      velocityType      static
+      velocityDir       linear
+      velocityMagnitude 50
+      velocity          0 0 1 ~20
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 50
+      acceleration          0 0 0 0
+
+      radius 0 0.0 60.0
+      alpha  0 1.0 0.0
+      rotation ~360 ~360 -
+      bounce 0.5
+
+      lifeTime 700~50%
+    }
+
+    count infinite
+    delay 0
+    period 20 - ~0%
+  }
+}
+
+models/weapons/rocketl/impactPS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync rocketFlareParticle
+      displacement          0 0 0 0
+
+      velocityType          normal
+
+      velocityDir           linear
+
+      velocityMagnitude     0
+      velocity              0 0 0 ~0
+
+      accelerationType      static
+      accelerationDir       linear
+      acceleration          0 0 0 ~0
+      accelerationMagnitude 0
+
+      radius                0 50 100
+      alpha                 250 1 0
+      rotation              0 ~-15 ~15
+      bounce                0.0
+
+      lifeTime              40
+    }
+
+    count   1
+    delay   0
+    period  0 - 0
+  }
+
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/sprites/smoke
+      //shader sync flame3 flame4 flame5 flame6 flame7 flame8 flame9 flame10 flame11 flame12 flame13 flame14 flame15 flame16 flame17 flame18 flame19 flame20 flame21 flame22 flame23 flame24 flame25
+      displacement          0 0 0 0
+
+      velocityType          normal
+
+      velocityDir           linear
+
+      velocityMagnitude     100
+      velocity              0 0 0 ~35
+
+      accelerationType      static
+      accelerationDir       linear
+      acceleration          0 0 -1 ~5
+      accelerationMagnitude 25
+
+      radius                0 0 60
+      alpha                 250 .75 0
+      rotation              0 ~-15 ~15
+      bounce                0.0
+
+      lifeTime              800~200
+    }
+
+    count   10
+    delay   0
+    period  0 - 0
+  }
+
+  ejector
+  {
+    particle
+    {
+      shader sync flame3 flame4 flame5 flame6 flame7 flame8 flame9 flame10 flame11 flame12 flame13 flame14 flame15 flame16 flame17 flame18 flame19 flame20 flame21 flame22 flame23 flame24 flame25
+      displacement          0 0 0 0
+
+      velocityType          normal
+
+      velocityDir           linear
+
+      velocityMagnitude     100
+      velocity              0 0 0 ~35
+
+      accelerationType      static
+      accelerationDir       linear
+      acceleration          0 0 -1 ~5
+      accelerationMagnitude 25
+
+      radius                0 0 100
+      alpha                 250 .75 0
+      rotation              0 ~-15 ~15
+      bounce                0.0
+      color                 0 { 0.8 0.2 0.2 } -
+
+      lifeTime              300~100
+    }
+
+    count   1
+    delay   0
+    period  0 - 0
+  }
+}
+

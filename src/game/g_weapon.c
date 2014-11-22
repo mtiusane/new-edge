@@ -831,6 +831,19 @@ void LCChargeFire( gentity_t *ent, qboolean secondary )
 
 /*
 ======================================================================
+
+PULSE RIFLE
+
+======================================================================
+*/
+
+void rocketLauncherFire( gentity_t *ent )
+{
+  fire_rocket( ent, muzzle, forward );
+}
+
+/*
+======================================================================
 TESLA GENERATOR
 ======================================================================
 */
@@ -937,8 +950,7 @@ void cancelBuildFire( gentity_t *ent )
     ent->client->ps.stats[ STAT_BUILDABLE ] = BA_NONE;
     return;
   }
-  if( ent->client->ps.weapon == WP_ABUILD ||
-      ent->client->ps.weapon == WP_ABUILD2 )
+  if( ent->client->ps.weapon == WP_ABUILD )
     meleeAttack( ent, ABUILDER_CLAW_RANGE, ABUILDER_CLAW_WIDTH,
                  ABUILDER_CLAW_WIDTH, ABUILDER_CLAW_DMG, MOD_ABUILDER_CLAW );
 }
@@ -1776,7 +1788,7 @@ gclient_t *client;
       bounceBallFire( ent );
       break;
 
-    case WP_ABUILD2:
+    case WP_ABUILD:
       slowBlobFire( ent );
       break;
 
@@ -1877,7 +1889,6 @@ void FireWeapon2( gentity_t *ent )
       break;
 	  
     case WP_ABUILD:
-    case WP_ABUILD2:
     case WP_HBUILD:
       cancelBuildFire( ent );
       break;
@@ -1974,6 +1985,9 @@ void FireWeapon( gentity_t *ent )
     case WP_PAIN_SAW:
       painSawFire( ent );
       break;
+    case WP_ROCKET_LAUNCHER:
+      rocketLauncherFire( ent );
+      break;
     case WP_GRENADE:
       throwGrenade( ent );
       break;
@@ -1999,7 +2013,6 @@ void FireWeapon( gentity_t *ent )
 	   FlameTurretFire( ent );	   
       break;	  	  
     case WP_ABUILD:
-    case WP_ABUILD2:
       buildFire( ent, MN_A_BUILD );
       break;
     case WP_HBUILD:
