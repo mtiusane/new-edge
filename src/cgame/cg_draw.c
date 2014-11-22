@@ -1205,8 +1205,8 @@ static float CG_ChargeProgress( void )
       max = LEVEL4_TRAMPLE_CHARGE_MAX;
     }
   }
-  else if( cg.snap->ps.weapon == WP_FLAMER )
 
+  else if( cg.snap->ps.weapon == WP_LUCIFER_CANNON || cg.snap->ps.weapon == WP_FLAMER )
   {
     min = LCANNON_CHARGE_TIME_MIN;
     max = LCANNON_CHARGE_TIME_MAX;
