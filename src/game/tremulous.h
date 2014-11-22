@@ -539,9 +539,9 @@ TREMULOUS EDGE MOD SRC FILE
 #define FLAMER_SECONDARY_REPEAT    200
 
 #define ROCKETL_PRICE               700
-#define ROCKETL_AMMO                6
-#define ROCKETL_CLIPS               4
-#define ROCKETL_RELOAD              2000
+#define ROCKETL_AMMO                24
+#define ROCKETL_CLIPS               0
+#define ROCKETL_RELOAD              0
 #define ROCKETL_REPEAT              1000
 #define ROCKETL_K_SCALE             1.0f
 #define ROCKETL_DAMAGE              HDM(88)

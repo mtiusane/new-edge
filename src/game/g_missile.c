@@ -989,7 +989,7 @@ gentity_t *fire_rocket( gentity_t *self, vec3_t start, vec3_t dir )
   bolt->r.ownerNum = self->s.number;
   bolt->parent = self;
   bolt->damage = ROCKETL_DAMAGE;
-  bolt->splashDamage = ROCKETL_DAMAGE / 2;
+  bolt->splashDamage = ROCKETL_DAMAGE;
   bolt->splashRadius = ROCKETL_RADIUS;
   bolt->methodOfDeath = MOD_ROCKETL;
   bolt->splashMethodOfDeath = MOD_ROCKETL_SPLASH;
