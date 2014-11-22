@@ -436,7 +436,7 @@ void CG_InitBuildables( void )
   }
 
   cgs.media.teslaZapTS = CG_RegisterTrailSystem( "models/buildables/tesla/zap" );
-  //für slime
+  //f\FCr slime
   cgs.media.slimeTS = CG_RegisterTrailSystem( "models/buildables/infestationslime" );
 
 }
@@ -1229,7 +1229,6 @@ static qboolean CG_PlayerIsBuilder( buildable_t buildable )
   switch( cg.predictedPlayerState.weapon )
   {
     case WP_ABUILD:
-    case WP_ABUILD2:
     case WP_HBUILD:
       return BG_Buildable( buildable )->team ==
              BG_Weapon( cg.predictedPlayerState.weapon )->team;

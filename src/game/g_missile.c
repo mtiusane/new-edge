@@ -207,8 +207,7 @@ void G_MissileImpact( gentity_t *ent, trace_t *trace )
     if( other->client )
     {
       if( ( other->client->ps.stats[ STAT_STATE ] & SS_SLOWLOCKED ) 
-            && ( other->s.weapon < WP_ALEVEL3 
-            || ( other->s.weapon == WP_ABUILD2 || other->s.weapon == WP_ABUILD ) ) )
+            && ( other->s.weapon < WP_ALEVEL3 || other->s.weapon == WP_ABUILD ) )
       {
         other->client->ps.stats[ STAT_STATE ] |= SS_BLOBLOCKED;
         other->client->lastLockTime = level.time;
@@ -966,6 +965,47 @@ gentity_t *fire_luciferCannon( gentity_t *self, vec3_t start, vec3_t dir,
   return bolt;
 }
 
+
+/*
+=================
+fire_rocket
+=================
+*/
+gentity_t *fire_rocket( gentity_t *self, vec3_t start, vec3_t dir )
+{
+  gentity_t *bolt;
+
+  VectorNormalize (dir);
+
+  bolt = G_Spawn();
+  bolt->classname = "rocket";
+  bolt->pointAgainstWorld = qtrue;
+  bolt->nextthink = level.time + 10000;
+  bolt->think = G_ExplodeMissile;
+  bolt->s.eType = ET_MISSILE;
+  bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
+  bolt->s.weapon = WP_ROCKET_LAUNCHER;
+  bolt->s.generic1 = self->s.generic1; //weaponMode
+  bolt->r.ownerNum = self->s.number;
+  bolt->parent = self;
+  bolt->damage = ROCKETL_DAMAGE;
+  bolt->splashDamage = ROCKETL_DAMAGE / 2;
+  bolt->splashRadius = ROCKETL_RADIUS;
+  bolt->methodOfDeath = MOD_ROCKETL;
+  bolt->splashMethodOfDeath = MOD_ROCKETL_SPLASH;
+  bolt->clipmask = MASK_SHOT;
+  bolt->target_ent = NULL;
+  bolt->r.mins[ 0 ] = bolt->r.mins[ 1 ] = bolt->r.mins[ 2 ] = -ROCKETL_SIZE;
+  bolt->r.maxs[ 0 ] = bolt->r.maxs[ 1 ] = bolt->r.maxs[ 2 ] = ROCKETL_SIZE;
+  bolt->s.pos.trType = TR_LINEAR;
+  bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;   // move a bit on the very first frame
+  VectorCopy( start, bolt->s.pos.trBase );
+  VectorScale( dir, ROCKETL_SPEED, bolt->s.pos.trDelta );
+  SnapVector( bolt->s.pos.trDelta );      // save net bandwidth
+  VectorCopy( start, bolt->r.currentOrigin );
+  return bolt;
+}
+
 /*
 =================
 launch_grenade
@@ -1502,7 +1542,7 @@ gentity_t *fire_slowBlob( gentity_t *self, vec3_t start, vec3_t dir )
   bolt->think = G_ExplodeMissile;
   bolt->s.eType = ET_MISSILE;
   bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
-  bolt->s.weapon = WP_ABUILD2;
+  bolt->s.weapon = WP_ABUILD;
   bolt->s.generic1 = self->s.generic1; //weaponMode
   bolt->r.ownerNum = self->s.number;
   bolt->parent = self;

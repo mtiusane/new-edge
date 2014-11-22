@@ -184,8 +184,7 @@ float G_CamperRewardBonus(  gentity_t *self )
   // exclude builders:
   switch( BG_GetPlayerWeapon( &self->client->ps ) ) 
   { 
-      case WP_ABUILD: 
-      case WP_ABUILD2: 
+      case WP_ABUILD:
       case WP_HBUILD:   return 1.0f;
       default: ;
   }
