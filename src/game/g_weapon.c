@@ -698,18 +698,6 @@ void acidBombFire2x( gentity_t *ent, int wp )
 
 /*
 ======================================================================
-SMOKE
-======================================================================
-*/
-
-void throwSmoke( gentity_t *ent )
-{
-  gentity_t *m;
-  m = launch_smoke( ent, muzzle, forward );
-}
-
-/*
-======================================================================
 LAS GUN
 ======================================================================
 */
@@ -1994,9 +1982,6 @@ void FireWeapon( gentity_t *ent )
     case WP_MINE:
       throwMine( ent );
       break;
-    case WP_SMOKE:
-      throwSmoke( ent );
-      break; 
     case WP_LOCKBLOB_LAUNCHER:
       lockBlobLauncherFire( ent );
       break;

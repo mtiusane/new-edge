@@ -1241,44 +1241,6 @@ gentity_t *launch_saw( gentity_t *self, vec3_t start, vec3_t dir )
   return bolt;
 }
 
-
-gentity_t *launch_smoke( gentity_t *self, vec3_t start, vec3_t dir )
-{
-  gentity_t *bolt;
-
-  VectorNormalize( dir );
-  bolt = G_Spawn( );
-  bolt->classname = "smoke";
-  bolt->nextthink = level.time + 200;
-  bolt->think = G_ProcessSmoke;
-  bolt->s.eType = ET_MISSILE;
-  bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
-  bolt->s.weapon = WP_SMOKE;
-  bolt->s.eFlags = EF_BOUNCE_HALF;
-  bolt->s.generic1 = WPM_PRIMARY; //weaponMode
-  bolt->r.ownerNum = self->s.number;
-  bolt->parent = self;
-  bolt->damage = SMOKE_DAMAGE;
-  bolt->splashDamage = 0;
-  bolt->splashRadius = 0;
-  bolt->methodOfDeath = MOD_SMOKE;
-  bolt->splashMethodOfDeath = MOD_SMOKE;
-  bolt->clipmask = MASK_SHOT;
-  bolt->target_ent = NULL;
-  bolt->r.mins[ 0 ] = bolt->r.mins[ 1 ] = bolt->r.mins[ 2 ] = -3.0f;
-  bolt->r.maxs[ 0 ] = bolt->r.maxs[ 1 ] = bolt->r.maxs[ 2 ] = 3.0f;
-  bolt->s.time = level.time;
-  bolt->s.pos.trType = TR_GRAVITY;
-  bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;   // move a bit on the very first frame
-  VectorCopy( start, bolt->s.pos.trBase );
-  VectorScale( dir, SMOKE_SPEED, bolt->s.pos.trDelta );
-  SnapVector( bolt->s.pos.trDelta );      // save net bandwidth
-
-  VectorCopy( start, bolt->r.currentOrigin );
-
-  return bolt;
-}
-
 /*
 ================
 AHive_SearchAndDestroy

@@ -244,10 +244,7 @@ static void CG_Obituary( entityState_t *ent )
         else
           message = "^5was terminated by own flames";
         break;
-		
-    case MOD_SMOKE:
-        message = "^5smoked himself up";
-        break;
+
       case MOD_ABOMB:
         message = "^5bombed himself up";
         break;
@@ -355,11 +352,6 @@ static void CG_Obituary( entityState_t *ent )
 	   case MOD_FLAMES:
         message = "^5tasted^7";
         message2 = "^5's ^5flames";
-        break;
-		
-      case MOD_SMOKE:
-        message = "^5tasted^7";
-        message2 = "^5's ^5smoke";
         break;
 		
       case MOD_ABUILDER_CLAW:
