@@ -26,9 +26,12 @@ TREMULOUS EDGE MOD SRC FILE
 ===========================================================================
 */
 #include "g_local.h"
+#include "edge_version.h"
 
 #define G_MOD_VERSION "Aardvark 0.5x" SVN_VERSION
-#define EDGE_MOD_VERSION "7.0.x"
+#ifndef EDGE_MOD_VERSION
+#define EDGE_MOD_VERSION "7.5.x"
+#endif
 level_locals_t  level;
 
 typedef struct
