@@ -287,7 +287,7 @@ void G_MissileImpact( gentity_t *ent, trace_t *trace )
         return;
     }
   }
-  else if ( other->s.eType == ET_BUILDABLE && other->s.modelindex == BA_A_REFLECTOR && ( !strcmp( ent->classname, "lcannon" ) || !strcmp( ent->classname, "pulse" ) || !strcmp( ent->classname, "lasgun" ) ) )
+  else if ( other->s.eType == ET_BUILDABLE && other->s.modelindex == BA_A_REFLECTOR && ( !strcmp( ent->classname, "lcannon" ) || !strcmp( ent->classname, "pulse" ) || !strcmp( ent->classname, "lasgun" ) || !strcmp( ent->classname, "rocket" ) ) )
   {
     G_BounceMissile( ent, trace );
       
