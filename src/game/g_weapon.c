@@ -819,9 +819,7 @@ void LCChargeFire( gentity_t *ent, qboolean secondary )
 
 /*
 ======================================================================
-
-PULSE RIFLE
-
+ROCKET LAUNCHER
 ======================================================================
 */
 
@@ -829,6 +827,48 @@ void rocketLauncherFire( gentity_t *ent )
 {
   fire_rocket( ent, muzzle, forward );
 }
+
+
+/*
+======================================================================
+LIGHTNING GUN
+======================================================================
+*/
+
+void lightningGunFire( gentity_t *ent )
+{
+	vec3_t start, end;
+	trace_t tr;
+	gentity_t *target;
+
+	VectorMA( muzzle, LIGHTNING_RANGE, forward, end );
+
+	G_UnlaggedOn( ent, muzzle, LIGHTNING_RANGE );
+	trap_Trace( &tr, muzzle, NULL, NULL, end, ent->s.number, MASK_SHOT );
+	G_UnlaggedOff( );
+
+	if( tr.fraction == 1.0f ||
+	    tr.entityNum == ENTITYNUM_NONE ||
+	    ( tr.surfaceFlags & SURF_NOIMPACT ) )
+		return;
+
+	target = g_entities + tr.entityNum;
+
+	if( target->s.eType == ET_PLAYER || target->s.eType == ET_BUILDABLE )
+		BloodSpurt( ent, target, &tr );
+	else
+	{
+		gentity_t *tent;
+
+		tent = G_TempEntity( tr.endpos, EV_MISSILE_MISS );
+		tent->s.eventParm = DirToByte( tr.plane.normal );
+		tent->s.weapon = ent->s.weapon;
+		tent->s.generic1 = ent->s.generic1;
+  }
+
+	G_Damage( target, ent, ent, forward, tr.endpos, LIGHTNING_DAMAGE, 0, MOD_LIGHTNING );
+}
+
 
 /*
 ======================================================================
@@ -1975,6 +2015,9 @@ void FireWeapon( gentity_t *ent )
       break;
     case WP_ROCKET_LAUNCHER:
       rocketLauncherFire( ent );
+      break;
+    case WP_LIGHTNING_GUN:
+      lightningGunFire( ent );
       break;
     case WP_GRENADE:
       throwGrenade( ent );

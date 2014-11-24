@@ -866,6 +866,60 @@ static float CG_MachinegunSpinAngle( centity_t *cent, qboolean firing )
   return angle;
 }
 
+/*
+=============
+CG_RenderBeam
+=============
+*/
+
+void CG_RenderGenericBeam( const vec3_t start, const vec3_t end, qhandle_t shader, float radius )
+{
+	vec3_t delta, viewdelta, side;
+	float length;
+	polyVert_t quad[ 4 ];
+
+	VectorSubtract( end, start, delta );
+	length = VectorLength( delta );
+	VectorSubtract( start, cg.refdef.vieworg, viewdelta );
+	CrossProduct( delta, viewdelta, side );
+	VectorNormalize( side );
+
+	VectorMA( start, radius, side, quad[ 3 ].xyz );
+	VectorMA( start, -radius, side, quad[ 2 ].xyz );
+	VectorMA( end, -radius, side, quad[ 1 ].xyz );
+	VectorMA( end, radius, side, quad[ 0 ].xyz );
+
+	quad[ 0 ].st[ 0 ] = length / radius * 0.1;
+	quad[ 0 ].st[ 1 ] = 0;
+	quad[ 0 ].modulate[ 0 ] = 255;
+	quad[ 0 ].modulate[ 1 ] = 255;
+	quad[ 0 ].modulate[ 2 ] = 255;
+	quad[ 0 ].modulate[ 3 ] = 255;
+
+	quad[ 1 ].st[ 0 ] = length / radius * 0.1;
+	quad[ 1 ].st[ 1 ] = 1;
+	quad[ 1 ].modulate[ 0 ] = 255;
+	quad[ 1 ].modulate[ 1 ] = 255;
+	quad[ 1 ].modulate[ 2 ] = 255;
+	quad[ 1 ].modulate[ 3 ] = 255;
+
+	quad[ 2 ].st[ 0 ] = 0;
+	quad[ 2 ].st[ 1 ] = 1;
+	quad[ 2 ].modulate[ 0 ] = 255;
+	quad[ 2 ].modulate[ 1 ] = 255;
+	quad[ 2 ].modulate[ 2 ] = 255;
+	quad[ 2 ].modulate[ 3 ] = 255;
+
+	quad[ 3 ].st[ 0 ] = 0;
+	quad[ 3 ].st[ 1 ] = 0;
+	quad[ 3 ].modulate[ 0 ] = 255;
+	quad[ 3 ].modulate[ 1 ] = 255;
+	quad[ 3 ].modulate[ 2 ] = 255;
+	quad[ 3 ].modulate[ 3 ] = 255;
+
+	trap_R_AddPolyToScene( shader, 4, quad );
+}
+
 
 /*
 =============
@@ -876,6 +930,7 @@ The main player will have this called for BOTH cases, so effects like light and
 sound should only be done on the world model case.
 =============
 */
+
 void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent )
 {
   refEntity_t   gun;
@@ -1113,6 +1168,52 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 
       cent->muzzlePsTrigger = qfalse;
     }
+
+		if( weaponNum == WP_LIGHTNING_GUN )
+		{
+			attachment_t attachment;
+			vec3_t muzzle, forward, end, beam_start;
+			trace_t tr;
+
+			if( ps )
+			{
+				BG_GetClientViewOrigin( ps, muzzle );
+				AngleVectors( ps->viewangles, forward, NULL, NULL );
+			}
+			else
+			{
+				// NOTE: this code assumes that the player's normal is (0,0,1)
+				//       it will break when humans start walking on walls
+				class_t class = ( cent->currentState.misc >> 8 ) & 0xFF;
+
+				VectorCopy( cent->lerpOrigin, muzzle );
+
+				// the only way to tell if a human is crouching is to check its bbox
+				// which is transmitted in a weird, encoded form (hence the magic number)
+				if( class == PCL_HUMAN && cent->currentState.solid == 3151887 )
+					muzzle[ 2 ] += BG_ClassConfig( class )->crouchViewheight;
+				else
+					muzzle[ 2 ] += BG_ClassConfig( class )->viewheight;
+
+				AngleVectors( cent->lerpAngles, forward, NULL, NULL );
+			}
+
+			VectorMA( muzzle, LIGHTNING_RANGE, forward, end );
+
+			CG_Trace( &tr, muzzle, NULL, NULL, end, cg.predictedPlayerState.clientNum, MASK_SHOT );
+
+			memset( &attachment, 0, sizeof( attachment ) );
+
+			if( noGunModel )
+				CG_SetAttachmentTag( &attachment, *parent, parent->hModel, "tag_weapon" );
+			else
+				CG_SetAttachmentTag( &attachment, gun, gun.hModel, "tag_flash" );
+
+			CG_AttachToTag( &attachment );
+
+			if( CG_AttachmentPoint( &attachment, beam_start ) )
+				CG_RenderGenericBeam( beam_start, tr.endpos, cgs.media.lightningBeam, 3 );
+		}
 
     // make a dlight for the flash
     if( weapon->wim[ weaponMode ].flashDlightColor[ 0 ] ||

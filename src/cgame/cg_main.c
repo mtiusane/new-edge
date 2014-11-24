@@ -821,7 +821,8 @@ static void CG_RegisterGraphics( void )
   cgs.media.healthCrossPoisoned       = trap_R_RegisterShader( "ui/assets/neutral/cross_poison.tga" );
   
   cgs.media.upgradeClassIconShader    = trap_R_RegisterShader( "icons/icona_upgrade.tga" );
-  
+
+  cgs.media.lightningBeam             = trap_R_RegisterShader( "gfx/lightning/beam" );
 
   cgs.media.disconnectPS              = CG_RegisterParticleSystem( "disconnectPS" );
 

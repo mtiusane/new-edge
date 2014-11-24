@@ -3575,6 +3575,31 @@ static const weaponAttributes_t bg_weapons[ ] =
     TEAM_HUMANS           //team_t    team;
   },
   {
+    WP_LIGHTNING_GUN,     //int       weaponNum;
+    LIGHTNING_PRICE,      //int       price;
+    STAGE_GE_5,           //int  stages
+    SLOT_WEAPON,          //int       slots;
+    "lightning",          //char      *weaponName;
+    "[yefarms]Lightning Gun",     //char      *humanName;
+    "This is a lightning gun. It guns lightning.",
+    LIGHTNING_AMMO,       //int       maxAmmo;
+    0,                    //int       maxClips;
+    qfalse,               //int       infiniteAmmo;
+    qtrue,                //int       usesEnergy;
+    LIGHTNING_REPEAT,     //int       repeatRate1;
+    0,                    //int       repeatRate2;
+    0,                    //int       repeatRate3;
+    0,                    //int       reloadTime;
+    LIGHTNING_K_SCALE,    //float     knockbackScale;
+    qfalse,               //qboolean  hasAltMode;
+    qfalse,               //qboolean  hasThirdMode;
+    qfalse,               //qboolean  canZoom;
+    90.0f,                //float     zoomFov;
+    qtrue,                //qboolean  purchasable;
+    qtrue,                //qboolean  longRanged;
+    TEAM_HUMANS           //team_t    team;
+  },
+  {
     WP_LUCIFER_CANNON,    //int       weaponNum;
     LCANNON_PRICE,        //int       price;
     STAGE_GE_5,           //int  stages
