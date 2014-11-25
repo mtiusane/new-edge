@@ -1338,6 +1338,7 @@ typedef struct
   qhandle_t   alienWoundsBleedPS;
 
   qhandle_t   lightningBeam;
+  qhandle_t   lightningImpactPS;
 } cgMedia_t;
 
 typedef struct

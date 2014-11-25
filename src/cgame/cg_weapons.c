@@ -868,7 +868,7 @@ static float CG_MachinegunSpinAngle( centity_t *cent, qboolean firing )
 
 /*
 =============
-CG_RenderBeam
+CG_RenderGenericBeam
 =============
 */
 
@@ -1169,6 +1169,7 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
       cent->muzzlePsTrigger = qfalse;
     }
 
+		// Lightning Gun's beam
 		if( weaponNum == WP_LIGHTNING_GUN )
 		{
 			attachment_t attachment;
@@ -1213,6 +1214,19 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
 
 			if( CG_AttachmentPoint( &attachment, beam_start ) )
 				CG_RenderGenericBeam( beam_start, tr.endpos, cgs.media.lightningBeam, 3 );
+
+			if( tr.entityNum != ENTITYNUM_NONE &&
+			    !( tr.surfaceFlags & SURF_NOIMPACT ) )
+			{
+				particleSystem_t *ps = CG_SpawnNewParticleSystem( cgs.media.lightningImpactPS );
+
+				if( CG_IsParticleSystemValid( &ps ) )
+				{
+					CG_SetAttachmentPoint( &ps->attachment, tr.endpos );
+					CG_SetParticleSystemNormal( ps, tr.plane.normal );
+					CG_AttachToPoint( &ps->attachment );
+				}
+			}
 		}
 
     // make a dlight for the flash
@@ -1351,6 +1365,15 @@ void CG_AddViewWeapon( playerState_t *ps )
     VectorMA( hand.origin, random( ) * 3, cg.refdef.viewaxis[ 1 ],
               hand.origin );	  
 			  
+  }
+
+  // Lightning Gun vibration effect
+  if( ( weapon == WP_LIGHTNING_GUN ) && ps->eFlags & EF_FIRING )
+  {
+    VectorMA( hand.origin, random( ) * 0.1, cg.refdef.viewaxis[ 0 ],
+              hand.origin );
+    VectorMA( hand.origin, random( ) * 0.1, cg.refdef.viewaxis[ 1 ],
+              hand.origin );
   }
 
   AnglesToAxis( angles, hand.axis );
@@ -1753,6 +1776,7 @@ void CG_FireWeapon( centity_t *cent, weaponMode_t weaponMode )
   int               c;
   weaponInfo_t      *wi;
   weapon_t          weaponNum;
+  qboolean          skipSound = qfalse;
 
   es = &cent->currentState;
 
@@ -1772,6 +1796,10 @@ void CG_FireWeapon( centity_t *cent, weaponMode_t weaponMode )
 
   wi = &cg_weapons[ weaponNum ];
 
+  if( wi->wim[ weaponMode ].continuousFlash &&
+      cent->muzzleFlashTime >= cg.time - 100 )
+    skipSound = qtrue;
+
   // mark the entity as muzzle flashing, so when it is added it will
   // append the flash to the weapon model
   cent->muzzleFlashTime = cg.time;
@@ -1782,6 +1810,9 @@ void CG_FireWeapon( centity_t *cent, weaponMode_t weaponMode )
         !CG_IsParticleSystemInfinite( cent->muzzlePS ) )
       cent->muzzlePsTrigger = qtrue;
   }
+
+  if( skipSound )
+    return;
 
   // play a sound
   for( c = 0; c < 4; c++ )

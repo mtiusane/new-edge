@@ -335,6 +335,9 @@ static void CG_Obituary( entityState_t *ent )
         message = "^5almost dodged^7";
         message2 = "^5's ^5rocket";
         break;
+      case MOD_LIGHTNING:
+        message = "^5was electrocuted by^7";
+        break;
       case MOD_GRENADE:
         message = "^5couldn't escape^7";
         message2 = "^5's ^5grenade";
