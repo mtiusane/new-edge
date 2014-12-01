@@ -206,13 +206,14 @@ void G_MissileImpact( gentity_t *ent, trace_t *trace )
   {
     if( other->client )
     {
+      /* NOTE: Locking enemies completely in place disabled for now.
       if( ( other->client->ps.stats[ STAT_STATE ] & SS_SLOWLOCKED ) 
             && ( other->s.weapon < WP_ALEVEL3 || other->s.weapon == WP_ABUILD ) )
       {
         other->client->ps.stats[ STAT_STATE ] |= SS_BLOBLOCKED;
         other->client->lastLockTime = level.time;
       }
-      else if( other->s.weapon >= WP_ALEVEL3 && other->s.weapon < WP_BLASTER 
+      else */if( other->s.weapon >= WP_ALEVEL3 && other->s.weapon < WP_BLASTER 
                && other->client->blobs <= 3 )
       {
         other->client->lastSlowTime = level.time;
