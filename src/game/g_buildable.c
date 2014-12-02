@@ -398,30 +398,20 @@ Note: 'pos' can be NULL, in this case return the overall BP of the team.
 int G_GetBuildPoints( const vec3_t pos, team_t team )
 {
   int value = 0;
-
-  if( !G_Overmind( ) && team == TEAM_ALIENS )
-  {
-    return 0;
-  }
-  else if( team == TEAM_ALIENS )
-  {
+  switch(team) {
+  case TEAM_ALIENS:
+    if ( !G_Overmind( ) ) return 0;
     value = level.alienBuildPoints;
-  }
-  else if( !G_Reactor( ) && team == TEAM_HUMANS )
-  {
-    return 0;
-  }
-  else if( team == TEAM_HUMANS )
-  {
+    break;
+  case TEAM_HUMANS:
+    if ( !G_Reactor( ) ) return 0;
     value = level.humanBuildPoints;
+    break;
+  default:
+    return 0;
   }
-  else
-    return 0;
-
-  if( ( value > 0 ) && ( G_TimeTilSuddenDeath( ) <= 0 ) )
-    return 0;
-  else
-    return value;
+  if( ( value > 0 ) && ( G_TimeTilSuddenDeath( ) <= 0 ) ) return 0;
+  return value;
 }
 
 /*

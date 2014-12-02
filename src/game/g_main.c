@@ -203,6 +203,8 @@ vmCvar_t  g_AutoLevelMinTeamSize;
 vmCvar_t  g_RageQuitScorePenalty;
 vmCvar_t  g_DretchTurretDamage;
 vmCvar_t  g_DretchBuildingDamage;
+vmCvar_t  g_OwnTeamBPFactor;
+vmCvar_t  g_EnemyTeamBPFactor;
 
 // copy cvars that can be set in worldspawn so they can be restored later
 static char cv_gravity[ MAX_CVAR_VALUE_STRING ];
@@ -372,7 +374,9 @@ static cvarTable_t   gameCvarTable[ ] =
   { &g_AutoLevelMinTeamSize, "g_AutoLevelMinTeamSize", "3", CVAR_ARCHIVE, 0, qfalse },
   { &g_RageQuitScorePenalty, "g_RageQuitScorePenalty", "2000", CVAR_ARCHIVE, 0, qfalse },
   { &g_DretchTurretDamage, "g_DretchTurretDamage", "1", CVAR_ARCHIVE, 0, qfalse },
-  { &g_DretchBuildingDamage, "g_DretchBuildingDamage", "0.5", CVAR_ARCHIVE, 0, qfalse }
+  { &g_DretchBuildingDamage, "g_DretchBuildingDamage", "0.5", CVAR_ARCHIVE, 0, qfalse },
+  { &g_OwnTeamBPFactor, "g_OwnTeamBPFactor", "1.0", CVAR_ARCHIVE, 0, qfalse },
+  { &g_EnemyTeamBPFactor, "g_EnemyTeamBPFactor", "0.0", CVAR_ARCHIVE, 0, qfalse }  
 };
 static int gameCvarTableSize = sizeof( gameCvarTable ) / sizeof( gameCvarTable[ 0 ] );
 void G_InitGame( int levelTime, int randomSeed, int restart );
@@ -1394,8 +1398,8 @@ void G_CalculateBuildPoints( void )
     hFixed = h_refineries * g_humanRefineryBuildPoints.value;
 //    LimitSum( g_maxFixedBuildPoints.value, 1.0f, &aFixed, &hFixed );
 
-    level.alienExtraBuildPoints = aVar + aFixed;
-    level.humanExtraBuildPoints = hVar + hFixed;
+    level.alienExtraBuildPoints = g_OwnTeamBPFactor.value * (aVar + aFixed) + g_EnemyTeamBPFactor.value * (hVar + hFixed);
+    level.humanExtraBuildPoints = g_OwnTeamBPFactor.value * (hVar + hFixed) + g_EnemyTeamBPFactor.value * (aVar + aFixed);
 
     level.humanBuildPoints += level.humanExtraBuildPoints;
     level.alienBuildPoints += level.alienExtraBuildPoints;
