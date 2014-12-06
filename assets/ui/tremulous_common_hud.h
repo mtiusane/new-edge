@@ -246,7 +246,7 @@ itemDef
 itemDef
 {
   name "bpalien"
-  rect 184 8.5 20 25
+  rect 185.5 8.5 20 25
   foreColor  1 0 0 1
   aspectBias ALIGN_CENTER
   textalign ALIGN_RIGHT
