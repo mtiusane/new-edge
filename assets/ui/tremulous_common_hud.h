@@ -205,28 +205,72 @@ itemDef
     ownerdraw CG_FOLLOW
 }
 
-	itemDef
-    {
-      name "stage_add"
-      style WINDOW_STYLE_SHADER
-      rect 253 -1 140 35
-      visible 1
-	  background "scripts/stage_add"
-      decoration
-    }	
+itemDef
+{
+  name "stage_add"
+  style WINDOW_STYLE_SHADER
+  rect 343 -1 160 35
+  aspectBias ALIGN_CENTER
+  visible 1
+  background "scripts/stage_add"
+  decoration
+}
 
-    itemDef
-    {
-      name "stagereport"
-    rect 200 2 240 25
-    foreColor  1 1 1 1
-    aspectBias ALIGN_CENTER
-    textalign ALIGN_CENTER
-    textvalign VALIGN_TOP
-    visible 1
-    decoration
-    textScale .22
-    textStyle ITEM_TEXTSTYLE_NORMAL
-    ownerdraw CG_STAGE_REPORT_TEXT
-    }
+itemDef
+{
+  name "stagereport"
+  rect 300 2 240 25
+  foreColor 1 1 1 1
+  aspectBias ALIGN_CENTER
+  textalign ALIGN_CENTER
+  textvalign VALIGN_TOP
+  visible 1
+  decoration
+  textScale .22
+  textStyle ITEM_TEXTSTYLE_NORMAL
+  ownerdraw CG_STAGE_REPORT_TEXT
+}
+
+itemDef
+{
+  name "bpbackground"
+  style WINDOW_STYLE_SHADER
+  rect 140 -5 160 40
+  aspectBias ALIGN_CENTER
+  visible 1
+  foreColor 1 1 1 0.5
+  background "ui/assets/bp-bg.tga"
+  decoration
+}
+
+itemDef
+{
+  name "bpalien"
+  rect 184 8.5 20 25
+  foreColor  1 0 0 1
+  aspectBias ALIGN_CENTER
+  textalign ALIGN_RIGHT
+  textvalign VALIGN_TOP
+  visible 1
+  decoration
+  textScale .4
+  textStyle ITEM_TEXTSTYLE_NORMAL
+  ownerdraw CG_ALIEN_BUILD_POOL
+}
+
+
+itemDef
+{
+  name "bphuman"
+  rect 238 8.5 20 25
+  foreColor 0 0.8 1 1
+  aspectBias ALIGN_CENTER
+  textalign ALIGN_LEFT
+  textvalign VALIGN_TOP
+  visible 1
+  decoration
+  textScale .4
+  textStyle ITEM_TEXTSTYLE_NORMAL
+  ownerdraw CG_HUMAN_BUILD_POOL
+}
 

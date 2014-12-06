@@ -1789,6 +1789,26 @@ static void CG_DrawStageReport( rectDef_t *rect, float text_x, float text_y,
 
 /*
 ==================
+CG_DrawBuildPoolReport
+==================
+*/
+static void CG_DrawBuildPoolReport( rectDef_t *rect, float text_x, float text_y,
+    vec4_t color, float scale, int textalign, int textvalign, int textStyle, qboolean humans )
+{
+  char out[ 20 ];
+  float tx, ty;
+
+  if( cg.intermissionStarted )
+    return;
+
+  Com_sprintf( out, sizeof( out ), "%s", Info_ValueForKey( CG_ConfigString( CS_BUILD_POOLS ), ( humans ? "h" : "a" ) ) );
+
+  CG_AlignText( rect, out, scale, 0.0f, 0.0f, textalign, textvalign, &tx, &ty );
+  UI_Text_Paint( text_x + tx, text_y + ty, scale, color, out, 0, 0, textStyle );
+}
+
+/*
+==================
 CG_DrawFPS
 ==================
 */
@@ -3147,6 +3167,12 @@ void CG_OwnerDraw( float x, float y, float w, float h, float text_x,
       break;
     case CG_STAGE_REPORT_TEXT:
       CG_DrawStageReport( &rect, text_x, text_y, foreColor, scale, textalign, textvalign, textStyle );
+      break;
+    case CG_ALIEN_BUILD_POOL:
+      CG_DrawBuildPoolReport( &rect, text_x, text_y, foreColor, scale, textalign, textvalign, textStyle, qfalse );
+      break;
+    case CG_HUMAN_BUILD_POOL:
+      CG_DrawBuildPoolReport( &rect, text_x, text_y, foreColor, scale, textalign, textvalign, textStyle, qtrue );
       break;
     case CG_ALIENS_SCORE_LABEL:
       CG_DrawTeamLabel( &rect, TEAM_ALIENS, text_x, text_y, foreColor, scale, textalign, textvalign, textStyle );
