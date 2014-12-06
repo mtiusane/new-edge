@@ -26,9 +26,12 @@ TREMULOUS EDGE MOD SRC FILE
 ===========================================================================
 */
 #include "g_local.h"
+#include "edge_version.h"
 
 #define G_MOD_VERSION "Aardvark 0.5x" SVN_VERSION
-#define EDGE_MOD_VERSION "7.0.x"
+#ifndef EDGE_MOD_VERSION
+#define EDGE_MOD_VERSION "7.5.x"
+#endif
 level_locals_t  level;
 
 typedef struct
@@ -200,6 +203,8 @@ vmCvar_t  g_AutoLevelMinTeamSize;
 vmCvar_t  g_RageQuitScorePenalty;
 vmCvar_t  g_DretchTurretDamage;
 vmCvar_t  g_DretchBuildingDamage;
+vmCvar_t  g_OwnTeamBPFactor;
+vmCvar_t  g_EnemyTeamBPFactor;
 
 // copy cvars that can be set in worldspawn so they can be restored later
 static char cv_gravity[ MAX_CVAR_VALUE_STRING ];
@@ -369,7 +374,9 @@ static cvarTable_t   gameCvarTable[ ] =
   { &g_AutoLevelMinTeamSize, "g_AutoLevelMinTeamSize", "3", CVAR_ARCHIVE, 0, qfalse },
   { &g_RageQuitScorePenalty, "g_RageQuitScorePenalty", "2000", CVAR_ARCHIVE, 0, qfalse },
   { &g_DretchTurretDamage, "g_DretchTurretDamage", "1", CVAR_ARCHIVE, 0, qfalse },
-  { &g_DretchBuildingDamage, "g_DretchBuildingDamage", "0.5", CVAR_ARCHIVE, 0, qfalse }
+  { &g_DretchBuildingDamage, "g_DretchBuildingDamage", "0.5", CVAR_ARCHIVE, 0, qfalse },
+  { &g_OwnTeamBPFactor, "g_OwnTeamBPFactor", "1.0", CVAR_ARCHIVE, 0, qfalse },
+  { &g_EnemyTeamBPFactor, "g_EnemyTeamBPFactor", "0.0", CVAR_ARCHIVE, 0, qfalse }  
 };
 static int gameCvarTableSize = sizeof( gameCvarTable ) / sizeof( gameCvarTable[ 0 ] );
 void G_InitGame( int levelTime, int randomSeed, int restart );
@@ -1087,6 +1094,7 @@ void G_SpawnClients( team_t team )
     if( g_teamForceBalance.integer == 2 &&
 	!level.humanTeamLocked && 
 	!level.alienTeamLocked &&
+	level.numHumanSpawns > 0 &&
 	level.numLiveAlienClients-level.numHumanClients > 0 )
       numSpawns = -1;
   }
@@ -1097,6 +1105,7 @@ void G_SpawnClients( team_t team )
     if( g_teamForceBalance.integer == 2 &&
 	!level.humanTeamLocked && 
 	!level.alienTeamLocked &&
+	level.numAlienSpawns > 0 &&
 	level.numLiveHumanClients-level.numAlienClients > 0 )
       numSpawns = -1;
   }
@@ -1389,8 +1398,8 @@ void G_CalculateBuildPoints( void )
     hFixed = h_refineries * g_humanRefineryBuildPoints.value;
 //    LimitSum( g_maxFixedBuildPoints.value, 1.0f, &aFixed, &hFixed );
 
-    level.alienExtraBuildPoints = aVar + aFixed;
-    level.humanExtraBuildPoints = hVar + hFixed;
+    level.alienExtraBuildPoints = g_OwnTeamBPFactor.value * (aVar + aFixed) + g_EnemyTeamBPFactor.value * (hVar + hFixed);
+    level.humanExtraBuildPoints = g_OwnTeamBPFactor.value * (hVar + hFixed) + g_EnemyTeamBPFactor.value * (aVar + aFixed);
 
     level.humanBuildPoints += level.humanExtraBuildPoints;
     level.alienBuildPoints += level.alienExtraBuildPoints;
@@ -2619,7 +2628,7 @@ void G_ArmageddonStep( void )
       if (thresholdOther > 0.0f) if (random() < thresholdOther) {
          ent->health = -999;
          ent->enemy = &g_entities[ ENTITYNUM_WORLD ];
-         ent->die( ent, ent->enemy, ent->enemy, 999, MOD_UNKNOWN );
+         ent->die( ent, ent->enemy, ent->enemy, 999, MOD_HDOG );
        }
       break;
     }

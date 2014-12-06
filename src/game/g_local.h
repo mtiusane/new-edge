@@ -1300,6 +1300,8 @@ extern  vmCvar_t  g_AutoLevelMinTeamSize;
 extern  vmCvar_t  g_RageQuitScorePenalty;
 extern  vmCvar_t  g_DretchTurretDamage;
 extern  vmCvar_t  g_DretchBuildingDamage;
+extern  vmCvar_t  g_OwnTeamBPFactor;
+extern  vmCvar_t  g_EnemyTeamBPFactor;
 
 void      trap_Print( const char *fmt );
 void      trap_Error( const char *fmt );

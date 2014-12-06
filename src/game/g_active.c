@@ -847,7 +847,7 @@ void ClientTimerActions( gentity_t *ent, int msec )
         client->ps.stats[ STAT_STAMINA ] += rate_stamina;
     }
 
-    if( weapon == WP_ABUILD || weapon == WP_ABUILD2 ||
+    if( weapon == WP_ABUILD ||
         BG_InventoryContainsWeapon( WP_HBUILD, client->ps.stats ) )
     {
         // Update build timer
@@ -870,7 +870,6 @@ void ClientTimerActions( gentity_t *ent, int msec )
     switch( weapon )
     {
       case WP_ABUILD:
-      case WP_ABUILD2:
       case WP_HBUILD:
       
         // Set validity bit on buildable
@@ -1088,8 +1087,7 @@ void ClientTimerActions( gentity_t *ent, int msec )
   {
     client->time10000 -= 10000;
 
-    if( ent->client->ps.weapon == WP_ABUILD ||
-        ent->client->ps.weapon == WP_ABUILD2 )
+    if( ent->client->ps.weapon == WP_ABUILD )
     {
       AddScore( ent, ALIEN_BUILDER_SCOREINC );
     }

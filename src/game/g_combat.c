@@ -80,75 +80,9 @@ void LookAtKiller( gentity_t *self, gentity_t *inflictor, gentity_t *attacker )
 // these are just for logging, the client prints its own messages
 char *modNames[ ] =
 {
-  "MOD_UNKNOWN",
-  "MOD_HDOG",
-  "MOD_SHOTGUN",
-  "MOD_BLASTER",
-  "MOD_PAINSAW",
-  "MOD_MACHINEGUN",
-  "MOD_CHAINGUN",
-  "MOD_PRIFLE",
-  "MOD_MDRIVER",
-  "MOD_LASGUN",
-  "MOD_LCANNON",
-  "MOD_LCANNON_SPLASH",
-  "MOD_FLAMER",
-  "MOD_FLAMER_SPLASH",
-  "MOD_GRENADE",
-  "MOD_PSAWBLADE",
-  "MOD_MINE",
-  "MOD_FLAMES",
-  "MOD_SMOKE",
-  "MOD_SPITEFUL_ABCESS",
-  "MOD_WATER",
-  "MOD_SLIME",
-  "MOD_LAVA",
-  "MOD_CRUSH",
-  "MOD_TELEFRAG",
-  "MOD_FALLING",
-  "MOD_SUICIDE",
-  "MOD_TARGET_LASER",
-  "MOD_TRIGGER_HURT",
-
-  "MOD_ABUILDER_CLAW",
-  "MOD_LEVEL0_BITE",
-  "MOD_LEVEL1_CLAW",
-  "MOD_LEVEL1_PCLOUD",
-  "MOD_LEVEL3_CLAW",
-  "MOD_LEVEL3_POUNCE",
-  "MOD_LEVEL5_POUNCE",
-  "MOD_LEVEL5_PRICKLES",
-  "MOD_LEVEL3_BOUNCEBALL",
-  "MOD_LEVEL2_CLAW",
-  "MOD_LEVEL2_ZAP",
-  "MOD_LEVEL5_CLAW",
-  "MOD_LEVEL5_ZAP",
-  "MOD_LEVEL5_BOUNCEBALL",
-  "MOD_LEVEL2_BOUNCEBALL",
-  "MOD_LEVEL4_CLAW",
-  "MOD_LEVEL4_TRAMPLE",
-  "MOD_LEVEL4_CRUSH",
-
-  "MOD_SLOWBLOB",
-  "MOD_POISON",
-  "MOD_INFECTION",
-  "MOD_SWARM",
-  "MOD_MD2",
-  "MOD_HSPAWN",
-  "MOD_TESLAGEN",
-  "MOD_MGTURRET",
-  "MOD_MGTURRET2",
-  "MOD_REACTOR",
-
-  "MOD_ASPAWN",
-  "MOD_ATUBE",
-  "MOD_OVERMIND",
-  "MOD_SLAP",
-  "MOD_DECONSTRUCT",
-  "MOD_REPLACE",
-  "MOD_NOCREEP",
-  "MOD_NOBP",
-  "MOD_ABOMB"
+#define MOD(x) #x
+#include "bg_mod.h"
+#undef MOD
 };
 
  /*
@@ -184,8 +118,7 @@ float G_CamperRewardBonus(  gentity_t *self )
   // exclude builders:
   switch( BG_GetPlayerWeapon( &self->client->ps ) ) 
   { 
-      case WP_ABUILD: 
-      case WP_ABUILD2: 
+      case WP_ABUILD:
       case WP_HBUILD:   return 1.0f;
       default: ;
   }

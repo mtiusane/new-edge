@@ -79,7 +79,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define ALIEN_SPAWN_REPEAT_TIME     11000
 #define ALIEN_REGEN_DAMAGE_TIME     2000 			//msec since damage that regen starts again
 #define ALIEN_REGEN_NOCREEP_MOD     (1.0f/3.0f) 	//regen off creep
-#define ALIEN_MAX_FRAGS             18
+#define ALIEN_MAX_FRAGS             9
 #define ALIEN_MAX_CREDITS           (ALIEN_MAX_FRAGS*ALIEN_CREDITS_PER_KILL)
 #define ALIEN_CREDITS_PER_KILL      400
 #define ALIEN_TK_SUICIDE_PENALTY    150
@@ -345,7 +345,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define STAMINA_BLACKOUT_LEVEL      -800
 #define HUMAN_SPAWN_REPEAT_TIME     11000
 #define HUMAN_REGEN_DAMAGE_TIME     2000 		//msec since damage before dcc repairs
-#define HUMAN_MAX_CREDITS           4000
+#define HUMAN_MAX_CREDITS           2000
 #define HUMAN_TK_SUICIDE_PENALTY    150
 #define HUMAN_BUILDER_SCOREINC      50          // builders receive this many points every 10 seconds
 #define ALIEN_BUILDER_SCOREINC      AVM(100)    // builders receive this many points every 10 seconds
@@ -511,7 +511,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define PRIFLE_DMG                  HDM(9)
 #define PRIFLE_SPEED                1200
 #define PRIFLE_SIZE                 5
-#define PRIFLE_SECONDARY_SPEED      800
+#define PRIFLE_SECONDARY_SPEED      900
 #define PRIFLE_SECONDARY_REPEAT     400
 
 #define LCANNON_PRICE               600
@@ -537,6 +537,18 @@ TREMULOUS EDGE MOD SRC FILE
 #define FLAMER_CHARGE_TIME_MAX     3000
 #define FLAMER_CHARGE_AMMO         50       // ammo cost of a full charge shot
 #define FLAMER_SECONDARY_REPEAT    200
+
+#define ROCKETL_PRICE               700
+#define ROCKETL_AMMO                8
+#define ROCKETL_CLIPS               3
+#define ROCKETL_RELOAD              0
+#define ROCKETL_REPEAT              1000
+#define ROCKETL_K_SCALE             1.0f
+#define ROCKETL_DAMAGE              HDM(88)
+#define ROCKETL_RADIUS              120
+#define ROCKETL_SIZE                5
+#define ROCKETL_SPEED               700
+
 
 #define HBUILD_PRICE                0
 #define HBUILD_REPEAT               1000
@@ -653,20 +665,20 @@ TREMULOUS EDGE MOD SRC FILE
 
 #define ACIDTUBE_BP                 6
 #define ACIDTUBE_BT                 8000
-#define ACIDTUBE_HEALTH             ABHM(125)
+#define ACIDTUBE_HEALTH             ABHM(130)
 #define ACIDTUBE_REGEN              10
 #define ACIDTUBE_SPLASHDAMAGE       50
 #define ACIDTUBE_SPLASHRADIUS       100
 #define ACIDTUBE_CREEPSIZE          30
 #define ACIDTUBE_DAMAGE             8
 #define ACIDTUBE_RANGE              300.0f
-#define ACIDTUBE_REPEAT             300
+#define ACIDTUBE_REPEAT             280
 #define ACIDTUBE_REPEAT_ANIM        2000
 #define ACIDTUBE_VALUE              ABVM(ACIDTUBE_BP)
 
 #define HIVE_BP                     8
 #define HIVE_BT                     13000
-#define HIVE_HEALTH                 ABHM(125)
+#define HIVE_HEALTH                 ABHM(130)
 #define HIVE_REGEN                  10
 #define HIVE_SPLASHDAMAGE           30
 #define HIVE_SPLASHRADIUS           200
@@ -676,7 +688,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define HIVE_REPEAT                 3000
 #define HIVE_K_SCALE                1.0f
 #define HIVE_DMG                    80
-#define HIVE_SPEED                  320.0f
+#define HIVE_SPEED                  340.0f
 #define HIVE_DIR_CHANGE_PERIOD      500
 #define HIVE_VALUE                  ABVM(HIVE_BP)
 
@@ -708,7 +720,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define OVERMIND_VALUE              ABVM(50)
 
 #define PANZER_SMALL_BP                    1
-#define PANZER_SMALL_BT                    6000
+#define PANZER_SMALL_BT                    3000
 #define PANZER_SMALL_HEALTH                ABHM(100)
 #define PANZER_SMALL_REGEN                 1
 #define PANZER_SMALL_SPLASHDAMAGE          1
@@ -717,7 +729,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define PANZER_SMALL_VALUE                 ABVM(PANZER_SMALL_BP)
 
 #define PANZER_MEDIUM_BP                    2
-#define PANZER_MEDIUM_BT                    15000
+#define PANZER_MEDIUM_BT                    9000
 #define PANZER_MEDIUM_HEALTH                ABHM(250)
 #define PANZER_MEDIUM_REGEN                 1
 #define PANZER_MEDIUM_SPLASHDAMAGE          5
@@ -726,7 +738,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define PANZER_MEDIUM_VALUE                 ABVM(PANZER_MEDIUM_BP)
 
 #define PANZER_LARGE_BP                     5
-#define PANZER_LARGE_BT                     20000
+#define PANZER_LARGE_BT                     18000
 #define PANZER_LARGE_HEALTH                 ABHM(450)
 #define PANZER_LARGE_REGEN                  1
 #define PANZER_LARGE_SPLASHDAMAGE           10
@@ -933,7 +945,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define MGTURRET2_BT                 20000
 #define MGTURRET2_HEALTH             HBHM(300)
 #define MGTURRET2_SPLASHDAMAGE       1
-#define MGTURRET2_SPLASHRADIUS       170
+#define MGTURRET2_SPLASHRADIUS       120
 #define MGTURRET2_ANGULARSPEED       12
 #define MGTURRET2_ACCURACY_TO_FIRE   0
 #define MGTURRET2_VERTICALCAP        40  		// +/- maximum pitch
@@ -941,8 +953,8 @@ TREMULOUS EDGE MOD SRC FILE
 #define MGTURRET2_K_SCALE            1.0f
 #define MGTURRET2_RANGE              50.0f
 #define MGTURRET2_SPREAD             300
-#define MGTURRET2_DMG                HDM(16)
-#define MGTURRET2_SPINUP_TIME        600 		// time between target sighted and fire
+#define MGTURRET2_DMG                HDM(18)
+#define MGTURRET2_SPINUP_TIME        550 		// time between target sighted and fire
 #define MGTURRET2_VALUE              HBVM(MGTURRET2_BP)
 #define FLAMER2_LIFETIME             350.0f
 
@@ -954,7 +966,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define TESLAGEN_REPEAT             250
 #define TESLAGEN_K_SCALE            4.0f
 #define TESLAGEN_RANGE              225
-#define TESLAGEN_DMG                HDM(11)
+#define TESLAGEN_DMG                HDM(12)
 #define TESLAGEN_VALUE              HBVM(TESLAGEN_BP)
 
 #define DC_BP                       15
@@ -996,36 +1008,36 @@ TREMULOUS EDGE MOD SRC FILE
 
 //EDGE BUILDINGS HUMANS
 #define CONTAINER_SMALL_BP                    1
-#define CONTAINER_SMALL_BT                    5000
+#define CONTAINER_SMALL_BT                    3000
 #define CONTAINER_SMALL_HEALTH                HBHM(60)
 #define CONTAINER_SMALL_SPLASHDAMAGE          1
 #define CONTAINER_SMALL_SPLASHRADIUS          10
 #define CONTAINER_SMALL_VALUE                 HBVM(CONTAINER_SMALL_BP)
 
 #define CONTAINER_MEDIUM_BP                   2
-#define CONTAINER_MEDIUM_BT                   14000
+#define CONTAINER_MEDIUM_BT                   9000
 #define CONTAINER_MEDIUM_HEALTH               HBHM(250)
 #define CONTAINER_MEDIUM_SPLASHDAMAGE         5
 #define CONTAINER_MEDIUM_SPLASHRADIUS         40
 #define CONTAINER_MEDIUM_VALUE                HBVM(CONTAINER_MEDIUM_BP)
 
 #define CONTAINER_LARGE_BP                    5
-#define CONTAINER_LARGE_BT                    20000
+#define CONTAINER_LARGE_BT                    18000
 #define CONTAINER_LARGE_HEALTH                HBHM(450)
 #define CONTAINER_LARGE_SPLASHDAMAGE          10
 #define CONTAINER_LARGE_SPLASHRADIUS          70
 #define CONTAINER_LARGE_VALUE                 HBVM(CONTAINER_LARGE_BP)
 
-#define PLATE_SMALL_BP       	              1
+#define PLATE_SMALL_BP       	              2
 #define PLATE_SMALL_BT        	              4000
-#define PLATE_SMALL_HEALTH     	              HBHM(25)
+#define PLATE_SMALL_HEALTH     	              HBHM(100)
 #define PLATE_SMALL_SPLASHDAMAGE              5
 #define PLATE_SMALL_SPLASHRADIUS              10
 #define PLATE_SMALL_VALUE               	  HBVM(PLATE_SMALL_BP)
 
-#define PLATE_LARGE_BP       	              3
+#define PLATE_LARGE_BP       	              4
 #define PLATE_LARGE_BT        	              13000
-#define PLATE_LARGE_HEALTH     	              HBHM(100)
+#define PLATE_LARGE_HEALTH     	              HBHM(200)
 #define PLATE_LARGE_SPLASHDAMAGE              5
 #define PLATE_LARGE_SPLASHRADIUS              100
 #define PLATE_LARGE_VALUE               	  HBVM(PLATE_LARGE_BP)
@@ -1045,21 +1057,21 @@ TREMULOUS EDGE MOD SRC FILE
 #define FENCE_ROD_VALUE              		  HBVM(FENCE_ROD_BP)
 
 #define BARRIER_LINE_BP                 	  2
-#define BARRIER_LINE_BT                 	  12000
-#define BARRIER_LINE_HEALTH              	  HBHM(300)
+#define BARRIER_LINE_BT                 	  10000
+#define BARRIER_LINE_HEALTH              	  HBHM(350)
 #define BARRIER_LINE_SPLASHDAMAGE        	  10
 #define BARRIER_LINE_SPLASHRADIUS        	  50
 #define BARRIER_LINE_VALUE              	  HBVM(BARRIER_LINE_BP)
 
 #define BARRIER_CORNER_BP                 	  2
-#define BARRIER_CORNER_BT                 	  12000
-#define BARRIER_CORNER_HEALTH              	  HBHM(300)
+#define BARRIER_CORNER_BT                 	  10000
+#define BARRIER_CORNER_HEALTH              	  HBHM(350)
 #define BARRIER_CORNER_SPLASHDAMAGE        	  10
 #define BARRIER_CORNER_SPLASHRADIUS        	  50
 #define BARRIER_CORNER_VALUE               	  HBVM(BARRIER_CORNER_BP)
 
 #define BARRIER_POINT_BP                 	  3
-#define BARRIER_POINT_BT                 	  12000
+#define BARRIER_POINT_BT                 	  10000
 #define BARRIER_POINT_HEALTH              	  HBHM(350)
 #define BARRIER_POINT_SPLASHDAMAGE        	  10
 #define BARRIER_POINT_SPLASHRADIUS        	  50
@@ -1075,14 +1087,14 @@ TREMULOUS EDGE MOD SRC FILE
 #define SHIELD_VALUE               			  HBVM(SHIELD_BP)
 
 #define LADDER_BP                		 	  5
-#define LADDER_BT                 		      8000
+#define LADDER_BT                 		      4000
 #define LADDER_HEALTH              		      HBHM(155)
 #define LADDER_SPLASHDAMAGE        			  15
 #define LADDER_SPLASHRADIUS        			  250
 #define LADDER_VALUE               			  HBVM(LADDER_BP)
 
 #define TEFLON_FOIL_BP                		  1
-#define TEFLON_FOIL_BT                 		  2000
+#define TEFLON_FOIL_BT                 		  1500
 #define TEFLON_FOIL_HEALTH             		  HBHM(50)
 #define TEFLON_FOIL_SPLASHDAMAGE       		  1
 #define TEFLON_FOIL_SPLASHRADIUS       		  1

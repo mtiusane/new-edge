@@ -315,8 +315,7 @@ static void CG_DrawPlayerCreditsValue( rectDef_t *rect, vec4_t color, qboolean p
   ps = &cg.snap->ps;
 
   //if the build timer pie is showing don't show this
-  if( ( cent->currentState.weapon == WP_ABUILD ||
-      cent->currentState.weapon == WP_ABUILD2 ) && ps->stats[ STAT_MISC ] )
+  if( ( cent->currentState.weapon == WP_ABUILD ) && ps->stats[ STAT_MISC ] )
     return;
 
   value = ps->persistant[ PERS_CREDIT ];
@@ -467,7 +466,6 @@ static void CG_DrawPlayerClipsRing( rectDef_t *rect, vec4_t backColor,
   switch( weapon )
   {
     case WP_ABUILD:
-    case WP_ABUILD2:
     case WP_HBUILD:
       if( buildTime > MAXIMUM_BUILD_TIME )
         buildTime = MAXIMUM_BUILD_TIME;
@@ -868,7 +866,6 @@ static void CG_DrawPlayerAmmoValue( rectDef_t *rect, vec4_t color )
       return;
 
     case WP_ABUILD:
-    case WP_ABUILD2:
     case WP_HBUILD:
       value = cg.snap->ps.persistant[ PERS_BP ];
       valueMarked = cg.snap->ps.persistant[ PERS_MARKEDBP ];
@@ -1036,7 +1033,6 @@ static void CG_DrawPlayerBuildTimer( rectDef_t *rect, vec4_t color )
   switch( BG_PrimaryWeapon( ps->stats ) )
   {
     case WP_ABUILD:
-    case WP_ABUILD2:
     case WP_HBUILD:
       break;
 
@@ -1074,7 +1070,6 @@ static void CG_DrawPlayerClipsValue( rectDef_t *rect, vec4_t color )
     case WP_NONE:
     case WP_BLASTER:
     case WP_ABUILD:
-    case WP_ABUILD2:
     case WP_HBUILD:
       return;
 
@@ -1210,8 +1205,8 @@ static float CG_ChargeProgress( void )
       max = LEVEL4_TRAMPLE_CHARGE_MAX;
     }
   }
-  else if( cg.snap->ps.weapon == WP_LUCIFER_CANNON || cg.snap->ps.weapon == WP_FLAMER )
 
+  else if( cg.snap->ps.weapon == WP_LUCIFER_CANNON || cg.snap->ps.weapon == WP_FLAMER )
   {
     min = LCANNON_CHARGE_TIME_MIN;
     max = LCANNON_CHARGE_TIME_MAX;
@@ -1290,7 +1285,7 @@ static void CG_DrawPlayerChargeBar( rectDef_t *rect, vec4_t ref_color,
   color[ 3 ] = ref_color[ 3 ] * cg.chargeMeterAlpha;
 
   // Flash red for Lucifer Cannon warning
- if( (cg.snap->ps.weapon == WP_LUCIFER_CANNON || cg.snap->ps.weapon == WP_FLAMER ) &&
+ if( (cg.snap->ps.weapon == WP_FLAMER ) &&
 
       cg.snap->ps.stats[ STAT_MISC ] >= LCANNON_CHARGE_TIME_WARN &&
       ( cg.time & 128 ) )
@@ -2187,8 +2182,8 @@ static void CG_DrawTeamOverlay( rectDef_t *rect, float scale, vec4_t color )
       }
       else
       {
-        if( curWeapon == WP_ABUILD2 || curWeapon == WP_ALEVEL1_UPG ||
-            curWeapon == WP_ALEVEL2_UPG || curWeapon == WP_ALEVEL3_UPG )
+        if( curWeapon == WP_ALEVEL1_UPG || curWeapon == WP_ALEVEL2_UPG ||
+            curWeapon == WP_ALEVEL3_UPG )
         {
           CG_DrawPic( x + iconSize + leftMargin, y, iconSize, 
                       iconSize, cgs.media.upgradeClassIconShader );

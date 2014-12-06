@@ -610,7 +610,7 @@ static void Svcmd_Armageddon_f( void )
     {
       ent->health = -999;
       ent->enemy = &g_entities[ ENTITYNUM_WORLD ];
-      ent->die( ent, ent->enemy, ent->enemy, 999, MOD_UNKNOWN );
+      ent->die( ent, ent->enemy, ent->enemy, 999, MOD_HDOG );
     }
   }
 

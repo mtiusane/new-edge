@@ -3820,19 +3820,18 @@ void G_UnEscapeString( char *in, char *out, int len )
 
 void Cmd_MyScore_f( gentity_t *ent )
 {
-  g_admin_level_t *n;
+  g_admin_level_t *l,*n;
   if ( !ent || !ent->client->pers.admin ) {
     ADMP( "This command is only available for registered players.\n" );
     return;
   }
-  if ( n = G_admin_level_next( G_admin_level( ent->client->pers.admin->level ) ) ) {
+  l = G_admin_find_level_for_score( ent->client->pers.admin->score );
+  if ( n = G_admin_level_next( G_admin_level( l->level ) ) ) {
     ADMP( va( "^7Level %d (%s^7) total score earned: %d next level: %d\n", 
-      ent->client->pers.admin->level, G_admin_level( ent->client->pers.admin->level )->name, 
-      ent->client->pers.admin->score, n->score ) );
+      l->level, G_admin_level( l->level )->name, ent->client->pers.admin->score, n->score ) );
   } else {
     ADMP( va( "^7Level %d (%s^7) total score earned: %d (max level)\n", 
-      ent->client->pers.admin->level, G_admin_level( ent->client->pers.admin->level )->name,
-      ent->client->pers.admin->score ) );
+      l->level, G_admin_level( l->level )->name, ent->client->pers.admin->score ) );
   }
 }
 
