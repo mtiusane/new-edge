@@ -189,3 +189,16 @@ ui/assets/neutral/squad_v
   }
 }
 
+ui/assets/neutral/stagebar
+{
+	nomipmaps
+	{
+		map ui/assets/neutral/stagebar.tga
+		blendFunc blend
+	}
+	{
+		map ui/assets/neutral/stagebar_add.jpg
+		blendFunc add
+	}
+}
+

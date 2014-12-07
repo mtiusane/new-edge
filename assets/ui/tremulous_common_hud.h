@@ -207,19 +207,20 @@ itemDef
 
 itemDef
 {
-  name "stage_add"
+  name "bpbackground"
   style WINDOW_STYLE_SHADER
-  rect 343 -1 160 35
+  rect 160 -5 320 40
   aspectBias ALIGN_CENTER
   visible 1
-  background "scripts/stage_add"
+  foreColor 1 1 1 0.5
+  background "ui/assets/neutral/stagebar"
   decoration
 }
 
 itemDef
 {
   name "stagereport"
-  rect 300 2 240 25
+  rect 200 11 240 25
   foreColor 1 1 1 1
   aspectBias ALIGN_CENTER
   textalign ALIGN_CENTER
@@ -233,20 +234,8 @@ itemDef
 
 itemDef
 {
-  name "bpbackground"
-  style WINDOW_STYLE_SHADER
-  rect 140 -5 160 40
-  aspectBias ALIGN_CENTER
-  visible 1
-  foreColor 1 1 1 0.5
-  background "ui/assets/bp-bg.tga"
-  decoration
-}
-
-itemDef
-{
   name "bpalien"
-  rect 185.5 8.5 20 25
+  rect 194 8.5 20 25
   foreColor  1 0 0 1
   aspectBias ALIGN_CENTER
   textalign ALIGN_RIGHT
@@ -262,8 +251,8 @@ itemDef
 itemDef
 {
   name "bphuman"
-  rect 238 8.5 20 25
-  foreColor 0 0.8 1 1
+  rect 430 8.5 20 25
+  foreColor 0.5 0.9 1 1
   aspectBias ALIGN_CENTER
   textalign ALIGN_LEFT
   textvalign VALIGN_TOP
