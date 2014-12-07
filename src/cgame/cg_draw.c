@@ -1735,9 +1735,6 @@ static void CG_DrawStageReport( rectDef_t *rect, float text_x, float text_y,
   char  s[ MAX_TOKEN_CHARS ];
   float tx, ty;
 
-  if( cg.intermissionStarted )
-    return;
-
   if( cg.snap->ps.stats[ STAT_TEAM ] == TEAM_NONE )
 //    return;
   {
@@ -1793,13 +1790,53 @@ static void CG_DrawBuildPoolReport( rectDef_t *rect, float text_x, float text_y,
   char out[ 20 ];
   float tx, ty;
 
-  if( cg.intermissionStarted )
-    return;
-
   Com_sprintf( out, sizeof( out ), "%s", Info_ValueForKey( CG_ConfigString( CS_BUILD_POOLS ), ( humans ? "h" : "a" ) ) );
 
   CG_AlignText( rect, out, scale, 0.0f, 0.0f, textalign, textvalign, &tx, &ty );
   UI_Text_Paint( text_x + tx, text_y + ty, scale, color, out, 0, 0, textStyle );
+}
+
+/*
+==================
+CG_DrawBuildPoolBars
+==================
+*/
+static void CG_DrawBuildPoolBars( rectDef_t *rect, vec4_t color )
+{
+  const char *cs;
+  float abp, hbp, f;
+  float x, y, w, h;
+
+  cs = CG_ConfigString( CS_BUILD_POOLS );
+
+  abp = atof( Info_ValueForKey( cs, "a" ) ) / atof( Info_ValueForKey( cs, "ad" ) );
+  hbp = atof( Info_ValueForKey( cs, "h" ) ) / atof( Info_ValueForKey( cs, "hd" ) );
+
+  if( fabs( abp + hbp ) < 1e-3 )
+    f = 0.5f;
+  else
+    f = ( ( abp - hbp ) / ( abp + hbp ) + 1.0f ) / 2.0f;
+
+  f = ( f < 0.0f ) ? 0.0f : ( f > 1.0f ) ? 1.0f : f;
+  f = f * 0.55f + 0.225f;
+
+  trap_R_SetColor( color );
+
+  x = rect->x;
+  y = rect->y;
+  w = rect->w * f;
+  h = rect->h;
+  CG_AdjustFrom640( &x, &y, &w, &h );
+  trap_R_DrawStretchPic( x, y, w, h, 0, 0, f, 1, cgs.media.alienBuildPoolBar );
+
+  x = rect->x + rect->w * f;
+  y = rect->y;
+  w = rect->w * ( 1.0f - f );
+  h = rect->h;
+  CG_AdjustFrom640( &x, &y, &w, &h );
+  trap_R_DrawStretchPic( x, y, w, h, f, 0, 1, 1, cgs.media.humanBuildPoolBar );
+
+  trap_R_SetColor( NULL );
 }
 
 /*
@@ -3168,6 +3205,9 @@ void CG_OwnerDraw( float x, float y, float w, float h, float text_x,
       break;
     case CG_HUMAN_BUILD_POOL:
       CG_DrawBuildPoolReport( &rect, text_x, text_y, foreColor, scale, textalign, textvalign, textStyle, qtrue );
+      break;
+    case CG_BUILD_POOL_BARS:
+      CG_DrawBuildPoolBars( &rect, foreColor );
       break;
     case CG_ALIENS_SCORE_LABEL:
       CG_DrawTeamLabel( &rect, TEAM_ALIENS, text_x, text_y, foreColor, scale, textalign, textvalign, textStyle );

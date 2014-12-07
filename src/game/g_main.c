@@ -1405,9 +1405,11 @@ void G_CalculateBuildPoints( void )
     level.alienBuildPoints += level.alienExtraBuildPoints;
   }
 
-  trap_SetConfigstring( CS_BUILD_POOLS, va( "a\\%d\\h\\%d", 
+  trap_SetConfigstring( CS_BUILD_POOLS, va( "a\\%d\\ad\\%d\\h\\%d\\hd\\%d", 
     g_alienBuildPoints.integer + level.alienExtraBuildPoints,
-    g_humanBuildPoints.integer + level.humanExtraBuildPoints ) );
+    g_alienBuildPoints.integer,
+    g_humanBuildPoints.integer + level.humanExtraBuildPoints,
+    g_humanBuildPoints.integer ) );
 
 //zero bp not allowed
 //  if( level.humanBuildPoints < 0 )

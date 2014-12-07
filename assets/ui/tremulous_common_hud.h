@@ -213,8 +213,19 @@ itemDef
   aspectBias ALIGN_CENTER
   visible 1
   foreColor 1 1 1 0.5
-  background "ui/assets/neutral/stagebar"
+  background "ui/assets/neutral/build_pool_bg"
   decoration
+}
+
+itemDef
+{
+  name "bpbars"
+  rect 160 -5 320 40
+  aspectBias ALIGN_CENTER
+  visible 1
+  foreColor 1 1 1 0.5
+  decoration
+  ownerDraw CG_BUILD_POOL_BARS
 }
 
 itemDef
@@ -228,7 +239,7 @@ itemDef
   visible 1
   decoration
   textScale .22
-  textStyle ITEM_TEXTSTYLE_NORMAL
+  textStyle ITEM_TEXTSTYLE_SHADOWED
   ownerdraw CG_STAGE_REPORT_TEXT
 }
 

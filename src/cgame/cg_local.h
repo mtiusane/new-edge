@@ -1336,6 +1336,9 @@ typedef struct
   qhandle_t   headShotPS;
   qhandle_t   humanWoundsBleedPS;
   qhandle_t   alienWoundsBleedPS;
+
+  qhandle_t   alienBuildPoolBar;
+  qhandle_t   humanBuildPoolBar;
 } cgMedia_t;
 
 typedef struct

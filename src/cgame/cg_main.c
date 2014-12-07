@@ -821,7 +821,9 @@ static void CG_RegisterGraphics( void )
   cgs.media.healthCrossPoisoned       = trap_R_RegisterShader( "ui/assets/neutral/cross_poison.tga" );
   
   cgs.media.upgradeClassIconShader    = trap_R_RegisterShader( "icons/icona_upgrade.tga" );
-  
+
+  cgs.media.alienBuildPoolBar         = trap_R_RegisterShader( "ui/assets/alien/build_pool_bar.tga" );
+  cgs.media.humanBuildPoolBar         = trap_R_RegisterShader( "ui/assets/human/build_pool_bar.tga" );
 
   cgs.media.disconnectPS              = CG_RegisterParticleSystem( "disconnectPS" );
 
