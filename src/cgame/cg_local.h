@@ -1339,6 +1339,8 @@ typedef struct
 
   qhandle_t   alienBuildPoolBar;
   qhandle_t   humanBuildPoolBar;
+  qhandle_t   alienNoBPFlash;
+  qhandle_t   humanNoBPFlash;
 } cgMedia_t;
 
 typedef struct
@@ -1443,6 +1445,13 @@ typedef struct
 
   voice_t       *voices;
   clientList_t  ignoreList;
+
+  int           alienBuildPool;
+  int           alienBuildPoolMax;
+  int           alienNoBPFlashTime;
+  int           humanBuildPool;
+  int           humanBuildPoolMax;
+  int           humanNoBPFlashTime;
 } cgs_t;
 
 typedef struct

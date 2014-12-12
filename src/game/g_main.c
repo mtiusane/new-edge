@@ -653,6 +653,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
   level.humanStage2Time = level.humanStage3Time = level.humanStage4Time = level.humanStage5Time = level.startTime;
   level.snd_fry = G_SoundIndex( "sound/misc/fry.wav" ); // FIXME standing in lava / slime
   level.humanRewardKills = level.alienRewardKills = 0.0f;
+  level.alienNoBPFlashTime = level.humanNoBPFlashTime = -1;
   trap_Cvar_Set( "g_version", G_MOD_VERSION );
   trap_Cvar_Set( "edge_version", EDGE_MOD_VERSION );
   if( g_logFile.string[ 0 ] )
@@ -1405,11 +1406,25 @@ void G_CalculateBuildPoints( void )
     level.alienBuildPoints += level.alienExtraBuildPoints;
   }
 
-  trap_SetConfigstring( CS_BUILD_POOLS, va( "a\\%d\\ad\\%d\\h\\%d\\hd\\%d", 
+  if( level.alienNoBPFlash )
+  {
+    level.alienNoBPFlash = qfalse;
+    level.alienNoBPFlashTime = level.time;
+  }
+
+  if( level.humanNoBPFlash )
+  {
+    level.humanNoBPFlash = qfalse;
+    level.humanNoBPFlashTime = level.time;
+  }
+
+  trap_SetConfigstring( CS_BUILD_POOLS, va( "%d %d %d %d %d %d", 
     g_alienBuildPoints.integer + level.alienExtraBuildPoints,
     g_alienBuildPoints.integer,
+    level.alienNoBPFlashTime,
     g_humanBuildPoints.integer + level.humanExtraBuildPoints,
-    g_humanBuildPoints.integer ) );
+    g_humanBuildPoints.integer,
+    level.humanNoBPFlashTime ) );
 
 //zero bp not allowed
 //  if( level.humanBuildPoints < 0 )
@@ -1481,7 +1496,14 @@ void G_CheckForNegativeBuildPoints( void )
     {
       surviveprobcur = pow( surviveprob1min, thinkduration / 60000.0f );
       if( surviveprobcur * RAND_MAX < rand( ) )
+      {
         G_Suicide( ent, MOD_NOBP );
+
+        if( ent->buildableTeam == TEAM_ALIENS )
+          level.alienNoBPFlash = qtrue;
+        else
+          level.humanNoBPFlash = qtrue;
+      }
     }
   }
 }

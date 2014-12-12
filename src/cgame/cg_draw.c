@@ -1790,7 +1790,7 @@ static void CG_DrawBuildPoolReport( rectDef_t *rect, float text_x, float text_y,
   char out[ 20 ];
   float tx, ty;
 
-  Com_sprintf( out, sizeof( out ), "%s", Info_ValueForKey( CG_ConfigString( CS_BUILD_POOLS ), ( humans ? "h" : "a" ) ) );
+  Com_sprintf( out, sizeof( out ), "%d", ( humans ? cgs.humanBuildPool : cgs.alienBuildPool ) );
 
   CG_AlignText( rect, out, scale, 0.0f, 0.0f, textalign, textvalign, &tx, &ty );
   UI_Text_Paint( text_x + tx, text_y + ty, scale, color, out, 0, 0, textStyle );
@@ -1803,14 +1803,11 @@ CG_DrawBuildPoolBars
 */
 static void CG_DrawBuildPoolBars( rectDef_t *rect, vec4_t color )
 {
-  const char *cs;
   float abp, hbp, f;
   float x, y, w, h;
 
-  cs = CG_ConfigString( CS_BUILD_POOLS );
-
-  abp = atof( Info_ValueForKey( cs, "a" ) ) / atof( Info_ValueForKey( cs, "ad" ) );
-  hbp = atof( Info_ValueForKey( cs, "h" ) ) / atof( Info_ValueForKey( cs, "hd" ) );
+  abp = (float)cgs.alienBuildPool / (float)cgs.alienBuildPoolMax;
+  hbp = (float)cgs.humanBuildPool / (float)cgs.humanBuildPoolMax;
 
   if( fabs( abp + hbp ) < 1e-3 )
     f = 0.5f;
@@ -1836,6 +1833,35 @@ static void CG_DrawBuildPoolBars( rectDef_t *rect, vec4_t color )
   CG_AdjustFrom640( &x, &y, &w, &h );
   trap_R_DrawStretchPic( x, y, w, h, f, 0, 1, 1, cgs.media.humanBuildPoolBar );
 
+  trap_R_SetColor( NULL );
+}
+
+/*
+==================
+CG_DrawNoBPFlash
+==================
+*/
+#define NOBP_FLASH_TIME 3000
+static void CG_DrawNoBPFlash( rectDef_t *rect, vec4_t color, qboolean humans )
+{
+  vec4_t mcolor;
+  int flashTime;
+
+  Vector4Copy( color, mcolor );
+  flashTime = ( humans ? cgs.humanNoBPFlashTime : cgs.alienNoBPFlashTime );
+
+  if( flashTime == -1 )
+    return;
+
+  mcolor[ 3 ] *= 1.0f - ( (float)( cg.time - flashTime ) / NOBP_FLASH_TIME );
+
+  if( mcolor[ 3 ] <= 0 )
+    return;
+
+  trap_R_SetColor( mcolor );
+  CG_DrawPic( rect->x, rect->y, rect->w, rect->h,
+    ( humans ? cgs.media.humanNoBPFlash :
+      cgs.media.alienNoBPFlash ) );
   trap_R_SetColor( NULL );
 }
 
@@ -3209,6 +3235,12 @@ void CG_OwnerDraw( float x, float y, float w, float h, float text_x,
     case CG_BUILD_POOL_BARS:
       CG_DrawBuildPoolBars( &rect, foreColor );
       break;
+    case CG_ALIEN_NOBP_FLASH:
+      CG_DrawNoBPFlash( &rect, foreColor, qfalse );
+      break;
+    case CG_HUMAN_NOBP_FLASH:
+      CG_DrawNoBPFlash( &rect, foreColor, qtrue );
+      break;
     case CG_ALIENS_SCORE_LABEL:
       CG_DrawTeamLabel( &rect, TEAM_ALIENS, text_x, text_y, foreColor, scale, textalign, textvalign, textStyle );
       break;
@@ -3830,6 +3862,15 @@ static void CG_Draw2D( void )
 
   if( cg_draw2D.integer == 0 )
     return;
+
+  // this has to be here, CG_ConfigStringModified isn't reliable
+  sscanf( CG_ConfigString( CS_BUILD_POOLS ), "%d %d %d %d %d %d",
+    &cgs.alienBuildPool,
+    &cgs.alienBuildPoolMax,
+    &cgs.alienNoBPFlashTime,
+    &cgs.humanBuildPool,
+    &cgs.humanBuildPoolMax,
+    &cgs.humanNoBPFlashTime );
 
   if( cg.snap->ps.pm_type == PM_INTERMISSION )
   {

@@ -713,6 +713,11 @@ typedef struct
   buildLog_t        buildLog[ MAX_BUILDLOG ];
   int               buildId;
   int               numBuildLogs;
+
+  qboolean          alienNoBPFlash;
+  qboolean          humanNoBPFlash;
+  int               alienNoBPFlashTime;
+  int               humanNoBPFlashTime;
 } level_locals_t;
 
 #define CMD_CHEAT         0x0001

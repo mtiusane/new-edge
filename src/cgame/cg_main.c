@@ -824,6 +824,8 @@ static void CG_RegisterGraphics( void )
 
   cgs.media.alienBuildPoolBar         = trap_R_RegisterShader( "ui/assets/alien/build_pool_bar.tga" );
   cgs.media.humanBuildPoolBar         = trap_R_RegisterShader( "ui/assets/human/build_pool_bar.tga" );
+  cgs.media.alienNoBPFlash            = trap_R_RegisterShader( "ui/assets/alien/nobp_flash.tga" );
+  cgs.media.humanNoBPFlash            = trap_R_RegisterShader( "ui/assets/human/nobp_flash.tga" );
 
   cgs.media.disconnectPS              = CG_RegisterParticleSystem( "disconnectPS" );
 

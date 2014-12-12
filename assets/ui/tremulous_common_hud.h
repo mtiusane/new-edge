@@ -274,3 +274,24 @@ itemDef
   ownerdraw CG_HUMAN_BUILD_POOL
 }
 
+itemDef
+{
+  name "aliennobpflash"
+  rect 160 -5 320 40
+  aspectBias ALIGN_CENTER
+  visible 1
+  foreColor 1 1 1 1
+  decoration
+  ownerDraw CG_ALIEN_NOBP_FLASH
+}
+
+itemDef
+{
+  name "humannobpflash"
+  rect 160 -5 320 40
+  aspectBias ALIGN_CENTER
+  visible 1
+  foreColor 1 1 1 1
+  decoration
+  ownerDraw CG_HUMAN_NOBP_FLASH
+}
