@@ -1809,11 +1809,7 @@ static void CG_DrawBuildPoolBars( rectDef_t *rect, vec4_t color )
   abp = (float)cgs.alienBuildPool / (float)cgs.alienBuildPoolMax;
   hbp = (float)cgs.humanBuildPool / (float)cgs.humanBuildPoolMax;
 
-  if( fabs( abp + hbp ) < 1e-3 )
-    f = 0.5f;
-  else
-    f = ( ( abp - hbp ) / ( abp + hbp ) + 1.0f ) / 2.0f;
-
+  f = ( abp - hbp + 1.0f ) / 2.0f;
   f = ( f < 0.0f ) ? 0.0f : ( f > 1.0f ) ? 1.0f : f;
   f = f * 0.55f + 0.225f;
 
