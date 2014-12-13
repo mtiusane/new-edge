@@ -416,6 +416,26 @@ static qboolean CG_ParseWeaponModeSection( weaponInfoMode_t *wim, char **text_p 
 
       continue;
     }
+    else if( !Q_stricmp( token, "impactQuake" ) )
+    {
+      token = COM_Parse( text_p );
+      if( !token )
+        break;
+
+      wim->impactQuake = atof( token );
+
+      continue;
+    }
+    else if( !Q_stricmp( token, "flashQuake" ) )
+    {
+      token = COM_Parse( text_p );
+      if( !token )
+        break;
+
+      wim->flashQuake = atof( token );
+
+      continue;
+    }
     else if( !Q_stricmp( token, "}" ) )
       return qtrue; //reached the end of this weapon section
     else
@@ -1827,6 +1847,14 @@ void CG_FireWeapon( centity_t *cent, weaponMode_t weaponMode )
     if( wi->wim[ weaponMode ].flashSound[ c ] )
       trap_S_StartSound( NULL, es->number, CHAN_WEAPON, wi->wim[ weaponMode ].flashSound[ c ] );
   }
+
+  if( cent == &cg.predictedPlayerEntity )
+  {
+    float quake;
+
+    quake = wi->wim[ weaponMode ].flashQuake;
+    CG_InduceViewQuake( NULL, quake );
+  }
 }
 
 
@@ -1843,7 +1871,7 @@ void CG_MissileHitWall( weapon_t weaponNum, weaponMode_t weaponMode, int clientN
   qhandle_t           mark = 0;
   qhandle_t           ps = 0;
   int                 c;
-  float               radius = 1.0f;
+  float               radius = 1.0f, quake;
   weaponInfo_t        *weapon = &cg_weapons[ weaponNum ];
 
   if( weaponMode <= WPM_NONE || weaponMode >= WPM_NUM_WEAPONMODES )
@@ -1852,6 +1880,7 @@ void CG_MissileHitWall( weapon_t weaponNum, weaponMode_t weaponMode, int clientN
   mark = weapon->wim[ weaponMode ].impactMark;
   radius = weapon->wim[ weaponMode ].impactMarkSize;
   ps = weapon->wim[ weaponMode ].impactParticleSystem;
+  quake = weapon->wim[ weaponMode ].impactQuake;
 
   if( soundType == IMPACTSOUND_FLESH )
   {
@@ -1905,6 +1934,11 @@ void CG_MissileHitWall( weapon_t weaponNum, weaponMode_t weaponMode, int clientN
   //
   if( radius > 0.0f )
     CG_ImpactMark( mark, origin, dir, random( ) * 360, 1, 1, 1, 1, qfalse, radius, qfalse );
+
+  if( weaponNum == WP_LUCIFER_CANNON )
+    quake *= charge;
+
+  CG_InduceViewQuake( origin, quake );
 }
 
 
@@ -1918,6 +1952,7 @@ void CG_MissileHitEntity( weapon_t weaponNum, weaponMode_t weaponMode,
 {
   vec3_t        normal;
   weaponInfo_t  *weapon = &cg_weapons[ weaponNum ];
+  float         quake = weapon->wim[ weaponMode ].impactQuake;
 
   VectorCopy( dir, normal );
   VectorInverse( normal );
@@ -1947,6 +1982,11 @@ void CG_MissileHitEntity( weapon_t weaponNum, weaponMode_t weaponMode,
           
     CG_MissileHitWall( weaponNum, weaponMode, 0, origin, dir, sound, charge );
   }
+
+  if( weaponNum == WP_LUCIFER_CANNON )
+    quake *= charge;
+
+  CG_InduceViewQuake( origin, quake );
 }
 
 

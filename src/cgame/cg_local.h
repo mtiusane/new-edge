@@ -787,6 +787,7 @@ typedef struct weaponInfoMode_s
   vec3_t      flashDlightColor;
   sfxHandle_t flashSound[ 4 ];  // fast firing weapons randomly choose
   qboolean    continuousFlash;
+  float       flashQuake;
 
   qhandle_t   missileModel;
   sfxHandle_t missileSound;
@@ -816,6 +817,7 @@ typedef struct weaponInfoMode_s
   qhandle_t   impactMarkSize;
   sfxHandle_t impactSound[ 4 ]; //random impact sound
   sfxHandle_t impactFleshSound[ 4 ]; //random impact sound
+  float       impactQuake;
 } weaponInfoMode_t;
 
 // each WP_* weapon enum has an associated weaponInfo_t
@@ -1159,6 +1161,8 @@ typedef struct
   int           nearUsableBuildable;
   
   int           nextWeaponClickTime;
+
+  float         viewQuake;
 } cg_t;
 
 
@@ -1586,6 +1590,9 @@ extern  vmCvar_t    cg_chatTeamPrefix;
 extern  vmCvar_t    cg_drawBubble;
 extern  vmCvar_t    cg_BubbleZoom;
 
+extern  vmCvar_t    cg_viewQuake;
+extern  vmCvar_t    cg_viewQuakeLambda;
+
 //
 // cg_main.c
 //
@@ -1627,6 +1634,7 @@ void        CG_TestModelNextSkin_f( void );
 void        CG_TestModelPrevSkin_f( void );
 void        CG_AddBufferedSound( sfxHandle_t sfx );
 void        CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView, qboolean demoPlayback );
+void        CG_InduceViewQuake( vec3_t src, float mag );
 void        CG_OffsetFirstPersonView( void );
 void        CG_OffsetThirdPersonView( void );
 void        CG_OffsetShoulderView( void );

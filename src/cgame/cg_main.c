@@ -226,7 +226,10 @@ vmCvar_t  cg_chatTeamPrefix;
 
 vmCvar_t  cg_drawBubble;
 vmCvar_t  cg_BubbleZoom;
-vmCvar_t  cg_EDGEFPSFIX; 
+vmCvar_t  cg_EDGEFPSFIX;
+
+vmCvar_t  cg_viewQuake;
+vmCvar_t  cg_viewQuakeLambda;
 
 typedef struct
 {
@@ -371,7 +374,10 @@ static cvarTable_t cvarTable[ ] =
 
 //  { &cg_chatTeamPrefix, "cg_chatTeamPrefix", "1", CVAR_ARCHIVE}
   { &cg_chatTeamPrefix, "cg_chatTeamPrefix", "1", CVAR_ARCHIVE},
-  { &cg_EDGEFPSFIX, "cg_EDGEFPSFIX", "0", CVAR_ARCHIVE|CVAR_USERINFO } 
+  { &cg_EDGEFPSFIX, "cg_EDGEFPSFIX", "0", CVAR_ARCHIVE|CVAR_USERINFO },
+
+  { &cg_viewQuake, "cg_viewQuake", "1", CVAR_ARCHIVE },
+  { &cg_viewQuakeLambda, "cg_viewQuakeLambda", "-10", CVAR_ARCHIVE }
 };
 
 static int   cvarTableSize = sizeof( cvarTable ) / sizeof( cvarTable[0] );

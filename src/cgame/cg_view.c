@@ -537,6 +537,26 @@ static void CG_StepOffset( void )
 #define PCLOUD_ZOOM_FREQUENCY     0.625f // 2.5s / 4
 #define PCLOUD_DISORIENT_DURATION 2500
 
+/*
+===============
+CG_InduceViewQuake
+===============
+*/
+
+void CG_InduceViewQuake( vec3_t src, float mag )
+{
+  if( !src )
+  {
+    cg.viewQuake += mag;
+  }
+  else
+  {
+    float dist;
+
+    dist = Distance( src, cg.refdef.vieworg );
+    cg.viewQuake += mag / dist / dist * 1000.0f;
+  }
+}
 
 /*
 ===============
@@ -838,6 +858,20 @@ void CG_OffsetFirstPersonView( void )
 
   // add step offset
   CG_StepOffset( );
+
+
+  // view quake
+  if( cg.thisFrameTeleport )
+  {
+    cg.viewQuake = 0;
+  }
+  else
+  {
+    angles[ PITCH ] += crandom( ) * cg.viewQuake * cg_viewQuake.value;
+    angles[ YAW ] += crandom( ) * cg.viewQuake * cg_viewQuake.value;
+
+    cg.viewQuake *= pow( 2, (float)cg.frametime * 1.0e-3 * cg_viewQuakeLambda.value );
+  }
 }
 
 //======================================================================
