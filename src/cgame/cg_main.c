@@ -226,7 +226,11 @@ vmCvar_t  cg_chatTeamPrefix;
 
 vmCvar_t  cg_drawBubble;
 vmCvar_t  cg_BubbleZoom;
-vmCvar_t  cg_EDGEFPSFIX; 
+vmCvar_t  cg_EDGEFPSFIX;
+
+vmCvar_t  cg_viewQuake;
+vmCvar_t  cg_viewQuakeLambda;
+vmCvar_t  cg_viewQuakeLimit;
 
 typedef struct
 {
@@ -371,7 +375,11 @@ static cvarTable_t cvarTable[ ] =
 
 //  { &cg_chatTeamPrefix, "cg_chatTeamPrefix", "1", CVAR_ARCHIVE}
   { &cg_chatTeamPrefix, "cg_chatTeamPrefix", "1", CVAR_ARCHIVE},
-  { &cg_EDGEFPSFIX, "cg_EDGEFPSFIX", "0", CVAR_ARCHIVE|CVAR_USERINFO } 
+  { &cg_EDGEFPSFIX, "cg_EDGEFPSFIX", "0", CVAR_ARCHIVE|CVAR_USERINFO },
+
+  { &cg_viewQuake, "cg_viewQuake", "1", CVAR_ARCHIVE },
+  { &cg_viewQuakeLambda, "cg_viewQuakeLambda", "-10", CVAR_ARCHIVE },
+  { &cg_viewQuakeLimit, "cg_viewQuakeLimit", "5", CVAR_ARCHIVE }
 };
 
 static int   cvarTableSize = sizeof( cvarTable ) / sizeof( cvarTable[0] );
@@ -827,6 +835,8 @@ static void CG_RegisterGraphics( void )
   cgs.media.alienNoBPFlash            = trap_R_RegisterShader( "ui/assets/alien/nobp_flash.tga" );
   cgs.media.humanNoBPFlash            = trap_R_RegisterShader( "ui/assets/human/nobp_flash.tga" );
 
+  cgs.media.lightningBeam             = trap_R_RegisterShader( "gfx/lightning/beam" );
+
   cgs.media.disconnectPS              = CG_RegisterParticleSystem( "disconnectPS" );
 
   CG_UpdateMediaFraction( 0.7f );
@@ -869,6 +879,8 @@ static void CG_RegisterGraphics( void )
   cgs.media.alienWoundsBleedPS        = CG_RegisterParticleSystem( "alienWoundBleedPS" );
   cgs.media.humanWoundsBleedPS        = CG_RegisterParticleSystem( "humanWoundBleedPS" );
   cgs.media.headShotPS                = CG_RegisterParticleSystem( "headShotPS" );
+
+  cgs.media.lightningImpactPS         = CG_RegisterParticleSystem( "models/weapons/lightning/impactPS" );
 
   CG_BuildableStatusParse( "ui/assets/human/buildstat.cfg", &cgs.humanBuildStat );
   CG_BuildableStatusParse( "ui/assets/alien/buildstat.cfg", &cgs.alienBuildStat );

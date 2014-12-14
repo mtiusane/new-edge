@@ -244,10 +244,7 @@ static void CG_Obituary( entityState_t *ent )
         else
           message = "^5was terminated by own flames";
         break;
-		
-    case MOD_SMOKE:
-        message = "^5smoked himself up";
-        break;
+
       case MOD_ABOMB:
         message = "^5bombed himself up";
         break;
@@ -338,6 +335,9 @@ static void CG_Obituary( entityState_t *ent )
         message = "^5almost dodged^7";
         message2 = "^5's ^5rocket";
         break;
+      case MOD_LIGHTNING:
+        message = "^5was electrocuted by^7";
+        break;
       case MOD_GRENADE:
         message = "^5couldn't escape^7";
         message2 = "^5's ^5grenade";
@@ -355,11 +355,6 @@ static void CG_Obituary( entityState_t *ent )
 	   case MOD_FLAMES:
         message = "^5tasted^7";
         message2 = "^5's ^5flames";
-        break;
-		
-      case MOD_SMOKE:
-        message = "^5tasted^7";
-        message2 = "^5's ^5smoke";
         break;
 		
       case MOD_ABUILDER_CLAW:
@@ -1014,9 +1009,12 @@ void CG_EntityEvent( centity_t *cent, vec3_t position )
       CG_MissileHitWall( es->weapon, es->generic1, 0, position, dir, IMPACTSOUND_METAL, es->torsoAnim );
       break;
 
+#define BUILDABLE_EXPLOSION_QUAKE 50
+
     case EV_HUMAN_BUILDABLE_EXPLOSION:
       ByteToDir( es->eventParm, dir );
       CG_HumanBuildableExplosion( position, dir, es->modelindex );
+      CG_InduceViewQuake( position, BUILDABLE_EXPLOSION_QUAKE );
       break;
 
     case EV_ALIEN_BUILDABLE_EXPLOSION:
@@ -1025,6 +1023,8 @@ void CG_EntityEvent( centity_t *cent, vec3_t position )
       
       if ( es->modelindex == BA_A_SPITEFUL_ABCESS )
         CG_AlienSPITEFUL_ABCESSExplosion( position, dir );
+
+      CG_InduceViewQuake( position, BUILDABLE_EXPLOSION_QUAKE );
       break;
 	  
 //Scleim greifer schwanz f\FCr slime

@@ -1,0 +1,35 @@
+
+models/weapons/lightning/impactPS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/lightning/particle
+
+      displacement 0 0 0 ~2.0
+
+      velocityType      normal
+      velocityDir       linear
+      velocityMagnitude 100
+      velocity          0 0 -1 ~10
+
+      accelerationType      static
+      accelerationDir       linear
+      accelerationMagnitude 800
+      acceleration          0 0 -1 ~10
+
+      radius 0 9 0
+      alpha  0 1.0 1.0
+      rotation 0 ~360 -
+      bounce 0.5
+
+      lifeTime 100
+    }
+
+    count 1
+    delay 0
+    period 0 - ~0%
+  }
+}
+

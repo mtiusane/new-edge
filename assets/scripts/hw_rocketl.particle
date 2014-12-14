@@ -38,40 +38,7 @@ models/weapons/rocketl/impactPS
   {
     particle
     {
-      shader sync rocketFlareParticle
-      displacement          0 0 0 0
-
-      velocityType          normal
-
-      velocityDir           linear
-
-      velocityMagnitude     0
-      velocity              0 0 0 ~0
-
-      accelerationType      static
-      accelerationDir       linear
-      acceleration          0 0 0 ~0
-      accelerationMagnitude 0
-
-      radius                0 50 100
-      alpha                 250 1 0
-      rotation              0 ~-15 ~15
-      bounce                0.0
-
-      lifeTime              40
-    }
-
-    count   1
-    delay   0
-    period  0 - 0
-  }
-
-  ejector
-  {
-    particle
-    {
       shader sync gfx/sprites/smoke
-      //shader sync flame3 flame4 flame5 flame6 flame7 flame8 flame9 flame10 flame11 flame12 flame13 flame14 flame15 flame16 flame17 flame18 flame19 flame20 flame21 flame22 flame23 flame24 flame25
       displacement          0 0 0 0
 
       velocityType          normal
@@ -103,7 +70,7 @@ models/weapons/rocketl/impactPS
   {
     particle
     {
-      shader sync flame3 flame4 flame5 flame6 flame7 flame8 flame9 flame10 flame11 flame12 flame13 flame14 flame15 flame16 flame17 flame18 flame19 flame20 flame21 flame22 flame23 flame24 flame25
+      shader sync rocketx1 rocketx2 rocketx3 rocketx4 rocketx5 rocketx6 rocketx7 rocketx8 rocketx9 rocketx10 rocketx11 rocketx12 rocketx13 rocketx14 rocketx15 rocketx16 rocketx17 rocketx18 rocketx19 rocketx20 rocketx21 rocketx22 rocketx23 rocketx24 rocketx25 rocketx26 rocketx27 rocketx28 rocketx29
       displacement          0 0 0 0
 
       velocityType          normal
@@ -118,9 +85,9 @@ models/weapons/rocketl/impactPS
       acceleration          0 0 -1 ~5
       accelerationMagnitude 25
 
-      radius                0 0 100
-      alpha                 250 .75 0
-      rotation              0 ~-15 ~15
+      radius                0 30 70
+      alpha                 250 1 1
+      rotation              ~360 0 0
       bounce                0.0
       color                 0 { 0.8 0.2 0.2 } -
 

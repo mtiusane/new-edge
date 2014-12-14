@@ -65,8 +65,6 @@ void CG_RegisterUpgrade( int upgradeNum )
     upgradeInfo->upgradeIcon = cg_weapons[ WP_GRENADE ].weaponIcon;
   else if( upgradeNum == UP_MINE )
     upgradeInfo->upgradeIcon = cg_weapons[ WP_MINE ].weaponIcon;
-  else if( upgradeNum == UP_SMOKE )
-    upgradeInfo->upgradeIcon = cg_weapons[ WP_SMOKE ].weaponIcon;
   else if( ( icon = BG_Upgrade( upgradeNum )->icon ) )
     upgradeInfo->upgradeIcon = trap_R_RegisterShader( icon );
 }
@@ -415,6 +413,26 @@ static qboolean CG_ParseWeaponModeSection( weaponInfoMode_t *wim, char **text_p 
         break;
 
       wim->flashSound[ index ] = trap_S_RegisterSound( token, qfalse );
+
+      continue;
+    }
+    else if( !Q_stricmp( token, "impactQuake" ) )
+    {
+      token = COM_Parse( text_p );
+      if( !token )
+        break;
+
+      wim->impactQuake = atof( token );
+
+      continue;
+    }
+    else if( !Q_stricmp( token, "flashQuake" ) )
+    {
+      token = COM_Parse( text_p );
+      if( !token )
+        break;
+
+      wim->flashQuake = atof( token );
 
       continue;
     }
@@ -868,6 +886,60 @@ static float CG_MachinegunSpinAngle( centity_t *cent, qboolean firing )
   return angle;
 }
 
+/*
+=============
+CG_RenderGenericBeam
+=============
+*/
+
+void CG_RenderGenericBeam( const vec3_t start, const vec3_t end, qhandle_t shader, float radius )
+{
+	vec3_t delta, viewdelta, side;
+	float length;
+	polyVert_t quad[ 4 ];
+
+	VectorSubtract( end, start, delta );
+	length = VectorLength( delta );
+	VectorSubtract( start, cg.refdef.vieworg, viewdelta );
+	CrossProduct( delta, viewdelta, side );
+	VectorNormalize( side );
+
+	VectorMA( start, radius, side, quad[ 3 ].xyz );
+	VectorMA( start, -radius, side, quad[ 2 ].xyz );
+	VectorMA( end, -radius, side, quad[ 1 ].xyz );
+	VectorMA( end, radius, side, quad[ 0 ].xyz );
+
+	quad[ 0 ].st[ 0 ] = length / radius * 0.1;
+	quad[ 0 ].st[ 1 ] = 0;
+	quad[ 0 ].modulate[ 0 ] = 255;
+	quad[ 0 ].modulate[ 1 ] = 255;
+	quad[ 0 ].modulate[ 2 ] = 255;
+	quad[ 0 ].modulate[ 3 ] = 255;
+
+	quad[ 1 ].st[ 0 ] = length / radius * 0.1;
+	quad[ 1 ].st[ 1 ] = 1;
+	quad[ 1 ].modulate[ 0 ] = 255;
+	quad[ 1 ].modulate[ 1 ] = 255;
+	quad[ 1 ].modulate[ 2 ] = 255;
+	quad[ 1 ].modulate[ 3 ] = 255;
+
+	quad[ 2 ].st[ 0 ] = 0;
+	quad[ 2 ].st[ 1 ] = 1;
+	quad[ 2 ].modulate[ 0 ] = 255;
+	quad[ 2 ].modulate[ 1 ] = 255;
+	quad[ 2 ].modulate[ 2 ] = 255;
+	quad[ 2 ].modulate[ 3 ] = 255;
+
+	quad[ 3 ].st[ 0 ] = 0;
+	quad[ 3 ].st[ 1 ] = 0;
+	quad[ 3 ].modulate[ 0 ] = 255;
+	quad[ 3 ].modulate[ 1 ] = 255;
+	quad[ 3 ].modulate[ 2 ] = 255;
+	quad[ 3 ].modulate[ 3 ] = 255;
+
+	trap_R_AddPolyToScene( shader, 4, quad );
+}
+
 
 /*
 =============
@@ -878,6 +950,7 @@ The main player will have this called for BOTH cases, so effects like light and
 sound should only be done on the world model case.
 =============
 */
+
 void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent )
 {
   refEntity_t   gun;
@@ -1116,6 +1189,66 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
       cent->muzzlePsTrigger = qfalse;
     }
 
+		// Lightning Gun's beam
+		if( weaponNum == WP_LIGHTNING_GUN )
+		{
+			attachment_t attachment;
+			vec3_t muzzle, forward, end, beam_start;
+			trace_t tr;
+
+			if( ps )
+			{
+				BG_GetClientViewOrigin( ps, muzzle );
+				AngleVectors( ps->viewangles, forward, NULL, NULL );
+			}
+			else
+			{
+				// NOTE: this code assumes that the player's normal is (0,0,1)
+				//       it will break when humans start walking on walls
+				class_t class = ( cent->currentState.misc >> 8 ) & 0xFF;
+
+				VectorCopy( cent->lerpOrigin, muzzle );
+
+				// the only way to tell if a human is crouching is to check its bbox
+				// which is transmitted in a weird, encoded form (hence the magic number)
+				if( class == PCL_HUMAN && cent->currentState.solid == 3151887 )
+					muzzle[ 2 ] += BG_ClassConfig( class )->crouchViewheight;
+				else
+					muzzle[ 2 ] += BG_ClassConfig( class )->viewheight;
+
+				AngleVectors( cent->lerpAngles, forward, NULL, NULL );
+			}
+
+			VectorMA( muzzle, LIGHTNING_RANGE, forward, end );
+
+			CG_Trace( &tr, muzzle, NULL, NULL, end, cg.predictedPlayerState.clientNum, MASK_SHOT );
+
+			memset( &attachment, 0, sizeof( attachment ) );
+
+			if( noGunModel )
+				CG_SetAttachmentTag( &attachment, *parent, parent->hModel, "tag_weapon" );
+			else
+				CG_SetAttachmentTag( &attachment, gun, gun.hModel, "tag_flash" );
+
+			CG_AttachToTag( &attachment );
+
+			if( CG_AttachmentPoint( &attachment, beam_start ) )
+				CG_RenderGenericBeam( beam_start, tr.endpos, cgs.media.lightningBeam, 3 );
+
+			if( tr.entityNum != ENTITYNUM_NONE &&
+			    !( tr.surfaceFlags & SURF_NOIMPACT ) )
+			{
+				particleSystem_t *ps = CG_SpawnNewParticleSystem( cgs.media.lightningImpactPS );
+
+				if( CG_IsParticleSystemValid( &ps ) )
+				{
+					CG_SetAttachmentPoint( &ps->attachment, tr.endpos );
+					CG_SetParticleSystemNormal( ps, tr.plane.normal );
+					CG_AttachToPoint( &ps->attachment );
+				}
+			}
+		}
+
     // make a dlight for the flash
     if( weapon->wim[ weaponMode ].flashDlightColor[ 0 ] ||
         weapon->wim[ weaponMode ].flashDlightColor[ 1 ] ||
@@ -1252,6 +1385,15 @@ void CG_AddViewWeapon( playerState_t *ps )
     VectorMA( hand.origin, random( ) * 3, cg.refdef.viewaxis[ 1 ],
               hand.origin );	  
 			  
+  }
+
+  // Lightning Gun vibration effect
+  if( ( weapon == WP_LIGHTNING_GUN ) && ps->eFlags & EF_FIRING )
+  {
+    VectorMA( hand.origin, random( ) * 0.1, cg.refdef.viewaxis[ 0 ],
+              hand.origin );
+    VectorMA( hand.origin, random( ) * 0.1, cg.refdef.viewaxis[ 1 ],
+              hand.origin );
   }
 
   AnglesToAxis( angles, hand.axis );
@@ -1654,6 +1796,7 @@ void CG_FireWeapon( centity_t *cent, weaponMode_t weaponMode )
   int               c;
   weaponInfo_t      *wi;
   weapon_t          weaponNum;
+  qboolean          skipSound = qfalse;
 
   es = &cent->currentState;
 
@@ -1673,6 +1816,10 @@ void CG_FireWeapon( centity_t *cent, weaponMode_t weaponMode )
 
   wi = &cg_weapons[ weaponNum ];
 
+  if( wi->wim[ weaponMode ].continuousFlash &&
+      cent->muzzleFlashTime >= cg.time - 100 )
+    skipSound = qtrue;
+
   // mark the entity as muzzle flashing, so when it is added it will
   // append the flash to the weapon model
   cent->muzzleFlashTime = cg.time;
@@ -1683,6 +1830,9 @@ void CG_FireWeapon( centity_t *cent, weaponMode_t weaponMode )
         !CG_IsParticleSystemInfinite( cent->muzzlePS ) )
       cent->muzzlePsTrigger = qtrue;
   }
+
+  if( skipSound )
+    return;
 
   // play a sound
   for( c = 0; c < 4; c++ )
@@ -1696,6 +1846,14 @@ void CG_FireWeapon( centity_t *cent, weaponMode_t weaponMode )
     c = rand( ) % c;
     if( wi->wim[ weaponMode ].flashSound[ c ] )
       trap_S_StartSound( NULL, es->number, CHAN_WEAPON, wi->wim[ weaponMode ].flashSound[ c ] );
+  }
+
+  if( cent == &cg.predictedPlayerEntity )
+  {
+    float quake;
+
+    quake = wi->wim[ weaponMode ].flashQuake;
+    CG_InduceViewQuake( NULL, quake );
   }
 }
 
@@ -1713,7 +1871,7 @@ void CG_MissileHitWall( weapon_t weaponNum, weaponMode_t weaponMode, int clientN
   qhandle_t           mark = 0;
   qhandle_t           ps = 0;
   int                 c;
-  float               radius = 1.0f;
+  float               radius = 1.0f, quake;
   weaponInfo_t        *weapon = &cg_weapons[ weaponNum ];
 
   if( weaponMode <= WPM_NONE || weaponMode >= WPM_NUM_WEAPONMODES )
@@ -1722,6 +1880,7 @@ void CG_MissileHitWall( weapon_t weaponNum, weaponMode_t weaponMode, int clientN
   mark = weapon->wim[ weaponMode ].impactMark;
   radius = weapon->wim[ weaponMode ].impactMarkSize;
   ps = weapon->wim[ weaponMode ].impactParticleSystem;
+  quake = weapon->wim[ weaponMode ].impactQuake;
 
   if( soundType == IMPACTSOUND_FLESH )
   {
@@ -1775,6 +1934,11 @@ void CG_MissileHitWall( weapon_t weaponNum, weaponMode_t weaponMode, int clientN
   //
   if( radius > 0.0f )
     CG_ImpactMark( mark, origin, dir, random( ) * 360, 1, 1, 1, 1, qfalse, radius, qfalse );
+
+  if( weaponNum == WP_LUCIFER_CANNON )
+    quake *= charge;
+
+  CG_InduceViewQuake( origin, quake );
 }
 
 
@@ -1788,6 +1952,7 @@ void CG_MissileHitEntity( weapon_t weaponNum, weaponMode_t weaponMode,
 {
   vec3_t        normal;
   weaponInfo_t  *weapon = &cg_weapons[ weaponNum ];
+  float         quake = weapon->wim[ weaponMode ].impactQuake;
 
   VectorCopy( dir, normal );
   VectorInverse( normal );
@@ -1817,6 +1982,11 @@ void CG_MissileHitEntity( weapon_t weaponNum, weaponMode_t weaponMode,
           
     CG_MissileHitWall( weaponNum, weaponMode, 0, origin, dir, sound, charge );
   }
+
+  if( weaponNum == WP_LUCIFER_CANNON )
+    quake *= charge;
+
+  CG_InduceViewQuake( origin, quake );
 }
 
 

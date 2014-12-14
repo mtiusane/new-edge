@@ -1941,21 +1941,6 @@ void ClientThink_real( gentity_t *ent )
     ent->s.weapon = lastWeapon;
   }
 
-  if( BG_InventoryContainsUpgrade( UP_SMOKE, client->ps.stats ) &&
-      BG_UpgradeIsActive( UP_SMOKE, client->ps.stats ) )
-  {
-    int lastWeapon = ent->s.weapon;
-
-    //remove SMOKE
-    BG_DeactivateUpgrade( UP_SMOKE, client->ps.stats );
-    BG_RemoveUpgradeFromInventory( UP_SMOKE, client->ps.stats );
-
-    //M-M-M-M-MONSTER HACK
-    ent->s.weapon = WP_SMOKE;
-    FireWeapon( ent );
-    ent->s.weapon = lastWeapon;
-  }
-  
   // set speed
   if( client->ps.pm_type == PM_NOCLIP )
     client->ps.speed = client->pers.flySpeed;
