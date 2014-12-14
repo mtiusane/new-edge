@@ -1592,6 +1592,7 @@ extern  vmCvar_t    cg_BubbleZoom;
 
 extern  vmCvar_t    cg_viewQuake;
 extern  vmCvar_t    cg_viewQuakeLambda;
+extern  vmCvar_t    cg_viewQuakeLimit;
 
 //
 // cg_main.c

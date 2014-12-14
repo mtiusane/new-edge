@@ -230,6 +230,7 @@ vmCvar_t  cg_EDGEFPSFIX;
 
 vmCvar_t  cg_viewQuake;
 vmCvar_t  cg_viewQuakeLambda;
+vmCvar_t  cg_viewQuakeLimit;
 
 typedef struct
 {
@@ -377,7 +378,8 @@ static cvarTable_t cvarTable[ ] =
   { &cg_EDGEFPSFIX, "cg_EDGEFPSFIX", "0", CVAR_ARCHIVE|CVAR_USERINFO },
 
   { &cg_viewQuake, "cg_viewQuake", "1", CVAR_ARCHIVE },
-  { &cg_viewQuakeLambda, "cg_viewQuakeLambda", "-10", CVAR_ARCHIVE }
+  { &cg_viewQuakeLambda, "cg_viewQuakeLambda", "-10", CVAR_ARCHIVE },
+  { &cg_viewQuakeLimit, "cg_viewQuakeLimit", "5", CVAR_ARCHIVE }
 };
 
 static int   cvarTableSize = sizeof( cvarTable ) / sizeof( cvarTable[0] );

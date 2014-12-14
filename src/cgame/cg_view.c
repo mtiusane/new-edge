@@ -556,6 +556,9 @@ void CG_InduceViewQuake( vec3_t src, float mag )
     dist = Distance( src, cg.refdef.vieworg );
     cg.viewQuake += mag / dist / dist * 1000.0f;
   }
+
+  if( cg.viewQuake > cg_viewQuakeLimit.value )
+    cg.viewQuake = cg_viewQuakeLimit.value;
 }
 
 /*
