@@ -206,6 +206,9 @@ vmCvar_t  g_DretchBuildingDamage;
 vmCvar_t  g_OwnTeamBPFactor;
 vmCvar_t  g_EnemyTeamBPFactor;
 
+vmCvar_t  g_lightningDamage;
+vmCvar_t  g_lightningDifficulty;
+
 // copy cvars that can be set in worldspawn so they can be restored later
 static char cv_gravity[ MAX_CVAR_VALUE_STRING ];
 static char cv_humanMaxStage[ MAX_CVAR_VALUE_STRING ];
@@ -376,7 +379,10 @@ static cvarTable_t   gameCvarTable[ ] =
   { &g_DretchTurretDamage, "g_DretchTurretDamage", "1", CVAR_ARCHIVE, 0, qfalse },
   { &g_DretchBuildingDamage, "g_DretchBuildingDamage", "0.5", CVAR_ARCHIVE, 0, qfalse },
   { &g_OwnTeamBPFactor, "g_OwnTeamBPFactor", "1.0", CVAR_ARCHIVE, 0, qfalse },
-  { &g_EnemyTeamBPFactor, "g_EnemyTeamBPFactor", "0.0", CVAR_ARCHIVE, 0, qfalse }  
+  { &g_EnemyTeamBPFactor, "g_EnemyTeamBPFactor", "0.0", CVAR_ARCHIVE, 0, qfalse },
+
+  { &g_lightningDamage, "g_lightningDamage", "140", 0, 0, qfalse },
+  { &g_lightningDifficulty, "g_lightningDifficulty", "1", 0, 0, qfalse }
 };
 static int gameCvarTableSize = sizeof( gameCvarTable ) / sizeof( gameCvarTable[ 0 ] );
 void G_InitGame( int levelTime, int randomSeed, int restart );

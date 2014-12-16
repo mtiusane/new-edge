@@ -1308,6 +1308,9 @@ extern  vmCvar_t  g_DretchBuildingDamage;
 extern  vmCvar_t  g_OwnTeamBPFactor;
 extern  vmCvar_t  g_EnemyTeamBPFactor;
 
+extern  vmCvar_t  g_lightningDamage;
+extern  vmCvar_t  g_lightningDifficulty;
+
 void      trap_Print( const char *fmt );
 void      trap_Error( const char *fmt );
 int       trap_Milliseconds( void );

@@ -835,27 +835,80 @@ LIGHTNING GUN
 ======================================================================
 */
 
+float G_LightningAccuracy( const vec3_t ws_origin, const vec3_t ws_dir,
+                           const vec3_t mins, const vec3_t maxs, const vec3_t ws_target )
+{
+	int i, damage;
+	vec3_t origin, dir, boxcenter, boxdelta;
+	float dist, chord;
+
+	VectorSubtract( ws_origin, ws_target, origin );
+	VectorSubtract( maxs, mins, boxdelta );
+
+	for( i = 0; i < 3; i++ )
+		boxcenter[ i ] = ( mins[ i ] + maxs[ i ] ) / 2.0f;
+
+	VectorSubtract( origin, boxcenter, origin );
+
+	for( i = 0; i < 3; i++ )
+		origin[ i ] *= 2.0f / boxdelta[ i ],
+		dir[ i ] = ws_dir[ i ] * 1.0f / boxdelta[ i ];
+
+	VectorNormalize( dir );
+
+	dist = VectorLength( origin );
+
+	if( dist <= 1.0f ) // inside the sphere (shouldn't happen)
+		return 1.0f;
+
+	chord = pow( DotProduct( origin, dir ), 2 ) - pow( dist, 2 ) + 1;
+
+	if( chord <= 0.0f )
+		return 0.0f;
+
+	chord = pow( chord, g_lightningDifficulty.value * 0.5f );
+
+	return chord;
+}
+
+
 void lightningGunFire( gentity_t *ent )
 {
-	vec3_t start, end;
+	vec3_t start, end, mins, maxs, target_origin;
 	trace_t tr;
 	gentity_t *target;
+	int damage;
 
 	VectorMA( muzzle, LIGHTNING_RANGE, forward, end );
 
 	G_UnlaggedOn( ent, muzzle, LIGHTNING_RANGE );
+
 	trap_Trace( &tr, muzzle, NULL, NULL, end, ent->s.number, MASK_SHOT );
-	G_UnlaggedOff( );
 
 	if( tr.fraction == 1.0f ||
 	    tr.entityNum == ENTITYNUM_NONE ||
 	    ( tr.surfaceFlags & SURF_NOIMPACT ) )
+	{
+		G_UnlaggedOff( );
 		return;
+	}
 
 	target = g_entities + tr.entityNum;
 
+	damage = g_lightningDamage.value / ( 1000.0f / LIGHTNING_REPEAT );
+
 	if( target->s.eType == ET_PLAYER || target->s.eType == ET_BUILDABLE )
+	{
+		float acc;
+
+		VectorCopy( target->r.mins, mins );
+		VectorCopy( target->r.maxs, maxs );
+		VectorCopy( target->r.currentOrigin, target_origin );
 		BloodSpurt( ent, target, &tr );
+
+		acc = G_LightningAccuracy( muzzle, forward, mins, maxs, target_origin );
+		damage = MAX( round( (float)damage * acc ), 1 );
+	}
 	else
 	{
 		gentity_t *tent;
@@ -864,9 +917,10 @@ void lightningGunFire( gentity_t *ent )
 		tent->s.eventParm = DirToByte( tr.plane.normal );
 		tent->s.weapon = ent->s.weapon;
 		tent->s.generic1 = ent->s.generic1;
-  }
+	}
 
-	G_Damage( target, ent, ent, forward, tr.endpos, LIGHTNING_DAMAGE, 0, MOD_LIGHTNING );
+	G_UnlaggedOff( );
+	G_Damage( target, ent, ent, forward, tr.endpos, damage, 0, MOD_LIGHTNING );
 }
 
 
