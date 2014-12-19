@@ -833,7 +833,7 @@ typedef enum
 // means of death
 typedef enum
 {
-#define MOD(x) x
+#define MOD(a,b) a
 #include "bg_mod.h"
 #undef MOD
 } meansOfDeath_t;
@@ -1243,3 +1243,4 @@ typedef struct
   const char *name;
 } dummyCmd_t;
 int cmdcmp( const void *a, const void *b );
+

@@ -1675,6 +1675,8 @@ void ClientDisconnect( int clientNum )
     tent->s.clientNum = ent->s.clientNum;
   }
 
+  G_LogCombatStats( ent );
+
   G_LogPrintf( "^5ClientDisconnect: ^7%i [%s] (%s) \"%s^7\"\n", clientNum,
    ent->client->pers.ip.str, ent->client->pers.guid, ent->client->pers.netname );
 

@@ -307,6 +307,25 @@ typedef struct namelog_s
   int               id;
 } namelog_t;
 
+typedef enum
+{
+#define CSW(a,b) a
+#include "g_csw.h"
+#undef CSW
+  ,
+  MAX_COMBAT_STATS_WEAPONS
+} combatStatsWeapon_t;
+
+typedef struct
+{
+  int total;
+
+  int enemy;
+  int enemy_buildable;
+  int friendly;
+  int friendly_buildable;
+} combatStats_t;
+
 // client data that stays across multiple respawns, but is cleared
 // on each level change or team change at ClientBegin()
 typedef struct
@@ -356,6 +375,8 @@ typedef struct
 
   // keep track of other players' info for tinfo
   char                cinfo[ MAX_CLIENTS ][ 16 ];
+
+  combatStats_t       combatStats[ MAX_COMBAT_STATS_WEAPONS ];
 } clientPersistant_t;
 
 #define MAX_UNLAGGED_MARKERS 10
@@ -944,6 +965,11 @@ void      G_InitDamageLocations( void );
 #define DAMAGE_NO_KNOCKBACK   0x00000004  // do not affect velocity, just view angles
 #define DAMAGE_NO_PROTECTION  0x00000008  // armor, shields, invulnerability, and godmode have no effect
 #define DAMAGE_NO_LOCDAMAGE   0x00000010  // do not apply locational damage
+
+void G_CombatStats_Fire( gentity_t *ent, combatStatsWeapon_t weapon, int damage );
+void G_CombatStats_FireMOD( gentity_t *ent, meansOfDeath_t mod, int damage );
+void G_CombatStats_Hit( gentity_t *ent, gentity_t *hit, combatStatsWeapon_t weapon, int damage );
+void G_CombatStats_HitMOD( gentity_t *ent, gentity_t *hit, meansOfDeath_t mod, int damage );
 
 //
 // g_missile.c

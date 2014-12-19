@@ -206,6 +206,7 @@ qboolean G_admin_revert( gentity_t *ent );
 qboolean G_admin_flaglist( gentity_t *ent );
 qboolean G_admin_flag( gentity_t *ent );
 qboolean G_admin_slap( gentity_t *ent );
+qboolean G_admin_stats( gentity_t *ent );
 
 g_admin_level_t *G_admin_find_level_for_score( int score );
 void G_admin_add_score( gentity_t *ent, int score );

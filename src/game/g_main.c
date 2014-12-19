@@ -2235,6 +2235,18 @@ void LogExit( const char *string )
 
   }
 
+  for( i = 0; i < MAX_CLIENTS; i++ )
+  {
+    gentity_t *ent = g_entities + i;
+
+    if( !ent->inuse ||
+        !ent->client ||
+        ent->client->pers.connected == CON_CONNECTING )
+      continue;
+
+    G_LogCombatStats( ent );
+  }
+
   for( i = 1, ent = g_entities + i ; i < level.num_entities ; i++, ent++ )
   {
     if( !ent->inuse )

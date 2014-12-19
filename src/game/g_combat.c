@@ -80,7 +80,7 @@ void LookAtKiller( gentity_t *self, gentity_t *inflictor, gentity_t *attacker )
 // these are just for logging, the client prints its own messages
 char *modNames[ ] =
 {
-#define MOD(x) #x
+#define MOD(a,b) #a
 #include "bg_mod.h"
 #undef MOD
 };
@@ -1431,7 +1431,9 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	G_InstantRewardAttacker(attacker,targ,take);
 	targ->credits[ attacker->client->ps.clientNum ] += take;
   }
-  
+
+  G_CombatStats_HitMOD( attacker, targ, mod, take );
+
   if( targ->health <= 0 )
   {
     if( client )
@@ -1770,3 +1772,117 @@ void G_LogDestruction( gentity_t *self, gentity_t *actor, int mod )
   }
 
 }
+
+const static combatStatsWeapon_t modToCsw[ ] =
+{
+#define MOD(a,b) b
+#include "bg_mod.h"
+#undef MOD
+};
+
+const static char *cswStrings[ ] =
+{
+#define CSW(a,b) #a
+#include "g_csw.h"
+#undef CSW
+};
+
+void G_CombatStats_Fire( gentity_t *ent, combatStatsWeapon_t weapon, int damage )
+{
+	combatStats_t *cs;
+
+	if( !ent || !ent->client )
+		return;
+
+	cs = ent->client->pers.combatStats + weapon;
+	cs->total += damage;
+
+	if( g_debugDamage.integer > 3 )
+		Com_Printf( "player %i fired %s, damage: %i\n",
+			ent - g_entities,
+			cswStrings[ weapon ],
+			damage );
+}
+
+void G_CombatStats_FireMOD( gentity_t *ent, meansOfDeath_t mod, int damage )
+{
+	G_CombatStats_Fire( ent, modToCsw[ mod ], damage );
+}
+
+void G_CombatStats_Hit( gentity_t *ent, gentity_t *hit, combatStatsWeapon_t weapon, int damage )
+{
+	combatStats_t *cs;
+	int *stat;
+
+	if( !ent || !ent->client || !hit )
+		return;
+
+	cs = ent->client->pers.combatStats + weapon;
+
+	if( hit->s.eType == ET_BUILDABLE )
+	{
+		if( ent->client->pers.teamSelection == hit->buildableTeam )
+			stat = &cs->friendly_buildable;
+		else
+			stat = &cs->enemy_buildable;
+	}
+	else if( hit->client )
+	{
+		if( ent->client->pers.teamSelection ==
+		    hit->client->pers.teamSelection )
+			stat = &cs->friendly;
+		else
+			stat = &cs->enemy;
+	}
+	else
+		return;
+
+	if( g_debugDamage.integer > 3 )
+		Com_Printf( "player %i hit %s %i with %s, damage: %i\n",
+			ent - g_entities,
+			( stat == &cs->friendly_buildable ) ? "a friendly buildable" :
+			( stat == &cs->enemy_buildable ) ? "an enemy buildable" :
+			( stat == &cs->friendly ) ? "a friendly player" :
+			"an enemy player",
+			hit - g_entities,
+			cswStrings[ weapon ],
+			damage );
+
+	(*stat) += damage;
+}
+
+void G_CombatStats_HitMOD( gentity_t *ent, gentity_t *hit, meansOfDeath_t mod, int damage )
+{
+	G_CombatStats_Hit( ent, hit, modToCsw[ mod ], damage );
+}
+
+void G_LogCombatStats( gentity_t *ent )
+{
+	int i;
+	char buffer[ 4096 ], *p = buffer;
+
+	for( i = 0; i < MAX_COMBAT_STATS_WEAPONS; i++ )
+	{
+		combatStats_t *cs = ent->client->pers.combatStats + i;
+
+		// skip unused weapons
+		if( !cs->total )
+			continue;
+
+		Com_sprintf(
+			p, 4096 - ( p - buffer ),
+			" %s %i,%i,%i,%i,%i",
+			cswStrings[ i ],
+			cs->total,
+			cs->enemy,
+			cs->friendly,
+			cs->enemy_buildable,
+			cs->friendly_buildable );
+
+		while( *p ) p++;
+	}
+
+	if( p != buffer )
+		G_LogPrintf( "CombatStats: %i%s\n", ent - g_entities, buffer );
+}
+

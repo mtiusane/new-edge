@@ -249,6 +249,10 @@ g_admin_cmd_t g_admin_cmds[ ] =
       "move 999 pingers to the spectator team",
       ""},
 
+    {"stats", G_admin_stats, qfalse, "stats",
+      "view combat statistics of a player",
+      "[^7name|slot^7]"},
+
     {"time", G_admin_time, qtrue, "time",
       "show the current local server time",
       ""},
@@ -4369,6 +4373,119 @@ qboolean G_admin_flag( gentity_t *ent )
   return qtrue;
 }
 
+
+
+/*
+=================
+G_admin_stats
+=================
+*/
+qboolean G_admin_stats( gentity_t *ent )
+{
+	gentity_t *targ;
+	int i;
+	qboolean header = qfalse;
+	const static char *cswNames[ ] =
+	{
+#define CSW(a,b) b
+#include "g_csw.h"
+#undef CSW
+	};
+
+	if( trap_Argc( ) > 1 )
+	{
+		char name[ MAX_NAME_LENGTH ];
+		namelog_t *vic;
+
+		trap_Argv( 1, name, sizeof( name ) );
+
+		if( !( vic = G_NamelogFromString( ent, name ) ) ||
+		    vic->slot <= -1 )
+		{
+			ADMP( "^3stats: ^7no match\n" );
+			return qfalse;
+		}
+
+		targ = g_entities + vic->slot;
+	}
+	else
+	{
+		if( !ent )
+		{
+			ADMP( "^3stats: ^7console is not a combatant\n" );
+			return qfalse;
+		}
+
+		targ = ent;
+	}
+
+	ADMBP_begin( );
+
+	for( i = CSW_UNKNOWN + 1; i < MAX_COMBAT_STATS_WEAPONS; i++ )
+	{
+		combatStats_t *cs = targ->client->pers.combatStats + i;
+
+		// skip unused weapons
+		if( !cs->total )
+			continue;
+
+		if( !header )
+		{
+			ADMBP( va( "^3stats: ^7combat statistics of %s^7:\n", targ->client->pers.netname ) );
+			ADMBP( va( "^3%*s      Dmg Acc FAc BAC FBA^7\n",
+				CSW_MAX_NAME_LEN, "Weapon" ) );
+			header = qtrue;
+		}
+
+		ADMBP( va( "%*s %8d", CSW_MAX_NAME_LEN, cswNames[ i ], cs->total ) );
+
+#define PRINT_ACC(a,b) \
+if( (b) == 0 ) \
+	ADMBP( " ^0n/a" ); \
+else \
+{ \
+	int _t = round( (float)(a)/(b) * 100.0f ); \
+	ADMBP( va( " ^7%3d", _t ) );  \
+}
+
+		PRINT_ACC( cs->enemy,
+			cs->total -
+			cs->friendly -
+			cs->enemy_buildable -
+			cs->friendly_buildable )
+
+		PRINT_ACC( cs->friendly,
+			cs->total -
+			cs->enemy -
+			cs->enemy_buildable -
+			cs->friendly_buildable )
+
+		PRINT_ACC( cs->enemy_buildable,
+			cs->total -
+			cs->enemy -
+			cs->friendly -
+			cs->friendly_buildable )
+
+		PRINT_ACC( cs->friendly_buildable,
+			cs->total -
+			cs->enemy -
+			cs->enemy_buildable -
+			cs->friendly )
+
+#undef PRINT_ACC
+
+		ADMBP( "\n" );
+	}
+
+	if( !header )
+		ADMBP( va( "^3stats: ^7no combat statistics are available for %s^7\n", targ->client->pers.netname ) );
+
+	ADMBP_end( );
+
+	return qtrue;
+}
+
+
 /*
 ================
  G_admin_print
@@ -4452,3 +4569,4 @@ void G_admin_cleanup( void )
   g_admin_commands = NULL;
   BG_DefragmentMemory( );
 }
+

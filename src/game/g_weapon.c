@@ -300,6 +300,8 @@ void meleeAttack( gentity_t *ent, float range, float width, float height,
   trace_t   tr;
   gentity_t *traceEnt;
 
+  G_CombatStats_FireMOD( ent, mod, damage );
+
   G_WideTrace( &tr, ent, range, width, height, &traceEnt );
   if( traceEnt == NULL || !traceEnt->takedamage )
     return;
@@ -324,6 +326,8 @@ void bulletFire( gentity_t *ent, float spread, int damage, int mod )
   float   u;
   gentity_t *tent;
   gentity_t *traceEnt;
+
+  G_CombatStats_FireMOD( ent, mod, damage );
 
   r = random( ) * M_PI * 2.0f;
   u = sin( r ) * crandom( ) * spread * 16;
@@ -424,6 +428,8 @@ void shotgunFire( gentity_t *ent )
 {
   gentity_t    *tent;
 
+  G_CombatStats_Fire( ent, CSW_SHOTGUN, SHOTGUN_DMG * SHOTGUN_PELLETS );
+
   // send shotgun blast
   tent = G_TempEntity( muzzle, EV_SHOTGUN );
   VectorScale( forward, 4096, tent->s.origin2 );
@@ -449,6 +455,8 @@ void massDriverFire( gentity_t *ent )
   vec3_t    end;
   gentity_t *tent;
   gentity_t *traceEnt;
+
+  G_CombatStats_Fire( ent, CSW_MDRIVER, MDRIVER_DMG );
 
   VectorMA( muzzle, 8192.0f * 16.0f, forward, end );
 
@@ -545,6 +553,7 @@ BLASTER PISTOL
 
 void blasterFire( gentity_t *ent )
 {
+  G_CombatStats_Fire( ent, CSW_BLASTER, BLASTER_DMG );
   fire_blaster( ent, muzzle, forward );
 }
 
@@ -558,6 +567,7 @@ PULSE RIFLE
 
 void pulseRifleFire( gentity_t *ent )
 {
+  G_CombatStats_Fire( ent, CSW_MDRIVER, PRIFLE_DMG );
   fire_pulseRifle( ent, muzzle, forward );
 }
 
@@ -585,19 +595,22 @@ Napalm Charge
 ===============
 */
 void NapalmFire( gentity_t *ent, qboolean secondary )
-  {
-    
+{
+  int damage;
 
-    NapalmChargeFire( ent, muzzle, forward,
-                            ent->client->ps.stats[ STAT_MISC ] *
-                            LCANNON_DAMAGE / LCANNON_CHARGE_TIME_MAX,
-                            LCANNON_RADIUS, LCANNON_SPEED );
+  damage = ent->client->ps.stats[ STAT_MISC ] *
+           LCANNON_DAMAGE / LCANNON_CHARGE_TIME_MAX;
 
-    NapalmChargeImp( ent, muzzle, forward,
-                            ent->client->ps.stats[ STAT_MISC ] *
-                            LCANNON_DAMAGE / LCANNON_CHARGE_TIME_MAX,
-                            LCANNON_RADIUS, LCANNON_SPEED );
-							ent->client->ps.stats[ STAT_MISC ] = 0;
+  G_CombatStats_Fire( ent, CSW_FLAMER, damage );
+
+  NapalmChargeFire( ent, muzzle, forward,
+                    damage, LCANNON_RADIUS, LCANNON_SPEED );
+
+  NapalmChargeImp( ent, muzzle, forward,
+                   ent->client->ps.stats[ STAT_MISC ] *
+                   damage, LCANNON_RADIUS, LCANNON_SPEED );
+
+  ent->client->ps.stats[ STAT_MISC ] = 0;
 }
 
 /*
@@ -609,6 +622,8 @@ Normal
  void FlamerNormal( gentity_t *ent )
 {
   vec3_t origin;
+
+  G_CombatStats_Fire( ent, CSW_FLAMER, FLAMER_DMG );
 
   // Correct muzzle so that the missile does not start in the ceiling 
   VectorMA( muzzle, -7.0f, up, origin );
@@ -625,16 +640,9 @@ FireBreath Tyrant
 ===============
 */
 void FireBreath_tyrant( gentity_t *ent )
-  {
-   vec3_t corr;
-    corr[0] = 0.0;
-    corr[1] = 0.0;
-    corr[2] = 10.0;
-	
-    FireBreath_fire( ent, muzzle, forward,
-                            ent->client->ps.stats[ STAT_MISC ] *
-                            LCANNON_DAMAGE / LCANNON_CHARGE_TIME_MAX,
-                            LCANNON_RADIUS, LCANNON_SPEED );
+{
+  G_CombatStats_Fire( ent, CSW_LEVEL4_ALT, LEVEL4_FIREBREATHDMG );
+  FireBreath_fire( ent, muzzle, forward, 0, LCANNON_RADIUS, LCANNON_SPEED );
 }
 
 /*
@@ -645,13 +653,8 @@ FlameTurret
 
 void FlameTurretFire( gentity_t *ent )
 {
-   vec3_t corr;
-    corr[0] = 0.0;
-    corr[1] = 0.0;
-    corr[2] = 8.0;
-
-	VectorAdd( muzzle, corr, muzzle );
-    FlameTurretFireNormal( ent, muzzle, forward );
+  muzzle[2] += 8.0f;
+  FlameTurretFireNormal( ent, muzzle, forward );
 }
 
 /*
@@ -662,6 +665,8 @@ GRENADE
 
 void throwGrenade( gentity_t *ent )
 {
+  G_CombatStats_Fire( ent, CSW_GRENADE, GRENADE_DAMAGE );
+
   launch_grenade( ent, muzzle, forward );
   launch_grenade_flames( ent, muzzle, forward );
 }
@@ -708,6 +713,8 @@ void lasGunFire( gentity_t *ent )
   vec3_t    end;
   gentity_t *tent;
   gentity_t *traceEnt;
+
+  G_CombatStats_Fire( ent, CSW_LASGUN, LASGUN_DAMAGE );
 
   VectorMA( muzzle, 8192 * 16, forward, end );
 
@@ -760,6 +767,8 @@ void painSawFire( gentity_t *ent )
   vec3_t    temp;
   gentity_t *tent, *traceEnt;
 
+  G_CombatStats_Fire( ent, CSW_PAINSAW, PAINSAW_DAMAGE );
+
   G_WideTrace( &tr, ent, PAINSAW_RANGE, PAINSAW_WIDTH, PAINSAW_HEIGHT,
                &traceEnt );
   if( !traceEnt || !traceEnt->takedamage )
@@ -792,6 +801,7 @@ PSAW BLADES
 */
 void painSawFire2( gentity_t *ent )
 {
+  G_CombatStats_Fire( ent, CSW_PAINSAW_ALT, PAINSAW_DAMAGE2 );
   launch_saw( ent, muzzle, forward );
 }
 
@@ -806,13 +816,23 @@ LUCIFER CANNON
 void LCChargeFire( gentity_t *ent, qboolean secondary )
 {
   if( secondary && ent->client->ps.stats[ STAT_MISC ] <= 0 )
+  {
+    G_CombatStats_Fire( ent, CSW_LCANNON, LCANNON_SECONDARY_DAMAGE );
     fire_luciferCannon( ent, muzzle, forward, LCANNON_SECONDARY_DAMAGE,
                             LCANNON_SECONDARY_RADIUS, LCANNON_SECONDARY_SPEED );
+  }
   else
-    fire_luciferCannon( ent, muzzle, forward,
-                            ent->client->ps.stats[ STAT_MISC ] *
-                            LCANNON_DAMAGE / LCANNON_CHARGE_TIME_MAX,
-                            LCANNON_RADIUS, LCANNON_SPEED );
+  {
+    int damage;
+
+    damage = ent->client->ps.stats[ STAT_MISC ] *
+             LCANNON_DAMAGE / LCANNON_CHARGE_TIME_MAX;
+
+    G_CombatStats_Fire( ent, CSW_LCANNON, damage );
+
+    fire_luciferCannon( ent, muzzle, forward, damage,
+                        LCANNON_RADIUS, LCANNON_SPEED );
+  }
 
   ent->client->ps.stats[ STAT_MISC ] = 0;
 }
@@ -825,6 +845,7 @@ ROCKET LAUNCHER
 
 void rocketLauncherFire( gentity_t *ent )
 {
+  G_CombatStats_Fire( ent, CSW_ROCKETL, ROCKETL_DAMAGE );
   fire_rocket( ent, muzzle, forward );
 }
 
@@ -879,6 +900,9 @@ void lightningGunFire( gentity_t *ent )
 	gentity_t *target;
 	int damage;
 
+	damage = g_lightningDamage.value / ( 1000.0f / LIGHTNING_REPEAT );
+	G_CombatStats_Fire( ent, CSW_LIGHTNING, damage );
+
 	VectorMA( muzzle, LIGHTNING_RANGE, forward, end );
 
 	G_UnlaggedOn( ent, muzzle, LIGHTNING_RANGE );
@@ -895,7 +919,6 @@ void lightningGunFire( gentity_t *ent )
 
 	target = g_entities + tr.entityNum;
 
-	damage = g_lightningDamage.value / ( 1000.0f / LIGHTNING_REPEAT );
 
 	if( target->s.eType == ET_PLAYER || target->s.eType == ET_BUILDABLE )
 	{
@@ -1074,6 +1097,7 @@ void buildFire( gentity_t *ent, dynMenu_t menu )
 
 void slowBlobFire( gentity_t *ent )
 {
+  G_CombatStats_Fire( ent, CSW_ABUILDER_ALT, ABUILDER_BLOB_DMG );
   fire_slowBlob( ent, muzzle, forward );
 }
 
@@ -1591,6 +1615,8 @@ void areaZapFire( gentity_t *ent )
   trace_t   tr;
   gentity_t *traceEnt;
 
+  G_CombatStats_Fire( ent, CSW_LEVEL2_ALT, LEVEL2_AREAZAP_DMG );
+
   G_WideTrace( &tr, ent, LEVEL2_AREAZAP_RANGE, LEVEL2_AREAZAP_WIDTH, LEVEL2_AREAZAP_WIDTH, &traceEnt );
 
   if( traceEnt == NULL )
@@ -1681,6 +1707,7 @@ qboolean CheckPounceAttack( gentity_t *ent )
 
 void bounceBallFire( gentity_t *ent )
 {
+  G_CombatStats_Fire( ent, CSW_LEVEL3_ALT, LEVEL3_BOUNCEBALL_DMG );
   fire_bounceBall( ent, muzzle, forward );
 }
 
@@ -1828,6 +1855,9 @@ void Prickles( gentity_t *ent )
   vec3_t    end;
   float   r;
   float   u;
+
+
+  G_CombatStats_Fire( ent, CSW_LEVEL5_ALT, LEVEL5_PRICKLES_DMG );
 
   r = random( ) * M_PI * 2.0f;
   u = sin( r ) * crandom( ) * LEVEL5_PRICKLES_SPREAD * 16;

@@ -1,0 +1,30 @@
+CSW( CSW_UNKNOWN, NULL ),
+
+CSW( CSW_BLASTER,       "Blaster" ),
+CSW( CSW_MACHINEGUN,    "Rifle" ),
+CSW( CSW_PAINSAW,       "Pain Saw" ),
+CSW( CSW_PAINSAW_ALT,   "Pain Saw Blade" ),
+CSW( CSW_SHOTGUN,       "Shotgun" ),
+CSW( CSW_LASGUN,        "Las Gun" ),
+CSW( CSW_MDRIVER,       "Mass Driver" ),
+CSW( CSW_CHAINGUN,      "Chaingun" ),
+CSW( CSW_PRIFLE,        "Pulse Rifle" ),
+CSW( CSW_FLAMER,        "Flame Thrower" ),
+CSW( CSW_LIGHTNING,     "Lightning Gun" ),
+CSW( CSW_LCANNON,       "Lucifer Cannon" ),
+CSW( CSW_ROCKETL,       "Rocket Launcher" ),
+CSW( CSW_GRENADE,       "Grenade" ),
+
+CSW( CSW_ABUILDER,      "Granger" ),
+CSW( CSW_ABUILDER_ALT,  "Granger Spit" ),
+CSW( CSW_LEVEL1,        "Basilisk" ),
+CSW( CSW_LEVEL2,        "Marauder" ),
+CSW( CSW_LEVEL2_ALT,    "Marauder Zap" ),
+CSW( CSW_LEVEL3,        "Dragoon" ),
+CSW( CSW_LEVEL3_ALT,    "Dragoon Barb" ),
+CSW( CSW_LEVEL4,        "Tyrant" ),
+CSW( CSW_LEVEL4_ALT,    "Tyrant Flames" ),
+CSW( CSW_LEVEL5,        "Hummel" ),
+CSW( CSW_LEVEL5_ALT,    "Hummel Prickles" )
+
+#define CSW_MAX_NAME_LEN 15

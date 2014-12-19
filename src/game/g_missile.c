@@ -734,8 +734,8 @@ gentity_t *FireBreath_fire( gentity_t *self, vec3_t start, vec3_t dir,
   bolt->damage = LEVEL4_FIREBREATHDMG;
   bolt->splashDamage = 60;
   bolt->splashRadius = 250 ;
-  bolt->methodOfDeath = MOD_FLAMES;
-  bolt->splashMethodOfDeath = MOD_FLAMER_SPLASH;
+  bolt->methodOfDeath = MOD_LEVEL4_FLAMES;
+  bolt->splashMethodOfDeath = MOD_LEVEL4_FLAMES;
   bolt->clipmask = MASK_SHOT;
   bolt->target_ent = NULL;
   

@@ -350,13 +350,13 @@ static void CG_Obituary( entityState_t *ent )
         message = "^5found^7";
         message2 = "^5's ^5mine";
         break;  
-		
-	
-	   case MOD_FLAMES:
+
+     case MOD_FLAMES:
+     case MOD_LEVEL4_FLAMES:
         message = "^5tasted^7";
         message2 = "^5's ^5flames";
         break;
-		
+
       case MOD_ABUILDER_CLAW:
         message = "^5should leave^7";
         message2 = "^5's ^5buildings alone";
