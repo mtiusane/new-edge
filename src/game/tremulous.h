@@ -517,7 +517,10 @@ TREMULOUS EDGE MOD SRC FILE
 #define LIGHTNING_PRICE             500
 #define LIGHTNING_AMMO              300
 #define LIGHTNING_K_SCALE           1
+#define LIGHTNING_DPS               140
+#define LIGHTNING_DIFFICULTY        2
 #define LIGHTNING_REPEAT            50 // keep it as low as possible
+#define LIGHTNING_DAMAGE            ( LIGHTNING_DPS * LIGHTNING_REPEAT / 1000 )
 #define LIGHTNING_RANGE             450
 
 #define LCANNON_PRICE               600

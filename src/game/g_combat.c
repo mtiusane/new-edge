@@ -1138,6 +1138,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
          vec3_t dir, vec3_t point, int damage, int dflags, int mod )
 {
   gclient_t *client;
+  int     damage_orig = damage;
   int     take;
   int     asave = 0;
   int     knockback;
@@ -1432,7 +1433,14 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	targ->credits[ attacker->client->ps.clientNum ] += take;
   }
 
-  G_CombatStats_HitMOD( attacker, targ, mod, take );
+  // special cases...
+  if( mod == MOD_LEVEL2_CLAW && damage_orig == LEVEL2_CLAW_UPG_DMG )
+    G_CombatStats_Hit( attacker, targ, CSW_LEVEL2_UPG, take );
+  else if( ( mod == MOD_LCANNON || mod == MOD_LCANNON_SPLASH ) &&
+           inflictor->s.generic1 == WPM_SECONDARY )
+    G_CombatStats_Hit( attacker, targ, CSW_LCANNON_ALT, take );
+  else
+  	G_CombatStats_HitMOD( attacker, targ, mod, take );
 
   if( targ->health <= 0 )
   {
@@ -1782,7 +1790,7 @@ const static combatStatsWeapon_t modToCsw[ ] =
 
 const static char *cswStrings[ ] =
 {
-#define CSW(a,b) #a
+#define CSW(a,b,c) #a
 #include "g_csw.h"
 #undef CSW
 };
@@ -1966,6 +1974,33 @@ void G_CalculateCombatRanks( void )
 		}
 
 	level.combatRanksTime = level.time;
+}
+
+/*
+================
+G_LogCombatSettings
+
+Log settings of all combat stats weapons
+================
+*/
+void G_LogCombatSettings( void )
+{
+	int i;
+	char buffer[ 4096 ], *p = buffer;
+	static const int cswDamages[ ] =
+	{
+#define CSW(a,b,c) (c)
+#include "g_csw.h"
+#undef CSW
+	};
+
+	for( i = 0; i < CSW_MAX; i++ )
+	{
+		Com_sprintf( p, 4096 - ( p - buffer ), " %s %i", cswStrings[ i ], cswDamages[ i ] );
+		while( *p ) p++;
+	}
+
+	G_LogPrintf( "CombatSettings:%s\n", buffer );
 }
 
 /*

@@ -4387,7 +4387,7 @@ qboolean G_admin_stats( gentity_t *ent )
 	qboolean header = qfalse;
 	const static char *cswNames[ ] =
 	{
-#define CSW(a,b) b
+#define CSW(a,b,c) b
 #include "g_csw.h"
 #undef CSW
 	};

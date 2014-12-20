@@ -320,7 +320,7 @@ typedef enum
 
 typedef enum
 {
-#define CSW(a,b) a
+#define CSW(a,b,c) a
 #include "g_csw.h"
 #undef CSW
   ,
@@ -984,6 +984,7 @@ void      G_InitDamageLocations( void );
 #define DAMAGE_NO_PROTECTION  0x00000008  // armor, shields, invulnerability, and godmode have no effect
 #define DAMAGE_NO_LOCDAMAGE   0x00000010  // do not apply locational damage
 
+void G_LogCombatSettings( void );
 void G_CombatStats_Fire( gentity_t *ent, combatStatsWeapon_t weapon, int damage );
 void G_CombatStats_FireMOD( gentity_t *ent, meansOfDeath_t mod, int damage );
 void G_CombatStats_Hit( gentity_t *ent, gentity_t *hit, combatStatsWeapon_t weapon, int damage );

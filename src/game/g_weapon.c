@@ -300,7 +300,10 @@ void meleeAttack( gentity_t *ent, float range, float width, float height,
   trace_t   tr;
   gentity_t *traceEnt;
 
-  G_CombatStats_FireMOD( ent, mod, damage );
+  if( mod == MOD_LEVEL2_CLAW && damage == LEVEL2_CLAW_UPG_DMG )
+    G_CombatStats_Fire( ent, CSW_LEVEL2_UPG, damage );
+  else
+    G_CombatStats_FireMOD( ent, mod, damage );
 
   G_WideTrace( &tr, ent, range, width, height, &traceEnt );
   if( traceEnt == NULL || !traceEnt->takedamage )
@@ -817,7 +820,7 @@ void LCChargeFire( gentity_t *ent, qboolean secondary )
 {
   if( secondary && ent->client->ps.stats[ STAT_MISC ] <= 0 )
   {
-    G_CombatStats_Fire( ent, CSW_LCANNON, LCANNON_SECONDARY_DAMAGE );
+    G_CombatStats_Fire( ent, CSW_LCANNON_ALT, LCANNON_SECONDARY_DAMAGE );
     fire_luciferCannon( ent, muzzle, forward, LCANNON_SECONDARY_DAMAGE,
                             LCANNON_SECONDARY_RADIUS, LCANNON_SECONDARY_SPEED );
   }
@@ -887,7 +890,7 @@ float G_LightningAccuracy( const vec3_t ws_origin, const vec3_t ws_dir,
 	if( chord <= 0.0f )
 		return 0.0f;
 
-	chord = pow( chord, g_lightningDifficulty.value * 0.5f );
+	chord = pow( chord, LIGHTNING_DIFFICULTY * 0.5f );
 
 	return chord;
 }
@@ -900,7 +903,7 @@ void lightningGunFire( gentity_t *ent )
 	gentity_t *target;
 	int damage;
 
-	damage = g_lightningDamage.value / ( 1000.0f / LIGHTNING_REPEAT );
+	damage = LIGHTNING_DAMAGE;
 	G_CombatStats_Fire( ent, CSW_LIGHTNING, damage );
 
 	VectorMA( muzzle, LIGHTNING_RANGE, forward, end );
