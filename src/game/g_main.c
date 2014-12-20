@@ -1812,6 +1812,8 @@ void CalculateRanks( void )
   // see if it is time to end the level
   CheckExitRules( );
 
+  G_CalculateCombatRanks( );
+
   // if we are at the intermission, send the new info to everyone
   if( level.intermissiontime )
     SendScoreboardMessageToAllClients( );

@@ -1787,6 +1787,14 @@ const static char *cswStrings[ ] =
 #undef CSW
 };
 
+/*
+================
+G_CombatStats_Fire
+G_CombatStats_FireMOD
+
+Register a weapon shot
+================
+*/
 void G_CombatStats_Fire( gentity_t *ent, combatStatsWeapon_t weapon, int damage )
 {
 	combatStats_t *cs;
@@ -1794,8 +1802,7 @@ void G_CombatStats_Fire( gentity_t *ent, combatStatsWeapon_t weapon, int damage 
 	if( !ent || !ent->client )
 		return;
 
-	cs = ent->client->pers.combatStats + weapon;
-	cs->total += damage;
+	ent->client->pers.combatStats[ weapon ].fired += damage;
 
 	if( g_debugDamage.integer > 3 )
 		Com_Printf( "player %i fired %s, damage: %i\n",
@@ -1809,32 +1816,37 @@ void G_CombatStats_FireMOD( gentity_t *ent, meansOfDeath_t mod, int damage )
 	G_CombatStats_Fire( ent, modToCsw[ mod ], damage );
 }
 
+/*
+================
+G_CombatStats_Hit
+G_CombatStats_HitMOD
+
+Register a weapon hit
+================
+*/
 void G_CombatStats_Hit( gentity_t *ent, gentity_t *hit, combatStatsWeapon_t weapon, int damage )
 {
-	combatStats_t *cs;
-	int *stat;
+	combatStatsDmgType_t type;
 
 	if( !ent || !ent->client || !hit )
 		return;
 
-	cs = ent->client->pers.combatStats + weapon;
-
 	if( hit == ent )
-		stat = &cs->self;
+		type = CSD_SELF;
 	else if( hit->s.eType == ET_BUILDABLE )
 	{
 		if( ent->client->pers.teamSelection == hit->buildableTeam )
-			stat = &cs->friendly_buildable;
+			type = CSD_FRIENDLY_BUILDABLE;
 		else
-			stat = &cs->enemy_buildable;
+			type = CSD_ENEMY_BUILDABLE;
 	}
 	else if( hit->client )
 	{
 		if( ent->client->pers.teamSelection ==
 		    hit->client->pers.teamSelection )
-			stat = &cs->friendly;
+			type = CSD_FRIENDLY;
 		else
-			stat = &cs->enemy;
+			type = CSD_ENEMY;
 	}
 	else
 		return;
@@ -1842,16 +1854,16 @@ void G_CombatStats_Hit( gentity_t *ent, gentity_t *hit, combatStatsWeapon_t weap
 	if( g_debugDamage.integer > 3 )
 		Com_Printf( "player %i hit %s %i with %s, damage: %i\n",
 			ent - g_entities,
-			( stat == &cs->friendly_buildable ) ? "a friendly buildable" :
-			( stat == &cs->enemy_buildable ) ? "an enemy buildable" :
-			( stat == &cs->friendly ) ? "a friendly player" :
-			( stat == &cs->enemy ) ? "an enemy player" :
+			( type == CSD_FRIENDLY_BUILDABLE ) ? "a friendly buildable" :
+			( type == CSD_ENEMY_BUILDABLE ) ? "an enemy buildable" :
+			( type == CSD_FRIENDLY ) ? "a friendly player" :
+			( type == CSD_ENEMY ) ? "an enemy player" :
 			"themselves",
 			hit - g_entities,
 			cswStrings[ weapon ],
 			damage );
 
-	(*stat) += damage;
+	ent->client->pers.combatStats[ weapon ].dealt[ type ] += damage;
 }
 
 void G_CombatStats_HitMOD( gentity_t *ent, gentity_t *hit, meansOfDeath_t mod, int damage )
@@ -1859,29 +1871,132 @@ void G_CombatStats_HitMOD( gentity_t *ent, gentity_t *hit, meansOfDeath_t mod, i
 	G_CombatStats_Hit( ent, hit, modToCsw[ mod ], damage );
 }
 
+
+/*
+================
+G_CalculateCombatRanking
+================
+*/
+
+typedef struct
+{
+	gentity_t *ent;
+	float value;
+} csrSample_t;
+
+int csrSampleCmp( const csrSample_t *a, const csrSample_t *b )
+{
+	return ( a->value < b->value ) ? 1 : -1;
+}
+
+void G_CalculateCombatRanks( void )
+{
+	gentity_t *ent;
+	combatStatsWeapon_t weapon;
+	combatStatsDmgType_t dmgtype;
+
+	// reset all ranks
+	for( ent = g_entities; ent < g_entities + MAX_CLIENTS; ent++ )
+		if( ent->client )
+			memset( &ent->client->pers.combatRanks, 0, sizeof( combatRanks_t ) );
+
+	for( weapon = CSW_UNKNOWN + 1; weapon < CSW_MAX; weapon++ )
+		for( dmgtype = CSD_FIRST; dmgtype < CSD_MAX; dmgtype++ )
+		{
+			int i, sample_count = 0, rank;
+			csrSample_t samples[ MAX_CLIENTS ];
+			float last;
+
+			for( ent = g_entities; ent < g_entities + MAX_CLIENTS; ent++ )
+			{
+				combatStats_t *stats;
+				combatRanks_t *ranks;
+				int potential;
+
+				if( !ent->inuse ||
+				    !ent->client ||
+				    ent->client->pers.connected == CON_CONNECTING )
+					continue;
+
+				stats = ent->client->pers.combatStats + weapon;
+				ranks = ent->client->pers.combatRanks + weapon;
+
+				if( !stats->fired )
+					continue;
+
+				potential = stats->fired;
+
+				for( i = 0; i < CSD_MAX; i++ )
+					if( i != dmgtype )
+						potential -= stats->dealt[ i ];
+
+				if( !potential )
+					continue;
+
+				ranks->inuse[ dmgtype ] = qtrue;
+				ranks->effs[ dmgtype ] = (float)stats->dealt[ dmgtype ] / potential;
+
+				samples[ sample_count ].ent = ent;
+				samples[ sample_count++ ].value = ranks->effs[ dmgtype ];
+			}
+
+			if( !sample_count )
+				continue;
+
+			qsort( samples, sample_count, sizeof( csrSample_t ), (int(*)(const void*,const void*))csrSampleCmp ); 
+
+			for( i = 0, rank = 0; i < sample_count; i++ )
+			{
+				combatRanks_t *ranks = samples[ i ].ent->client->pers.combatRanks + weapon;
+
+				if( i > 0 && fabs( last - samples[ i ].value ) > 1.0e-5 )
+					rank++;
+
+				ranks->effs_pc[ dmgtype ] = rank;
+
+				last = samples[ i ].value;
+			}
+
+			for( i = 0; i < sample_count; i++ )
+			{
+				float *eff = samples[ i ].ent->client->pers.combatRanks[ weapon ].effs_pc + dmgtype;
+				(*eff) = 1.0f - (*eff) / ( (float)rank + 1 );
+			}
+		}
+
+	level.combatRanksTime = level.time;
+}
+
+/*
+================
+G_LogCombatStats
+
+Write combat stats of a player to the game log
+================
+*/
 void G_LogCombatStats( gentity_t *ent )
 {
 	int i;
 	char buffer[ 4096 ], *p = buffer;
 
-	for( i = 0; i < MAX_COMBAT_STATS_WEAPONS; i++ )
+	for( i = 0; i < CSW_MAX; i++ )
 	{
 		combatStats_t *cs = ent->client->pers.combatStats + i;
 
 		// skip unused weapons
-		if( !cs->total )
+		if( !cs->fired )
 			continue;
 
 		Com_sprintf(
 			p, 4096 - ( p - buffer ),
 			" %s %i,%i,%i,%i,%i,%i",
 			cswStrings[ i ],
-			cs->total,
-			cs->enemy,
-			cs->friendly,
-			cs->enemy_buildable,
-			cs->friendly_buildable,
-			cs->self );
+			cs->fired,
+			cs->dealt[ CSD_ENEMY ],
+			cs->dealt[ CSD_FRIENDLY ],
+			cs->dealt[ CSD_ENEMY_BUILDABLE ],
+			cs->dealt[ CSD_FRIENDLY_BUILDABLE ],
+			cs->dealt[ CSD_SELF ] );
 
 		while( *p ) p++;
 	}

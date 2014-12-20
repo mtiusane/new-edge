@@ -4383,7 +4383,7 @@ G_admin_stats
 qboolean G_admin_stats( gentity_t *ent )
 {
 	gentity_t *targ;
-	int i;
+	int i, j;
 	qboolean header = qfalse;
 	const static char *cswNames[ ] =
 	{
@@ -4419,77 +4419,47 @@ qboolean G_admin_stats( gentity_t *ent )
 		targ = ent;
 	}
 
+	if( level.time - level.combatRanksTime > 5000 )
+		G_CalculateCombatRanks( );
+
 	ADMBP_begin( );
 
-	for( i = CSW_UNKNOWN + 1; i < MAX_COMBAT_STATS_WEAPONS; i++ )
+	for( i = CSW_UNKNOWN + 1; i < CSW_MAX; i++ )
 	{
-		combatStats_t *cs = targ->client->pers.combatStats + i;
+		combatRanks_t *ranks = targ->client->pers.combatRanks + i;
 
-		// skip unused weapons
-		if( !cs->total )
-			continue;
+		for( j = CSD_FIRST; j < CSD_MAX; j++ )
+			if( ranks->inuse[ j ] )
+				goto no_skip;
+		continue;
+	no_skip:
 
 		if( !header )
 		{
-			ADMBP( va( "^3stats: ^7combat statistics of %s^7:\n", targ->client->pers.netname ) );
-			ADMBP( va( "^3%*s      Dmg Acc FAc BAC FBA SAc^7\n",
-				CSW_MAX_NAME_LEN, "Weapon" ) );
 			header = qtrue;
+			ADMBP( va( "^3stats: ^7combat statistics of %s^7:\n"
+			           "^3%*s ^7  E ^1pct ^7 EB ^1pct ^7 FF ^1pct ^7FBF ^1pct ^7Slf ^1pct^7\n",
+				targ->client->pers.netname,
+				CSW_MAX_NAME_LEN, "Weapon" ) );
 		}
 
-		ADMBP( va( "%*s %8d", CSW_MAX_NAME_LEN, cswNames[ i ], cs->total ) );
+		ADMBP( va( "%*s", CSW_MAX_NAME_LEN, cswNames[ i ] ) );
 
-#define PRINT_ACC(a,b) \
-if( (b) == 0 ) \
-	ADMBP( " ^0n/a" ); \
-else \
-{ \
-	int _t = MIN( (int)round( (float)(a)/(b) * 100.0f ), 999 ); \
-	ADMBP( va( " ^7%3d", _t ) );  \
-}
-
-		PRINT_ACC( cs->enemy,
-			cs->total -
-			cs->friendly -
-			cs->enemy_buildable -
-			cs->friendly_buildable -
-			cs->self )
-
-		PRINT_ACC( cs->friendly,
-			cs->total -
-			cs->enemy -
-			cs->enemy_buildable -
-			cs->friendly_buildable -
-			cs->self )
-
-		PRINT_ACC( cs->enemy_buildable,
-			cs->total -
-			cs->enemy -
-			cs->friendly -
-			cs->friendly_buildable -
-			cs->self )
-
-		PRINT_ACC( cs->friendly_buildable,
-			cs->total -
-			cs->enemy -
-			cs->enemy_buildable -
-			cs->friendly -
-			cs->self )
-
-		PRINT_ACC( cs->self,
-			cs->total -
-			cs->enemy -
-			cs->friendly -
-			cs->enemy_buildable -
-			cs->friendly_buildable )
-
-#undef PRINT_ACC
+		for( j = CSD_FIRST; j < CSD_MAX; j++ )
+		{
+			if( ranks->inuse[ j ] )
+				ADMBP( va( " ^7%3d ^1%3d",
+					MIN( (int)round( ranks->effs[ j ] * 100.0f ), 999 ),
+					(int)round( ranks->effs_pc[ j ] * 100.0f ) ) );
+			else
+				ADMBP( " ^0--- ---" );
+		}
 
 		ADMBP( "\n" );
 	}
 
 	if( !header )
-		ADMBP( va( "^3stats: ^7no combat statistics are available for %s^7\n", targ->client->pers.netname ) );
+		ADMBP( va( "^3stats: ^7no combat statistics are available for %s^7 yet\n", targ->client->pers.netname ) );
 
 	ADMBP_end( );
 

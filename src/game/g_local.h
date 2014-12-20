@@ -309,23 +309,36 @@ typedef struct namelog_s
 
 typedef enum
 {
+  CSD_FIRST = 0,
+  CSD_ENEMY = 0,
+  CSD_ENEMY_BUILDABLE,
+  CSD_FRIENDLY,
+  CSD_FRIENDLY_BUILDABLE,
+  CSD_SELF,
+  CSD_MAX
+} combatStatsDmgType_t;
+
+typedef enum
+{
 #define CSW(a,b) a
 #include "g_csw.h"
 #undef CSW
   ,
-  MAX_COMBAT_STATS_WEAPONS
+  CSW_MAX
 } combatStatsWeapon_t;
 
 typedef struct
 {
-  int total;
-
-  int enemy;
-  int enemy_buildable;
-  int friendly;
-  int friendly_buildable;
-  int self;
+  int fired;
+  int dealt[ CSD_MAX ];
 } combatStats_t;
+
+typedef struct
+{
+	qboolean inuse[ CSD_MAX ];
+	float effs[ CSD_MAX ];
+	float effs_pc[ CSD_MAX ];
+} combatRanks_t;
 
 // client data that stays across multiple respawns, but is cleared
 // on each level change or team change at ClientBegin()
@@ -377,7 +390,8 @@ typedef struct
   // keep track of other players' info for tinfo
   char                cinfo[ MAX_CLIENTS ][ 16 ];
 
-  combatStats_t       combatStats[ MAX_COMBAT_STATS_WEAPONS ];
+  combatStats_t       combatStats[ CSW_MAX ];
+  combatRanks_t       combatRanks[ CSW_MAX ];
 } clientPersistant_t;
 
 #define MAX_UNLAGGED_MARKERS 10
@@ -740,6 +754,8 @@ typedef struct
   qboolean          humanNoBPFlash;
   int               alienNoBPFlashTime;
   int               humanNoBPFlashTime;
+
+  int               combatRanksTime;
 } level_locals_t;
 
 #define CMD_CHEAT         0x0001
@@ -971,6 +987,8 @@ void G_CombatStats_Fire( gentity_t *ent, combatStatsWeapon_t weapon, int damage 
 void G_CombatStats_FireMOD( gentity_t *ent, meansOfDeath_t mod, int damage );
 void G_CombatStats_Hit( gentity_t *ent, gentity_t *hit, combatStatsWeapon_t weapon, int damage );
 void G_CombatStats_HitMOD( gentity_t *ent, gentity_t *hit, meansOfDeath_t mod, int damage );
+void G_CalculateCombatRanks( void );
+void G_LogCombatStats( gentity_t *ent );
 
 //
 // g_missile.c
