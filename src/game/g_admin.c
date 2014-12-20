@@ -4443,14 +4443,21 @@ qboolean G_admin_stats( gentity_t *ent )
 				CSW_MAX_NAME_LEN, "Weapon" ) );
 		}
 
-		ADMBP( va( "%*s", CSW_MAX_NAME_LEN, cswNames[ i ] ) );
+		ADMBP( va( "^3%*s", CSW_MAX_NAME_LEN, cswNames[ i ] ) );
 
 		for( j = CSD_FIRST; j < CSD_MAX; j++ )
 		{
 			if( ranks->inuse[ j ] )
-				ADMBP( va( " ^7%3d ^1%3d",
-					MIN( (int)round( ranks->effs[ j ] * 100.0f ), 999 ),
-					(int)round( ranks->effs_pc[ j ] * 100.0f ) ) );
+			{
+				ADMBP( va( " ^7%3d",
+					MIN( (int)round( ranks->effs[ j ] * 100.0f ), 999 ) ) );
+
+				if( ranks->ranked[ j ] )
+					ADMBP( va( " ^1%3d",
+						(int)round( ranks->effs_pc[ j ] * 100.0f ) ) );
+				else
+					ADMBP( " ^0n/a" );
+			}
 			else
 				ADMBP( " ^0--- ---" );
 		}

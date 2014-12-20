@@ -1940,7 +1940,7 @@ void G_CalculateCombatRanks( void )
 				samples[ sample_count++ ].value = ranks->effs[ dmgtype ];
 			}
 
-			if( !sample_count )
+			if( sample_count < 2 )
 				continue;
 
 			qsort( samples, sample_count, sizeof( csrSample_t ), (int(*)(const void*,const void*))csrSampleCmp ); 
@@ -1952,6 +1952,7 @@ void G_CalculateCombatRanks( void )
 				if( i > 0 && fabs( last - samples[ i ].value ) > 1.0e-5 )
 					rank++;
 
+				ranks->ranked[ dmgtype ] = qtrue;
 				ranks->effs_pc[ dmgtype ] = rank;
 
 				last = samples[ i ].value;
