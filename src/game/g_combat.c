@@ -1819,7 +1819,9 @@ void G_CombatStats_Hit( gentity_t *ent, gentity_t *hit, combatStatsWeapon_t weap
 
 	cs = ent->client->pers.combatStats + weapon;
 
-	if( hit->s.eType == ET_BUILDABLE )
+	if( hit == ent )
+		stat = &cs->self;
+	else if( hit->s.eType == ET_BUILDABLE )
 	{
 		if( ent->client->pers.teamSelection == hit->buildableTeam )
 			stat = &cs->friendly_buildable;
@@ -1843,7 +1845,8 @@ void G_CombatStats_Hit( gentity_t *ent, gentity_t *hit, combatStatsWeapon_t weap
 			( stat == &cs->friendly_buildable ) ? "a friendly buildable" :
 			( stat == &cs->enemy_buildable ) ? "an enemy buildable" :
 			( stat == &cs->friendly ) ? "a friendly player" :
-			"an enemy player",
+			( stat == &cs->enemy ) ? "an enemy player" :
+			"themselves",
 			hit - g_entities,
 			cswStrings[ weapon ],
 			damage );
@@ -1871,13 +1874,14 @@ void G_LogCombatStats( gentity_t *ent )
 
 		Com_sprintf(
 			p, 4096 - ( p - buffer ),
-			" %s %i,%i,%i,%i,%i",
+			" %s %i,%i,%i,%i,%i,%i",
 			cswStrings[ i ],
 			cs->total,
 			cs->enemy,
 			cs->friendly,
 			cs->enemy_buildable,
-			cs->friendly_buildable );
+			cs->friendly_buildable,
+			cs->self );
 
 		while( *p ) p++;
 	}

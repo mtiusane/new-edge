@@ -324,6 +324,7 @@ typedef struct
   int enemy_buildable;
   int friendly;
   int friendly_buildable;
+  int self;
 } combatStats_t;
 
 // client data that stays across multiple respawns, but is cleared

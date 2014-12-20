@@ -4432,7 +4432,7 @@ qboolean G_admin_stats( gentity_t *ent )
 		if( !header )
 		{
 			ADMBP( va( "^3stats: ^7combat statistics of %s^7:\n", targ->client->pers.netname ) );
-			ADMBP( va( "^3%*s      Dmg Acc FAc BAC FBA^7\n",
+			ADMBP( va( "^3%*s      Dmg Acc FAc BAC FBA SAc^7\n",
 				CSW_MAX_NAME_LEN, "Weapon" ) );
 			header = qtrue;
 		}
@@ -4444,7 +4444,7 @@ if( (b) == 0 ) \
 	ADMBP( " ^0n/a" ); \
 else \
 { \
-	int _t = round( (float)(a)/(b) * 100.0f ); \
+	int _t = MIN( (int)round( (float)(a)/(b) * 100.0f ), 999 ); \
 	ADMBP( va( " ^7%3d", _t ) );  \
 }
 
@@ -4452,25 +4452,36 @@ else \
 			cs->total -
 			cs->friendly -
 			cs->enemy_buildable -
-			cs->friendly_buildable )
+			cs->friendly_buildable -
+			cs->self )
 
 		PRINT_ACC( cs->friendly,
 			cs->total -
 			cs->enemy -
 			cs->enemy_buildable -
-			cs->friendly_buildable )
+			cs->friendly_buildable -
+			cs->self )
 
 		PRINT_ACC( cs->enemy_buildable,
 			cs->total -
 			cs->enemy -
 			cs->friendly -
-			cs->friendly_buildable )
+			cs->friendly_buildable -
+			cs->self )
 
 		PRINT_ACC( cs->friendly_buildable,
 			cs->total -
 			cs->enemy -
 			cs->enemy_buildable -
-			cs->friendly )
+			cs->friendly -
+			cs->self )
+
+		PRINT_ACC( cs->self,
+			cs->total -
+			cs->enemy -
+			cs->friendly -
+			cs->enemy_buildable -
+			cs->friendly_buildable )
 
 #undef PRINT_ACC
 
