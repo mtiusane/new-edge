@@ -820,7 +820,8 @@ void LCChargeFire( gentity_t *ent, qboolean secondary )
 {
   if( secondary && ent->client->ps.stats[ STAT_MISC ] <= 0 )
   {
-    G_CombatStats_Fire( ent, CSW_LCANNON_ALT, LCANNON_SECONDARY_DAMAGE );
+    G_CombatStats_Fire( ent, CSW_LCANNON, LCANNON_SECONDARY_DAMAGE );
+
     fire_luciferCannon( ent, muzzle, forward, LCANNON_SECONDARY_DAMAGE,
                             LCANNON_SECONDARY_RADIUS, LCANNON_SECONDARY_SPEED );
   }
@@ -2057,7 +2058,7 @@ void FireWeapon( gentity_t *ent )
       break;
     case WP_ALEVEL2_UPG:
       meleeAttack( ent, LEVEL2_CLAW_U_RANGE_UPG, LEVEL2_CLAW_WIDTH, LEVEL2_CLAW_WIDTH,
-                   LEVEL2_CLAW_UPG_DMG, MOD_LEVEL2_CLAW );
+                   LEVEL2_CLAW_UPG_DMG, MOD_LEVEL2_CLAW_UPG );
       break;
       
     case WP_ALEVEL5:

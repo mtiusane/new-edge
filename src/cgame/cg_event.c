@@ -371,6 +371,7 @@ static void CG_Obituary( entityState_t *ent )
         message2 = className;
         break;
       case MOD_LEVEL2_CLAW:
+      case MOD_LEVEL2_CLAW_UPG:
         message = "^5was clawed by^7";
         Com_sprintf( className, 64, "^5's %s",
             BG_ClassConfig( PCL_ALIEN_LEVEL2 )->humanName );

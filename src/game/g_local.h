@@ -320,7 +320,7 @@ typedef enum
 
 typedef enum
 {
-#define CSW(a,b,c) a
+#define CSW(a,b,c,d) a
 #include "g_csw.h"
 #undef CSW
   ,
@@ -1354,9 +1354,6 @@ extern  vmCvar_t  g_DretchTurretDamage;
 extern  vmCvar_t  g_DretchBuildingDamage;
 extern  vmCvar_t  g_OwnTeamBPFactor;
 extern  vmCvar_t  g_EnemyTeamBPFactor;
-
-extern  vmCvar_t  g_lightningDamage;
-extern  vmCvar_t  g_lightningDifficulty;
 
 void      trap_Print( const char *fmt );
 void      trap_Error( const char *fmt );
