@@ -946,7 +946,7 @@ void lightningGunFire( gentity_t *ent )
 	}
 
 	G_UnlaggedOff( );
-	G_Damage( target, ent, ent, forward, tr.endpos, damage, 0, MOD_LIGHTNING );
+	G_Damage( target, ent, ent, forward, tr.endpos, damage, DAMAGE_NO_KNOCKBACK, MOD_LIGHTNING );
 }
 
 
