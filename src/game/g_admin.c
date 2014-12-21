@@ -4247,13 +4247,6 @@ qboolean G_admin_flag( gentity_t *ent )
   trap_Argv( 1, name, sizeof( name ) );
   if( name[ 0 ] == '*' )
   {
-    if( ent )
-    {
-      ADMP( va( "^3%s: only console can change admin level flags\n",
-                command ) );
-      return qfalse;
-    }
-
     id = atoi( name + 1 );
     level = G_admin_level( id );
     if( !level )
