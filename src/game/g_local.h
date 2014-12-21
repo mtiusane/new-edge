@@ -335,10 +335,10 @@ typedef struct
 
 typedef struct
 {
-	qboolean inuse[ CSD_MAX ];
-	qboolean ranked[ CSD_MAX ];
-	float effs[ CSD_MAX ];
-	float effs_pc[ CSD_MAX ];
+	qboolean inuse;
+	qboolean ranked;
+	float skill;
+	float skill_pc;
 } combatRanks_t;
 
 // client data that stays across multiple respawns, but is cleared

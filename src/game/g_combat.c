@@ -1901,7 +1901,11 @@ void G_CalculateCombatRanks( void )
 {
 	gentity_t *ent;
 	combatStatsWeapon_t weapon;
-	combatStatsDmgType_t dmgtype;
+	combatStats_t *stats;
+	combatRanks_t *ranks;
+	int i, sample_count = 0, rank;
+	csrSample_t samples[ MAX_CLIENTS ];
+	float last;
 
 	// reset all ranks
 	for( ent = g_entities; ent < g_entities + MAX_CLIENTS; ent++ )
@@ -1909,69 +1913,54 @@ void G_CalculateCombatRanks( void )
 			memset( &ent->client->pers.combatRanks, 0, sizeof( combatRanks_t ) );
 
 	for( weapon = CSW_UNKNOWN + 1; weapon < CSW_MAX; weapon++ )
-		for( dmgtype = CSD_FIRST; dmgtype < CSD_MAX; dmgtype++ )
+	{
+		for( ent = g_entities; ent < g_entities + MAX_CLIENTS; ent++ )
 		{
-			int i, sample_count = 0, rank;
-			csrSample_t samples[ MAX_CLIENTS ];
-			float last;
-
-			for( ent = g_entities; ent < g_entities + MAX_CLIENTS; ent++ )
-			{
-				combatStats_t *stats;
-				combatRanks_t *ranks;
-				int potential;
-
-				if( !ent->inuse ||
-				    !ent->client ||
-				    ent->client->pers.connected == CON_CONNECTING )
-					continue;
-
-				stats = ent->client->pers.combatStats + weapon;
-				ranks = ent->client->pers.combatRanks + weapon;
-
-				if( !stats->fired )
-					continue;
-
-				potential = stats->fired;
-
-				for( i = 0; i < CSD_MAX; i++ )
-					if( i != dmgtype )
-						potential -= stats->dealt[ i ];
-
-				if( !potential )
-					continue;
-
-				ranks->inuse[ dmgtype ] = qtrue;
-				ranks->effs[ dmgtype ] = (float)stats->dealt[ dmgtype ] / potential;
-
-				samples[ sample_count ].ent = ent;
-				samples[ sample_count++ ].value = ranks->effs[ dmgtype ];
-			}
-
-			if( sample_count < 2 )
+			if( !ent->inuse ||
+			    !ent->client ||
+			    ent->client->pers.connected == CON_CONNECTING )
 				continue;
 
-			qsort( samples, sample_count, sizeof( csrSample_t ), (int(*)(const void*,const void*))csrSampleCmp ); 
+			stats = ent->client->pers.combatStats + weapon;
+			ranks = ent->client->pers.combatRanks + weapon;
 
-			for( i = 0, rank = 0; i < sample_count; i++ )
-			{
-				combatRanks_t *ranks = samples[ i ].ent->client->pers.combatRanks + weapon;
+			if( !stats->fired )
+				continue;
 
-				if( i > 0 && fabs( last - samples[ i ].value ) > 1.0e-5 )
-					rank++;
+			ranks->inuse = qtrue;
+			ranks->skill =
+				( stats->dealt[ CSD_ENEMY ] + stats->dealt[ CSD_ENEMY_BUILDABLE ] -
+				  stats->dealt[ CSD_FRIENDLY ] - stats->dealt[ CSD_FRIENDLY_BUILDABLE ] -
+				  stats->dealt[ CSD_SELF ] ) / (float)stats->fired;
 
-				ranks->ranked[ dmgtype ] = qtrue;
-				ranks->effs_pc[ dmgtype ] = rank;
-
-				last = samples[ i ].value;
-			}
-
-			for( i = 0; i < sample_count; i++ )
-			{
-				float *eff = samples[ i ].ent->client->pers.combatRanks[ weapon ].effs_pc + dmgtype;
-				(*eff) = 1.0f - (*eff) / ( (float)rank + 1 );
-			}
+			samples[ sample_count ].ent = ent;
+			samples[ sample_count++ ].value = ranks->skill;
 		}
+
+		if( sample_count < 2 )
+			continue;
+
+		qsort( samples, sample_count, sizeof( csrSample_t ), (int(*)(const void*,const void*))csrSampleCmp ); 
+
+		for( i = 0, rank = 0; i < sample_count; i++ )
+		{
+			combatRanks_t *ranks = samples[ i ].ent->client->pers.combatRanks + weapon;
+
+			if( i > 0 && fabs( last - samples[ i ].value ) > 1.0e-5 )
+				rank++;
+
+			ranks->ranked = qtrue;
+			ranks->skill_pc = rank;
+
+			last = samples[ i ].value;
+		}
+
+		for( i = 0; i < sample_count; i++ )
+		{
+			float *skill = &samples[ i ].ent->client->pers.combatRanks[ weapon ].skill;
+			(*skill) = 1.0f - (*skill) / ( (float)rank + 1 );
+		}
+	}
 
 	level.combatRanksTime = level.time;
 }
@@ -1994,7 +1983,7 @@ void G_LogCombatSettings( void )
 #undef CSW
 	};
 
-	for( i = 0; i < CSW_MAX; i++ )
+	for( i = CSW_UNKNOWN + 1; i < CSW_MAX; i++ )
 	{
 		Com_sprintf( p, 4096 - ( p - buffer ), " %s %i", modNames[ cswToMod[ i ] ], cswDamages[ i ] );
 		while( *p ) p++;
