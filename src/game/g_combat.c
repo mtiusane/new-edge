@@ -1957,7 +1957,7 @@ void G_CalculateCombatRanks( void )
 
 		for( i = 0; i < sample_count; i++ )
 		{
-			float *skill = &samples[ i ].ent->client->pers.combatRanks[ weapon ].skill;
+			float *skill = &samples[ i ].ent->client->pers.combatRanks[ weapon ].skill_pc;
 			(*skill) = 1.0f - (*skill) / ( (float)rank + 1 );
 		}
 	}
