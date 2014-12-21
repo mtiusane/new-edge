@@ -4376,7 +4376,7 @@ G_admin_stats
 qboolean G_admin_stats( gentity_t *ent )
 {
 	gentity_t *targ;
-	int i, j;
+	int i;
 	qboolean header = qfalse;
 	char err[ MAX_STRING_CHARS ];
 	const static char *cswNames[ ] =
@@ -4421,41 +4421,29 @@ qboolean G_admin_stats( gentity_t *ent )
 	{
 		combatRanks_t *ranks = targ->client->pers.combatRanks + i;
 
-		for( j = CSD_FIRST; j < CSD_MAX; j++ )
-			if( ranks->inuse[ j ] )
-				goto no_skip;
-		continue;
-	no_skip:
+		if( !ranks->inuse )
+			continue;
 
 		if( !header )
 		{
 			header = qtrue;
 			ADMBP( va( "^3stats: ^7combat statistics of %s^7:\n"
-			           "^3%*s ^7  E ^1pct ^7 EB ^1pct ^7 FF ^1pct ^7FBF ^1pct ^7Slf ^1pct^7\n",
+			           "^3%*s %*s %*s^7\n",
 				targ->client->pers.netname,
-				CSW_MAX_NAME_LEN, "Weapon" ) );
+				CSW_MAX_NAME_LEN, "Weapon",
+				8, "Skill",
+				4, "Rank" ) );
 		}
 
-		ADMBP( va( "^3%*s", CSW_MAX_NAME_LEN, cswNames[ i ] ) );
-
-		for( j = CSD_FIRST; j < CSD_MAX; j++ )
-		{
-			if( ranks->inuse[ j ] )
-			{
-				ADMBP( va( " ^7%3d",
-					MIN( (int)round( ranks->effs[ j ] * 100.0f ), 999 ) ) );
-
-				if( ranks->ranked[ j ] )
-					ADMBP( va( " ^1%3d",
-						(int)round( ranks->effs_pc[ j ] * 100.0f ) ) );
-				else
-					ADMBP( " ^0n/a" );
-			}
-			else
-				ADMBP( " ^0--- ---" );
-		}
-
-		ADMBP( "\n" );
+		if( ranks->ranked )
+			ADMBP( va( "^3%*s ^7%*d %*d%%\n",
+				CSW_MAX_NAME_LEN, cswNames[ i ],
+				8, (int)round( ranks->skill * 1000 ),
+				3, (int)round( ranks->skill_pc * 100 ) ) );
+		else
+			ADMBP( va( "^3%*s ^7%*d ^0----^7\n",
+				CSW_MAX_NAME_LEN, cswNames[ i ],
+				8, (int)round( ranks->skill * 1000 ) ) );
 	}
 
 	if( !header )
