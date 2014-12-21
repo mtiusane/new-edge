@@ -610,7 +610,6 @@ void NapalmFire( gentity_t *ent, qboolean secondary )
                     damage, LCANNON_RADIUS, LCANNON_SPEED );
 
   NapalmChargeImp( ent, muzzle, forward,
-                   ent->client->ps.stats[ STAT_MISC ] *
                    damage, LCANNON_RADIUS, LCANNON_SPEED );
 
   ent->client->ps.stats[ STAT_MISC ] = 0;
