@@ -145,6 +145,7 @@ static void CG_Obituary( entityState_t *ent )
     switch( mod )
     {
       case MOD_FLAMER_SPLASH:
+      case MOD_LEVEL4_FLAMES:
         if( gender == GENDER_FEMALE )
           message = "^5toasted herself";
         else if( gender == GENDER_NEUTER )
