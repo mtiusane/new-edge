@@ -4385,6 +4385,7 @@ qboolean G_admin_stats( gentity_t *ent )
 	gentity_t *targ;
 	int i, j;
 	qboolean header = qfalse;
+	char err[ MAX_STRING_CHARS ];
 	const static char *cswNames[ ] =
 	{
 #define CSW(a,b,c,d) c
@@ -4395,18 +4396,17 @@ qboolean G_admin_stats( gentity_t *ent )
 	if( trap_Argc( ) > 1 )
 	{
 		char name[ MAX_NAME_LENGTH ];
-		namelog_t *vic;
+		int pid;
 
 		trap_Argv( 1, name, sizeof( name ) );
 
-		if( !( vic = G_NamelogFromString( ent, name ) ) ||
-		    vic->slot <= -1 )
+		if( ( pid = G_ClientNumberFromString( name, err, sizeof( err ) ) ) == -1 )
 		{
-			ADMP( "^3stats: ^7no match\n" );
+			ADMP( va( "^3stats: ^7%s", err ) );
 			return qfalse;
 		}
 
-		targ = g_entities + vic->slot;
+		targ = g_entities + pid;
 	}
 	else
 	{
