@@ -1411,16 +1411,14 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
     targ->health = targ->health - take;
 
     if( targ->client )
+    {
       targ->client->ps.stats[ STAT_HEALTH ] = targ->health;
 
-	//turn off cloak if it is already activated and if the target is damaged
-	if( targ->client->ps.stats[ STAT_TEAM ] == TEAM_HUMANS )
-    {
-	  if( targ->client->cloakActivated )
-      {
-		if( !( targ->client->cloakReady ) )
-		  targ->client->ps.eFlags &= ~EF_MOVER_STOP;
-      }
+      //turn off cloak if it is already activated and if the target is damaged
+      if( targ->client->ps.stats[ STAT_TEAM ] == TEAM_HUMANS &&
+          targ->client->cloakActivated &&
+          !targ->client->cloakReady )
+        targ->client->ps.eFlags &= ~EF_MOVER_STOP;
     }
   }
   

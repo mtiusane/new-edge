@@ -1476,19 +1476,18 @@ static void G_CreateNewZap( gentity_t *creator, gentity_t *target )
     // the zap chains only through living entities
     if( target->health > 0 )
     {
-      if (target->client->ps.stats[ STAT_TEAM ] != TEAM_ALIENS)
-	G_Damage( target, creator, creator, forward,
-		  target->s.origin, LEVEL2_AREAZAP_DMG,
-		  DAMAGE_NO_KNOCKBACK | DAMAGE_NO_LOCDAMAGE,
-		  MOD_LEVEL2_ZAP );
+      if( !target->client || target->client->ps.stats[ STAT_TEAM ] != TEAM_ALIENS )
+        G_Damage( target, creator, creator, forward, target->s.origin, LEVEL2_AREAZAP_DMG,
+                  DAMAGE_NO_KNOCKBACK | DAMAGE_NO_LOCDAMAGE, MOD_LEVEL2_ZAP );
 
       G_FindZapChainTargets( zap );
 
       for( i = 1; i < zap->numTargets; i++ )
       {
-	if (zap->targets[ i ]->client->ps.stats[ STAT_TEAM ] != TEAM_ALIENS)
-	  G_Damage( zap->targets[ i ], target, zap->creator, forward, target->s.origin,
-		    LEVEL2_AREAZAP_DMG * ( 1 - pow( (zap->distances[ i ] /
+        if( !zap->targets[ i ]->client ||
+            zap->targets[ i ]->client->ps.stats[ STAT_TEAM ] != TEAM_ALIENS )
+          G_Damage( zap->targets[ i ], target, zap->creator, forward, target->s.origin,
+                    LEVEL2_AREAZAP_DMG * ( 1 - pow( (zap->distances[ i ] /
                     LEVEL2_AREAZAP_CHAIN_RANGE ), LEVEL2_AREAZAP_CHAIN_FALLOFF ) ) + 1,
                     DAMAGE_NO_KNOCKBACK | DAMAGE_NO_LOCDAMAGE,
                     MOD_LEVEL2_ZAP );

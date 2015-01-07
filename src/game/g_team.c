@@ -206,6 +206,11 @@ void G_LeaveTeamReal( gentity_t *self, qboolean reset_score )
       if( ent->client->ps.stats[ STAT_STATE ] & SS_POISONED &&
           ent->client->lastPoisonClient == self )
         ent->client->ps.stats[ STAT_STATE ] &= ~SS_POISONED;
+
+      // cure infection
+      if( ent->client->ps.stats[ STAT_STATE ] & SS_INFECTED &&
+          ent->client->lastInfectionClient == self )
+        ent->client->ps.stats[ STAT_STATE ] &= ~SS_INFECTED;
     }
     else if( ent->s.eType == ET_MISSILE && ent->r.ownerNum == self->s.number )
       G_FreeEntity( ent );
@@ -213,14 +218,6 @@ void G_LeaveTeamReal( gentity_t *self, qboolean reset_score )
 
   // cut all relevant zap beams
   G_ClearPlayerZapEffects( self );
-
-  // cure infection
-  if( ent->client->ps.stats[ STAT_STATE ] & SS_INFECTED &&
-      ent->client->lastInfectionClient == self )
-    ent->client->ps.stats[ STAT_STATE ] &= ~SS_INFECTED;
-  
-  else if( ent->s.eType == ET_MISSILE && ent->r.ownerNum == self->s.number )
-    G_FreeEntity( ent );
   
   G_namelog_update_score( self->client );
 

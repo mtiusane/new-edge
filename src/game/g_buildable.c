@@ -729,7 +729,7 @@ G_IsCreepHere
 simple wrapper to G_FindCreep to check if a location has creep
 ================
 */
-static qboolean G_IsCreepHere( vec3_t origin )
+qboolean G_IsCreepHere( vec3_t origin )
 {
   gentity_t dummy;
 
@@ -5137,7 +5137,7 @@ static void G_LayoutBuildItem( buildable_t buildable, vec3_t origin,
   G_SpawnBuildable( builder, buildable );
 }
 
-static void G_LayoutForceBuildItem( buildable_t buildable, vec3_t origin,
+void G_LayoutForceBuildItem( buildable_t buildable, vec3_t origin,
   vec3_t angles, vec3_t origin2, vec3_t angles2 )
 {
   gentity_t *builder;

@@ -3421,7 +3421,7 @@ qboolean G_admin_score_info( gentity_t *ent )
   char            name[ MAX_NAME_LENGTH ];
   g_admin_admin_t *target;
   namelog_t       *match;
-  int             newscore;
+  int             newscore = 0;
 
   if( trap_Argc() < 2 )
   {
@@ -3704,7 +3704,6 @@ static char *fates[] =
 
 qboolean G_admin_slap( gentity_t *ent )
 {
-  int pids[ MAX_CLIENTS ];
   int pid;
   char name[ MAX_NAME_LENGTH ], *reason, err[ MAX_STRING_CHARS ];
   int minargc;
@@ -3763,12 +3762,12 @@ qboolean G_admin_slap( gentity_t *ent )
   if( vic->health <= 1 )
   {
     vic->flags |= FL_NO_KNOCKBACK;
-    vic->enemy = &g_entities[ pids[ 0 ] ];
+    vic->enemy = ent;
     vic->die( vic, ent, ent, 25, MOD_SLAP );
   }
   else if( vic->pain )
   {
-    vic->pain( vic, &g_entities[ pids[ 0 ] ], 2 );
+    vic->pain( vic, ent, 2 );
   }
 
   return qtrue;
