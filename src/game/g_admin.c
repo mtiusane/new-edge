@@ -4539,3 +4539,7 @@ void G_admin_cleanup( void )
   BG_DefragmentMemory( );
 }
 
+void G_admin_writeconfig( void )
+{
+  if ( g_admin_levels ) admin_writeconfig( );
+}

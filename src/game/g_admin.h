@@ -220,5 +220,6 @@ void G_admin_buffer_begin( void );
 void G_admin_buffer_end( gentity_t *ent );
 void G_admin_duration( int secs, char *duration, int dursize );
 void G_admin_cleanup( void );
+void G_admin_writeconfig( void );
 
 #endif /* ifndef _G_ADMIN_H */

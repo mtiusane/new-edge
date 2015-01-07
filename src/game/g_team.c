@@ -224,7 +224,7 @@ void G_LeaveTeamReal( gentity_t *self, qboolean reset_score )
   
   G_namelog_update_score( self->client );
 
-  admin_writeconfig();
+  G_admin_writeconfig();
 }
 
 void G_LeaveTeam( gentity_t *self )
