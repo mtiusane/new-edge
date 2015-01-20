@@ -301,16 +301,15 @@ static qboolean ClientIsOnMedi( gclient_t *cl ) {
 
 static void ClientContagion( gentity_t *ent, gentity_t *other ) {
   gclient_t *c1 = ent->client, *c2;
-  gclient_t *client;
   qboolean poisoned1 = c1->ps.stats[ STAT_STATE ] & SS_POISONED, poisoned2;
   int expiryTime;
 
-    if( ( c1->pers.teamSelection != TEAM_HUMANS ) ||
-        ( c1->poisonImmunityTime >= level.time ) || 
-        ClientIsOnMedi(c1) )
-      return;
+  if( ( c1->pers.teamSelection != TEAM_HUMANS ) ||
+      ( c1->poisonImmunityTime >= level.time ) || 
+      ClientIsOnMedi(c1) )
+    return;
 
-  if( other->client && !BG_InventoryContainsUpgrade( UP_BIOKIT, client->ps.stats ) ) {
+  if( other->client && !BG_InventoryContainsUpgrade( UP_BIOKIT, c1->ps.stats ) ) {
     // touching another human
     c2 = other->client;
     poisoned2 = c2->ps.stats[ STAT_STATE ] & SS_POISONED;
@@ -381,10 +380,9 @@ void ClientImpacts( gentity_t *ent, pmove_t *pm )
     if( ent->client && other->client )
       ClientShove( ent, other );
 
-   // spread poison
+    // spread poison
     if( ent->client )
       ClientContagion( ent, other );
- 
 
     // touch triggers
     if( other->touch )
