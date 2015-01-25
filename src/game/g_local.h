@@ -870,11 +870,13 @@ gentity_t         *G_CheckSpawnPoint( int spawnNum, const vec3_t origin,
 
 buildable_t       G_IsPowered( vec3_t origin );
 qboolean          G_IsDCCBuilt( void );
+void              G_Suicide( gentity_t *self, meansOfDeath_t death );
 int               G_FindDCC( gentity_t *self );
 gentity_t         *G_Reactor( void );
 gentity_t         *G_Overmind( void );
 gentity_t         *G_Cocoon( void );
 qboolean          G_FindCreep( gentity_t *self );
+qboolean          G_IsCreepHere( vec3_t origin );
 
 void              G_BuildableThink( gentity_t *ent, int msec );
 qboolean          G_BuildableRange( vec3_t origin, float r, buildable_t buildable );
@@ -891,6 +893,8 @@ int               G_LayoutList( const char *map, char *list, int len );
 void              G_LayoutSelect( void );
 qboolean          G_LayoutExists( char *mapName, char *layoutName );
 void              G_LayoutLoad( void );
+void              G_LayoutForceBuildItem( buildable_t buildable, vec3_t origin,
+					  vec3_t angles, vec3_t origin2, vec3_t angles2 );
 void              G_BaseSelfDestruct( team_t team );
 int               G_NextQueueTime( int queuedBP, int totalBP, int queueBaseRate );
 void              G_QueueBuildPoints( gentity_t *self );
@@ -1015,12 +1019,28 @@ gentity_t *fire_bounceBall2( gentity_t *self, vec3_t start, vec3_t dir, int weap
 gentity_t *fire_bounceBall3( gentity_t *self, vec3_t start, vec3_t dir, int weapon, int dmg, int mod, int speed, int radius );
 gentity_t *fire_hive( gentity_t *self, vec3_t start, vec3_t dir );
 gentity_t *launch_grenade( gentity_t *self, vec3_t start, vec3_t dir );
+gentity_t *launch_grenade_flames( gentity_t *self, vec3_t start, vec3_t dir );
+gentity_t *launch_shield( gentity_t *self, vec3_t start, vec3_t dir );
+gentity_t *launch_saw( gentity_t *self, vec3_t start, vec3_t dir );
+gentity_t *fire_md2( gentity_t *self, vec3_t start, vec3_t dir );
 gentity_t *launch_mine( gentity_t *self, vec3_t start, vec3_t dir );
 gentity_t *launch_flames( gentity_t *self, vec3_t start, vec3_t dir );
 gentity_t *launch_smoke( gentity_t *self, vec3_t start, vec3_t dir );
+gentity_t *fire_rocket( gentity_t *self, vec3_t start, vec3_t dir );
 gentity_t *fire_acidBomb( gentity_t *self, vec3_t start, vec3_t dir, int wp );
 gentity_t *fire_acidBomb2( gentity_t *self, vec3_t start, vec3_t dir, int wp );
 gentity_t *fire_fern( vec3_t origin, vec3_t angles, int lifespan );
+
+gentity_t *Prickles_Fire( gentity_t *self, vec3_t start, vec3_t dir );
+
+gentity_t *NapalmChargeFire( gentity_t *self, vec3_t start, vec3_t dir,
+			     int damage, int radius, int speed );
+gentity_t *NapalmChargeImp( gentity_t *self, vec3_t start, vec3_t dir,
+			    int damage, int radius, int speed );
+gentity_t *FlamerNormalFire( gentity_t *self, vec3_t start, vec3_t dir );
+gentity_t *FireBreath_fire( gentity_t *self, vec3_t start, vec3_t dir,
+			    int damage, int radius, int speed );
+gentity_t *FlameTurretFireNormal( gentity_t *self, vec3_t start, vec3_t dir );
 
 //
 // g_mover.c
@@ -1129,6 +1149,7 @@ void G_CheckVote( team_t team );
 void G_ArmageddonStep( void );
 void LogExit( const char *string );
 int  G_TimeTilSuddenDeath( void );
+int  G_TimeTilWeakSuddenDeath( void );
 int  G_HumanBuildPoints( void );
 int  G_AlienBuildPoints( void );
 //
@@ -1151,6 +1172,7 @@ void G_UnlaggedOff( void );
 void ClientThink( int clientNum );
 void ClientEndFrame( gentity_t *ent );
 void G_RunClient( gentity_t *ent );
+void G_ArmaFreeLove( gentity_t *ent );
 
 //
 // g_team.c

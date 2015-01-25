@@ -482,18 +482,17 @@ G_ProcessSmoke
 ================
 */
 void G_ProcessSmoke(gentity_t *ent) {
-	int i, total_entities, entityList[MAX_GENTITIES];
-	vec3_t range, mins, maxs;
-	gentity_t *target;
-	
-	if (level.time > ent->s.time + 30000)
+  // int i, total_entities, entityList[MAX_GENTITIES];
+  // vec3_t range, mins, maxs;
+  // gentity_t *target;
+  if (level.time > ent->s.time + 30000)
   {
-		ent->nextthink = level.time + 100;
-		ent->think = G_ExplodeMissile;
-		return;
+    ent->nextthink = level.time + 100;
+    ent->think = G_ExplodeMissile;
+    return;
   }
-	// Set the next time to run this check (can be overwritten below)
-	ent->nextthink = level.time + SMOKE_CHECK_FREQUENCY;
+  // Set the next time to run this check (can be overwritten below)
+  ent->nextthink = level.time + SMOKE_CHECK_FREQUENCY;
 }
 
 /*
@@ -644,7 +643,7 @@ gentity_t *NapalmChargeFire( gentity_t *self, vec3_t start, vec3_t dir,
   bolt->splashMethodOfDeath = MOD_FLAMER_SPLASH;
   bolt->clipmask = MASK_SHOT;
   bolt->target_ent = NULL;
-  bolt->r.mins[ 0 ] = bolt->r.mins[ 2 ] = bolt->r.mins[ 3 ] = -LCANNON_SIZE;
+  bolt->r.mins[ 0 ] = bolt->r.mins[ 1 ] = bolt->r.mins[ 2 ] = -LCANNON_SIZE;
   bolt->r.maxs[ 0 ] = bolt->r.maxs[ 1 ] = bolt->r.maxs[ 2 ] = -bolt->r.mins[ 0 ];
   // Pass the missile charge through
   charge = (float)( damage - LCANNON_SECONDARY_DAMAGE ) / LCANNON_DAMAGE;
@@ -1061,7 +1060,7 @@ void G_LasgunPush( gentity_t *self )
   vec3_t    mins, maxs;
   int       i, num;
   gentity_t *enemy;
-  vec3_t start,dir,end;
+  vec3_t /*start,*/dir/*,end*/;
   float     force;
   qboolean  active = qfalse;
 
@@ -1164,7 +1163,7 @@ void G_LasgunPush( gentity_t *self )
 
 gentity_t *launch_shield( gentity_t *self, vec3_t start, vec3_t dir )
 {
-  vec3_t    range = { LASGUN_PUSH_RANGE, LASGUN_PUSH_RANGE, LASGUN_PUSH_RANGE };
+  // vec3_t    range = { LASGUN_PUSH_RANGE, LASGUN_PUSH_RANGE, LASGUN_PUSH_RANGE };
   gentity_t *bolt;
   VectorNormalize( dir );
   bolt = G_Spawn( );

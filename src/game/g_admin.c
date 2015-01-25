@@ -1651,7 +1651,7 @@ qboolean G_admin_register( gentity_t *ent )
     newLevel = oldLevel;
 
   trap_SendConsoleCommand( EXEC_APPEND,
-    va( "setlevel %d %d;", ent - g_entities, newLevel ) );
+			   va( "setlevel %d %d;", (int)(ent - g_entities), newLevel ) );
 
   AP( va( "print \"^3register: %s is now a %s nickname. Commands unlocked. ^2Congratulations!\n\"",
           ( newLevel == 0 && ent->client->pers.admin ) ?
@@ -2845,7 +2845,7 @@ static void ban_out( void *ban, char *str )
 
   Com_sprintf( str,MAX_STRING_CHARS, 
     S_COLOR_CYAN   "------------------------------"
-    S_COLOR_CYAN   "\n id:     | %ld" 
+    S_COLOR_CYAN   "\n id:     | %d" 
 	S_COLOR_CYAN   "\n Name:   | %-*s" 
     S_COLOR_CYAN   "\n IP:     | %s%-15s"
     S_COLOR_CYAN   "\n Banner: | %s"

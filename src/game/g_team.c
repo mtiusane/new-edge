@@ -282,7 +282,7 @@ void G_ChangeTeam( gentity_t *ent, team_t newTeam )
 /*
   Call this method to balance teams
 */
-void G_BalanceTeams()
+void G_BalanceTeams( void )
 {
   team_t sourceTeam;
   gentity_t *ent;

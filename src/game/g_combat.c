@@ -1138,12 +1138,12 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
          vec3_t dir, vec3_t point, int damage, int dflags, int mod )
 {
   gclient_t *client;
-  int     damage_orig = damage;
+  // int     damage_orig = damage;
   int     take;
   int     asave = 0;
   int     knockback;
   int     poisonTime = 0;
-  int client_z, min_z;
+  // int client_z, min_z;
   // Can't deal damage sometimes
   if( !targ->takedamage || targ->health <= 0 || level.intermissionQueued )
     return;
@@ -1803,7 +1803,7 @@ Register a weapon shot
 */
 void G_CombatStats_Fire( gentity_t *ent, combatStatsWeapon_t weapon, int damage )
 {
-	combatStats_t *cs;
+        // combatStats_t *cs;
 
 	if( !ent || !ent->client )
 		return;
@@ -1812,7 +1812,7 @@ void G_CombatStats_Fire( gentity_t *ent, combatStatsWeapon_t weapon, int damage 
 
 	if( g_debugDamage.integer > 3 )
 		Com_Printf( "player %i fired %s, damage: %i\n",
-			ent - g_entities,
+			(int)(ent - g_entities),
 			cswStrings[ weapon ],
 			damage );
 }
@@ -1859,13 +1859,13 @@ void G_CombatStats_Hit( gentity_t *ent, gentity_t *hit, combatStatsWeapon_t weap
 
 	if( g_debugDamage.integer > 3 )
 		Com_Printf( "player %i hit %s %i with %s, damage: %i\n",
-			ent - g_entities,
+			(int)(ent - g_entities),
 			( type == CSD_FRIENDLY_BUILDABLE ) ? "a friendly buildable" :
 			( type == CSD_ENEMY_BUILDABLE ) ? "an enemy buildable" :
 			( type == CSD_FRIENDLY ) ? "a friendly player" :
 			( type == CSD_ENEMY ) ? "an enemy player" :
 			"themselves",
-			hit - g_entities,
+			(int)(hit - g_entities),
 			cswStrings[ weapon ],
 			damage );
 

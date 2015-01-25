@@ -1024,7 +1024,7 @@ void CG_EntityEvent( centity_t *cent, vec3_t position )
       CG_AlienBuildableExplosion( position, dir, es->modelindex );
       
       if ( es->modelindex == BA_A_SPITEFUL_ABCESS )
-        CG_AlienSPITEFUL_ABCESSExplosion( position, dir );
+        CG_AlienSpitefulAbcessExplosion( position, dir );
 
       CG_InduceViewQuake( position, BUILDABLE_EXPLOSION_QUAKE );
       break;

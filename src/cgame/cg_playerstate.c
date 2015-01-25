@@ -245,7 +245,7 @@ CG_CheckLocalSounds
 */
 void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops )
 {
-  int reward;
+  // int reward;
 
   // don't play the sounds if the player just spawned
   if( ps->persistant[ PERS_SPECSTATE ] != ops->persistant[ PERS_SPECSTATE ] )
@@ -264,7 +264,7 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops )
     return;
 
   // reward sounds
-  reward = qfalse;
+  // reward = qfalse;
 }
 
 

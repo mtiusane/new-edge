@@ -669,11 +669,11 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
     {
       char serverinfo[ MAX_INFO_STRING ];
       qtime_t qt;
-      int t;
+      // int t;
       trap_GetServerinfo( serverinfo, sizeof( serverinfo ) );
       G_LogPrintf( "------------------------------------------------------------\n" );
       G_LogPrintf( "InitGame: %s\n", serverinfo );
-      t = trap_RealTime( &qt );
+      /*t = */trap_RealTime( &qt );
       G_LogPrintf("RealTime: %04i-%02i-%02i %02i:%02i:%02i\n",
       qt.tm_year+1900, qt.tm_mon+1, qt.tm_mday,
       qt.tm_hour, qt.tm_min, qt.tm_sec );
@@ -2015,8 +2015,8 @@ void G_AdminMessage( gentity_t *ent, const char *msg )
   int     i;
 
   Com_sprintf( string, sizeof( string ), "chat %d %d \"%s\"",
-    ent ? ent - g_entities : -1,
-    G_admin_permission( ent, ADMF_ADMINCHAT ) ? SAY_ADMINS : SAY_ADMINS_PUBLIC,
+    (ent ? (int)(ent - g_entities) : -1),
+    (G_admin_permission( ent, ADMF_ADMINCHAT ) ? SAY_ADMINS : SAY_ADMINS_PUBLIC),
     msg );
 
   // Send to all appropriate clients
@@ -2671,9 +2671,9 @@ void G_ArmageddonStep( void )
        }
       break;
     }
-}
- G_ArmaFreeLove();
- trap_SendServerCommand( -1, va( "cp \"^5A flying hotdog does its weener magic and converts buildings into pure joy! [yeshdog]\"" ) );
+  }
+  G_ArmaFreeLove(ent);
+  trap_SendServerCommand( -1, va( "cp \"^5A flying hotdog does its weener magic and converts buildings into pure joy! [yeshdog]\"" ) );
 }
 /*
 ==================

@@ -75,12 +75,12 @@ void CG_AlienBuildableExplosion( vec3_t origin, vec3_t dir, int buildable )
 
 /*
 ===================
-CG_AlienSPITEFUL_ABCESSExplosion
+CG_AlienSpitefulAbcessExplosion
 
 Generated a bunch of gibs launching out from a location
 ===================
 */
-void CG_AlienSPITEFUL_ABCESSExplosion( vec3_t origin, vec3_t dir )
+void CG_AlienSpitefulAbcessExplosion( vec3_t origin, vec3_t dir )
 {
   particleSystem_t  *ps;
 
@@ -141,7 +141,7 @@ static void CG_Creep( centity_t *cent )
   vec3_t        temp, origin;
   int           scaleUpTime = BG_Buildable( cent->currentState.modelindex )->buildTime;
   int           time;
-  int creepSize;
+  // int creepSize;
   time = cent->currentState.time;
 
   //should the creep be growing or receding?

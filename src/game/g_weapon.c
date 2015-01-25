@@ -584,10 +584,7 @@ PULSE RIFLE STASIS
 
 void prifleStasisFire( gentity_t *ent )
 {
-  gentity_t *m;
-
   fire_prifle_stasis( ent, muzzle, forward );
-
 }
 
 
@@ -681,9 +678,7 @@ MINE
 
 void throwMine( gentity_t *ent )
 {
-  gentity_t *m;
-
-  m = launch_mine( ent, muzzle, forward );
+  launch_mine( ent, muzzle, forward );
 }
 
 /*
@@ -693,14 +688,12 @@ ACID BOMBS
 */
 void acidBombFire( gentity_t *ent, int wp )
 {
-  gentity_t *m;
-  m = fire_acidBomb( ent, muzzle, forward, wp );
+  fire_acidBomb( ent, muzzle, forward, wp );
 }
 
 void acidBombFire2x( gentity_t *ent, int wp )
 {
-  gentity_t *m;
-  m = fire_acidBomb2( ent, muzzle, forward, wp );
+  fire_acidBomb2( ent, muzzle, forward, wp );
 }
 
 /*
@@ -862,7 +855,7 @@ LIGHTNING GUN
 float G_LightningAccuracy( const vec3_t ws_origin, const vec3_t ws_dir,
                            const vec3_t mins, const vec3_t maxs, const vec3_t ws_target )
 {
-	int i, damage;
+        int i/*, damage*/;
 	vec3_t origin, dir, boxcenter, boxdelta;
 	float dist, chord;
 
@@ -898,7 +891,7 @@ float G_LightningAccuracy( const vec3_t ws_origin, const vec3_t ws_dir,
 
 void lightningGunFire( gentity_t *ent )
 {
-	vec3_t start, end, mins, maxs, target_origin;
+        vec3_t /*start, */end, mins, maxs, target_origin;
 	trace_t tr;
 	gentity_t *target;
 	int damage;
@@ -1046,12 +1039,6 @@ cancelBuildFire
 */
 void cancelBuildFire( gentity_t *ent )
 {
-
-  trace_t     tr;
-  gentity_t   *traceEnt;
-  vec3_t      forward, end;
-  int         bHealth;
-
   // Cancel ghost buildable
   if( ent->client->ps.stats[ STAT_BUILDABLE ] != BA_NONE )
   {
@@ -1716,13 +1703,10 @@ void bounceBallFire( gentity_t *ent )
 
 void bounceBallFire_level2( gentity_t *ent )
 {
-  gentity_t *m;
-
-  m = fire_bounceBall2( ent, muzzle, forward,
-                       WP_ALEVEL2_UPG, LEVEL2_BOUNCEBALL_DMG,
-                       MOD_LEVEL2_BOUNCEBALL, LEVEL2_BOUNCEBALL_SPEED,
-                       LEVEL2_BOUNCEBALL_RADIUS );
-
+  fire_bounceBall2( ent, muzzle, forward,
+		    WP_ALEVEL2_UPG, LEVEL2_BOUNCEBALL_DMG,
+		    MOD_LEVEL2_BOUNCEBALL, LEVEL2_BOUNCEBALL_SPEED,
+		    LEVEL2_BOUNCEBALL_RADIUS );
 }
 
 /*
@@ -1853,11 +1837,9 @@ LEVEL5
 
 void Prickles( gentity_t *ent )
 {
-  trace_t   tr;
   vec3_t    end;
   float   r;
   float   u;
-
 
   G_CombatStats_Fire( ent, CSW_LEVEL5_ALT, LEVEL5_PRICKLES_DMG );
 
@@ -1881,8 +1863,6 @@ FireWeapon3
 */
 void FireWeapon3( gentity_t *ent )
 {
-playerState_t *ps = &ent->client->ps;
-gclient_t *client;
   if( ent->client )
   {
     // set aiming directions

@@ -1726,7 +1726,7 @@ void        CG_DrawBuildableStatus( void );
 void        CG_InitBuildables( void );
 void        CG_HumanBuildableExplosion( vec3_t origin, vec3_t dir, int buildable );
 void        CG_AlienBuildableExplosion( vec3_t origin, vec3_t dir, int buildable );
-
+void        CG_AlienSpitefulAbcessExplosion( vec3_t origin, vec3_t dir );
 
 void        CG_DrawChatBubble( void );
 int CG_SortDistance( const void *a, const void *b );

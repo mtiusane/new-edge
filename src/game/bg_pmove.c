@@ -771,6 +771,7 @@ static qboolean PM_CheckAirPounce( void )
   
   if( pm->ps->weapon == WP_ALEVEL5 )
     jumpMagnitude = pm->ps->stats[ STAT_MISC ] * LEVEL5_POUNCE_JUMP_MAG / LEVEL5_POUNCE_TIME;
+  else jumpMagnitude = 0;
 
   VectorMA( pm->ps->velocity, jumpMagnitude, pml.forward, pm->ps->velocity ); 
   PM_AddEvent( EV_AIRPOUNCE );
@@ -1399,7 +1400,7 @@ Only with the flight powerup
 */
 static void PM_FlyMove( void )
 {
-  int     i;
+  // int     i;
   vec3_t  wishvel,wishdir;
   float   wishspeed,scale;
 

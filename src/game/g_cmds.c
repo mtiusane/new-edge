@@ -952,7 +952,7 @@ static qboolean G_SayTo( gentity_t *ent, gentity_t *other, saymode_t mode, const
   }
 
   trap_SendServerCommand( other-g_entities, va( "chat %d %d \"%s\"",
-    ent ? ent-g_entities : -1,
+    ent ? (int)(ent-g_entities) : -1,
     mode,
     message ) );
 
@@ -1187,12 +1187,12 @@ void Cmd_VSay_f( gentity_t *ent )
     case VOICE_CHAN_LOCAL:
       trap_SendServerCommand( -1, va(
         "voice %d %d %d %d \"%s\"\n",
-        ent-g_entities, vchan, cmdNum, trackNum, text ) );
+        (int)(ent-g_entities), vchan, cmdNum, trackNum, text ) );
       break;
     case VOICE_CHAN_TEAM:
       G_TeamCommand( ent->client->pers.teamSelection, va(
         "voice %d %d %d %d \"%s\"\n",
-        ent-g_entities, vchan, cmdNum, trackNum, text ) );
+        (int)(ent-g_entities), vchan, cmdNum, trackNum, text ) );
       break;
     default:
       break;
@@ -3826,7 +3826,7 @@ void Cmd_MyScore_f( gentity_t *ent )
     return;
   }
   l = G_admin_find_level_for_score( ent->client->pers.admin->score );
-  if ( n = G_admin_level_next( G_admin_level( l->level ) ) ) {
+  if (( n = G_admin_level_next( G_admin_level( l->level ) ) )) {
     ADMP( va( "^7Level %d (%s^7) total score earned: %d next level: %d\n", 
       l->level, G_admin_level( l->level )->name, ent->client->pers.admin->score, n->score ) );
   } else {

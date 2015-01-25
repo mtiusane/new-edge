@@ -501,12 +501,12 @@ static void CG_DrawPlayerBuildTimerRing( rectDef_t *rect, vec4_t backColor,
                                          vec4_t foreColor, qhandle_t shader )
 {
   playerState_t *ps = &cg.snap->ps;
-  centity_t     *cent;
+  // centity_t     *cent;
   float         buildTime = ps->stats[ STAT_MISC ];
   float         progress;
   vec4_t        color;
 
-  cent = &cg_entities[ cg.snap->ps.clientNum ];
+  // cent = &cg_entities[ cg.snap->ps.clientNum ];
 
   if( buildTime > MAXIMUM_BUILD_TIME )
     buildTime = MAXIMUM_BUILD_TIME;
@@ -887,7 +887,7 @@ static void CG_DrawPlayerAmmoValue( rectDef_t *rect, vec4_t color )
   {
     float tx, ty;
     char *text;
-    int len;
+    // int len;
 
     trap_R_SetColor( color );
     if( !bp )
@@ -921,7 +921,7 @@ static void CG_DrawPlayerAmmoValue( rectDef_t *rect, vec4_t color )
   {
     float tx, ty;
     char *text;
-    int len;
+    // int len;
 
     trap_R_SetColor( color );
     if( !bp )
@@ -1434,11 +1434,11 @@ static void CG_DrawLevelShot( rectDef_t *rect )
 
 static void CG_DrawEdgeShot( rectDef_t *rect )
 {
-  const char  *info;
+  // const char  *info;
   qhandle_t   pic;
 
 
-  info = CG_ConfigString( CS_SERVERINFO );
+  // info = CG_ConfigString( CS_SERVERINFO );
   pic = trap_R_RegisterShaderNoMip( "ui/assets/warp_splash" );
 
   trap_R_SetColor( NULL );
@@ -1552,11 +1552,11 @@ void CG_DrawLoadingScreen( void )
 
 float CG_GetValue( int ownerDraw )
 {
-  centity_t *cent;
+  // centity_t *cent;
   playerState_t *ps;
   weapon_t weapon;
 
-  cent = &cg_entities[ cg.snap->ps.clientNum ];
+  // cent = &cg_entities[ cg.snap->ps.clientNum ];
   ps = &cg.snap->ps;
   weapon = BG_GetPlayerWeapon( ps );
 
@@ -2290,12 +2290,12 @@ static void CG_DrawClock( rectDef_t *rect, float text_x, float text_y,
   int     i, strLength;
   float   w, h, totalWidth;
   qtime_t qt;
-  int     t;
+  // int     t;
 
   if( !cg_drawClock.integer )
     return;
 
-  t = trap_RealTime( &qt );
+  /*t = */trap_RealTime( &qt );
 
   if( cg_drawClock.integer == 2 )
   {
@@ -2819,11 +2819,11 @@ CG_DrawWeaponIcon
 void CG_DrawWeaponIcon( rectDef_t *rect, vec4_t color )
 {
   int           maxAmmo;
-  centity_t     *cent;
+  // centity_t     *cent;
   playerState_t *ps;
   weapon_t      weapon;
 
-  cent = &cg_entities[ cg.snap->ps.clientNum ];
+  // cent = &cg_entities[ cg.snap->ps.clientNum ];
   ps = &cg.snap->ps;
   weapon = BG_GetPlayerWeapon( ps );
 
@@ -2898,7 +2898,7 @@ static void CG_DrawCrosshair( rectDef_t *rect, vec4_t color )
   float         x, y;
   weaponInfo_t  *wi;
   weapon_t      weapon;
-  weapon_t      curWeapon = WP_NONE;
+  // weapon_t      curWeapon = WP_NONE;
   weapon = BG_GetPlayerWeapon( &cg.snap->ps );
 
   
@@ -3469,9 +3469,9 @@ CG_DrawLighting
 */
 static void CG_DrawLighting( void )
 {
-  centity_t   *cent;
+  // centity_t   *cent;
 
-  cent = &cg_entities[ cg.snap->ps.clientNum ];
+  // cent = &cg_entities[ cg.snap->ps.clientNum ];
 
   //fade to black if stamina is low
   if( ( cg.snap->ps.stats[ STAT_STAMINA ] < STAMINA_BLACKOUT_LEVEL ) &&
@@ -3671,7 +3671,7 @@ static void CG_DrawVote( team_t team )
 static qboolean CG_DrawScoreboard( void )
 {
   static qboolean firstTime = qtrue;
-  float fade, *fadeColor;
+  // float fade, *fadeColor;
 
   if( menuScoreboard )
     menuScoreboard->window.flags &= ~WINDOW_FORCED;
@@ -3686,8 +3686,8 @@ static qboolean CG_DrawScoreboard( void )
   if( cg.showScores ||
       cg.predictedPlayerState.pm_type == PM_INTERMISSION )
   {
-    fade = 1.0;
-    fadeColor = colorWhite;
+    // fade = 1.0;
+    // fadeColor = colorWhite;
   }
   else
   {
