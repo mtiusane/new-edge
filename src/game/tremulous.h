@@ -177,13 +177,13 @@ TREMULOUS EDGE MOD SRC FILE
 #define LEVEL1_UPG_REGEN_MOD        3.0f
 #define LEVEL1_REGEN_SCOREINC       AVM(100) // score added for healing per 10s
 #define LEVEL1_UPG_REGEN_SCOREINC   AVM(200)
-#define ABOMB_DMG                   ADM(45)
-#define ABOMB_SPLASH_DMG            ADM(190)
+#define ABOMB_DMG                   ADM(60)
+#define ABOMB_SPLASH_DMG            ADM(200)
 #define ABOMB_SPLASH_RADIUS         200
 #define ABOMB_SPEED                 400.0f
 #define ABOMB_REPEAT                1000
-#define ABOMB2_DMG                  ADM(40)
-#define ABOMB2_SPLASH_DMG           ADM(165)
+#define ABOMB2_DMG                  ADM(50)
+#define ABOMB2_SPLASH_DMG           ADM(170)
 #define ABOMB2_SPLASH_RADIUS        180
 #define ABOMB2_SPEED                500.0f
 #define ABOMB2_REPEAT               1000
@@ -548,16 +548,15 @@ TREMULOUS EDGE MOD SRC FILE
 #define FLAMER_SECONDARY_REPEAT    200
 
 #define ROCKETL_PRICE               700
-#define ROCKETL_AMMO                8
-#define ROCKETL_CLIPS               3
+#define ROCKETL_AMMO                20
+#define ROCKETL_CLIPS               1
 #define ROCKETL_RELOAD              0
-#define ROCKETL_REPEAT              1000
+#define ROCKETL_REPEAT              1200
 #define ROCKETL_K_SCALE             1.0f
-#define ROCKETL_DAMAGE              HDM(88)
-#define ROCKETL_RADIUS              120
+#define ROCKETL_DAMAGE              HDM(80)
+#define ROCKETL_RADIUS              80
 #define ROCKETL_SIZE                5
 #define ROCKETL_SPEED               700
-
 
 #define HBUILD_PRICE                0
 #define HBUILD_REPEAT               1000
@@ -935,7 +934,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define MEDISTAT_VALUE              HBVM(MEDISTAT_BP)
 
 #define MGTURRET_BP                 8
-#define MGTURRET_BT                 8000
+#define MGTURRET_BT                 10000
 #define MGTURRET_HEALTH             HBHM(180)
 #define MGTURRET_SPLASHDAMAGE       100
 #define MGTURRET_SPLASHRADIUS       100

@@ -1249,7 +1249,7 @@ static const buildableAttributes_t bg_buildableList[ ] =
     TR_GRAVITY,            			//trType_t  traj;
     0.0,                   			//float     bounce;
     REPEATER_BP,           			//int       buildPoints;
-    STAGE_GE_1,                                 //int  stages
+    STAGE_GE_2,                                 //int  stages
     REPEATER_HEALTH,       			//int       health;
     0,                     			//int       regenRate;
     REPEATER_SPLASHDAMAGE, 			//int       splashDamage;
