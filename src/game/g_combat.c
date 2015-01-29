@@ -187,6 +187,7 @@ float G_CamperRewardBonus(  gentity_t *self )
 float G_TeamRewardScaleFactor( gentity_t *target )
 {
   if (level.humanRewardKills <= 0.0f || level.alienRewardKills <= 0.0f) return 1.0f;
+  if( !target->client ) return 1.0f;
   if( target->client->ps.stats[ STAT_TEAM ] == TEAM_ALIENS) {
     return level.alienRewardKills/level.humanRewardKills;
   } else if( target->client->ps.stats[ STAT_TEAM ] == TEAM_HUMANS ) {

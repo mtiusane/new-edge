@@ -2843,7 +2843,7 @@ void HMedistat_Think( gentity_t *self )
           }
 	  else if( SPAWN_WITH_MEDKIT && 
 		   !BG_InventoryContainsUpgrade( UP_MEDKIT, player->client->ps.stats ) ) 
-	    BG_AddUpgradeToInventory( UP_MEDKIT, self->enemy->client->ps.stats );
+	    BG_AddUpgradeToInventory( UP_MEDKIT, player->client->ps.stats );
         }
       }
     }
