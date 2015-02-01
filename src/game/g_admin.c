@@ -3840,9 +3840,10 @@ g_admin_level_t *G_admin_find_level_for_score( int score ) {
   for( level = g_admin_levels; level; level = next )
   {
     next = level->next;
-    if( next == NULL && level->score > 0) return level;
-    if( next->score < 0 ) continue;
-    if( /*level->score > score && */next->score <= score ) return next;
+    if( next != NULL) {
+      if( next->score < 0 ) continue;
+      if( /*level->score > score && */next->score <= score ) return next;
+    } else if (level->score > 0) return level;
   }
   return NULL;
 }
