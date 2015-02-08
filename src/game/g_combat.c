@@ -1881,7 +1881,7 @@ void G_CombatStats_HitMOD( gentity_t *ent, gentity_t *hit, meansOfDeath_t mod, i
 
 /*
 ================
-G_CalculateCombatRanking
+G_CalculateCombatRanks
 ================
 */
 
@@ -1902,7 +1902,7 @@ void G_CalculateCombatRanks( void )
 	combatStatsWeapon_t weapon;
 	combatStats_t *stats;
 	combatRanks_t *ranks;
-	int i, sample_count = 0, rank;
+	int i, sample_count, rank;
 	csrSample_t samples[ MAX_CLIENTS ];
 	float last;
 
@@ -1913,7 +1913,7 @@ void G_CalculateCombatRanks( void )
 
 	for( weapon = CSW_UNKNOWN + 1; weapon < CSW_MAX; weapon++ )
 	{
-		for( ent = g_entities; ent < g_entities + MAX_CLIENTS; ent++ )
+		for( sample_count = 0, ent = g_entities; ent < g_entities + MAX_CLIENTS; ent++ )
 		{
 			if( !ent->inuse ||
 			    !ent->client ||
