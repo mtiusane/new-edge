@@ -515,8 +515,6 @@ static void Svcmd_MessageWrapper( void )
 
   if( !Q_stricmp( cmd, "a" ) )
     Cmd_AdminMessage_f( NULL );
-  else if( !Q_stricmp( cmd, "m" ) )
-    Cmd_PrivateMessage_f( NULL );
   else if( !Q_stricmp( cmd, "say" ) )
     G_Say( NULL, SAY_ALL, ConcatArgs( 1 ) );
   else if( !Q_stricmp( cmd, "chat" ) )
