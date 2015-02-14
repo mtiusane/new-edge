@@ -1847,11 +1847,11 @@ void ClientThink_real( gentity_t *ent )
           continue;
         }
 
-		if( modifier < 4.6f && boost->s.eType == ET_BUILDABLE &&
+	if( modifier < COCOON_REGEN_MOD && boost->s.eType == ET_BUILDABLE &&
             boost->s.modelindex == BA_A_COCOON && boost->spawned &&
             boost->health > 0 && boost->powered )
         {
-          modifier = 4.6f;
+          modifier = COCOON_REGEN_MOD;
           continue;
         }
 		

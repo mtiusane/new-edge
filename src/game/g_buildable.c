@@ -3618,51 +3618,51 @@ static int G_CompareBuildablesForRemoval( const void *a, const void *b )
     BA_A_SPAWN,
     BA_A_OVERMIND,
     BA_A_PANZER_SMALL,
-	BA_A_PANZER_MEDIUM,
-	BA_A_PANZER_LARGE,
-	BA_A_TENDON_SMALL,
-	BA_A_TENDON_MEDIUM,
-	BA_A_TENDON_LARGE,
-	BA_A_NET,
-	BA_A_NET_SPIKE,
-	BA_A_INFESTATION_SLIME,
-	BA_A_INFESTATION_THICKET,
-	BA_A_INFESTATION_BLISTER,
-	BA_A_REFLECTOR,
-	BA_A_MUSCLE,
-	BA_A_SPITEFUL_ABCESS,
-	BA_A_COCOON,
-	BA_A_ORGANIC_BULB,
-	BA_A_POD,
-	BA_A_POD_STUMP,
-	BA_A_CREEPCOLONY,
-
+    BA_A_PANZER_MEDIUM,
+    BA_A_PANZER_LARGE,
+    BA_A_TENDON_SMALL,
+    BA_A_TENDON_MEDIUM,
+    BA_A_TENDON_LARGE,
+    BA_A_NET,
+    BA_A_NET_SPIKE,
+    BA_A_INFESTATION_SLIME,
+    BA_A_INFESTATION_THICKET,
+    BA_A_INFESTATION_BLISTER,
+    BA_A_REFLECTOR,
+    BA_A_MUSCLE,
+    BA_A_SPITEFUL_ABCESS,
+    BA_A_COCOON,
+    BA_A_ORGANIC_BULB,
+    BA_A_POD,
+    BA_A_POD_STUMP,
+    BA_A_CREEPCOLONY,
+    
     BA_H_MGTURRET,
-	BA_H_MGTURRET2,
+    BA_H_MGTURRET2,
     BA_H_TESLAGEN,
     BA_H_DCC,
     BA_H_MEDISTAT,
     BA_H_ARMOURY,
     BA_H_SPAWN,
     BA_H_REPEATER,
-	BA_H_CONTAINER_SMALL,
+    BA_H_CONTAINER_SMALL,
     BA_H_CONTAINER_MEDIUM,
-	BA_H_CONTAINER_LARGE,
-	BA_H_PLATE_SMALL,
-	BA_H_PLATE_LARGE,
+    BA_H_CONTAINER_LARGE,
+    BA_H_PLATE_SMALL,
+    BA_H_PLATE_LARGE,
     BA_H_FENCE,
     BA_H_FENCE_ROD,
     BA_H_BARRIER_LINE,
     BA_H_BARRIER_CORNER,
     BA_H_BARRIER_POINT,
-	BA_H_SHIELD,
-	BA_H_LADDER,
-	BA_H_TEFLON_FOIL,
+    BA_H_SHIELD,
+    BA_H_LADDER,
+    BA_H_TEFLON_FOIL,
     BA_H_BARREL,
     BA_H_LIGHT,	
-	BA_H_COVER,
-	BA_H_COVER_STUMP,
-	BA_H_REFINERY,
+    BA_H_COVER,
+    BA_H_COVER_STUMP,
+    BA_H_REFINERY,
   };
 
   gentity_t *buildableA, *buildableB;
@@ -4237,13 +4237,19 @@ itemBuildError_t G_CanBuild( gentity_t *ent, buildable_t buildable, int distance
     {
       case 0: break;
       case 1: // only creep providing buildings are blocked
- //       if( buildable != BA_A_OVERMIND && buildable != BA_A_SPAWN )
-          break;
-        // otherwise check the power
+        if( buildable != BA_A_OVERMIND && buildable != BA_A_SPAWN )
+	  break;
+        if( G_IsPowered( entity_origin ) != BA_NONE )
+          reason = IBE_BLOCKEDBYENEMY;
+	break;
+      case 2: // Creeps/colonies block building for enemy team
+	if( G_IsGathered( TEAM_HUMANS, entity_origin, qfalse, ent ) )
+          reason = IBE_BLOCKEDBYENEMY;
+	break;
       default:
         if( G_IsPowered( entity_origin ) != BA_NONE )
           reason = IBE_BLOCKEDBYENEMY;
-        break;
+	break;
     }
 
     // Check that there isn't another refinery/colony nearby
@@ -4266,22 +4272,11 @@ itemBuildError_t G_CanBuild( gentity_t *ent, buildable_t buildable, int distance
     // Check for power
     {
       //tell player to build a repeater to provide power
-      if( buildable != BA_H_REACTOR && buildable != BA_H_REPEATER && buildable != BA_H_LADDER
-&& buildable != BA_H_CONTAINER_SMALL
-&& buildable != BA_H_CONTAINER_MEDIUM
-&& buildable != BA_H_CONTAINER_LARGE
-&& buildable != BA_H_PLATE_SMALL
-&& buildable != BA_H_PLATE_LARGE
-&& buildable != BA_H_FENCE
-&& buildable != BA_H_FENCE_ROD
-&& buildable != BA_H_BARRIER_LINE
-&& buildable != BA_H_BARRIER_CORNER
-&& buildable != BA_H_BARRIER_POINT
-&& buildable != BA_H_TEFLON_FOIL
-&& buildable != BA_H_BARREL
-&& buildable != BA_H_COVER
-&& buildable != BA_H_COVER_STUMP
-	  )
+      if( buildable != BA_H_REACTOR && buildable != BA_H_REPEATER && buildable != BA_H_LADDER  && 
+	  buildable != BA_H_CONTAINER_SMALL && buildable != BA_H_CONTAINER_MEDIUM && buildable != BA_H_CONTAINER_LARGE && 
+	  buildable != BA_H_PLATE_SMALL && buildable != BA_H_PLATE_LARGE && buildable != BA_H_FENCE && buildable != BA_H_FENCE_ROD &&
+	  buildable != BA_H_BARRIER_LINE && buildable != BA_H_BARRIER_CORNER && buildable != BA_H_BARRIER_POINT &&
+	  buildable != BA_H_TEFLON_FOIL && buildable != BA_H_BARREL && buildable != BA_H_COVER && buildable != BA_H_COVER_STUMP )
         reason = IBE_NOPOWERHERE;
     }
 	
@@ -4291,13 +4286,18 @@ itemBuildError_t G_CanBuild( gentity_t *ent, buildable_t buildable, int distance
     {
       case 0: break;
       case 1: // only power providing buildings are blocked
-//        if( buildable != BA_H_REACTOR && buildable != BA_H_REPEATER )
-
+	if( buildable != BA_H_REACTOR && buildable != BA_H_REPEATER )
           break;
-        // otherwise check the creep
-      default:
         if( G_IsCreepHere( entity_origin ) )
           reason = IBE_BLOCKEDBYENEMY;
+      case 2: // Creeps/colonies block building for enemy team
+	if( G_IsGathered( TEAM_ALIENS, entity_origin, qfalse, ent ) )
+	reason = IBE_BLOCKEDBYENEMY;
+	break;
+      default:
+	if( G_IsCreepHere( entity_origin ) )
+	  reason = IBE_BLOCKEDBYENEMY;
+	break;
     }
 
     //this buildable requires a DCC

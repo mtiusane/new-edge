@@ -3104,10 +3104,10 @@ static void PM_Weapon( void )
     
     switch(pm->ps->weapon) {
     case WP_ALEVEL3:
-      max = LEVEL3_POUNCE_TIME_UPG;
+      max = LEVEL3_POUNCE_TIME;
       break;
     case WP_ALEVEL3_UPG:
-      max = LEVEL3_POUNCE_TIME;
+      max = LEVEL3_POUNCE_TIME_UPG;
       break;
     case WP_ALEVEL5:
       max = LEVEL5_POUNCE_TIME;

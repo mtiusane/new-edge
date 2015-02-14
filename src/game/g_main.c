@@ -205,6 +205,10 @@ vmCvar_t  g_DretchTurretDamage;
 vmCvar_t  g_DretchBuildingDamage;
 vmCvar_t  g_OwnTeamBPFactor;
 vmCvar_t  g_EnemyTeamBPFactor;
+vmCvar_t  g_MinAlienExtraBuildPoints;
+vmCvar_t  g_MaxAlienExtraBuildPoints;
+vmCvar_t  g_MinHumanExtraBuildPoints;
+vmCvar_t  g_MaxHumanExtraBuildPoints;
 
 // copy cvars that can be set in worldspawn so they can be restored later
 static char cv_gravity[ MAX_CVAR_VALUE_STRING ];
@@ -376,8 +380,13 @@ static cvarTable_t   gameCvarTable[ ] =
   { &g_DretchTurretDamage, "g_DretchTurretDamage", "1", CVAR_ARCHIVE, 0, qfalse },
   { &g_DretchBuildingDamage, "g_DretchBuildingDamage", "0.5", CVAR_ARCHIVE, 0, qfalse },
   { &g_OwnTeamBPFactor, "g_OwnTeamBPFactor", "1.0", CVAR_ARCHIVE, 0, qfalse },
-  { &g_EnemyTeamBPFactor, "g_EnemyTeamBPFactor", "0.0", CVAR_ARCHIVE, 0, qfalse }
+  { &g_EnemyTeamBPFactor, "g_EnemyTeamBPFactor", "0.0", CVAR_ARCHIVE, 0, qfalse },
+  { &g_MinAlienExtraBuildPoints, "g_MinAlienExtraBuildPoints", "-800", CVAR_ARCHIVE, 0, qfalse },
+  { &g_MaxAlienExtraBuildPoints, "g_MaxAlienExtraBuildPoints", "800", CVAR_ARCHIVE, 0, qfalse },
+  { &g_MinHumanExtraBuildPoints, "g_MinHumanExtraBuildPoints", "-800", CVAR_ARCHIVE, 0, qfalse },
+  { &g_MaxHumanExtraBuildPoints, "g_MaxHumanExtraBuildPoints", "800", CVAR_ARCHIVE, 0, qfalse }
 };
+
 static int gameCvarTableSize = sizeof( gameCvarTable ) / sizeof( gameCvarTable[ 0 ] );
 void G_InitGame( int levelTime, int randomSeed, int restart );
 void G_RunFrame( int levelTime );
@@ -1402,6 +1411,16 @@ void G_CalculateBuildPoints( void )
 
     level.alienExtraBuildPoints = g_OwnTeamBPFactor.value * (aVar + aFixed) + g_EnemyTeamBPFactor.value * (hVar + hFixed);
     level.humanExtraBuildPoints = g_OwnTeamBPFactor.value * (hVar + hFixed) + g_EnemyTeamBPFactor.value * (aVar + aFixed);
+
+    if (level.alienExtraBuildPoints < g_MinAlienExtraBuildPoints.value) 
+      level.alienExtraBuildPoints = g_MinAlienExtraBuildPoints.value;
+    else if (level.alienExtraBuildPoints > g_MaxAlienExtraBuildPoints.value) 
+      level.alienExtraBuildPoints = g_MaxAlienExtraBuildPoints.value;
+
+    if (level.humanExtraBuildPoints < g_MinHumanExtraBuildPoints.value) 
+      level.humanExtraBuildPoints = g_MinHumanExtraBuildPoints.value;
+    else if (level.humanExtraBuildPoints > g_MaxHumanExtraBuildPoints.value) 
+      level.humanExtraBuildPoints = g_MaxHumanExtraBuildPoints.value;
 
     level.humanBuildPoints += level.humanExtraBuildPoints;
     level.alienBuildPoints += level.alienExtraBuildPoints;
@@ -2643,8 +2662,8 @@ void G_ArmageddonStep( void )
     case BA_A_SPAWN:
     case BA_H_SPAWN:
     case BA_H_ARMOURY:
-	case BA_H_REPEATER:
-    continue; //dont get killed
+    case BA_H_REPEATER:
+      continue; //dont get killed
     case BA_A_TRAPPER:
     case BA_H_MGTURRET:
     case BA_H_MGTURRET2:

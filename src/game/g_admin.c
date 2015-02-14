@@ -2762,7 +2762,8 @@ qboolean G_admin_listplayers( gentity_t *ent )
       }
       else
       {
-	l = G_admin_level( 2 ); // Display 'Verified Player' level
+	// Display level matching admin's score instead of the real/fixed level for incognito players.
+	l = G_admin_find_level_for_score( p->pers.admin->score );
       }
     }
 

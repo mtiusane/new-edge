@@ -636,9 +636,9 @@ gentity_t *NapalmChargeFire( gentity_t *self, vec3_t start, vec3_t dir,
   bolt->s.generic1 = self->s.generic1; //weaponMode
   bolt->r.ownerNum = self->s.number;
   bolt->parent = self;
-  bolt->damage = damage / 1.6;
+  bolt->damage = damage / 1.7;
   bolt->splashDamage = damage / 5.2;
-  bolt->splashRadius = damage /1.1 ;
+  bolt->splashRadius = damage / 1.1 ;
   bolt->methodOfDeath = MOD_FLAMES;
   bolt->splashMethodOfDeath = MOD_FLAMER_SPLASH;
   bolt->clipmask = MASK_SHOT;
