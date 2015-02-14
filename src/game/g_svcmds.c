@@ -647,7 +647,6 @@ struct svcmd
   { "listmaps", qtrue, Svcmd_ListMapsWrapper },
   { "listemoticons", qtrue, Svcmd_ListEmoticonsWrapper },
   { "loadcensors", qfalse, G_LoadCensors },
-  { "m", qtrue, Svcmd_MessageWrapper },
   { "maplog", qtrue, Svcmd_MapLogWrapper },
   { "mapRotation", qfalse, Svcmd_MapRotation_f },
   { "pr", qfalse, Svcmd_Pr_f },

@@ -865,8 +865,8 @@ static void admin_log_abort( void )
 
 static void admin_log_end( const qboolean ok )
 {
-  if( adminLog[ 0 ] )
-    G_LogPrintf( "AdminExec: %s: %s\n", ok ? "ok" : "fail", adminLog );
+  if( adminLog[ 0 ] && !ok )
+    G_LogPrintf( "AdminExec: fail: %s\n", adminLog );
   admin_log_abort( );
 }
 
