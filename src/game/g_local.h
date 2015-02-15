@@ -694,8 +694,8 @@ typedef struct
   int               alienKills;
   int               humanKills;
 
-  float             alienRewardKills;
-  float             humanRewardKills;
+  float             alienRewardScore;
+  float             humanRewardScore;
 
   qboolean          overmindMuted;
 
@@ -1367,8 +1367,8 @@ extern  vmCvar_t  g_InstantRewardMultiplierH;
 extern  vmCvar_t  g_KillRewardMultiplierA;
 extern  vmCvar_t  g_KillRewardMultiplierH;
 extern  vmCvar_t  g_ConstantRewardFactor;
-extern  vmCvar_t  g_TeamRewardFactor;
-extern  vmCvar_t  g_PlayerRewardFactor;
+extern  vmCvar_t  g_MinRewardFactor;
+extern  vmCvar_t  g_MaxRewardFactor;
 extern  vmCvar_t  g_ForceRandomTeams;
 extern  vmCvar_t  g_AutoLevelMinTeamSize;
 extern  vmCvar_t  g_RageQuitScorePenalty;
@@ -1376,6 +1376,10 @@ extern  vmCvar_t  g_DretchTurretDamage;
 extern  vmCvar_t  g_DretchBuildingDamage;
 extern  vmCvar_t  g_OwnTeamBPFactor;
 extern  vmCvar_t  g_EnemyTeamBPFactor;
+extern  vmCvar_t  g_MinAlienExtraBuildPoints;
+extern  vmCvar_t  g_MaxAlienExtraBuildPoints;
+extern  vmCvar_t  g_MinHumanExtraBuildPoints;
+extern  vmCvar_t  g_MaxHumanExtraBuildPoints;
 
 void      trap_Print( const char *fmt );
 void      trap_Error( const char *fmt );

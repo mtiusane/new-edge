@@ -45,14 +45,21 @@ void AddScore( gentity_t *ent, int score )
   if( !ent->client )
     return;
 
-  // make alien and human scores equivalent 
-  if ( ent->client->pers.teamSelection == TEAM_ALIENS )
-  {
-    score = rint( ((float)score) / 2.0f );
-  }
-
   // scale values down to fit the scoreboard better
   score = rint( ((float)score) / 50.0f );
+
+  switch( ent->client->pers.teamSelection ) {
+  case TEAM_ALIENS:
+    // make alien and human scores equivalent 
+    score = rint( ((float)score) / 2.0f );
+    level.alienRewardScore += score;
+    break;
+  case TEAM_HUMANS:
+    level.humanRewardScore += score;
+    break;
+  default:
+    break;
+  }
 
   ent->client->ps.persistant[ PERS_SCORE ] += score;
 
@@ -184,29 +191,28 @@ float G_CamperRewardBonus(  gentity_t *self )
   return 1.0f;
 } 
 
-float G_TeamRewardScaleFactor( gentity_t *target )
+float G_RewardScaleFactor( gentity_t *self, gentity_t *target )
 {
-  if (level.humanRewardKills <= 0.0f || level.alienRewardKills <= 0.0f) return 1.0f;
+  float targetScore;
   if( !target->client ) return 1.0f;
-  if( target->client->ps.stats[ STAT_TEAM ] == TEAM_ALIENS) {
-    return level.alienRewardKills/level.humanRewardKills;
-  } else if( target->client->ps.stats[ STAT_TEAM ] == TEAM_HUMANS ) {
-    return level.humanRewardKills/level.alienRewardKills;
-  } else return 0;
-}
-
-float G_RewardScaleFactor( gentity_t *self, gentity_t *target, float teamFactor )
-{
-  float result;
-
-  if (self->client->pers.kills <= 0 || target->client->pers.kills <= 0) return 1.0f;
-
-  result = g_ConstantRewardFactor.value;
-  result += g_TeamRewardFactor.value*teamFactor;
-  result += g_PlayerRewardFactor.value*target->client->pers.kills/self->client->pers.kills;
-
-  if (result > 1.0f) result = 1.0f;
-  return result;
+  if( level.humanRewardScore <= 0.0f || level.alienRewardScore <= 0.0f ) return 1.0f;
+  if( self->client->ps.persistant[ PERS_SCORE ] <= 0 || target->client->ps.persistant[ PERS_SCORE ] <= 0) return 1.0f;
+  targetScore = target->client->ps.persistant[ PERS_SCORE ]/self->client->ps.persistant[ PERS_SCORE ];
+  switch( target->client->ps.stats[ STAT_TEAM ] ) {
+  case TEAM_ALIENS:
+    targetScore *= level.alienRewardScore/level.humanRewardScore;
+    break;
+  case TEAM_HUMANS:
+    targetScore *= level.humanRewardScore/level.alienRewardScore;
+    break;
+  default:
+    return 0;
+  }
+  targetScore *= 1.0f-g_ConstantRewardFactor.value;
+  targetScore += g_ConstantRewardFactor.value;
+  if (targetScore < g_MinRewardFactor.value) targetScore = g_MinRewardFactor.value;
+  else if (targetScore > g_MaxRewardFactor.value) targetScore = g_MaxRewardFactor.value;
+  return targetScore;
 }
 
 /* Instantly reward the current attacker */
@@ -235,7 +241,7 @@ float G_InstantRewardAttacker( gentity_t *self, gentity_t *target, float damage 
     value *= g_InstantRewardMultiplierH.value;
   } else value = 0;
 
-  value *= G_RewardScaleFactor( self, target, G_TeamRewardScaleFactor( target ) );
+  value *= G_RewardScaleFactor( self, target );
 
   if( value > 0 ) {
     G_AddCreditToClient( self->client, value, qtrue );
@@ -312,7 +318,6 @@ float G_RewardAttackers( gentity_t *self )
 
 
   // Give credits and empty the array
-  teamFactor = G_TeamRewardScaleFactor( self );
   for( i = 0; i < level.maxclients; i++ )
   {
     int stageValue = value * self->credits[ i ] / totalDamage;
@@ -333,15 +338,13 @@ float G_RewardAttackers( gentity_t *self )
       if( self->s.eType != ET_BUILDABLE )
       {
 	// Com_Printf(S_COLOR_YELLOW "Killer: kills = %f deaths = %f percent_of_damage = %f -> factor = %f\n",player->client->pers.kills,player->client->pers.deaths,killValue,G_RewardScaleFactor( player, self, teamFactor) );
-	stageValue *= G_RewardScaleFactor( player, self, teamFactor );
+	stageValue *= G_RewardScaleFactor( player, self );
 	player->client->pers.kills += killValue;
         // add to stage counters
         if( player->client->ps.stats[ STAT_TEAM ] == TEAM_ALIENS ) {
-	  level.alienRewardKills += killValue;
 	  G_AddCreditToClient( player->client, g_KillRewardMultiplierH.value*stageValue, qtrue );
           alienCredits += g_KillRewardMultiplierH.value*stageValue;
 	} else if( player->client->ps.stats[ STAT_TEAM ] == TEAM_HUMANS ) {
-	  level.humanRewardKills += killValue;
 	  G_AddCreditToClient( player->client, g_KillRewardMultiplierA.value*stageValue, qtrue );
           humanCredits += g_KillRewardMultiplierA.value*stageValue;
 	}
@@ -352,7 +355,7 @@ float G_RewardAttackers( gentity_t *self )
   // ++self->client->pers.deaths;
 
   // Com_Printf(S_COLOR_YELLOW "Killed: kills = %f deaths = %d\n",self->client->pers.kills,self->client->pers.deaths);
-  // Com_Printf(S_COLOR_YELLOW "Team: kills = %f deaths = %f\n",level.alienRewardKills,level.humanRewardKills);
+  // Com_Printf(S_COLOR_YELLOW "Team: kills = %f deaths = %f\n",level.alienRewardScore,level.humanRewardScore);
   
   if( alienCredits )
   {

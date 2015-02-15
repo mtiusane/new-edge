@@ -194,8 +194,8 @@ vmCvar_t  g_InstantRewardMultiplierH;
 vmCvar_t  g_KillRewardMultiplierA;
 vmCvar_t  g_KillRewardMultiplierH;
 vmCvar_t  g_ConstantRewardFactor;
-vmCvar_t  g_TeamRewardFactor;
-vmCvar_t  g_PlayerRewardFactor;
+vmCvar_t  g_MinRewardFactor;
+vmCvar_t  g_MaxRewardFactor;
 vmCvar_t  g_TimerPeriod;
 vmCvar_t  g_TimerCommand;
 vmCvar_t  g_ForceRandomTeams;
@@ -369,9 +369,9 @@ static cvarTable_t   gameCvarTable[ ] =
   { &g_InstantRewardMultiplierH, "g_InstantRewardMultiplierH", "1", CVAR_ARCHIVE, 0, qfalse },
   { &g_KillRewardMultiplierA, "g_KillRewardMultiplierA", "1", CVAR_ARCHIVE, 0, qfalse },
   { &g_KillRewardMultiplierH, "g_KillRewardMultiplierH", "1", CVAR_ARCHIVE, 0, qfalse },
-  { &g_ConstantRewardFactor, "g_ConstantRewardFactor", "0.25", CVAR_ARCHIVE, 0, qfalse },
-  { &g_TeamRewardFactor, "g_TeamRewardFactor", "0.5", CVAR_ARCHIVE, 0, qfalse },
-  { &g_PlayerRewardFactor, "g_PlayerRewardFactor", "0.25", CVAR_ARCHIVE, 0, qfalse },
+  { &g_ConstantRewardFactor, "g_ConstantRewardFactor", "0", CVAR_ARCHIVE, 0, qfalse },
+  { &g_MinRewardFactor, "g_MinRewardFactor", "0.2", CVAR_ARCHIVE, 0, qfalse },
+  { &g_MaxRewardFactor, "g_MaxRewardFactor", "5.0", CVAR_ARCHIVE, 0, qfalse },
   { &g_TimerPeriod, "g_TimerPeriod", "0", CVAR_ARCHIVE, 0, qfalse },
   { &g_TimerCommand, "g_TimerCommand", "", CVAR_ARCHIVE, 0, qfalse },
   { &g_ForceRandomTeams, "g_ForceRandomTeams", "0", CVAR_ARCHIVE, 0, qfalse },
@@ -661,7 +661,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
   level.alienStage2Time = level.alienStage3Time = level.alienStage4Time = level.alienStage5Time = 
   level.humanStage2Time = level.humanStage3Time = level.humanStage4Time = level.humanStage5Time = level.startTime;
   level.snd_fry = G_SoundIndex( "sound/misc/fry.wav" ); // FIXME standing in lava / slime
-  level.humanRewardKills = level.alienRewardKills = 0.0f;
+  level.humanRewardScore = level.alienRewardScore = 0.0f;
   level.alienNoBPFlashTime = level.humanNoBPFlashTime = -1;
   trap_Cvar_Set( "g_version", G_MOD_VERSION );
   trap_Cvar_Set( "edge_version", EDGE_MOD_VERSION );
