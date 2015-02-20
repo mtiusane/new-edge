@@ -1571,8 +1571,10 @@ qboolean G_SelectiveRadiusDamage( vec3_t origin, gentity_t *attacker, float dama
 
     points = damage * ( 1.0 - dist / radius );
 
-    if( CanDamage( ent, origin ) && ent->client &&
-        ent->client->ps.stats[ STAT_TEAM ] != team )
+    if( CanDamage( ent, origin ) &&
+        ( ( ent->client && ent->client->ps.stats[ STAT_TEAM ] != team ) ||
+          ( ent->s.eType == ET_BUILDABLE &&
+            BG_Buildable( ent->s.modelindex )->team != team ) ) )
     {
       VectorSubtract( ent->r.currentOrigin, origin, dir );
       // push the center of mass higher than the origin so players

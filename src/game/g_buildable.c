@@ -1505,7 +1505,9 @@ void AAcidTube_Think( gentity_t *self )
       if (enemy->client && enemy->client->notrackEndTime >= level.time)
       	continue;
 
-      if( enemy->client && enemy->client->ps.stats[ STAT_TEAM ] == TEAM_HUMANS )
+      if( ( enemy->client && enemy->client->ps.stats[ STAT_TEAM ] == TEAM_HUMANS ) ||
+          ( enemy->s.eType == ET_BUILDABLE &&
+            BG_Buildable( enemy->s.modelindex )->team == TEAM_HUMANS ) )
       {
         // start the attack animation
         if( level.time >= self->timestamp + ACIDTUBE_REPEAT_ANIM )
@@ -2891,9 +2893,20 @@ qboolean HMGTurret_CheckTarget( gentity_t *self, gentity_t *target,
   trace_t   tr;
   vec3_t    dir, end;
 
-  if( !target || target->health <= 0 || !target->client ||
-      target->client->pers.teamSelection != TEAM_ALIENS )
-    return qfalse;
+  if( !target || target->health <= 0 )
+     return qfalse;
+
+  if( target->client )
+  {
+    if( target->client->pers.teamSelection != TEAM_ALIENS )
+      return qfalse;
+  }
+  else
+  {
+    if( !( target->s.eType == ET_BUILDABLE &&
+           BG_Buildable( target->s.modelindex )->team == TEAM_ALIENS ) )
+      return qfalse;
+  }
 
   if( target->flags & FL_NOTARGET )
     return qfalse;
