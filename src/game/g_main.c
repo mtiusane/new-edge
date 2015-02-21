@@ -26,12 +26,9 @@ TREMULOUS EDGE MOD SRC FILE
 ===========================================================================
 */
 #include "g_local.h"
-#include "edge_version.h"
+#include "newedge_version.h"
 
 #define G_MOD_VERSION "Aardvark 0.5x" SVN_VERSION
-#ifndef EDGE_MOD_VERSION
-#define EDGE_MOD_VERSION "7.5.x"
-#endif
 level_locals_t  level;
 
 typedef struct
@@ -209,6 +206,8 @@ vmCvar_t  g_MinAlienExtraBuildPoints;
 vmCvar_t  g_MaxAlienExtraBuildPoints;
 vmCvar_t  g_MinHumanExtraBuildPoints;
 vmCvar_t  g_MaxHumanExtraBuildPoints;
+vmCvar_t  g_BuildingCreditsFactor;
+
 
 // copy cvars that can be set in worldspawn so they can be restored later
 static char cv_gravity[ MAX_CVAR_VALUE_STRING ];
@@ -224,7 +223,7 @@ static cvarTable_t   gameCvarTable[ ] =
   { NULL, "gamename", GAME_VERSION , CVAR_SERVERINFO | CVAR_ROM, 0, qfalse  },
   { NULL, "gamedate", __DATE__ , CVAR_ROM, 0, qfalse  },
   { NULL, "g_version", G_MOD_VERSION , CVAR_SERVERINFO | CVAR_ROM, 0, qfalse  },
-  { NULL, "edge_version", EDGE_MOD_VERSION , CVAR_SERVERINFO | CVAR_ROM, 0, qfalse  },
+  { NULL, "newedge_version", NEWEDGE_MOD_VERSION , CVAR_SERVERINFO | CVAR_ROM, 0, qfalse  },
   { &g_restarted, "g_restarted", "0", CVAR_ROM, 0, qfalse  },
   { &g_lockTeamsAtStart, "g_lockTeamsAtStart", "0", CVAR_ROM, 0, qfalse  },
   { NULL, "sv_mapname", "", CVAR_SERVERINFO | CVAR_ROM, 0, qfalse  },
@@ -384,7 +383,8 @@ static cvarTable_t   gameCvarTable[ ] =
   { &g_MinAlienExtraBuildPoints, "g_MinAlienExtraBuildPoints", "-800", CVAR_ARCHIVE, 0, qfalse },
   { &g_MaxAlienExtraBuildPoints, "g_MaxAlienExtraBuildPoints", "800", CVAR_ARCHIVE, 0, qfalse },
   { &g_MinHumanExtraBuildPoints, "g_MinHumanExtraBuildPoints", "-800", CVAR_ARCHIVE, 0, qfalse },
-  { &g_MaxHumanExtraBuildPoints, "g_MaxHumanExtraBuildPoints", "800", CVAR_ARCHIVE, 0, qfalse }
+  { &g_MaxHumanExtraBuildPoints, "g_MaxHumanExtraBuildPoints", "800", CVAR_ARCHIVE, 0, qfalse },
+  { &g_BuildingCreditsFactor, "g_BuildingCreditsFactor", "0.25", CVAR_ARCHIVE, 0, qfalse }
 };
 
 static int gameCvarTableSize = sizeof( gameCvarTable ) / sizeof( gameCvarTable[ 0 ] );
@@ -651,7 +651,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
   G_Printf( "------- Game Initialization -------\n" );
   G_Printf( "gamename: %s\n", GAME_VERSION );
   G_Printf( "gamedate: %s\n", __DATE__ );
-  G_Printf( "EDGE VERSION: %s\n", EDGE_MOD_VERSION );
+  G_Printf( "New EDGE version: %s\n", NEWEDGE_MOD_VERSION );
   BG_InitMemory( );
 
   // set some level globals
@@ -664,7 +664,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
   level.humanRewardScore = level.alienRewardScore = 0.0f;
   level.alienNoBPFlashTime = level.humanNoBPFlashTime = -1;
   trap_Cvar_Set( "g_version", G_MOD_VERSION );
-  trap_Cvar_Set( "edge_version", EDGE_MOD_VERSION );
+  trap_Cvar_Set( "newedge_version", NEWEDGE_MOD_VERSION );
   if( g_logFile.string[ 0 ] )
   {
     if( g_logFileSync.integer )

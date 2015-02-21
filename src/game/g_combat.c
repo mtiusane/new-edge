@@ -194,19 +194,20 @@ float G_CamperRewardBonus(  gentity_t *self )
 float G_RewardScaleFactor( gentity_t *self, gentity_t *target )
 {
   float targetScore;
-  if( !target->client ) return 1.0f;
   if( level.humanRewardScore <= 0.0f || level.alienRewardScore <= 0.0f ) return 1.0f;
-  if( self->client->ps.persistant[ PERS_SCORE ] <= 0 || target->client->ps.persistant[ PERS_SCORE ] <= 0) return 1.0f;
-  targetScore = target->client->ps.persistant[ PERS_SCORE ]/self->client->ps.persistant[ PERS_SCORE ];
-  switch( target->client->ps.stats[ STAT_TEAM ] ) {
+  switch( self->client->ps.stats[ STAT_TEAM ] ) {
   case TEAM_ALIENS:
-    targetScore *= level.alienRewardScore/level.humanRewardScore;
+    targetScore = level.humanRewardScore/level.alienRewardScore;
     break;
   case TEAM_HUMANS:
-    targetScore *= level.humanRewardScore/level.alienRewardScore;
+    targetScore = level.alienRewardScore/level.humanRewardScore;
     break;
   default:
     return 0;
+  }
+  if ( target->client != NULL ) {
+    if( self->client->ps.persistant[ PERS_SCORE ] <= 0 || target->client->ps.persistant[ PERS_SCORE ] <= 0) return targetScore;
+    targetScore *= target->client->ps.persistant[ PERS_SCORE ]/self->client->ps.persistant[ PERS_SCORE ];
   }
   targetScore *= 1.0f-g_ConstantRewardFactor.value;
   targetScore += g_ConstantRewardFactor.value;
@@ -219,31 +220,40 @@ float G_RewardScaleFactor( gentity_t *self, gentity_t *target )
 float G_InstantRewardAttacker( gentity_t *self, gentity_t *target, float damage )
 {
   float value;
-  int maxHealth;
+  int maxHealth,targetTeam;
 
   if( damage <= 0.f ) return 0.0f;
   if( !self->client ) return 0.0f;
-  if( !target->client ) return 0.0f;
-  if( OnSameTeam( self, target ) ) return 0.0f;
-  if( target->s.eType == ET_BUILDABLE ) return 0.0f;
 
-  maxHealth = target->client->ps.stats[ STAT_MAX_HEALTH ];
+  if( target->client != NULL ) {
+    maxHealth = target->client->ps.stats[ STAT_MAX_HEALTH ];
+    targetTeam = target->client->ps.stats[ STAT_TEAM ];
+  } else {
+    maxHealth = BG_Buildable( target->s.modelindex )->health;
+    targetTeam = target->buildableTeam;
+  }
+  if( targetTeam == self->client->ps.stats[ STAT_TEAM ] ) return 0.0f;
 
-  // Only give credits for attacking players for now
   value = damage / maxHealth;
   if (value > 1.0f) value = 1.0f;
-  value *= G_CamperRewardBonus( target );
-  value *= BG_GetValueOfPlayer( &target->client->ps );
 
-  if( target->client->ps.stats[ STAT_TEAM ] == TEAM_ALIENS) {
+  if( target->client != NULL ) {
+    value *= G_CamperRewardBonus( target );
+    value *= BG_GetValueOfPlayer( &target->client->ps );
+  } else {
+    value *= BG_Buildable( target->s.modelindex )->value;
+    value *= g_BuildingCreditsFactor.value;
+  }
+
+  if( targetTeam == TEAM_ALIENS) {
     value *= g_InstantRewardMultiplierA.value;
-  } else if( target->client->ps.stats[ STAT_TEAM ] == TEAM_HUMANS ) {
+  } else if( targetTeam == TEAM_HUMANS ) {
     value *= g_InstantRewardMultiplierH.value;
-  } else value = 0;
+  } else value = 0.f;
 
   value *= G_RewardScaleFactor( self, target );
 
-  if( value > 0 ) {
+  if( value > 0.f ) {
     G_AddCreditToClient( self->client, value, qtrue );
     if( self->client->ps.stats[ STAT_TEAM ] == TEAM_ALIENS ) {
       trap_Cvar_Set( "g_alienCredits",
@@ -334,12 +344,12 @@ float G_RewardAttackers( gentity_t *self )
 
       AddScore( player, stageValue );
 
-      // killing buildables earns score, but not credits
-      if( self->s.eType != ET_BUILDABLE )
-      {
+      // killing buildables earns score, but not credits unless g_BuildingCreditsFactor > 0
+      if( self->s.eType == ET_BUILDABLE ) stageValue *= g_BuildingCreditsFactor.value;
+      if( stageValue > 0 ) {
 	// Com_Printf(S_COLOR_YELLOW "Killer: kills = %f deaths = %f percent_of_damage = %f -> factor = %f\n",player->client->pers.kills,player->client->pers.deaths,killValue,G_RewardScaleFactor( player, self, teamFactor) );
 	stageValue *= G_RewardScaleFactor( player, self );
-	player->client->pers.kills += killValue;
+	player->client->pers.kills += killValue; // NOTE: Building kills will increase this too if g_BuildingCreditsFactor > 0
         // add to stage counters
         if( player->client->ps.stats[ STAT_TEAM ] == TEAM_ALIENS ) {
 	  G_AddCreditToClient( player->client, g_KillRewardMultiplierH.value*stageValue, qtrue );

@@ -1380,6 +1380,7 @@ extern  vmCvar_t  g_MinAlienExtraBuildPoints;
 extern  vmCvar_t  g_MaxAlienExtraBuildPoints;
 extern  vmCvar_t  g_MinHumanExtraBuildPoints;
 extern  vmCvar_t  g_MaxHumanExtraBuildPoints;
+extern  vmCvar_t  g_BuildingCreditsFactor;
 
 void      trap_Print( const char *fmt );
 void      trap_Error( const char *fmt );

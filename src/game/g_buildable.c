@@ -322,7 +322,7 @@ buildable_t G_IsPowered( vec3_t origin )
     return BA_NONE;
 }
 
- /*
+/*
 ================
 G_IsGathered
 
@@ -4190,6 +4190,7 @@ itemBuildError_t G_CanBuild( gentity_t *ent, buildable_t buildable, int distance
   qboolean          invert;
   int               contents;
   playerState_t     *ps = &ent->client->ps;
+  float             d;
 
   // Stop all buildables from interacting with traces
   //G_SetBuildableLinkState( qfalse );
@@ -4257,7 +4258,13 @@ itemBuildError_t G_CanBuild( gentity_t *ent, buildable_t buildable, int distance
 	break;
       case 2: // Creeps/colonies block building for enemy team
 	if( G_IsGathered( TEAM_HUMANS, entity_origin, qfalse, ent ) )
-          reason = IBE_BLOCKEDBYENEMY;
+	{
+	  tempent = G_Overmind( );
+	  if( tempent != NULL ) {
+	    d = Distance( tempent->s.origin, entity_origin );
+	    if ( d > CREEP_BASESIZE ) reason = IBE_BLOCKEDBYENEMY;
+	  } else reason = IBE_BLOCKEDBYENEMY;
+	}
 	break;
       default:
         if( G_IsPowered( entity_origin ) != BA_NONE )
@@ -4305,7 +4312,13 @@ itemBuildError_t G_CanBuild( gentity_t *ent, buildable_t buildable, int distance
           reason = IBE_BLOCKEDBYENEMY;
       case 2: // Creeps/colonies block building for enemy team
 	if( G_IsGathered( TEAM_ALIENS, entity_origin, qfalse, ent ) )
-	reason = IBE_BLOCKEDBYENEMY;
+	{
+	  tempent = G_Reactor( );
+	  if( tempent != NULL ) {
+	    d = Distance( tempent->s.origin, entity_origin );
+	    if ( d > REACTOR_BASESIZE ) reason = IBE_BLOCKEDBYENEMY;
+	  } else reason = IBE_BLOCKEDBYENEMY;
+        }
 	break;
       default:
 	if( G_IsCreepHere( entity_origin ) )
