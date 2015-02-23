@@ -1520,7 +1520,6 @@ void AAcidTube_Think( gentity_t *self )
         G_SelectiveRadiusDamage( self->s.pos.trBase, self, ACIDTUBE_DAMAGE,
                                  ACIDTUBE_RANGE, self, MOD_ATUBE, TEAM_ALIENS );                           
         self->nextthink = level.time + ACIDTUBE_REPEAT;
-        return;
       }
     }
   }
