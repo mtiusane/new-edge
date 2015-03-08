@@ -1011,198 +1011,6 @@ void G_Say( gentity_t *ent, saymode_t mode, const char *chatText )
     G_SayTo( ent, other, mode, text );
   }
 }
-
-/*
-==================
-Cmd_SayArea_f
-==================
-*/
-static void Cmd_SayArea_f( gentity_t *ent )
-{
-  int    entityList[ MAX_GENTITIES ];
-  int    num, i;
-  vec3_t range = { 1000.0f, 1000.0f, 1000.0f };
-  vec3_t mins, maxs;
-  char   *msg;
-
-  if( trap_Argc( ) < 2 )
-  {
-    ADMP( "usage: say_area [message]\n" );
-    return;
-  }
-
-  msg = ConcatArgs( 1 );
-
-  for(i = 0; i < 3; i++ )
-    range[ i ] = g_sayAreaRange.value;
-
-  G_LogPrintf( "SayArea: %d \"%s" S_COLOR_WHITE "\": " S_COLOR_BLUE "%s\n",
-    ent - g_entities, ent->client->pers.netname, msg );
-
-  VectorAdd( ent->s.origin, range, maxs );
-  VectorSubtract( ent->s.origin, range, mins );
-
-  num = trap_EntitiesInBox( mins, maxs, entityList, MAX_GENTITIES );
-  for( i = 0; i < num; i++ )
-    G_SayTo( ent, &g_entities[ entityList[ i ] ], SAY_AREA, msg );
-
-  //Send to ADMF_SPEC_ALLCHAT candidates
-  for( i = 0; i < level.maxclients; i++ )
-  {
-    if( g_entities[ i ].client->pers.teamSelection == TEAM_NONE &&
-        G_admin_permission( &g_entities[ i ], ADMF_SPEC_ALLCHAT ) )
-    {
-      G_SayTo( ent, &g_entities[ i ], SAY_AREA, msg );
-    }
-  }
-}
-
-
-/*
-==================
-Cmd_Say_f
-==================
-*/
-static void Cmd_Say_f( gentity_t *ent )
-{
-  char    *p;
-  char    cmd[ MAX_TOKEN_CHARS ];
-  saymode_t mode = SAY_ALL;
-
-  if( trap_Argc( ) < 2 )
-    return;
-
-  trap_Argv( 0, cmd, sizeof( cmd ) );
-  if( Q_stricmp( cmd, "say_team" ) == 0 )
-    mode = SAY_TEAM;
-
-  p = ConcatArgs( 1 );
-
-  G_Say( ent, mode, p );
-}
-
-/*
-==================
-Cmd_VSay_f
-==================
-*/
-void Cmd_VSay_f( gentity_t *ent )
-{
-  char            arg[MAX_TOKEN_CHARS];
-  char            text[ MAX_TOKEN_CHARS ];
-  voiceChannel_t  vchan;
-  voice_t         *voice;
-  voiceCmd_t      *cmd;
-  voiceTrack_t    *track;
-  int             cmdNum = 0;
-  int             trackNum = 0;
-  char            voiceName[ MAX_VOICE_NAME_LEN ] = {"default"};
-  char            voiceCmd[ MAX_VOICE_CMD_LEN ] = {""};
-  char            vsay[ 12 ] = {""};
-  weapon_t        weapon;
-
-  if( !ent || !ent->client )
-    Com_Error( ERR_FATAL, "Cmd_VSay_f() called by non-client entity\n" );
-
-  trap_Argv( 0, arg, sizeof( arg ) );
-  if( trap_Argc( ) < 2 )
-  {
-    trap_SendServerCommand( ent-g_entities, va(
-      "print \"usage: %s command [text] \n\"", arg ) );
-    return;
-  }
-  if( !level.voices )
-  {
-    trap_SendServerCommand( ent-g_entities, va(
-      "print \"%s: voice system is not installed on this server\n\"", arg ) );
-    return;
-  }
-  if( !g_voiceChats.integer )
-  {
-    trap_SendServerCommand( ent-g_entities, va(
-      "print \"%s: voice system administratively disabled on this server\n\"",
-      arg ) );
-    return;
-  }
-  if( !Q_stricmp( arg, "vsay" ) )
-    vchan = VOICE_CHAN_ALL;
-  else if( !Q_stricmp( arg, "vsay_team" ) )
-    vchan = VOICE_CHAN_TEAM;
-  else if( !Q_stricmp( arg, "vsay_local" ) )
-    vchan = VOICE_CHAN_LOCAL;
-  else
-    return;
-  Q_strncpyz( vsay, arg, sizeof( vsay ) );
-
-  if( ent->client->pers.voice[ 0 ] )
-    Q_strncpyz( voiceName, ent->client->pers.voice, sizeof( voiceName ) );
-  voice = BG_VoiceByName( level.voices, voiceName );
-  if( !voice )
-  {
-    trap_SendServerCommand( ent-g_entities, va(
-      "print \"%s: voice '%s' not found\n\"", vsay, voiceName ) );
-    return;
-  }
-
-  trap_Argv( 1, voiceCmd, sizeof( voiceCmd ) ) ;
-  cmd = BG_VoiceCmdFind( voice->cmds, voiceCmd, &cmdNum );
-  if( !cmd )
-  {
-    trap_SendServerCommand( ent-g_entities, va(
-     "print \"%s: command '%s' not found in voice '%s'\n\"",
-      vsay, voiceCmd, voiceName ) );
-    return;
-  }
-
-  // filter non-spec humans by their primary weapon as well
-  weapon = WP_NONE;
-  if( ent->client->sess.spectatorState == SPECTATOR_NOT )
-  {
-    weapon = BG_PrimaryWeapon( ent->client->ps.stats );
-  }
-
-  track = BG_VoiceTrackFind( cmd->tracks, ent->client->pers.teamSelection,
-    ent->client->pers.classSelection, weapon, (int)ent->client->voiceEnthusiasm,
-    &trackNum );
-  if( !track )
-  {
-    trap_SendServerCommand( ent-g_entities, va(
-      "print \"%s: no available track for command '%s', team %d, "
-      "class %d, weapon %d, and enthusiasm %d in voice '%s'\n\"",
-      vsay, voiceCmd, ent->client->pers.teamSelection,
-      ent->client->pers.classSelection, weapon,
-      (int)ent->client->voiceEnthusiasm, voiceName ) );
-    return;
-  }
-
-  if( !Q_stricmp( ent->client->lastVoiceCmd, cmd->cmd ) )
-    ent->client->voiceEnthusiasm++;
-
-  Q_strncpyz( ent->client->lastVoiceCmd, cmd->cmd,
-    sizeof( ent->client->lastVoiceCmd ) );
-
-  // optional user supplied text
-  trap_Argv( 2, arg, sizeof( arg ) );
-  G_CensorString( text, arg, sizeof( text ), ent );
-
-  switch( vchan )
-  {
-    case VOICE_CHAN_ALL:
-    case VOICE_CHAN_LOCAL:
-      trap_SendServerCommand( -1, va(
-        "voice %d %d %d %d \"%s\"\n",
-        (int)(ent-g_entities), vchan, cmdNum, trackNum, text ) );
-      break;
-    case VOICE_CHAN_TEAM:
-      G_TeamCommand( ent->client->pers.teamSelection, va(
-        "voice %d %d %d %d \"%s\"\n",
-        (int)(ent-g_entities), vchan, cmdNum, trackNum, text ) );
-      break;
-    default:
-      break;
-  }
-}
-
 /*
 ==================
 Cmd_Where_f
@@ -3643,17 +3451,12 @@ commands_t cmds[ ] = {
   { "levelshot", CMD_CHEAT, Cmd_LevelShot_f },
   { "listmaps", CMD_MESSAGE|CMD_INTERMISSION, Cmd_ListMaps_f },
   { "listemoticons", CMD_MESSAGE|CMD_INTERMISSION, Cmd_ListEmoticons_f },
-  { "m", CMD_MESSAGE|CMD_INTERMISSION, Cmd_PrivateMessage_f },
   { "maplog", CMD_MESSAGE|CMD_INTERMISSION, Cmd_MapLog_f },
-  { "mt", CMD_MESSAGE|CMD_INTERMISSION, Cmd_PrivateMessage_f },
   { "myscore", 0, Cmd_MyScore_f },
   { "noclip", CMD_CHEAT_TEAM, Cmd_Noclip_f },
   { "notarget", CMD_CHEAT|CMD_TEAM|CMD_LIVING, Cmd_Notarget_f },
   { "reload", CMD_HUMAN|CMD_LIVING, Cmd_Reload_f },
   { "rotation", CMD_MESSAGE|CMD_INTERMISSION, Cmd_MapRotation_f },
-  { "say", CMD_MESSAGE|CMD_INTERMISSION, Cmd_Say_f },
-  { "say_area", CMD_MESSAGE|CMD_TEAM|CMD_LIVING, Cmd_SayArea_f },
-  { "say_team", CMD_MESSAGE|CMD_INTERMISSION, Cmd_Say_f },
   { "score", CMD_INTERMISSION, ScoreboardMessage },
   { "sell", CMD_HUMAN|CMD_LIVING, Cmd_Sell_f },
   { "setviewpos", CMD_CHEAT_TEAM, Cmd_SetViewpos_f },
@@ -3662,9 +3465,6 @@ commands_t cmds[ ] = {
   { "test", CMD_CHEAT, Cmd_Test_f },
   { "unignore", 0, Cmd_Ignore_f },
   { "vote", 0, Cmd_Vote_f },
-  { "vsay", CMD_MESSAGE|CMD_INTERMISSION, Cmd_VSay_f },
-  { "vsay_local", CMD_MESSAGE|CMD_INTERMISSION, Cmd_VSay_f },
-  { "vsay_team", CMD_MESSAGE|CMD_INTERMISSION, Cmd_VSay_f },
   { "where", 0, Cmd_Where_f }
 };
 static size_t numCmds = sizeof( cmds ) / sizeof( cmds[ 0 ] );
@@ -3836,75 +3636,6 @@ void Cmd_MyScore_f( gentity_t *ent )
   } else {
     ADMP( va( "^7Level %d (%s^7) total score earned: %d (max level)\n", 
       l->level, G_admin_level( l->level )->name, ent->client->pers.admin->score ) );
-  }
-}
-
-void Cmd_PrivateMessage_f( gentity_t *ent )
-{
-  int pids[ MAX_CLIENTS ];
-  char name[ MAX_NAME_LENGTH ];
-  char cmd[ 12 ];
-  char text[ MAX_STRING_CHARS ];
-  char *msg;
-  char color;
-  int i, pcount;
-  int count = 0;
-  qboolean teamonly = qfalse;
-  char recipients[ MAX_STRING_CHARS ] = "";
-
-  if( !g_privateMessages.integer && ent )
-  {
-    ADMP( "Sorry, but private messages have been disabled\n" );
-    return;
-  }
-
-  trap_Argv( 0, cmd, sizeof( cmd ) );
-  if( trap_Argc( ) < 3 )
-  {
-    ADMP( va( "usage: %s [name|slot#] [message]\n", cmd ) );
-    return;
-  }
-
-  if( !Q_stricmp( cmd, "mt" ) )
-    teamonly = qtrue;
-
-  trap_Argv( 1, name, sizeof( name ) );
-  msg = ConcatArgs( 2 );
-  pcount = G_ClientNumbersFromString( name, pids, MAX_CLIENTS );
-
-  G_CensorString( text, msg, sizeof( text ), ent );
-
-  // send the message
-  for( i = 0; i < pcount; i++ )
-  {
-    if( G_SayTo( ent, &g_entities[ pids[ i ] ],
-        teamonly ? SAY_TPRIVMSG : SAY_PRIVMSG, text ) )
-    {
-      count++;
-      Q_strcat( recipients, sizeof( recipients ), va( "%s" S_COLOR_WHITE ", ",
-        level.clients[ pids[ i ] ].pers.netname ) );
-    }
-  }
-
-  // report the results
-  color = teamonly ? COLOR_CYAN : COLOR_YELLOW;
-
-  if( !count )
-    ADMP( va( "^3No player matching ^7\'%s^7\' ^3to send message to.\n",
-      name ) );
-  else
-  {
-    ADMP( va( "^%cPrivate message: ^7%s\n", color, text ) );
-    // remove trailing ", "
-    recipients[ strlen( recipients ) - 2 ] = '\0';
-    ADMP( va( "^%csent to %i player%s: " S_COLOR_WHITE "%s\n", color, count,
-      count == 1 ? "" : "s", recipients ) );
-
-    G_LogPrintf( "%s: %d \"%s" S_COLOR_WHITE "\" \"%s\": ^%c%s\n",
-      ( teamonly ) ? "TPrivMsg" : "PrivMsg",
-      ( ent ) ? ent - g_entities : -1,
-      ( ent ) ? ent->client->pers.netname : "console",
-      name, color, msg );
   }
 }
 
