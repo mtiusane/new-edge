@@ -515,8 +515,6 @@ static void Svcmd_MessageWrapper( void )
 
   if( !Q_stricmp( cmd, "a" ) )
     Cmd_AdminMessage_f( NULL );
-  else if( !Q_stricmp( cmd, "m" ) )
-    Cmd_PrivateMessage_f( NULL );
   else if( !Q_stricmp( cmd, "say" ) )
     G_Say( NULL, SAY_ALL, ConcatArgs( 1 ) );
   else if( !Q_stricmp( cmd, "chat" ) )
@@ -649,7 +647,6 @@ struct svcmd
   { "listmaps", qtrue, Svcmd_ListMapsWrapper },
   { "listemoticons", qtrue, Svcmd_ListEmoticonsWrapper },
   { "loadcensors", qfalse, G_LoadCensors },
-  { "m", qtrue, Svcmd_MessageWrapper },
   { "maplog", qtrue, Svcmd_MapLogWrapper },
   { "mapRotation", qfalse, Svcmd_MapRotation_f },
   { "pr", qfalse, Svcmd_Pr_f },
