@@ -303,11 +303,6 @@ g_admin_cmd_t g_admin_cmds[ ] =
       "[^7name|slot#^7]"
     },
 
-    {
-     "warn", G_admin_warn, qfalse, "warn",
-      "warn a player to correct their current activity",
-      "[^7name|slot#^7] [^7reason^7]"
-    },
 
     {"vsay", G_admin_vsay, qfalse, "say",
       "n/a",
@@ -322,6 +317,12 @@ g_admin_cmd_t g_admin_cmds[ ] =
     {"vsay_team", G_admin_vsay, qfalse, "say_team",
       "n/a",
       "n/a"
+    },
+
+    {
+     "warn", G_admin_warn, qfalse, "warn",
+      "warn a player to correct their current activity",
+      "[^7name|slot#^7] [^7reason^7]"
     }
 };
 
