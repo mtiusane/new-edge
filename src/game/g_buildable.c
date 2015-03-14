@@ -1924,7 +1924,7 @@ ASPITEFUL_ABCESS_Die
 Die for alien SPITEFUL_ABCESS
 ================
 */
-void ASPITEFUL_ABCESS_Die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int damage, int mod )
+void ASpitefulAbcess_Die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int damage, int mod )
 {
   vec3_t  dir;
   vec3_t    range = { 250.0f, 250.0f, 250.0f };
@@ -1943,18 +1943,20 @@ void ASPITEFUL_ABCESS_Die( gentity_t *self, gentity_t *inflictor, gentity_t *att
 
   if ( self->spawned )
   {
-  	// Grab all entities around us
-  	VectorAdd(self->s.origin, range, maxs);
-  	VectorSubtract(self->s.origin, range, mins);
-  	
-  	total_entities = trap_EntitiesInBox(mins, maxs, entityList, MAX_GENTITIES);
-  	
-  	// Loop entities looking for an enemy body
-  	for(i=0; i<total_entities; i++) {
-  		target = &g_entities[entityList[i]];
-  		if(target->client && target->client->ps.stats[ STAT_TEAM ] == TEAM_HUMANS) {
-  			if (G_Visible( self, target, MASK_SHOT ))
-  			{
+    // Grab all entities around us
+    VectorAdd(self->s.origin, range, maxs);
+    VectorSubtract(self->s.origin, range, mins);
+
+    total_entities = trap_EntitiesInBox(mins, maxs, entityList, MAX_GENTITIES);
+
+    // Loop entities looking for an enemy body
+    for( i = 0; i < total_entities; i++ )
+    {
+      target = &g_entities[entityList[i]];
+      if( target->client && target->client->ps.stats[ STAT_TEAM ] == TEAM_HUMANS )
+      {
+        if( G_Visible( self, target, MASK_SHOT ) )
+        {
           if( BG_InventoryContainsUpgrade( UP_LIGHTARMOUR, target->client->ps.stats ) )
             continue;
     
@@ -1969,9 +1971,9 @@ void ASPITEFUL_ABCESS_Die( gentity_t *self, gentity_t *inflictor, gentity_t *att
             //target->client->lastPoisonCloudedClient = self;
             trap_SendServerCommand( target->client->ps.clientNum, "poisoncloud" );
           }
-  			}
-  		}
-  	}
+        }
+      }
+    }
   }
 
   //pretty events and item cleanup
@@ -1979,7 +1981,7 @@ void ASPITEFUL_ABCESS_Die( gentity_t *self, gentity_t *inflictor, gentity_t *att
   G_AddEvent( self, EV_ALIEN_BUILDABLE_EXPLOSION, DirToByte( dir ) );
   self->s.eFlags &= ~EF_FIRING; //prevent any firing effects
   self->timestamp = level.time;
-  self->think = ASpawn_Melt;
+  self->think = AGeneric_Blast;
   self->nextthink = level.time + 500; //wait .5 seconds before damaging others
   self->die = nullDieFunction;
 
@@ -4532,7 +4534,7 @@ static gentity_t *G_Build( gentity_t *builder, buildable_t buildable,
 	  
 	case BA_A_SPITEFUL_ABCESS:
 	  built->think = G_Scan;
-      built->die = ASPITEFUL_ABCESS_Die;
+      built->die = ASpitefulAbcess_Die;
       built->pain = AGeneric_Pain;
       break;
 	  
