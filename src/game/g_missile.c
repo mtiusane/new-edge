@@ -1694,8 +1694,7 @@ for Hummel's second mode
 gentity_t *Prickles_Fire( gentity_t *self, vec3_t start, vec3_t dir )
 {
   gentity_t *bolt;
-  VectorNormalize ( dir );
-  
+
   bolt 				                = G_Spawn( );
   bolt->classname 				= "prickles";
   bolt->pointAgainstWorld 		        = qtrue;

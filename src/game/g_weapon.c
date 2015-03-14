@@ -1837,7 +1837,7 @@ LEVEL5
 
 void Prickles( gentity_t *ent )
 {
-  vec3_t    end;
+  vec3_t  dir;
   float   r;
   float   u;
 
@@ -1846,11 +1846,13 @@ void Prickles( gentity_t *ent )
   r = random( ) * M_PI * 2.0f;
   u = sin( r ) * crandom( ) * LEVEL5_PRICKLES_SPREAD * 16;
   r = cos( r ) * crandom( ) * LEVEL5_PRICKLES_SPREAD * 16;
-  VectorMA( muzzle, 8192 * 16, forward, end );
-  VectorMA( end, r, right, end );
-  VectorMA( end, u, up, end );
 
-  Prickles_Fire( ent, muzzle, end );
+  VectorScale( forward, 8192 * 16, dir );
+  VectorMA( dir, r, right, dir );
+  VectorMA( dir, u, up, dir );
+  VectorNormalize( dir );
+
+  Prickles_Fire( ent, muzzle, dir );
 }
 
 
