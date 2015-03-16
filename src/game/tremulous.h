@@ -482,12 +482,12 @@ TREMULOUS EDGE MOD SRC FILE
 #define CHAINGUN_BULLETS            300
 #define CHAINGUN_REPEAT             80
 #define CHAINGUN_K_SCALE            1.0f
-#define CHAINGUN_SPREAD             1100
+#define CHAINGUN_SPREAD             1000
 #define CHAINGUN_DMG                HDM(6) // DPS: 75
 
-#define CHAINGUN_REPEAT2            120
-#define CHAINGUN_SPREAD2            550
-#define CHAINGUN_DMG2               HDM(6) // DPS: 50
+#define CHAINGUN_REPEAT2            100
+#define CHAINGUN_SPREAD2            900
+#define CHAINGUN_DMG2               HDM(6) // DPS: 60
 
 #define FLAMER_PRICE                550
 #define FLAMER_GAS                  200
@@ -522,7 +522,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define LIGHTNING_PRICE             500
 #define LIGHTNING_AMMO              300
 #define LIGHTNING_K_SCALE           1
-#define LIGHTNING_DPS               100
+#define LIGHTNING_DPS               120
 #define LIGHTNING_DIFFICULTY        2
 #define LIGHTNING_REPEAT            50 // keep it as low as possible
 #define LIGHTNING_DAMAGE            ( LIGHTNING_DPS * LIGHTNING_REPEAT / 1000 )
@@ -801,9 +801,9 @@ TREMULOUS EDGE MOD SRC FILE
 #define NET_SPIKE_VALUE                	    ABVM(NET_SPIKE_BP)
 
 #define INFESTATION_SLIME_BP                    12
-#define INFESTATION_SLIME_BT                    20000
-#define INFESTATION_SLIME_HEALTH                ABHM(200)
-#define INFESTATION_SLIME_REGEN                 8
+#define INFESTATION_SLIME_BT                    16000
+#define INFESTATION_SLIME_HEALTH                ABHM(180)
+#define INFESTATION_SLIME_REGEN                 12
 #define INFESTATION_SLIME_SPLASHDAMAGE          15
 #define INFESTATION_SLIME_SPLASHRADIUS          200
 #define INFESTATION_SLIME_CREEPSIZE             170
