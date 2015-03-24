@@ -193,6 +193,7 @@ vmCvar_t  g_KillRewardMultiplierH;
 vmCvar_t  g_ConstantRewardFactor;
 vmCvar_t  g_MinRewardFactor;
 vmCvar_t  g_MaxRewardFactor;
+vmCvar_t  g_RewardFactorPower;
 vmCvar_t  g_TimerPeriod;
 vmCvar_t  g_TimerCommand;
 vmCvar_t  g_ForceRandomTeams;
@@ -371,6 +372,7 @@ static cvarTable_t   gameCvarTable[ ] =
   { &g_ConstantRewardFactor, "g_ConstantRewardFactor", "0", CVAR_ARCHIVE, 0, qfalse },
   { &g_MinRewardFactor, "g_MinRewardFactor", "0.2", CVAR_ARCHIVE, 0, qfalse },
   { &g_MaxRewardFactor, "g_MaxRewardFactor", "5.0", CVAR_ARCHIVE, 0, qfalse },
+  { &g_RewardFactorPower, "g_RewardFactorPower", "0.3025", CVAR_ARCHIVE, 0, qfalse },
   { &g_TimerPeriod, "g_TimerPeriod", "0", CVAR_ARCHIVE, 0, qfalse },
   { &g_TimerCommand, "g_TimerCommand", "", CVAR_ARCHIVE, 0, qfalse },
   { &g_ForceRandomTeams, "g_ForceRandomTeams", "0", CVAR_ARCHIVE, 0, qfalse },

@@ -203,11 +203,11 @@ float G_RewardScaleFactor( gentity_t *self, gentity_t *target )
     targetScore = level.alienRewardScore/level.humanRewardScore;
     break;
   default:
-    return 0;
+    return 0.0f;
   }
   if ( target->client != NULL ) {
-    if( self->client->ps.persistant[ PERS_SCORE ] <= 0 || target->client->ps.persistant[ PERS_SCORE ] <= 0) return targetScore;
-    targetScore *= target->client->ps.persistant[ PERS_SCORE ]/self->client->ps.persistant[ PERS_SCORE ];
+    if( self->client->ps.persistant[ PERS_SCORE ] > 0 && target->client->ps.persistant[ PERS_SCORE ] > 0)
+      targetScore *= pow(target->client->ps.persistant[ PERS_SCORE ],g_RewardFactorPower.value)/pow(self->client->ps.persistant[ PERS_SCORE ],g_RewardFactorPower.value);
   }
   targetScore *= 1.0f-g_ConstantRewardFactor.value;
   targetScore += g_ConstantRewardFactor.value;
