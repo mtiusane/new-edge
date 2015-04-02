@@ -3878,7 +3878,7 @@ found_blob:
   blob->value = value;
   blob->flags = flags;
   VectorCopy( origin, blob->origin );
-  VectorSet( blob->velocity, crandom( ) * 50, crandom( ) * 50, 300 );
+  VectorSet( blob->velocity, crandom( ) * 20, crandom( ) * 20, 100 );
 }
 
 static void CG_DrawNumber( float x, float y, float h, char *str )
@@ -3962,7 +3962,7 @@ static void CG_DrawDamageBlobs( void )
     CG_DrawNumber( x, y, scale, str );
 
     VectorMA( blob->origin, dt, blob->velocity, blob->origin );
-    blob->velocity[ 2 ] -= 800 * dt;
+    blob->velocity[ 2 ] -= 300 * dt;
   }
 
   trap_R_SetColor( NULL );
