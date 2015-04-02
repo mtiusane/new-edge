@@ -1115,43 +1115,6 @@ void G_InitDamageLocations( void )
   }
 }
 
-
-/*
-============
-G_SpawnDamageBlob
-============
-*/
-
-void G_SpawnDamageBlob(
-  gentity_t *ent, gentity_t *target, int mod,
-  int damage, vec3_t point, qboolean indirect )
-{
-  g_damageBlob_t *blob;
-  int flags = 0;
-
-  if( !ent || !ent->client || !target || ent == target )
-    return;
-
-  if( ent->client->bufferedBlobCount == MAX_BUFFERED_BLOBS )
-    return;
-
-  if( OnSameTeam( ent, target ) ||
-    ( target->s.eType == ET_BUILDABLE &&
-      ent->client->pers.teamSelection == target->buildableTeam ) )
-    flags |= DAMAGE_BLOB_FRIENDLY;
-
-  if( target->s.eType == ET_BUILDABLE )
-    flags |= DAMAGE_BLOB_BUILDABLE;
-
-  if( indirect )
-    flags |= DAMAGE_BLOB_SPLASH;
-
-  blob = ent->client->blobBuffer + (ent->client->bufferedBlobCount++);
-  VectorCopy( point, blob->origin );
-  blob->value = damage;
-  blob->flags = flags;
-}
-
 /*
 ============
 T_Damage
@@ -1482,7 +1445,55 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
   }
 
   G_CombatStats_HitMOD( attacker, targ, mod, take );
-  G_SpawnDamageBlob( attacker, targ, mod, take, point, ( dflags & DAMAGE_RADIUS ) );
+
+
+  if( attacker && attacker->client && take && attacker != targ )
+  {
+    g_damageBlob_t *blob;
+    int flags = 0;
+
+    if( attacker->client->bufferedBlobCount == MAX_BUFFERED_BLOBS )
+      return;
+
+    if( OnSameTeam( attacker, targ ) ||
+      ( targ->s.eType == ET_BUILDABLE &&
+        attacker->client->pers.teamSelection == targ->buildableTeam ) )
+      flags |= DAMAGE_BLOB_FRIENDLY;
+
+    if( targ->s.eType == ET_BUILDABLE )
+      flags |= DAMAGE_BLOB_BUILDABLE;
+
+    if( dflags & DAMAGE_RADIUS )
+    {
+      vec3_t mins = {0}, maxs = {0};
+
+      flags |= DAMAGE_BLOB_SPLASH;
+
+      switch( targ->s.eType )
+      {
+        case ET_BUILDABLE:
+          BG_BuildableBoundingBox( targ->s.modelindex, mins, maxs );
+          break;
+
+        case ET_PLAYER:
+          BG_ClassBoundingBox( targ->client->ps.stats[ STAT_CLASS ], mins, maxs, NULL, NULL, NULL );
+          break;
+      }
+
+      VectorAdd( mins, maxs, point );
+      VectorScale( point, 0.5f, point );
+      VectorAdd( point, targ->s.origin, point );
+    }
+    else if( inflictor->s.eType == ET_MISSILE )
+      VectorCopy( inflictor->r.currentOrigin, point );
+
+    blob = attacker->client->blobBuffer +
+      ( attacker->client->bufferedBlobCount++ );
+
+    VectorCopy( point, blob->origin );
+    blob->value = damage;
+    blob->flags = flags;
+  }
 
   if( targ->health <= 0 )
   {

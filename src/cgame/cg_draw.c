@@ -3937,26 +3937,23 @@ static void CG_DrawDamageBlobs( void )
 
     Com_sprintf( str, sizeof( str ), "%d", blob->value );
 
-
-#define Vector3Set( v, x, y, z ) ((v)[0]=(x),(v)[1]=(y),(v)[2]=(z))
-
     if( blob->flags & DAMAGE_BLOB_FRIENDLY )
-      Vector3Set( color, 1, 0, 0 );
+      VectorSet( color, 1, 0, 0 );
     else
     {
       if( blob->flags & DAMAGE_BLOB_BUILDABLE )
       {
         if( blob->flags & DAMAGE_BLOB_SPLASH )
-          Vector3Set( color, 1, 0.5, 0 );
+          VectorSet( color, 1, 0.5, 0 );
         else
-          Vector3Set( color, 0.7, 0.7, 0.7 );
+          VectorSet( color, 0.7, 0.7, 0.7 );
       }
       else
       {
         if( blob->flags & DAMAGE_BLOB_SPLASH )
-          Vector3Set( color, 1, 1, 0 );
+          VectorSet( color, 1, 1, 0 );
         else
-          Vector3Set( color, 1, 1, 1 );
+          VectorSet( color, 1, 1, 1 );
       }
     }
 

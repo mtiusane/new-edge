@@ -1350,8 +1350,6 @@ static void CG_DamageBlob_f( void )
     flags = atoi( CG_Argv( i + 4 ) );
 
     CG_SpawnDamageBlob( origin, value, flags );
-    
-    i += 5;
   }
 }
 
