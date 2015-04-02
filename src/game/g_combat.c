@@ -1118,6 +1118,42 @@ void G_InitDamageLocations( void )
 
 /*
 ============
+G_SpawnDamageBlob
+============
+*/
+
+void G_SpawnDamageBlob(
+  gentity_t *ent, gentity_t *target, int mod,
+  int damage, vec3_t point, qboolean indirect )
+{
+  g_damageBlob_t *blob;
+  int flags = 0;
+
+  if( !ent || !ent->client || !target || ent == target )
+    return;
+
+  if( ent->client->bufferedBlobCount == MAX_BUFFERED_BLOBS )
+    return;
+
+  if( OnSameTeam( ent, target ) ||
+    ( target->s.eType == ET_BUILDABLE &&
+      ent->client->pers.teamSelection == target->buildableTeam ) )
+    flags |= DAMAGE_BLOB_FRIENDLY;
+
+  if( target->s.eType == ET_BUILDABLE )
+    flags |= DAMAGE_BLOB_BUILDABLE;
+
+  if( indirect )
+    flags |= DAMAGE_BLOB_SPLASH;
+
+  blob = ent->client->blobBuffer + (ent->client->bufferedBlobCount++);
+  VectorCopy( point, blob->origin );
+  blob->value = damage;
+  blob->flags = flags;
+}
+
+/*
+============
 T_Damage
 
 targ    entity that is being damaged
@@ -1446,6 +1482,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
   }
 
   G_CombatStats_HitMOD( attacker, targ, mod, take );
+  G_SpawnDamageBlob( attacker, targ, mod, take, point, ( dflags & DAMAGE_RADIUS ) );
 
   if( targ->health <= 0 )
   {

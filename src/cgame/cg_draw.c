@@ -3834,6 +3834,143 @@ static void CG_DrawWarmup( void )
   UI_Text_Paint( 320 - w / 2, 200 + 1.5f * h, size, colorWhite, text, 0, 0, ITEM_TEXTSTYLE_SHADOWED );
 }
 
+/*
+=================
+CG_DrawWarmup
+=================
+*/
+
+typedef struct
+{
+  qboolean inuse;
+  int spawnTime;
+  int value;
+  int flags;
+  vec3_t origin;
+  vec3_t velocity;
+} cg_damageBlob_t;
+
+#define MAX_DAMAGE_BLOBS 50
+cg_damageBlob_t cg_damageBlobs[ MAX_DAMAGE_BLOBS ];
+
+void CG_SpawnDamageBlob( vec3_t origin, int value, int flags )
+{
+  centity_t *cent;
+  cg_damageBlob_t *blob, *oldest = NULL;
+
+  for( blob = cg_damageBlobs; blob < cg_damageBlobs + MAX_DAMAGE_BLOBS; blob++ )
+  {
+    if( !oldest || blob->spawnTime < oldest->spawnTime )
+      oldest = blob;
+
+    if( blob->inuse )
+      continue;
+
+    goto found_blob;
+  }
+
+  oldest = blob;
+
+found_blob:
+
+  blob->inuse = qtrue;
+  blob->spawnTime = cg.time;
+  blob->value = value;
+  blob->flags = flags;
+  VectorCopy( origin, blob->origin );
+  VectorSet( blob->velocity, crandom( ) * 50, crandom( ) * 50, 300 );
+}
+
+static void CG_DrawNumber( float x, float y, float h, char *str )
+{
+  int index, len;
+  float w;
+  char *p;
+
+  len = strlen( str );
+  w = h * cgDC.aspectScale * 0.5f;
+
+  y -= h / 2;
+  x -= len * w / 2;
+
+  for( p = str; *p; p++ )
+  {
+    if( *p >= '0' && *p <= '9' )
+      index = *p - '0';
+    else
+      index = 10;
+    
+    CG_DrawPic( x, y, w, h, cgs.media.numberShadersAlt[ index ] );
+    x += w;
+  }
+}
+
+#define DAMAGE_BLOB_TIME 700
+
+static void CG_DrawDamageBlobs( void )
+{
+  cg_damageBlob_t *blob;
+  float dt, x, y, fade, scale;
+  vec4_t color;
+  char str[ 32 ];
+
+  dt = 0.001 * cg.frametime;
+
+  for( blob = cg_damageBlobs; blob < cg_damageBlobs + MAX_DAMAGE_BLOBS; blob++ )
+  {
+    if( !blob->inuse )
+      continue;
+
+    if( blob->spawnTime + DAMAGE_BLOB_TIME < cg.time )
+    {
+      blob->inuse = qfalse;
+      continue;
+    }
+
+    if( !CG_WorldToScreen( blob->origin, &x, &y ) )
+      continue;
+
+    fade = 1.0f - (float)( cg.time - blob->spawnTime ) / DAMAGE_BLOB_TIME;
+
+    scale = cg_damageBlobSize.value /
+      pow( Distance( blob->origin, cg.refdef.vieworg ), 0.5f );
+
+    Com_sprintf( str, sizeof( str ), "%d", blob->value );
+
+
+#define Vector3Set( v, x, y, z ) ((v)[0]=(x),(v)[1]=(y),(v)[2]=(z))
+
+    if( blob->flags & DAMAGE_BLOB_FRIENDLY )
+      Vector3Set( color, 1, 0, 0 );
+    else
+    {
+      if( blob->flags & DAMAGE_BLOB_BUILDABLE )
+      {
+        if( blob->flags & DAMAGE_BLOB_SPLASH )
+          Vector3Set( color, 1, 0.5, 0 );
+        else
+          Vector3Set( color, 0.7, 0.7, 0.7 );
+      }
+      else
+      {
+        if( blob->flags & DAMAGE_BLOB_SPLASH )
+          Vector3Set( color, 1, 1, 0 );
+        else
+          Vector3Set( color, 1, 1, 1 );
+      }
+    }
+
+    color[ 3 ] = cg_damageBlobAlpha.value * fade;
+    trap_R_SetColor( color );
+    CG_DrawNumber( x, y, scale, str );
+
+    VectorMA( blob->origin, dt, blob->velocity, blob->origin );
+    blob->velocity[ 2 ] -= 800 * dt;
+  }
+
+  trap_R_SetColor( NULL );
+}
+
 //==================================================================================
 
 /*
@@ -3883,6 +4020,8 @@ static void CG_Draw2D( void )
     if (!(( cg.snap->ps.stats[ STAT_BUILDABLE ] & ~SB_VALID_TOGGLEBIT ) > BA_NONE ))
       CG_DrawBuildableStatus( );
   }
+
+  CG_DrawDamageBlobs( );
 
   if( !menu )
   {

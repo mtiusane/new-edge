@@ -1198,6 +1198,7 @@ typedef struct
   qhandle_t   teamOverlayShader;
 
   qhandle_t   numberShaders[ 11 ];
+  qhandle_t   numberShadersAlt[ 11 ];
 
   qhandle_t   shadowMarkShader;
   qhandle_t   wakeMarkShader;
@@ -1606,6 +1607,9 @@ extern  vmCvar_t    cg_viewQuake;
 extern  vmCvar_t    cg_viewQuakeLambda;
 extern  vmCvar_t    cg_viewQuakeLimit;
 
+extern  vmCvar_t    cg_damageBlobSize;
+extern  vmCvar_t    cg_damageBlobAlpha;
+
 //
 // cg_main.c
 //
@@ -1703,6 +1707,7 @@ void        CG_UpdateMediaFraction( float newFract );
 void        CG_ResetPainBlend( void );
 void        CG_DrawField( float x, float y, int width, float cw, float ch, int value );
 
+void        CG_SpawnDamageBlob( vec3_t origin, int value, int flags );
 //
 // cg_players.c
 //
