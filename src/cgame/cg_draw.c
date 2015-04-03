@@ -4063,12 +4063,12 @@ static void CG_DrawHealthBars( void )
 
     hf = (float)bar->value / bar->max;
 
-    h = 20 * 100 / bar->dist;
+    h = cg_healthBarSize.value / bar->dist;
     w = 4 * h * cgDC.aspectScale;
 
     Com_sprintf( buffer, sizeof( buffer ), "%d", bar->value );
 
-    color[ 3 ] = 1.0f;
+    color[ 3 ] = cg_healthBarAlpha.value;
 
     VectorSet( color, 0.1, 0.7, 0.1 );
     trap_R_SetColor( color );

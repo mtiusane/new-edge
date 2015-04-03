@@ -1610,6 +1610,9 @@ extern  vmCvar_t    cg_viewQuakeLimit;
 extern  vmCvar_t    cg_damageBlobSize;
 extern  vmCvar_t    cg_damageBlobAlpha;
 
+extern  vmCvar_t    cg_healthBarSize;
+extern  vmCvar_t    cg_healthBarAlpha;
+
 //
 // cg_main.c
 //
