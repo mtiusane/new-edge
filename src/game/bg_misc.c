@@ -2525,7 +2525,7 @@ static const classAttributes_t bg_classList[ ] =
   {
     PCL_ALIEN_LEVEL4,                               //int     classnum;
     "level4",                                       //char    *classname;
-    "A large alien with a strong melee attack and a weak flame blast. "
+    "A large alien with a strong melee attack. "
       "This class can also charge at enemy players and structures, "
       "inflicting great damage. Any humans caught under a falling "
       "Tyrant will be crushed by its weight.",
@@ -3329,7 +3329,7 @@ static const weaponAttributes_t bg_weapons[ ] =
     0,                    //int       reloadTime;
     LEVEL4_CLAW_K_SCALE,  //float     knockbackScale;
     qfalse,               //qboolean  hasAltMode;
-    qtrue,               //qboolean  hasThirdMode;
+    qfalse,               //qboolean  hasThirdMode;
     qfalse,               //qboolean  canZoom;
     90.0f,                //float     zoomFov;
     qfalse,               //qboolean  purchasable;

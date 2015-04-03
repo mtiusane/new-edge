@@ -3165,7 +3165,7 @@ void CG_OwnerDraw( float x, float y, float w, float h, float text_x,
       CG_DrawPlayerBoosterBolt( &rect, backColor, foreColor, shader );
       break;
     case CG_PLAYER_FBREATH:
-      CG_DrawPlayerFbreath( &rect, foreColor, shader );
+      // CG_DrawPlayerFbreath( &rect, foreColor, shader );
       break;
     case CG_PLAYER_PRICKLES:
       CG_DrawPlayerPrickles( &rect, foreColor, shader );
