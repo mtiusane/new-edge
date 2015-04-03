@@ -1451,46 +1451,29 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
     attacker->client->bufferedBlobCount < MAX_BUFFERED_BLOBS )
   {
     g_damageBlob_t *blob;
-    int flags = 0;
-
-    if( OnSameTeam( attacker, targ ) ||
-      ( targ->s.eType == ET_BUILDABLE &&
-        attacker->client->pers.teamSelection == targ->buildableTeam ) )
-      flags |= DAMAGE_BLOB_FRIENDLY;
-
-    if( targ->s.eType == ET_BUILDABLE )
-      flags |= DAMAGE_BLOB_BUILDABLE;
-
-    if( dflags & DAMAGE_RADIUS )
-    {
-      vec3_t mins = {0}, maxs = {0};
-
-      flags |= DAMAGE_BLOB_SPLASH;
-
-      switch( targ->s.eType )
-      {
-        case ET_BUILDABLE:
-          BG_BuildableBoundingBox( targ->s.modelindex, mins, maxs );
-          break;
-
-        case ET_PLAYER:
-          BG_ClassBoundingBox( targ->client->ps.stats[ STAT_CLASS ], mins, maxs, NULL, NULL, NULL );
-          break;
-      }
-
-      VectorAdd( mins, maxs, point );
-      VectorScale( point, 0.5f, point );
-      VectorAdd( point, targ->s.origin, point );
-    }
-    else if( inflictor->s.eType == ET_MISSILE )
-      VectorCopy( inflictor->r.currentOrigin, point );
 
     blob = attacker->client->blobBuffer +
       ( attacker->client->bufferedBlobCount++ );
 
-    VectorCopy( point, blob->origin );
+    blob->flags = 0;
     blob->value = take;
-    blob->flags = flags;
+
+    if( OnSameTeam( attacker, targ ) ||
+      ( targ->s.eType == ET_BUILDABLE &&
+        attacker->client->pers.teamSelection == targ->buildableTeam ) )
+      blob->flags |= DAMAGE_BLOB_FRIENDLY;
+
+    if( targ->s.eType == ET_BUILDABLE )
+      blob->flags |= DAMAGE_BLOB_BUILDABLE;
+
+    if( dflags & DAMAGE_RADIUS )
+    {
+      blob->flags |= DAMAGE_BLOB_SPLASH;
+      VectorAdd( targ->r.absmin, targ->r.absmax, blob->origin );
+      VectorScale( blob->origin, 0.5f, blob->origin );
+    }
+    else if( inflictor->s.eType == ET_MISSILE )
+      VectorCopy( inflictor->r.currentOrigin, blob->origin );
   }
 
   if( targ->health <= 0 )
