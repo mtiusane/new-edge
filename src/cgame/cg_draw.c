@@ -4009,6 +4009,9 @@ static void CG_DrawHealthBars( void )
     switch( es->eType )
     {
       case ET_BUILDABLE:
+        if( CG_PlayerIsBuilder( es->modelindex ) )
+          continue;
+
         bar->value = es->generic1;
         bar->max = BG_Buildable( es->modelindex )->health;
         BG_BuildableBoundingBox( es->modelindex, mins, maxs );
