@@ -874,7 +874,7 @@ TREMULOUS EDGE MOD SRC FILE
 
 #define POD_BP                    				20
 #define POD_BT                    				20000
-#define POD_HEALTH                				ABHM(850)
+#define POD_HEALTH                				ABHM(600)
 #define POD_REGEN                 				5
 #define POD_SPLASHDAMAGE          				50
 #define POD_SPLASHRADIUS          				150
@@ -883,7 +883,7 @@ TREMULOUS EDGE MOD SRC FILE
 
 #define POD_STUMP_BP                    		15
 #define POD_STUMP_BT                    		20000
-#define POD_STUMP_HEALTH                		ABHM(650)
+#define POD_STUMP_HEALTH                		ABHM(460)
 #define POD_STUMP_REGEN                 		15
 #define POD_STUMP_SPLASHDAMAGE          		25
 #define POD_STUMP_SPLASHRADIUS          		100
@@ -1087,7 +1087,7 @@ TREMULOUS EDGE MOD SRC FILE
 
 #define SHIELD_BP                		      8
 #define SHIELD_BT                 			  20000
-#define SHIELD_HEALTH              			  HBHM(600)
+#define SHIELD_HEALTH              			  HBHM(480)
 #define SHIELD_SPLASHDAMAGE        			  50
 #define SHIELD_SPLASHRADIUS        			  150
 #define SHIELD_SHRINKPROP     		          0.001f
@@ -1124,14 +1124,14 @@ TREMULOUS EDGE MOD SRC FILE
 
 #define COVER_BP                	    	 20
 #define COVER_BT                 			 20000
-#define COVER_HEALTH              	         HBHM(850)
+#define COVER_HEALTH              	         HBHM(600)
 #define COVER_SPLASHDAMAGE        			 50
 #define COVER_SPLASHRADIUS        			 150
 #define COVER_VALUE               			 HBVM(COVER_BP)
 
 #define COVER_STUMP_BP                		 15
-#define COVER_STUMP_BT                 	     20000
-#define COVER_STUMP_HEALTH              	 HBHM(650)
+#define COVER_STUMP_BT                 	         20000
+#define COVER_STUMP_HEALTH              	 HBHM(480)
 #define COVER_STUMP_SPLASHDAMAGE        	 50
 #define COVER_STUMP_SPLASHRADIUS        	 150
 #define COVER_STUMP_VALUE               	 HBVM(COVER_STUMP_BP)
