@@ -2236,6 +2236,49 @@ void ClientThink( int clientNum )
 
 void G_RunClient( gentity_t *ent )
 {
+  // send all buffered damage blobs
+  if( ent->client->bufferedBlobCount )
+  {
+    int i;
+    g_damageBlob_t *blob;
+    char *p, buffer[ 1024 ];
+
+    strcpy( buffer, "dblob" );
+    p = buffer + 5;
+
+    for( i = 0; i < ent->client->bufferedBlobCount; i++ )
+    {
+      char smallbuf[ 64 ];
+      int len;
+
+      blob = ent->client->blobBuffer + i;
+
+      Com_sprintf( smallbuf, sizeof( smallbuf ), " %.0f %.0f %.0f %d %d",
+        blob->origin[ 0 ], blob->origin[ 1 ], blob->origin[ 2 ],
+        blob->value, blob->flags );
+
+      len = strlen( smallbuf );
+
+      if( p - buffer + len + 1 > sizeof( buffer ) )
+      {
+        trap_SendServerCommand( ent - g_entities, buffer );
+        strcpy( buffer, "dblob" );
+        p = buffer + 5;
+      }
+
+      strcpy( p, smallbuf );
+      p += len;
+    }
+
+    if( p > buffer + 6 )
+      trap_SendServerCommand( ent - g_entities, buffer );
+
+    ent->client->bufferedBlobCount = 0;
+  }
+
+  // update the public health field
+  ent->s.otherEntityNum2 = MAX( 0, ent->client->ps.stats[ STAT_HEALTH ] );
+
   // Run a client think when there are no commands for a time
   if( !g_synchronousClients.integer &&
     ( g_friendlyFreeze.integer < 100 ||

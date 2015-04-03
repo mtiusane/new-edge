@@ -3834,6 +3834,263 @@ static void CG_DrawWarmup( void )
   UI_Text_Paint( 320 - w / 2, 200 + 1.5f * h, size, colorWhite, text, 0, 0, ITEM_TEXTSTYLE_SHADOWED );
 }
 
+/*
+=================
+Damage blobs
+=================
+*/
+
+typedef struct
+{
+  qboolean inuse;
+  int spawnTime;
+  int value;
+  int flags;
+  vec3_t origin;
+  vec3_t velocity;
+} cg_damageBlob_t;
+
+#define MAX_DAMAGE_BLOBS 50
+cg_damageBlob_t cg_damageBlobs[ MAX_DAMAGE_BLOBS ];
+
+void CG_SpawnDamageBlob( vec3_t origin, int value, int flags )
+{
+  centity_t *cent;
+  cg_damageBlob_t *blob, *oldest = NULL;
+
+  for( blob = cg_damageBlobs; blob < cg_damageBlobs + MAX_DAMAGE_BLOBS; blob++ )
+  {
+    if( !oldest || blob->spawnTime < oldest->spawnTime )
+      oldest = blob;
+
+    if( blob->inuse )
+      continue;
+
+    goto found_blob;
+  }
+
+  oldest = blob;
+
+found_blob:
+
+  blob->inuse = qtrue;
+  blob->spawnTime = cg.time;
+  blob->value = value;
+  blob->flags = flags;
+  VectorCopy( origin, blob->origin );
+  VectorSet( blob->velocity, crandom( ) * 20, crandom( ) * 20, 100 );
+}
+
+static void CG_DrawNumber( float x, float y, float h, char *str )
+{
+  int index, len;
+  float w;
+  char *p;
+
+  len = strlen( str );
+  w = h * cgDC.aspectScale * 0.5f;
+
+  y -= h / 2;
+  x -= len * w / 2;
+
+  for( p = str; *p; p++ )
+  {
+    if( *p >= '0' && *p <= '9' )
+      index = *p - '0';
+    else
+      index = 10;
+    
+    CG_DrawPic( x, y, w, h, cgs.media.numberShadersAlt[ index ] );
+    x += w;
+  }
+}
+
+#define DAMAGE_BLOB_TIME 700
+
+static void CG_DrawDamageBlobs( void )
+{
+  cg_damageBlob_t *blob;
+  float dt, x, y, fade, scale;
+  vec4_t color;
+  char str[ 32 ];
+
+  dt = 0.001 * cg.frametime;
+
+  for( blob = cg_damageBlobs; blob < cg_damageBlobs + MAX_DAMAGE_BLOBS; blob++ )
+  {
+    if( !blob->inuse )
+      continue;
+
+    if( blob->spawnTime + DAMAGE_BLOB_TIME < cg.time )
+    {
+      blob->inuse = qfalse;
+      continue;
+    }
+
+    if( !CG_WorldToScreen( blob->origin, &x, &y ) )
+      continue;
+
+    fade = 1.0f - (float)( cg.time - blob->spawnTime ) / DAMAGE_BLOB_TIME;
+
+    scale = cg_damageBlobSize.value /
+      pow( Distance( blob->origin, cg.refdef.vieworg ), 0.5f );
+
+    Com_sprintf( str, sizeof( str ), "%d", blob->value );
+
+    if( blob->flags & DAMAGE_BLOB_FRIENDLY )
+      VectorSet( color, 1, 0, 0 );
+    else
+    {
+      if( blob->flags & DAMAGE_BLOB_BUILDABLE )
+      {
+        if( blob->flags & DAMAGE_BLOB_SPLASH )
+          VectorSet( color, 1, 0.5, 0 );
+        else
+          VectorSet( color, 0.7, 0.7, 0.7 );
+      }
+      else
+      {
+        if( blob->flags & DAMAGE_BLOB_SPLASH )
+          VectorSet( color, 1, 1, 0 );
+        else
+          VectorSet( color, 1, 1, 1 );
+      }
+    }
+
+    color[ 3 ] = cg_damageBlobAlpha.value * fade;
+    trap_R_SetColor( color );
+    CG_DrawNumber( x, y, scale, str );
+
+    VectorMA( blob->origin, dt, blob->velocity, blob->origin );
+    blob->velocity[ 2 ] -= 300 * dt;
+  }
+
+  trap_R_SetColor( NULL );
+}
+
+/*
+=================
+Health bars
+=================
+*/
+typedef struct
+{
+  vec3_t origin;
+  float dist;
+
+  int value;
+  int max;
+} healthBar_t;
+
+static int CompareHealthBars( const healthBar_t *a, const healthBar_t *b )
+{
+  return a->dist < b->dist;
+}
+
+static void CG_DrawHealthBars( void )
+{
+  int i;
+  healthBar_t *bar, *bare, bars[ MAX_ENTITIES_IN_SNAPSHOT ];
+
+  for( bar = bars, i = 0; i < cg.snap->numEntities; i++ )
+  {
+    int j;
+    centity_t *cent;
+    entityState_t *es;
+    trace_t tr;
+    vec3_t mins, maxs;
+
+    cent  = cg_entities + cg.snap->entities[ i ].number;
+    es = &cent->currentState;
+
+    if( es->eFlags & ( EF_DEAD | EF_NODRAW ) )
+      continue;
+
+    switch( es->eType )
+    {
+      case ET_BUILDABLE:
+        if( CG_PlayerIsBuilder( es->modelindex ) )
+          continue;
+
+        bar->value = es->generic1;
+        bar->max = BG_Buildable( es->modelindex )->health;
+        BG_BuildableBoundingBox( es->modelindex, mins, maxs );
+        break;
+
+      case ET_PLAYER:
+        if( es->eFlags & EF_MOVER_STOP ) // cloak
+          continue;
+
+        bar->value = es->otherEntityNum2;
+        bar->max = BG_Class( ( es->misc >> 8 ) & 0xFF )->health;
+        BG_ClassBoundingBox( ( es->misc >> 8 ) & 0xFF, mins, maxs, NULL, NULL, NULL );
+        break;
+
+      default:
+        continue;
+    }
+
+    for( j = 0; j < 3; j++ )
+      bar->origin[ j ] = cent->lerpOrigin[ j ] + ( maxs[ j ] + mins[ j ] ) / 2.0f;
+
+    CG_Trace( &tr, cg.refdef.vieworg, NULL, NULL, bar->origin, ENTITYNUM_NONE, MASK_SOLID );
+
+    if( tr.fraction < 1.0f )
+      continue;
+
+    bar->dist = Distance( bar->origin, cg.refdef.vieworg );
+
+    bar++;
+  }
+
+  bare = bar;
+  qsort( bars, bare - bars, sizeof( healthBar_t ),
+    (int(*)(const void*,const void*))CompareHealthBars );
+
+/*
+  TODO: figure out why qsort fails for more than 5 bars
+
+  for( i = 0; i < bare - bars - 1; i++ )
+    if( CompareHealthBars( bars + i, bars + i + 1 ) )
+    {
+      Com_Printf( "qsort is retarded\n" );
+      break;
+    }
+*/
+
+  for( bar = bars; bar < bare; bar++ )
+  {
+    float x, y, w, h, hf;
+    char buffer[ 64 ];
+    vec4_t color;
+
+    if( !CG_WorldToScreen( bar->origin, &x, &y ) )
+      continue;
+
+    hf = (float)bar->value / bar->max;
+
+    h = cg_healthBarSize.value / bar->dist;
+    w = 4 * h * cgDC.aspectScale;
+
+    Com_sprintf( buffer, sizeof( buffer ), "%d", bar->value );
+
+    color[ 3 ] = cg_healthBarAlpha.value;
+
+    VectorSet( color, 0.1, 0.7, 0.1 );
+    trap_R_SetColor( color );
+    CG_DrawPic( x - w/2, y - h/2, w * hf, h, cgs.media.whiteShader );
+
+    VectorSet( color, 0.7, 0.1, 0.1 );
+    trap_R_SetColor( color );
+    CG_DrawPic( x - w/2 + w * hf, y - h/2, w * ( 1 - hf ), h, cgs.media.whiteShader );
+
+    VectorSet( color, 0, 0, 0 );
+    trap_R_SetColor( color );
+    CG_DrawNumber( x, y, h, buffer );
+  }
+}
+
+
 //==================================================================================
 
 /*
@@ -3883,6 +4140,9 @@ static void CG_Draw2D( void )
     if (!(( cg.snap->ps.stats[ STAT_BUILDABLE ] & ~SB_VALID_TOGGLEBIT ) > BA_NONE ))
       CG_DrawBuildableStatus( );
   }
+
+  CG_DrawDamageBlobs( );
+  CG_DrawHealthBars( );
 
   if( !menu )
   {
