@@ -1447,13 +1447,11 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
   G_CombatStats_HitMOD( attacker, targ, mod, take );
 
 
-  if( attacker && attacker->client && take && attacker != targ )
+  if( attacker && attacker->client && take && attacker != targ &&
+    attacker->client->bufferedBlobCount < MAX_BUFFERED_BLOBS )
   {
     g_damageBlob_t *blob;
     int flags = 0;
-
-    if( attacker->client->bufferedBlobCount == MAX_BUFFERED_BLOBS )
-      return;
 
     if( OnSameTeam( attacker, targ ) ||
       ( targ->s.eType == ET_BUILDABLE &&
