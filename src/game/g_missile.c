@@ -1618,8 +1618,10 @@ gentity_t *launch_mine( gentity_t *self, vec3_t start, vec3_t dir )
   VectorNormalize( dir );
   bolt = G_Spawn( );
   bolt->classname = "mine";
-  bolt->nextthink = level.time + MINE_INIT_TIME;
-  bolt->think = G_ProcessMine;  
+  /* bolt->nextthink = level.time + MINE_INIT_TIME;
+  bolt->think = G_ProcessMine; */
+  bolt->nextthink = level.time + 5000;
+  bolt->think = G_ExplodeMissile;
   bolt->s.eType = ET_MISSILE;
   bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;
   bolt->s.weapon = WP_MINE;

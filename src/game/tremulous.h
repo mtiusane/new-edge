@@ -407,7 +407,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define GRENADE_RANGE               192.0f
 #define GRENADE_SPEED               700.0f
 
-#define MINE_PRICE		    1000
+#define MINE_PRICE		    600
 #define MINE_REPEAT                 0
 #define MINE_K_SCALE                1.0f
 #define MINE_DAMAGE                 HDM(250)

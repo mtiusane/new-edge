@@ -209,7 +209,6 @@ vmCvar_t  g_MinHumanExtraBuildPoints;
 vmCvar_t  g_MaxHumanExtraBuildPoints;
 vmCvar_t  g_BuildingCreditsFactor;
 
-
 // copy cvars that can be set in worldspawn so they can be restored later
 static char cv_gravity[ MAX_CVAR_VALUE_STRING ];
 static char cv_humanMaxStage[ MAX_CVAR_VALUE_STRING ];

@@ -1897,7 +1897,7 @@ void FireWeapon3( gentity_t *ent )
       break;
 	  
     case WP_ALEVEL4:
-	FireBreath_tyrant( ent );
+      // FireBreath_tyrant( ent );
       break;
 
     case WP_MASS_DRIVER:
@@ -1908,16 +1908,10 @@ void FireWeapon3( gentity_t *ent )
       break;
 	  
     case WP_ALEVEL1:
+      acidBombFire2x( ent, WP_ALEVEL1 );
+      break;
     case WP_ALEVEL1_UPG:
-
-	if( ent->s.weapon == WP_ALEVEL1 )
-	{
-    acidBombFire2x( ent, WP_ALEVEL1 );
-	}
-    else
-	{
-    acidBombFire( ent, WP_ALEVEL1_UPG );
-	}
+      acidBombFire( ent, WP_ALEVEL1_UPG );
       break;
 
     default:
