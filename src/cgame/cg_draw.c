@@ -4003,7 +4003,7 @@ static void CG_DrawHealthBars( void )
     cent  = cg_entities + cg.snap->entities[ i ].number;
     es = &cent->currentState;
 
-    if( es->eFlags & EF_DEAD )
+    if( es->eFlags & ( EF_DEAD | EF_NODRAW ) )
       continue;
 
     switch( es->eType )
@@ -4018,6 +4018,9 @@ static void CG_DrawHealthBars( void )
         break;
 
       case ET_PLAYER:
+        if( es->eFlags & EF_MOVER_STOP ) // cloak
+          continue;
+
         bar->value = es->otherEntityNum2;
         bar->max = BG_Class( ( es->misc >> 8 ) & 0xFF )->health;
         BG_ClassBoundingBox( ( es->misc >> 8 ) & 0xFF, mins, maxs, NULL, NULL, NULL );
