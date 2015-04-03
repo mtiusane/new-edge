@@ -3836,7 +3836,7 @@ static void CG_DrawWarmup( void )
 
 /*
 =================
-CG_DrawWarmup
+Damage blobs
 =================
 */
 
@@ -3968,6 +3968,123 @@ static void CG_DrawDamageBlobs( void )
   trap_R_SetColor( NULL );
 }
 
+/*
+=================
+Health bars
+=================
+*/
+typedef struct
+{
+  vec3_t origin;
+  float dist;
+
+  int value;
+  int max;
+} healthBar_t;
+
+static int CompareHealthBars( const healthBar_t *a, const healthBar_t *b )
+{
+  return a->dist < b->dist;
+}
+
+static void CG_DrawHealthBars( void )
+{
+  int i;
+  healthBar_t *bar, *bare, bars[ MAX_ENTITIES_IN_SNAPSHOT ];
+
+  for( bar = bars, i = 0; i < cg.snap->numEntities; i++ )
+  {
+    int j;
+    centity_t *cent;
+    entityState_t *es;
+    trace_t tr;
+    vec3_t mins, maxs;
+
+    cent  = cg_entities + cg.snap->entities[ i ].number;
+    es = &cent->currentState;
+
+    if( es->eFlags & EF_DEAD )
+      continue;
+
+    switch( es->eType )
+    {
+      case ET_BUILDABLE:
+        bar->value = es->generic1;
+        bar->max = BG_Buildable( es->modelindex )->health;
+        BG_BuildableBoundingBox( es->modelindex, mins, maxs );
+        break;
+
+      case ET_PLAYER:
+        bar->value = es->otherEntityNum2;
+        bar->max = BG_Class( ( es->misc >> 8 ) & 0xFF )->health;
+        BG_ClassBoundingBox( ( es->misc >> 8 ) & 0xFF, mins, maxs, NULL, NULL, NULL );
+        break;
+
+      default:
+        continue;
+    }
+
+    for( j = 0; j < 3; j++ )
+      bar->origin[ j ] = cent->lerpOrigin[ j ] + ( maxs[ j ] + mins[ j ] ) / 2.0f;
+
+    CG_Trace( &tr, cg.refdef.vieworg, NULL, NULL, bar->origin, ENTITYNUM_NONE, MASK_SOLID );
+
+    if( tr.fraction < 1.0f )
+      continue;
+
+    bar->dist = Distance( bar->origin, cg.refdef.vieworg );
+
+    bar++;
+  }
+
+  bare = bar;
+  qsort( bars, bare - bars, sizeof( healthBar_t ),
+    (int(*)(const void*,const void*))CompareHealthBars );
+
+/*
+  TODO: figure out why qsort fails for more than 5 bars
+
+  for( i = 0; i < bare - bars - 1; i++ )
+    if( CompareHealthBars( bars + i, bars + i + 1 ) )
+    {
+      Com_Printf( "qsort is retarded\n" );
+      break;
+    }
+*/
+
+  for( bar = bars; bar < bare; bar++ )
+  {
+    float x, y, w, h, hf;
+    char buffer[ 64 ];
+    vec4_t color;
+
+    if( !CG_WorldToScreen( bar->origin, &x, &y ) )
+      continue;
+
+    hf = (float)bar->value / bar->max;
+
+    h = 20 * 100 / bar->dist;
+    w = 4 * h * cgDC.aspectScale;
+
+    Com_sprintf( buffer, sizeof( buffer ), "%d", bar->value );
+
+    color[ 3 ] = 1.0f;
+
+    VectorSet( color, 0.1, 0.7, 0.1 );
+    trap_R_SetColor( color );
+    CG_DrawPic( x - w/2, y - h/2, w * hf, h, cgs.media.whiteShader );
+
+    VectorSet( color, 0.7, 0.1, 0.1 );
+    trap_R_SetColor( color );
+    CG_DrawPic( x - w/2 + w * hf, y - h/2, w * ( 1 - hf ), h, cgs.media.whiteShader );
+
+    VectorSet( color, 0, 0, 0 );
+    trap_R_SetColor( color );
+    CG_DrawNumber( x, y, h, buffer );
+  }
+}
+
+
 //==================================================================================
 
 /*
@@ -4019,6 +4136,7 @@ static void CG_Draw2D( void )
   }
 
   CG_DrawDamageBlobs( );
+  CG_DrawHealthBars( );
 
   if( !menu )
   {

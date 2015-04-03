@@ -2236,6 +2236,7 @@ void ClientThink( int clientNum )
 
 void G_RunClient( gentity_t *ent )
 {
+  // send all buffered damage blobs
   if( ent->client->bufferedBlobCount )
   {
     int i;
@@ -2274,6 +2275,9 @@ void G_RunClient( gentity_t *ent )
 
     ent->client->bufferedBlobCount = 0;
   }
+
+  // update the public health field
+  ent->s.otherEntityNum2 = MAX( 0, ent->client->ps.stats[ STAT_HEALTH ] );
 
   // Run a client think when there are no commands for a time
   if( !g_synchronousClients.integer &&
