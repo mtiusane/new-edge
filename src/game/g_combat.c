@@ -1491,7 +1491,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
       ( attacker->client->bufferedBlobCount++ );
 
     VectorCopy( point, blob->origin );
-    blob->value = damage;
+    blob->value = take;
     blob->flags = flags;
   }
 
