@@ -232,6 +232,12 @@ vmCvar_t  cg_viewQuake;
 vmCvar_t  cg_viewQuakeLambda;
 vmCvar_t  cg_viewQuakeLimit;
 
+vmCvar_t  cg_damageBlobSize;
+vmCvar_t  cg_damageBlobAlpha;
+
+vmCvar_t  cg_healthBarSize;
+vmCvar_t  cg_healthBarAlpha;
+
 typedef struct
 {
   vmCvar_t  *vmCvar;
@@ -379,7 +385,13 @@ static cvarTable_t cvarTable[ ] =
 
   { &cg_viewQuake, "cg_viewQuake", "1", CVAR_ARCHIVE },
   { &cg_viewQuakeLambda, "cg_viewQuakeLambda", "-10", CVAR_ARCHIVE },
-  { &cg_viewQuakeLimit, "cg_viewQuakeLimit", "5", CVAR_ARCHIVE }
+  { &cg_viewQuakeLimit, "cg_viewQuakeLimit", "5", CVAR_ARCHIVE },
+
+  { &cg_damageBlobSize, "cg_damageBlobSize", "400", CVAR_ARCHIVE },
+  { &cg_damageBlobAlpha, "cg_damageBlobAlpha", "0.8", CVAR_ARCHIVE },
+
+  { &cg_healthBarSize, "cg_healthBarSize", "2000", CVAR_ARCHIVE },
+  { &cg_healthBarAlpha, "cg_healthBarAlpha", "0.5", CVAR_ARCHIVE }
 };
 
 static int   cvarTableSize = sizeof( cvarTable ) / sizeof( cvarTable[0] );
@@ -769,6 +781,20 @@ static void CG_RegisterGraphics( void )
     "gfx/2d/numbers/nine_32b",
     "gfx/2d/numbers/minus_32b",
   };
+  static char *sb_nums_alt[ 11 ] =
+  {
+    "gfx/2d/numbers_alt/0",
+    "gfx/2d/numbers_alt/1",
+    "gfx/2d/numbers_alt/2",
+    "gfx/2d/numbers_alt/3",
+    "gfx/2d/numbers_alt/4",
+    "gfx/2d/numbers_alt/5",
+    "gfx/2d/numbers_alt/6",
+    "gfx/2d/numbers_alt/7",
+    "gfx/2d/numbers_alt/8",
+    "gfx/2d/numbers_alt/9",
+    "gfx/2d/numbers_alt/minus",
+  };
   static char *buildWeaponTimerPieShaders[ 8 ] =
   {
     "ui/assets/neutral/1_5pie",
@@ -790,6 +816,9 @@ static void CG_RegisterGraphics( void )
 
   for( i = 0; i < 11; i++ )
     cgs.media.numberShaders[ i ] = trap_R_RegisterShader( sb_nums[ i ] );
+
+  for( i = 0; i < 11; i++ )
+    cgs.media.numberShadersAlt[ i ] = trap_R_RegisterShader( sb_nums_alt[ i ] );
 
   cgs.media.viewBloodShader           = trap_R_RegisterShader( "gfx/damage/fullscreen_painblend" );
 

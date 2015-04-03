@@ -1473,7 +1473,7 @@ static void G_CreateNewZap( gentity_t *creator, gentity_t *target )
       {
         if( !zap->targets[ i ]->client ||
             zap->targets[ i ]->client->ps.stats[ STAT_TEAM ] != TEAM_ALIENS )
-          G_Damage( zap->targets[ i ], target, zap->creator, forward, target->s.origin,
+          G_Damage( zap->targets[ i ], target, zap->creator, forward, zap->targets[ i ]->s.origin,
                     LEVEL2_AREAZAP_DMG * ( 1 - pow( (zap->distances[ i ] /
                     LEVEL2_AREAZAP_CHAIN_RANGE ), LEVEL2_AREAZAP_CHAIN_FALLOFF ) ) + 1,
                     DAMAGE_NO_KNOCKBACK | DAMAGE_NO_LOCDAMAGE,
