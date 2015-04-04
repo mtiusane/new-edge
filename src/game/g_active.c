@@ -2213,6 +2213,39 @@ void ClientThink_real( gentity_t *ent )
 
 /*
 ==================
+G_SendPublicServerCommand
+
+Send a server command to a player and everyone following them.
+==================
+*/
+void G_SendPublicServerCommand( int clientNum, const char *cmd )
+{
+  int i;
+  gclient_t *client;
+
+  for( i = 0; i < level.maxclients ; i++ )
+  {
+    client = level.clients + i;
+
+    if( client->pers.connected != CON_CONNECTED )
+      continue;
+
+    if( client->ps.clientNum == clientNum )
+      goto send;
+
+    if( client->sess.spectatorState == SPECTATOR_NOT )
+      continue;
+
+    if( client->sess.spectatorClient != clientNum )
+      continue;
+
+  send:
+    trap_SendServerCommand( client->ps.clientNum, cmd );
+  }
+}
+
+/*
+==================
 ClientThink
 
 A new command has arrived from the client
@@ -2261,7 +2294,7 @@ void G_RunClient( gentity_t *ent )
 
       if( p - buffer + len + 1 > sizeof( buffer ) )
       {
-        trap_SendServerCommand( ent - g_entities, buffer );
+        G_SendPublicServerCommand( ent - g_entities, buffer );
         strcpy( buffer, "dblob" );
         p = buffer + 5;
       }
@@ -2271,7 +2304,7 @@ void G_RunClient( gentity_t *ent )
     }
 
     if( p > buffer + 6 )
-      trap_SendServerCommand( ent - g_entities, buffer );
+      G_SendPublicServerCommand( ent - g_entities, buffer );
 
     ent->client->bufferedBlobCount = 0;
   }
