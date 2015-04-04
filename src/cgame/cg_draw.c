@@ -3610,17 +3610,17 @@ static void CG_DrawVote( team_t team )
   int     offset = 0;
   vec4_t  white = { 1.0f, 1.0f, 1.0f, 1.0f };
   char    yeskey[ 32 ] = "", nokey[ 32 ] = "";
+  static int lastVoteTime[ NUM_TEAMS ] = { 0 };
 
-	
   if( !cgs.voteTime[ team ] )
     return;
-	
+
   sec = ( VOTE_TIME - ( cg.time - cgs.voteTime[ team ] ) ) / 1000;
   
-  //play dong sound
-  if(sec > 28 )
+  if( cgs.voteTime[ team ] != lastVoteTime[ team ] )
   {
     trap_S_StartLocalSound( cgs.media.iniVote, CHAN_LOCAL_SOUND );
+    lastVoteTime[ team ] = cgs.voteTime[ team ];
   }
 
  // if( cgs.voteModified[ team ] && (sec < 26 ) )
