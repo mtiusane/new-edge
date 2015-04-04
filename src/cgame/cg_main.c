@@ -238,6 +238,8 @@ vmCvar_t  cg_damageBlobAlpha;
 vmCvar_t  cg_healthBarSize;
 vmCvar_t  cg_healthBarAlpha;
 
+vmCvar_t  cg_hitSounds;
+
 typedef struct
 {
   vmCvar_t  *vmCvar;
@@ -391,7 +393,9 @@ static cvarTable_t cvarTable[ ] =
   { &cg_damageBlobAlpha, "cg_damageBlobAlpha", "0.8", CVAR_ARCHIVE },
 
   { &cg_healthBarSize, "cg_healthBarSize", "2000", CVAR_ARCHIVE },
-  { &cg_healthBarAlpha, "cg_healthBarAlpha", "0.5", CVAR_ARCHIVE }
+  { &cg_healthBarAlpha, "cg_healthBarAlpha", "0.5", CVAR_ARCHIVE },
+  
+  { &cg_hitSounds, "cg_hitSounds", "1", CVAR_ARCHIVE }
 };
 
 static int   cvarTableSize = sizeof( cvarTable ) / sizeof( cvarTable[0] );
@@ -647,7 +651,14 @@ static void CG_RegisterSounds( void )
   int         i;
   char        name[ MAX_QPATH ];
   const char  *soundName;
-
+  const char  *hit_sounds[ 5 ] =
+  {
+    "sound/feedback/hit_enemy.wav",
+    "sound/feedback/hit_splash.wav",
+    "sound/feedback/hit_building.wav",
+    "sound/feedback/hit_building_splash.wav",
+    "sound/feedback/hit_friendly.wav",
+  };
   
   
   cgs.media.alienStageTransition  = trap_S_RegisterSound( "sound/announcements/overmindevolved.wav", qtrue );
@@ -751,6 +762,9 @@ static void CG_RegisterSounds( void )
   
   cgs.media.FlamerWarningSound     = trap_S_RegisterSound( "models/weapons/flamer/warning.wav", qfalse );
   cgs.media.FlamerWarningSound2    = trap_S_RegisterSound( "models/weapons/flamer/warning2.wav", qfalse );
+
+  for( i = 0; i < 5; i++ )
+    cgs.media.hitSounds[ i ]        = trap_S_RegisterSound( hit_sounds[ i ], qfalse );
 }
 
 

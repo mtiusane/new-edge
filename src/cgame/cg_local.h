@@ -1349,6 +1349,8 @@ typedef struct
 
   qhandle_t   lightningBeam;
   qhandle_t   lightningImpactPS;
+
+  sfxHandle_t hitSounds[ 5 ];
 } cgMedia_t;
 
 typedef struct
@@ -1612,6 +1614,8 @@ extern  vmCvar_t    cg_damageBlobAlpha;
 
 extern  vmCvar_t    cg_healthBarSize;
 extern  vmCvar_t    cg_healthBarAlpha;
+
+extern  vmCvar_t    cg_hitSounds;
 
 //
 // cg_main.c
