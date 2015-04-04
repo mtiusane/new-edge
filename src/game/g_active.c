@@ -2223,14 +2223,14 @@ void G_SendPublicServerCommand( int clientNum, const char *cmd )
   int i;
   gclient_t *client;
 
-  for( i = 0; i < level.maxclients ; i++ )
+  for( i = 0; i < level.maxclients; i++ )
   {
     client = level.clients + i;
 
     if( client->pers.connected != CON_CONNECTED )
       continue;
 
-    if( client->ps.clientNum == clientNum )
+    if( i == clientNum )
       goto send;
 
     if( client->sess.spectatorState == SPECTATOR_NOT )
@@ -2240,7 +2240,7 @@ void G_SendPublicServerCommand( int clientNum, const char *cmd )
       continue;
 
   send:
-    trap_SendServerCommand( client->ps.clientNum, cmd );
+    trap_SendServerCommand( i, cmd );
   }
 }
 
