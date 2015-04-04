@@ -1466,7 +1466,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
     if( targ->s.eType == ET_BUILDABLE )
       blob->flags |= DAMAGE_BLOB_BUILDABLE;
 
-    if( dflags & DAMAGE_RADIUS )
+    if( ( dflags & DAMAGE_RADIUS ) || mod == MOD_POISON )
     {
       blob->flags |= DAMAGE_BLOB_SPLASH;
       VectorAdd( targ->r.absmin, targ->r.absmax, blob->origin );
