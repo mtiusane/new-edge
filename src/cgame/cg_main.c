@@ -781,7 +781,7 @@ static void CG_RegisterGraphics( void )
     "gfx/2d/numbers/nine_32b",
     "gfx/2d/numbers/minus_32b",
   };
-  static char *sb_nums_alt[ 11 ] =
+  static char *sb_nums_alt[ 12 ] =
   {
     "gfx/2d/numbers_alt/0",
     "gfx/2d/numbers_alt/1",
@@ -794,6 +794,7 @@ static void CG_RegisterGraphics( void )
     "gfx/2d/numbers_alt/8",
     "gfx/2d/numbers_alt/9",
     "gfx/2d/numbers_alt/minus",
+    "gfx/2d/numbers_alt/slash",
   };
   static char *buildWeaponTimerPieShaders[ 8 ] =
   {
@@ -817,7 +818,7 @@ static void CG_RegisterGraphics( void )
   for( i = 0; i < 11; i++ )
     cgs.media.numberShaders[ i ] = trap_R_RegisterShader( sb_nums[ i ] );
 
-  for( i = 0; i < 11; i++ )
+  for( i = 0; i < 12; i++ )
     cgs.media.numberShadersAlt[ i ] = trap_R_RegisterShader( sb_nums_alt[ i ] );
 
   cgs.media.viewBloodShader           = trap_R_RegisterShader( "gfx/damage/fullscreen_painblend" );
