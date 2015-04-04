@@ -3879,6 +3879,20 @@ found_blob:
   blob->flags = flags;
   VectorCopy( origin, blob->origin );
   VectorSet( blob->velocity, crandom( ) * 20, crandom( ) * 20, 100 );
+
+  if( cg_hitSounds.integer > 1 ||
+    ( cg_hitSounds.integer == 1 &&
+      ( flags & DAMAGE_BLOB_FRIENDLY ) ) )
+  {
+    int index;
+
+    if( flags & DAMAGE_BLOB_FRIENDLY )
+      index = 4;
+    else
+      index = ( flags & ( DAMAGE_BLOB_SPLASH | DAMAGE_BLOB_BUILDABLE ) );
+
+    trap_S_StartLocalSound( cgs.media.hitSounds[ index ], CHAN_LOCAL_SOUND );
+  }
 }
 
 static void CG_DrawNumber( float x, float y, float h, char *str )

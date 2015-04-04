@@ -1245,6 +1245,6 @@ typedef struct
 int cmdcmp( const void *a, const void *b );
 
 // damage blob flags
-#define DAMAGE_BLOB_FRIENDLY    1
-#define DAMAGE_BLOB_BUILDABLE   2
-#define DAMAGE_BLOB_SPLASH      4
+#define DAMAGE_BLOB_SPLASH      1 // has to be 1
+#define DAMAGE_BLOB_BUILDABLE   2 // has to be 2
+#define DAMAGE_BLOB_FRIENDLY    4
