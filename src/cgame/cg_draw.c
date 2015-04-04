@@ -3936,7 +3936,7 @@ static void CG_DrawDamageBlobs( void )
 
     fade = 1.0f - (float)( cg.time - blob->spawnTime ) / DAMAGE_BLOB_TIME;
 
-    scale = cg_damageBlobSize.value /
+    scale = 0.75f * cg_damageBlobSize.value /
       pow( Distance( blob->origin, cg.refdef.vieworg ), 0.5f );
 
     Com_sprintf( str, sizeof( str ), "%d", blob->value );

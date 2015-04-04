@@ -1474,6 +1474,8 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
     }
     else if( inflictor->s.eType == ET_MISSILE )
       VectorCopy( inflictor->r.currentOrigin, blob->origin );
+    else
+      VectorCopy( point, blob->origin );
   }
 
   if( targ->health <= 0 )
