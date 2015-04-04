@@ -1198,7 +1198,7 @@ typedef struct
   qhandle_t   teamOverlayShader;
 
   qhandle_t   numberShaders[ 11 ];
-  qhandle_t   numberShadersAlt[ 11 ];
+  qhandle_t   numberShadersAlt[ 12 ];
 
   qhandle_t   shadowMarkShader;
   qhandle_t   wakeMarkShader;

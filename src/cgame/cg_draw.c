@@ -3888,7 +3888,7 @@ static void CG_DrawNumber( float x, float y, float h, char *str )
   char *p;
 
   len = strlen( str );
-  w = h * cgDC.aspectScale * 0.5f;
+  w = h * cgDC.aspectScale * 0.75f;
 
   y -= h / 2;
   x -= len * w / 2;
@@ -3897,10 +3897,14 @@ static void CG_DrawNumber( float x, float y, float h, char *str )
   {
     if( *p >= '0' && *p <= '9' )
       index = *p - '0';
-    else
+    else if( *p == '.' )
       index = 10;
-    
-    CG_DrawPic( x, y, w, h, cgs.media.numberShadersAlt[ index ] );
+    else
+      index = 11;
+
+    if( *p != ' ' )
+      CG_DrawPic( x, y, w, h, cgs.media.numberShadersAlt[ index ] );
+
     x += w;
   }
 }
@@ -3932,7 +3936,7 @@ static void CG_DrawDamageBlobs( void )
 
     fade = 1.0f - (float)( cg.time - blob->spawnTime ) / DAMAGE_BLOB_TIME;
 
-    scale = cg_damageBlobSize.value /
+    scale = 0.75f * cg_damageBlobSize.value /
       pow( Distance( blob->origin, cg.refdef.vieworg ), 0.5f );
 
     Com_sprintf( str, sizeof( str ), "%d", blob->value );
@@ -3984,7 +3988,7 @@ typedef struct
 
 static int CompareHealthBars( const healthBar_t *a, const healthBar_t *b )
 {
-  return a->dist < b->dist;
+  return ( a->dist < b->dist ? 1 : -1 );
 }
 
 static void CG_DrawHealthBars( void )
@@ -4047,22 +4051,14 @@ static void CG_DrawHealthBars( void )
   qsort( bars, bare - bars, sizeof( healthBar_t ),
     (int(*)(const void*,const void*))CompareHealthBars );
 
-/*
-  TODO: figure out why qsort fails for more than 5 bars
-
-  for( i = 0; i < bare - bars - 1; i++ )
-    if( CompareHealthBars( bars + i, bars + i + 1 ) )
-    {
-      Com_Printf( "qsort is retarded\n" );
-      break;
-    }
-*/
-
   for( bar = bars; bar < bare; bar++ )
   {
-    float x, y, w, h, hf;
+    float x, y, w, h, hf, cf;
     char buffer[ 64 ];
     vec4_t color;
+
+    if( bar->value >= bar->max )
+      continue;
 
     if( !CG_WorldToScreen( bar->origin, &x, &y ) )
       continue;
@@ -4070,21 +4066,35 @@ static void CG_DrawHealthBars( void )
     hf = (float)bar->value / bar->max;
 
     h = cg_healthBarSize.value / bar->dist;
-    w = 4 * h * cgDC.aspectScale;
+    w = 6 * h * cgDC.aspectScale;
 
-    Com_sprintf( buffer, sizeof( buffer ), "%d", bar->value );
+    Com_sprintf( buffer, sizeof( buffer ), "%d/%d", bar->value, bar->max );
 
     color[ 3 ] = cg_healthBarAlpha.value;
 
-    VectorSet( color, 0.1, 0.7, 0.1 );
+    if( hf <= 1.0f && hf > 0.5f )
+    {
+      cf = ( hf - 0.5f ) / 0.5f;
+      VectorSet( color, 1 - cf, 1.0f, 0.0f );
+    }
+    else
+    {
+      cf = hf / 0.5f;
+      VectorSet( color, 1.0f, cf, 0.0f );
+    }
+
+    VectorScale( color, 0.5f, color );
+
     trap_R_SetColor( color );
     CG_DrawPic( x - w/2, y - h/2, w * hf, h, cgs.media.whiteShader );
 
-    VectorSet( color, 0.7, 0.1, 0.1 );
+    
+
+    VectorSet( color, 0.1, 0.1, 0.1 );
     trap_R_SetColor( color );
     CG_DrawPic( x - w/2 + w * hf, y - h/2, w * ( 1 - hf ), h, cgs.media.whiteShader );
 
-    VectorSet( color, 0, 0, 0 );
+    VectorSet( color, 1, 1, 1 );
     trap_R_SetColor( color );
     CG_DrawNumber( x, y, h, buffer );
   }
