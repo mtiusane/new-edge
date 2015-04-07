@@ -1117,6 +1117,69 @@ void G_InitDamageLocations( void )
 
 /*
 ============
+G_SpawnDamageIndicator
+
+Computes a damage indicator for a given hit and stores it in the
+player's damage indicator buffer.
+============
+*/
+void G_SpawnDamageIndicator( gentity_t *ent, gentity_t *inflictor,
+  gentity_t *targ, const vec3_t point, int mod, int take, int dflags )
+{
+  g_damageIndicator_t *di;
+
+  if( !ent || !ent->client )
+    return;
+
+  if( ent == targ )
+    return;
+
+  if( !take )
+    return;
+
+  if( ent->client->diBufferCounter >= MAX_BUFFERED_DAMAGE_INDICATORS )
+    return;
+
+  di = ent->client->diBuffer + ent->client->diBufferCounter++;
+  di->value = take;
+
+  di->flags = 0;
+
+  if( targ->s.eType == ET_BUILDABLE )
+    di->flags |= DIF_BUILDABLE;
+
+  if( OnSameTeam( ent, targ ) ||
+    ( targ->s.eType == ET_BUILDABLE &&
+      ent->client->pers.teamSelection == targ->buildableTeam ) )
+    di->flags |= DIF_FRIENDLY;
+
+  if( dflags & DAMAGE_RADIUS )
+    di->flags |= DIF_INDIRECT;
+
+  switch( mod )
+  {
+    case MOD_POISON:
+    case MOD_INFECTION:
+      di->flags |= DIF_INDIRECT | DIF_PERSISTENT;
+      break;
+
+    case MOD_DECONSTRUCT:
+      return;
+  }
+
+  if( di->flags & DIF_INDIRECT )
+  {
+    VectorAdd( targ->r.absmin, targ->r.absmax, di->origin );
+    VectorScale( di->origin, 0.5f, di->origin );
+  }
+  else if( inflictor->s.eType == ET_MISSILE )
+    VectorCopy( inflictor->r.currentOrigin, di->origin );
+  else
+    VectorCopy( point, di->origin );
+}
+
+/*
+============
 T_Damage
 
 targ    entity that is being damaged
@@ -1446,37 +1509,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 
   G_CombatStats_HitMOD( attacker, targ, mod, take );
 
-
-  if( attacker && attacker->client && take && attacker != targ &&
-    attacker->client->bufferedBlobCount < MAX_BUFFERED_BLOBS )
-  {
-    g_damageBlob_t *blob;
-
-    blob = attacker->client->blobBuffer +
-      ( attacker->client->bufferedBlobCount++ );
-
-    blob->flags = 0;
-    blob->value = take;
-
-    if( OnSameTeam( attacker, targ ) ||
-      ( targ->s.eType == ET_BUILDABLE &&
-        attacker->client->pers.teamSelection == targ->buildableTeam ) )
-      blob->flags |= DAMAGE_BLOB_FRIENDLY;
-
-    if( targ->s.eType == ET_BUILDABLE )
-      blob->flags |= DAMAGE_BLOB_BUILDABLE;
-
-    if( ( dflags & DAMAGE_RADIUS ) || mod == MOD_POISON )
-    {
-      blob->flags |= DAMAGE_BLOB_SPLASH;
-      VectorAdd( targ->r.absmin, targ->r.absmax, blob->origin );
-      VectorScale( blob->origin, 0.5f, blob->origin );
-    }
-    else if( inflictor->s.eType == ET_MISSILE )
-      VectorCopy( inflictor->r.currentOrigin, blob->origin );
-    else
-      VectorCopy( point, blob->origin );
-  }
+  G_SpawnDamageIndicator( attacker, inflictor, targ, point, mod, take, dflags );
 
   if( targ->health <= 0 )
   {

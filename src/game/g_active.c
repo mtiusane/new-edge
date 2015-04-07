@@ -2270,33 +2270,33 @@ void ClientThink( int clientNum )
 void G_RunClient( gentity_t *ent )
 {
   // send all buffered damage blobs
-  if( ent->client->bufferedBlobCount )
+  if( ent->client->diBufferCounter )
   {
     int i;
-    g_damageBlob_t *blob;
+    g_damageIndicator_t *di;
     char *p, buffer[ 1024 ];
 
-    strcpy( buffer, "dblob" );
-    p = buffer + 5;
+    strcpy( buffer, "di" );
+    p = buffer + 2;
 
-    for( i = 0; i < ent->client->bufferedBlobCount; i++ )
+    for( i = 0; i < ent->client->diBufferCounter; i++ )
     {
       char smallbuf[ 64 ];
       int len;
 
-      blob = ent->client->blobBuffer + i;
+      di = ent->client->diBuffer + i;
 
       Com_sprintf( smallbuf, sizeof( smallbuf ), " %.0f %.0f %.0f %d %d",
-        blob->origin[ 0 ], blob->origin[ 1 ], blob->origin[ 2 ],
-        blob->value, blob->flags );
+        di->origin[ 0 ], di->origin[ 1 ], di->origin[ 2 ],
+        di->value, di->flags );
 
       len = strlen( smallbuf );
 
       if( p - buffer + len + 1 > sizeof( buffer ) )
       {
         G_SendPublicServerCommand( ent - g_entities, buffer );
-        strcpy( buffer, "dblob" );
-        p = buffer + 5;
+        strcpy( buffer, "di" );
+        p = buffer + 2;
       }
 
       strcpy( p, smallbuf );
@@ -2306,7 +2306,7 @@ void G_RunClient( gentity_t *ent )
     if( p > buffer + 6 )
       G_SendPublicServerCommand( ent - g_entities, buffer );
 
-    ent->client->bufferedBlobCount = 0;
+    ent->client->diBufferCounter = 0;
   }
 
   // update the public health field

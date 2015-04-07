@@ -1336,7 +1336,7 @@ static void CG_GameCmds_f( void )
     trap_AddCommand( CG_Argv( i ) );
 }
 
-static void CG_DamageBlob_f( void )
+static void CG_DamageIndicator_f( void )
 {
   int i, count = trap_Argc( ), value, flags;
   vec3_t origin;
@@ -1349,7 +1349,7 @@ static void CG_DamageBlob_f( void )
     value = atoi( CG_Argv( i + 3 ) );
     flags = atoi( CG_Argv( i + 4 ) );
 
-    CG_SpawnDamageBlob( origin, value, flags );
+    CG_SpawnDamageIndicator( origin, value, flags );
   }
 }
 
@@ -1360,7 +1360,7 @@ static consoleCommand_t svcommands[ ] =
   { "cmds", CG_GameCmds_f },
   { "cp", CG_CenterPrint_f },
   { "cs", CG_ConfigStringModified },
-  { "dblob", CG_DamageBlob_f },
+  { "di", CG_DamageIndicator_f },
   { "map_restart", CG_MapRestart },
   { "poisoncloud", CG_PoisonCloud_f },
   { "print", CG_Print_f },

@@ -232,8 +232,8 @@ vmCvar_t  cg_viewQuake;
 vmCvar_t  cg_viewQuakeLambda;
 vmCvar_t  cg_viewQuakeLimit;
 
-vmCvar_t  cg_damageBlobSize;
-vmCvar_t  cg_damageBlobAlpha;
+vmCvar_t  cg_damageIndicatorSize;
+vmCvar_t  cg_damageIndicatorAlpha;
 
 vmCvar_t  cg_healthBarSize;
 vmCvar_t  cg_healthBarAlpha;
@@ -389,8 +389,8 @@ static cvarTable_t cvarTable[ ] =
   { &cg_viewQuakeLambda, "cg_viewQuakeLambda", "-10", CVAR_ARCHIVE },
   { &cg_viewQuakeLimit, "cg_viewQuakeLimit", "5", CVAR_ARCHIVE },
 
-  { &cg_damageBlobSize, "cg_damageBlobSize", "400", CVAR_ARCHIVE },
-  { &cg_damageBlobAlpha, "cg_damageBlobAlpha", "0.8", CVAR_ARCHIVE },
+  { &cg_damageIndicatorSize, "cg_damageIndicatorSize", "400", CVAR_ARCHIVE },
+  { &cg_damageIndicatorAlpha, "cg_damageIndicatorAlpha", "0.8", CVAR_ARCHIVE },
 
   { &cg_healthBarSize, "cg_healthBarSize", "2000", CVAR_ARCHIVE },
   { &cg_healthBarAlpha, "cg_healthBarAlpha", "0.5", CVAR_ARCHIVE },

@@ -1244,7 +1244,8 @@ typedef struct
 } dummyCmd_t;
 int cmdcmp( const void *a, const void *b );
 
-// damage blob flags
-#define DAMAGE_BLOB_SPLASH      1 // has to be 1
-#define DAMAGE_BLOB_BUILDABLE   2 // has to be 2
-#define DAMAGE_BLOB_FRIENDLY    4
+// damage indicator flags
+#define DIF_INDIRECT    0x0001 // has to be 1
+#define DIF_BUILDABLE   0x0002 // has to be 2
+#define DIF_FRIENDLY    0x0004
+#define DIF_PERSISTENT  0x0008 // poison and infection

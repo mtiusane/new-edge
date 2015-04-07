@@ -403,13 +403,13 @@ typedef struct unlagged_s {
   qboolean    used;
 } unlagged_t;
 
-#define MAX_BUFFERED_BLOBS 20
+#define MAX_BUFFERED_DAMAGE_INDICATORS 20
 typedef struct
 {
   vec3_t origin;
   int value;
   int flags;
-} g_damageBlob_t;
+} g_damageIndicator_t;
 
 #define MAX_TRAMPLE_BUILDABLES_TRACKED 20
 // this structure is cleared on each ClientSpawn(),
@@ -520,8 +520,8 @@ struct gclient_s
   int                 notrackEndTime;       // Time when the current no track period ends
   int                 blobs;
 
-  g_damageBlob_t      blobBuffer[ MAX_BUFFERED_BLOBS ];
-  int                 bufferedBlobCount;
+  g_damageIndicator_t  diBuffer[ MAX_BUFFERED_DAMAGE_INDICATORS ];
+  int                  diBufferCounter;
 };
 
 

@@ -3836,7 +3836,7 @@ static void CG_DrawWarmup( void )
 
 /*
 =================
-Damage blobs
+Damage indicators
 =================
 */
 
@@ -3848,54 +3848,71 @@ typedef struct
   int flags;
   vec3_t origin;
   vec3_t velocity;
-} cg_damageBlob_t;
+} cg_damageIndicator_t;
 
-#define MAX_DAMAGE_BLOBS 50
-cg_damageBlob_t cg_damageBlobs[ MAX_DAMAGE_BLOBS ];
+#define MAX_DAMAGE_INDICATORS 50
+cg_damageIndicator_t cg_damageIndicators[ MAX_DAMAGE_INDICATORS ];
 
-void CG_SpawnDamageBlob( vec3_t origin, int value, int flags )
+/*
+=================
+CG_SpawnDamageIndicator
+
+Creates a new local damage indicator
+=================
+*/
+void CG_SpawnDamageIndicator( vec3_t origin, int value, int flags )
 {
-  centity_t *cent;
-  cg_damageBlob_t *blob, *oldest = NULL;
+  int i;
+  cg_damageIndicator_t *di, *oldest = NULL;
 
-  for( blob = cg_damageBlobs; blob < cg_damageBlobs + MAX_DAMAGE_BLOBS; blob++ )
+  for( i = 0; i < MAX_DAMAGE_INDICATORS; i++ )
   {
-    if( !oldest || blob->spawnTime < oldest->spawnTime )
-      oldest = blob;
+    di = cg_damageIndicators + i;
 
-    if( blob->inuse )
+    if( !oldest || di->spawnTime < oldest->spawnTime )
+      oldest = di;
+
+    if( di->inuse )
       continue;
 
-    goto found_blob;
+    goto found;
   }
 
-  oldest = blob;
+  oldest = di;
 
-found_blob:
+found:
 
-  blob->inuse = qtrue;
-  blob->spawnTime = cg.time;
-  blob->value = value;
-  blob->flags = flags;
-  VectorCopy( origin, blob->origin );
-  VectorSet( blob->velocity, crandom( ) * 20, crandom( ) * 20, 100 );
+  di->inuse = qtrue;
+  di->spawnTime = cg.time;
+  di->value = value;
+  di->flags = flags;
+  VectorCopy( origin, di->origin );
+  VectorSet( di->velocity, crandom( ) * 20, crandom( ) * 20, 100 );
 
   if( cg_hitSounds.integer > 1 ||
     ( cg_hitSounds.integer == 1 &&
-      ( flags & DAMAGE_BLOB_FRIENDLY ) ) )
+      ( flags & DIF_FRIENDLY ) ) )
   {
     int index;
 
-    if( flags & DAMAGE_BLOB_FRIENDLY )
+    if( flags & DIF_FRIENDLY )
       index = 4;
     else
-      index = ( flags & ( DAMAGE_BLOB_SPLASH | DAMAGE_BLOB_BUILDABLE ) );
+      index = ( flags & ( DIF_INDIRECT | DIF_BUILDABLE ) );
 
     trap_S_StartLocalSound( cgs.media.hitSounds[ index ], CHAN_LOCAL_SOUND );
   }
 }
 
-static void CG_DrawNumber( float x, float y, float h, char *str )
+/*
+=================
+CG_DrawAltNumber
+
+Draws a centered (horizontally and vertically) number using the
+cgs.media.numbersAlt charset. Used by damage indicators and health bars.
+=================
+*/
+static void CG_DrawAltNumber( float x, float y, float h, char *str )
 {
   int index, len;
   float w;
@@ -3923,64 +3940,76 @@ static void CG_DrawNumber( float x, float y, float h, char *str )
   }
 }
 
-#define DAMAGE_BLOB_TIME 700
+#define DIF_TIME 700
 
-static void CG_DrawDamageBlobs( void )
+/*
+=================
+CG_DrawDamageIndicators
+
+Handle damage indicators' dynamics, timing out and drawing.
+=================
+*/
+static void CG_DrawDamageIndicators( void )
 {
-  cg_damageBlob_t *blob;
+  int i;
+  cg_damageIndicator_t *di;
   float dt, x, y, fade, scale;
   vec4_t color;
   char str[ 32 ];
 
   dt = 0.001 * cg.frametime;
 
-  for( blob = cg_damageBlobs; blob < cg_damageBlobs + MAX_DAMAGE_BLOBS; blob++ )
+  for( i = 0; i < MAX_DAMAGE_INDICATORS; i++ )
   {
-    if( !blob->inuse )
+    di = cg_damageIndicators + i;
+
+    if( !di->inuse )
       continue;
 
-    if( blob->spawnTime + DAMAGE_BLOB_TIME < cg.time )
+    if( di->spawnTime + DIF_TIME < cg.time )
     {
-      blob->inuse = qfalse;
+      di->inuse = qfalse;
       continue;
     }
 
-    if( !CG_WorldToScreen( blob->origin, &x, &y ) )
+    if( !CG_WorldToScreen( di->origin, &x, &y ) )
       continue;
 
-    fade = 1.0f - (float)( cg.time - blob->spawnTime ) / DAMAGE_BLOB_TIME;
+    fade = 1.0f - (float)( cg.time - di->spawnTime ) / DIF_TIME;
 
-    scale = 0.75f * cg_damageBlobSize.value /
-      pow( Distance( blob->origin, cg.refdef.vieworg ), 0.5f );
+    scale = 0.75f * cg_damageIndicatorSize.value /
+      pow( Distance( di->origin, cg.refdef.vieworg ), 0.5f );
 
-    Com_sprintf( str, sizeof( str ), "%d", blob->value );
+    Com_sprintf( str, sizeof( str ), "%d", di->value );
 
-    if( blob->flags & DAMAGE_BLOB_FRIENDLY )
+    if( di->flags & DIF_FRIENDLY )
       VectorSet( color, 1, 0, 0 );
+    else if( di->flags & DIF_PERSISTENT )
+      VectorSet( color, 0, 1, 0 );
     else
     {
-      if( blob->flags & DAMAGE_BLOB_BUILDABLE )
+      if( di->flags & DIF_BUILDABLE )
       {
-        if( blob->flags & DAMAGE_BLOB_SPLASH )
+        if( di->flags & DIF_INDIRECT )
           VectorSet( color, 1, 0.5, 0 );
         else
           VectorSet( color, 0.7, 0.7, 0.7 );
       }
       else
       {
-        if( blob->flags & DAMAGE_BLOB_SPLASH )
+        if( di->flags & DIF_INDIRECT )
           VectorSet( color, 1, 1, 0 );
         else
           VectorSet( color, 1, 1, 1 );
       }
     }
 
-    color[ 3 ] = cg_damageBlobAlpha.value * fade;
+    color[ 3 ] = cg_damageIndicatorAlpha.value * fade;
     trap_R_SetColor( color );
-    CG_DrawNumber( x, y, scale, str );
+    CG_DrawAltNumber( x, y, scale, str );
 
-    VectorMA( blob->origin, dt, blob->velocity, blob->origin );
-    blob->velocity[ 2 ] -= 300 * dt;
+    VectorMA( di->origin, dt, di->velocity, di->origin );
+    di->velocity[ 2 ] -= 300 * dt;
   }
 
   trap_R_SetColor( NULL );
@@ -4110,7 +4139,7 @@ static void CG_DrawHealthBars( void )
 
     VectorSet( color, 1, 1, 1 );
     trap_R_SetColor( color );
-    CG_DrawNumber( x, y, h, buffer );
+    CG_DrawAltNumber( x, y, h, buffer );
   }
 }
 
@@ -4165,8 +4194,8 @@ static void CG_Draw2D( void )
       CG_DrawBuildableStatus( );
   }
 
-  CG_DrawDamageBlobs( );
   CG_DrawHealthBars( );
+  CG_DrawDamageIndicators( );
 
   if( !menu )
   {
