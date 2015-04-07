@@ -209,6 +209,8 @@ vmCvar_t  g_MinHumanExtraBuildPoints;
 vmCvar_t  g_MaxHumanExtraBuildPoints;
 vmCvar_t  g_BuildingCreditsFactor;
 
+vmCvar_t  g_buildPointDeletion;
+
 // copy cvars that can be set in worldspawn so they can be restored later
 static char cv_gravity[ MAX_CVAR_VALUE_STRING ];
 static char cv_humanMaxStage[ MAX_CVAR_VALUE_STRING ];
@@ -385,7 +387,9 @@ static cvarTable_t   gameCvarTable[ ] =
   { &g_MaxAlienExtraBuildPoints, "g_MaxAlienExtraBuildPoints", "800", CVAR_ARCHIVE, 0, qfalse },
   { &g_MinHumanExtraBuildPoints, "g_MinHumanExtraBuildPoints", "-800", CVAR_ARCHIVE, 0, qfalse },
   { &g_MaxHumanExtraBuildPoints, "g_MaxHumanExtraBuildPoints", "800", CVAR_ARCHIVE, 0, qfalse },
-  { &g_BuildingCreditsFactor, "g_BuildingCreditsFactor", "0.25", CVAR_ARCHIVE, 0, qfalse }
+  { &g_BuildingCreditsFactor, "g_BuildingCreditsFactor", "0.25", CVAR_ARCHIVE, 0, qfalse },
+
+  { &g_buildPointDeletion, "g_buildPointDeletion", "1", CVAR_ARCHIVE, 0, qfalse }
 };
 
 static int gameCvarTableSize = sizeof( gameCvarTable ) / sizeof( gameCvarTable[ 0 ] );
@@ -1440,10 +1444,10 @@ void G_CalculateBuildPoints( void )
   }
 
   trap_SetConfigstring( CS_BUILD_POOLS, va( "%d %d %d %d %d %d", 
-    g_alienBuildPoints.integer + level.alienExtraBuildPoints,
+    g_alienBuildPoints.integer + level.alienExtraBuildPoints - level.alienDeletedBuildPoints,
     g_alienBuildPoints.integer,
     level.alienNoBPFlashTime,
-    g_humanBuildPoints.integer + level.humanExtraBuildPoints,
+    g_humanBuildPoints.integer + level.humanExtraBuildPoints - level.humanDeletedBuildPoints,
     g_humanBuildPoints.integer,
     level.humanNoBPFlashTime ) );
 

@@ -691,10 +691,12 @@ typedef struct
   int               numAlienBuilders;
   int               numHumanBuilders;
   int               alienBuildPoints;
+  int               alienDeletedBuildPoints;
   int               alienExtraBuildPoints;
   int               alienBuildPointQueue;
   int               alienNextQueueTime;
   int               humanBuildPoints;
+  int               humanDeletedBuildPoints;
   int               humanExtraBuildPoints;
   int               humanBuildPointQueue;
   int               humanNextQueueTime;
@@ -1393,6 +1395,8 @@ extern  vmCvar_t  g_MaxAlienExtraBuildPoints;
 extern  vmCvar_t  g_MinHumanExtraBuildPoints;
 extern  vmCvar_t  g_MaxHumanExtraBuildPoints;
 extern  vmCvar_t  g_BuildingCreditsFactor;
+
+extern  vmCvar_t  g_buildPointDeletion;
 
 void      trap_Print( const char *fmt );
 void      trap_Error( const char *fmt );
