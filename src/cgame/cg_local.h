@@ -1625,6 +1625,7 @@ const char  *CG_Argv( int arg );
 
 void QDECL  CG_Printf( const char *msg, ... );
 void QDECL  CG_Error( const char *msg, ... );
+#define CG_Error CG_Printf //uberhack
 
 void        CG_StartMusic( void );
 int         CG_PlayerCount( void );
