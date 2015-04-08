@@ -50,7 +50,9 @@ void trap_Print( const char *fmt )
 
 void trap_Error( const char *fmt )
 {
-  syscall( CG_ERROR, fmt );
+  syscall( CG_PRINT, "^1FATAL ERROR:\n" );
+  syscall( CG_PRINT, fmt );
+  //syscall( CG_ERROR, fmt );
 }
 
 int trap_Milliseconds( void )
