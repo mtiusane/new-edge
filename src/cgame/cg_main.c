@@ -1849,6 +1849,13 @@ void CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum )
 {
   const char  *s;
 
+  CG_Printf( "****************************\n" );
+  CG_Printf( "***THIS  IS  THE  QVM*******\n" );
+  CG_Printf( "****************************\n" );
+  CG_Printf( "****YOU'RE SUPPOSED TO******\n" );
+  CG_Printf( "********BE RUNNING**********\n" );
+  CG_Printf( "****************************\n" );
+
   // clear everything
   memset( &cgs, 0, sizeof( cgs ) );
   memset( &cg, 0, sizeof( cg ) );
