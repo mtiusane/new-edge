@@ -2830,8 +2830,7 @@ void HMedistat_Think( gentity_t *self )
 
         if( player->client && player->client->ps.stats[ STAT_TEAM ] == TEAM_HUMANS )
         {
-          if( ( player->health < player->client->ps.stats[ STAT_MAX_HEALTH ] ||
-                player->client->ps.stats[ STAT_STAMINA ] < STAMINA_MAX ) &&
+          if( player->health < player->client->ps.stats[ STAT_MAX_HEALTH ] &&
               PM_Live( player->client->ps.pm_type ) )
           {
             self->enemy = player;
@@ -2861,12 +2860,6 @@ void HMedistat_Think( gentity_t *self )
     }
     else if( self->enemy && self->enemy->client ) //heal!
     {
-      if( self->enemy->client->ps.stats[ STAT_STAMINA ] <  STAMINA_MAX )
-        self->enemy->client->ps.stats[ STAT_STAMINA ] += STAMINA_MEDISTAT_RESTORE;
-
-      if( self->enemy->client->ps.stats[ STAT_STAMINA ] > STAMINA_MAX )
-        self->enemy->client->ps.stats[ STAT_STAMINA ] = STAMINA_MAX;
-
       self->enemy->health++;
 
       //if they're completely healed, give them a medkit
