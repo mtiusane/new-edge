@@ -3085,12 +3085,6 @@ static void PM_Weapon( void )
   // don't allow attack until all buttons are up
   if( pm->ps->pm_flags & PMF_RESPAWNED )
     return;
-	
-  // no bite during pounce (except for level5)
-  if( ( pm->ps->weapon == WP_ALEVEL3 || pm->ps->weapon == WP_ALEVEL3_UPG )
-      && ( pm->cmd.buttons & BUTTON_ATTACK )
-      && ( pm->ps->pm_flags & PMF_CHARGE ) )
-    return;
 
   // pump weapon delays (repeat times etc)
   if( pm->ps->weaponTime > 0 )

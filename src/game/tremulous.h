@@ -354,14 +354,14 @@ TREMULOUS EDGE MOD SRC FILE
 #define RIFLE_CLIPSIZE              35
 #define RIFLE_MAXCLIPS              5
 #define RIFLE_REPEAT                90
-#define RIFLE_K_SCALE               1.0f
+#define RIFLE_K_SCALE               0.0f
 #define RIFLE_RELOAD                2000
 #define RIFLE_PRICE                 0
 #define RIFLE_SPREAD                200
 #define RIFLE_DMG                   HDM(5) // DPS: 55.55
 
 #define RIFLE_REPEAT2               35
-#define RIFLE_K_SCALE2              1.2f
+#define RIFLE_K_SCALE2              0.0f
 #define RIFLE_RELOAD2               4000
 #define RIFLE_SPREAD2               2000
 #define RIFLE_DMG2                  HDM(4)
@@ -369,7 +369,7 @@ TREMULOUS EDGE MOD SRC FILE
 
 #define PAINSAW_PRICE               100
 #define PAINSAW_REPEAT              75
-#define PAINSAW_K_SCALE             1.0f
+#define PAINSAW_K_SCALE             0.0f
 #define PAINSAW_DAMAGE              HDM(11) // DPS: 146.67
 #define PAINSAW_RANGE               64.0f
 #define PAINSAW_WIDTH               0.0f
@@ -424,7 +424,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define SHOTGUN_PELLETS             11 		//used to sync server and client side
 #define SHOTGUN_MAXCLIPS            3
 #define SHOTGUN_REPEAT              1000
-#define SHOTGUN_K_SCALE             1.0f
+#define SHOTGUN_K_SCALE             0.0f
 #define SHOTGUN_RELOAD              2000
 #define SHOTGUN_SPREAD              700
 #define SHOTGUN_DMG                 HDM(5) // DPS: 55
@@ -433,7 +433,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define LASGUN_PRICE                250
 #define LASGUN_AMMO                 250
 #define LASGUN_REPEAT               190
-#define LASGUN_K_SCALE              1.0f
+#define LASGUN_K_SCALE              0.0f
 #define LASGUN_RELOAD               2000
 #define LASGUN_DAMAGE               HDM(9) // DPS: 47.37
 
@@ -450,7 +450,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define MDRIVER_MAXCLIPS            3
 #define MDRIVER_DMG                 HDM(40) // DPS: 40
 #define MDRIVER_REPEAT              1000
-#define MDRIVER_K_SCALE             1.0f
+#define MDRIVER_K_SCALE             0.0f
 #define MDRIVER_RELOAD              2200
 #define MDRIVER2ND_DMG              HDM(40)
 #define MDRIVER2ND_SPLASH_DMG       10
@@ -463,7 +463,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define CHAINGUN_PRICE              400
 #define CHAINGUN_BULLETS            300
 #define CHAINGUN_REPEAT             80
-#define CHAINGUN_K_SCALE            1.0f
+#define CHAINGUN_K_SCALE            0.0f
 #define CHAINGUN_SPREAD             1000
 #define CHAINGUN_DMG                HDM(6) // DPS: 75
 
@@ -493,7 +493,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define PRIFLE_CLIPS                40
 #define PRIFLE_MAXCLIPS             5
 #define PRIFLE_REPEAT               100
-#define PRIFLE_K_SCALE              1.0f
+#define PRIFLE_K_SCALE              0.0f
 #define PRIFLE_RELOAD               2000
 #define PRIFLE_DMG                  HDM(9) // DPS: 90
 #define PRIFLE_SPEED                1200
@@ -503,7 +503,7 @@ TREMULOUS EDGE MOD SRC FILE
 
 #define LIGHTNING_PRICE             500
 #define LIGHTNING_AMMO              300
-#define LIGHTNING_K_SCALE           1
+#define LIGHTNING_K_SCALE           0.0f
 #define LIGHTNING_DPS               120
 #define LIGHTNING_DIFFICULTY        2
 #define LIGHTNING_REPEAT            50 // keep it as low as possible

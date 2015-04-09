@@ -1253,8 +1253,12 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 
   if( inflictor->s.weapon != WP_NONE )
   {
+    Com_Printf( "^2DEBUG: weapon knockback: %d * %f = ",
+    knockback, BG_Weapon( inflictor->s.weapon )->knockbackScale );
     knockback = (int)( (float)knockback *
       BG_Weapon( inflictor->s.weapon )->knockbackScale );
+    Com_Printf( "%d\n", knockback );
+    
   }
 
   if( targ->client )
