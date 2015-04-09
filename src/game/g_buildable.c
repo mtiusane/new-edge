@@ -401,11 +401,11 @@ int G_GetBuildPoints( const vec3_t pos, team_t team )
   switch(team) {
   case TEAM_ALIENS:
     if ( !G_Overmind( ) ) return 0;
-    value = level.alienBuildPoints;
+    value = level.alienBuildPoints - level.alienDeletedBuildPoints;
     break;
   case TEAM_HUMANS:
     if ( !G_Reactor( ) ) return 0;
-    value = level.humanBuildPoints;
+    value = level.humanBuildPoints - level.humanDeletedBuildPoints;
     break;
   default:
     return 0;
@@ -3312,6 +3312,28 @@ void G_QueueBuildPoints( gentity_t *self )
 {
   gentity_t *powerEntity;
   int       queuePoints;
+
+  // if using build point deletion mode then delete BP permanently
+  // instead of queuing it
+  if( g_buildPointDeletion.integer )
+  {
+    int points = BG_Buildable( self->s.modelindex )->buildPoints;
+    
+    switch( self->buildableTeam )
+    {
+      case TEAM_ALIENS:
+        level.alienDeletedBuildPoints += points;
+        level.alienNoBPFlash = qtrue;
+        break;
+
+      case TEAM_HUMANS:
+        level.humanDeletedBuildPoints += points;
+        level.humanNoBPFlash = qtrue;
+        break;
+    }
+
+    return;
+  }
 
   queuePoints = G_QueueValue( self );
 
