@@ -375,34 +375,10 @@ static void CG_DrawPlayerStamina( int ownerDraw, rectDef_t *rect,
                                   vec4_t backColor, vec4_t foreColor,
                                   qhandle_t shader )
 {
-  playerState_t *ps = &cg.snap->ps;
-  float         stamina = ps->stats[ STAT_STAMINA ];
-  float         maxStaminaBy3 = (float)STAMINA_MAX / 3.0f;
   float         progress;
   vec4_t        color;
 
-  switch( ownerDraw )
-  {
-    case CG_PLAYER_STAMINA_1:
-      progress = ( stamina - 2 * (int)maxStaminaBy3 ) / maxStaminaBy3;
-      break;
-    case CG_PLAYER_STAMINA_2:
-      progress = ( stamina - (int)maxStaminaBy3 ) / maxStaminaBy3;
-      break;
-    case CG_PLAYER_STAMINA_3:
-  progress = stamina / maxStaminaBy3;
-      break;
-    case CG_PLAYER_STAMINA_4:
-      progress = ( stamina + STAMINA_MAX ) / STAMINA_MAX;
-      break;
-    default:
-      return;
-  }
-
-  if( progress > 1.0f )
-    progress  = 1.0f;
-  else if( progress < 0.0f )
-    progress = 0.0f;
+  progress = 0.0f;
 
   Vector4Lerp( progress, backColor, foreColor, color );
 
@@ -419,25 +395,9 @@ CG_DrawPlayerStaminaBolt
 static void CG_DrawPlayerStaminaBolt( rectDef_t *rect, vec4_t backColor,
                                       vec4_t foreColor, qhandle_t shader )
 {
-  float         stamina = cg.snap->ps.stats[ STAT_STAMINA ];
   vec4_t        color;
 
-  if( cg.predictedPlayerState.stats[ STAT_STATE ] & SS_SPEEDBOOST )
-  {
-    if( stamina >= 0 )
-      Vector4Lerp( ( sin( cg.time / 150.0f ) + 1 ) / 2,
-                   backColor, foreColor, color );
-    else
-      Vector4Lerp( ( sin( cg.time / 2000.0f ) + 1 ) / 2,
-                   backColor, foreColor, color );
-  }
-  else
-  {
-    if( stamina < 0 )
-      Vector4Copy( backColor, color );
-    else
-      Vector4Copy( foreColor, color );
-  }
+  Vector4Copy( backColor, color );
 
   trap_R_SetColor( color );
   CG_DrawPic( rect->x, rect->y, rect->w, rect->h, shader );
@@ -3460,31 +3420,6 @@ void CG_RunMenuScript( char **args )
 }
 //END TA UI
 
-
-/*
-================
-CG_DrawLighting
-
-================
-*/
-static void CG_DrawLighting( void )
-{
-  // centity_t   *cent;
-
-  // cent = &cg_entities[ cg.snap->ps.clientNum ];
-
-  //fade to black if stamina is low
-  if( ( cg.snap->ps.stats[ STAT_STAMINA ] < STAMINA_BLACKOUT_LEVEL ) &&
-      ( cg.snap->ps.stats[ STAT_TEAM ] == TEAM_HUMANS ) )
-  {
-    vec4_t black = { 0, 0, 0, 0 };
-    black[ 3 ] = 1.0 - ( (float)( cg.snap->ps.stats[ STAT_STAMINA ] + 1000 ) / 200.0f );
-    trap_R_SetColor( black );
-    CG_DrawPic( 0, 0, 640, 480, cgs.media.whiteShader );
-    trap_R_SetColor( NULL );
-  }
-}
-
 /*
 ===============================================================================
 
@@ -4161,10 +4096,6 @@ static void CG_Draw2D( void )
   // if we are taking a levelshot for the menu, don't draw anything
   if( cg.levelShot )
     return;
-
-  // fading to black if stamina runs out
-  // (only 2D that can't be disabled)
-  CG_DrawLighting( );
 
   if( cg_draw2D.integer == 0 )
     return;

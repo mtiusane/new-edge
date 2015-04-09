@@ -246,7 +246,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define LEVEL3_CLAW_K_SCALE         1.0f
 #define LEVEL3_CLAW_U_REPEAT        800
 #define LEVEL3_CLAW_U_K_SCALE       1.0f
-#define LEVEL3_POUNCE_DMG           ADM(90)
+#define LEVEL3_POUNCE_DMG           ADM(23)
 #define LEVEL3_POUNCE_RANGE         48.0f
 #define LEVEL3_POUNCE_UPG_RANGE     LEVEL3_POUNCE_RANGE + 3.0f
 #define LEVEL3_POUNCE_WIDTH         14.0f
@@ -276,7 +276,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define LEVEL4_CLAW_HEIGHT          20.0f
 #define LEVEL4_CLAW_REPEAT          800
 #define LEVEL4_CLAW_K_SCALE         1.0f
-#define LEVEL4_TRAMPLE_DMG             ADM(111)
+#define LEVEL4_TRAMPLE_DMG             ADM(28)
 #define LEVEL4_TRAMPLE_SPEED           2.0f
 #define LEVEL4_TRAMPLE_CHARGE_MIN      375   // minimum msec to start a charge
 #define LEVEL4_TRAMPLE_CHARGE_MAX      1000  // msec to maximum charge stored
@@ -324,25 +324,7 @@ TREMULOUS EDGE MOD SRC FILE
  * HUMAN
  */
 
-#define HUMAN_SPRINT_MODIFIER       1.28f
-#define HUMAN_JOG_MODIFIER          1.1f
-#define HUMAN_BACK_MODIFIER         0.8f
-#define HUMAN_SIDE_MODIFIER         0.9f
-#define HUMAN_DODGE_SIDE_MODIFIER   2.9f
-#define HUMAN_DODGE_SLOWED_MODIFIER 0.9f
-#define HUMAN_DODGE_UP_MODIFIER     0.5f
-#define HUMAN_DODGE_TIMEOUT         500
 #define HUMAN_LAND_FRICTION         3.0f
-#define STAMINA_STOP_RESTORE        20
-#define STAMINA_WALK_RESTORE        15
-#define STAMINA_MEDISTAT_RESTORE    30 			 // stacked on STOP or WALK
-#define STAMINA_SPRINT_TAKE         8
-#define STAMINA_JUMP_TAKE           250
-#define STAMINA_DODGE_TAKE          250
-#define STAMINA_MAX                 1200
-#define STAMINA_BREATHING_LEVEL     0
-#define STAMINA_SLOW_LEVEL          -500
-#define STAMINA_BLACKOUT_LEVEL      -800
 #define HUMAN_SPAWN_REPEAT_TIME     11000
 #define HUMAN_REGEN_DAMAGE_TIME     2000 		//msec since damage before dcc repairs
 #define HUMAN_MAX_CREDITS           2000

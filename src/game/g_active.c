@@ -631,7 +631,6 @@ void SpectatorThink( gentity_t *ent, usercmd_t *ucmd )
       client->ps.pm_flags |= PMF_QUEUED;
 
     client->ps.speed = client->pers.flySpeed;
-    client->ps.stats[ STAT_STAMINA ] = 0;
     client->ps.stats[ STAT_MISC ] = 0;
     client->ps.stats[ STAT_BUILDABLE ] = BA_NONE;
     client->ps.stats[ STAT_CLASS ] = PCL_NONE;
@@ -807,26 +806,10 @@ void ClientTimerActions( gentity_t *ent, int msec )
 	  client->ps.stats[ STAT_STATE ] &= ~SS_INVI;
     }
 
-    // Restore or subtract stamina
-    if( stopped || client->ps.pm_type == PM_JETPACK )
-      client->ps.stats[ STAT_STAMINA ] += STAMINA_STOP_RESTORE;
-    else if( ( client->ps.stats[ STAT_STATE ] & SS_SPEEDBOOST ) &&
-             !( client->buttons & BUTTON_WALKING ) ) // walk overrides sprint
-      client->ps.stats[ STAT_STAMINA ] -= STAMINA_SPRINT_TAKE;
-    else if( walking || crouched )
-      client->ps.stats[ STAT_STAMINA ] += STAMINA_WALK_RESTORE;
-      
-    // Check stamina limits
-    if( client->ps.stats[ STAT_STAMINA ] > STAMINA_MAX )
-      client->ps.stats[ STAT_STAMINA ] = STAMINA_MAX;
-    else if( client->ps.stats[ STAT_STAMINA ] < -STAMINA_MAX )
-      client->ps.stats[ STAT_STAMINA ] = -STAMINA_MAX;
-
-    // Regenerate health and stamina if we have got a Biokit
+    // Regenerate health if we have got a Biokit
     if( BG_InventoryContainsUpgrade( UP_BIOKIT, client->ps.stats ) )
     {
       int rate_health  = BIOKIT_HEALTH_RATE;
-      int rate_stamina = BIOKIT_STAMINA_RATE;
 
       if( ent->nextRegenTime < level.time && ent->health > 0 && rate_health > 0 && 
           ent->health < client->ps.stats[ STAT_MAX_HEALTH ] )
@@ -840,9 +823,6 @@ void ClientTimerActions( gentity_t *ent, int msec )
         ent->nextRegenTime = level.time + 5000/rate_health;
         ent->client->alreadyRegenerated = qtrue;
       }
-
-      if( client->ps.stats[ STAT_STAMINA ] + rate_stamina <= STAMINA_MAX )
-        client->ps.stats[ STAT_STAMINA ] += rate_stamina;
     }
 
     if( weapon == WP_ABUILD ||
