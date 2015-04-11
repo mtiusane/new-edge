@@ -253,7 +253,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define LEVEL3_POUNCE_TIME          900      // msec for full Dragoon pounce
 #define LEVEL3_POUNCE_TIME_UPG      900      // msec for full Adv. Dragoon pounce
 #define LEVEL3_POUNCE_TIME_MIN      200      // msec before which pounce cancels  
-#define LEVEL3_POUNCE_REPEAT        400      // msec before a new pounce starts (default: 400)
+#define LEVEL3_POUNCE_REPEAT        0        // msec before a new pounce starts (default: 400)
 #define LEVEL3_POUNCE_SPEED_MOD     0.75f    // walking speed modifier for pounce charging
 #define LEVEL3_POUNCE_JUMP_MAG      850      // Dragoon pounce jump power
 #define LEVEL3_POUNCE_JUMP_MAG_UPG  930      // Adv. Dragoon pounce jump power
