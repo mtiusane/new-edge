@@ -324,7 +324,21 @@ TREMULOUS EDGE MOD SRC FILE
  * HUMAN
  */
 
+#define HUMAN_SPRINT_MODIFIER       1.28f
+#define HUMAN_JOG_MODIFIER          1.1f
+#define HUMAN_BACK_MODIFIER         0.8f
+#define HUMAN_SIDE_MODIFIER         0.9f
 #define HUMAN_LAND_FRICTION         3.0f
+#define STAMINA_STOP_RESTORE        20
+#define STAMINA_WALK_RESTORE        15
+#define STAMINA_MEDISTAT_RESTORE    30
+#define STAMINA_SPRINT_TAKE         8
+#define STAMINA_JUMP_TAKE           250
+#define STAMINA_DODGE_TAKE          250
+#define STAMINA_MAX                 1200
+#define STAMINA_BREATHING_LEVEL     0
+#define STAMINA_SLOW_LEVEL          -500
+#define STAMINA_BLACKOUT_LEVEL      -800
 #define HUMAN_SPAWN_REPEAT_TIME     11000
 #define HUMAN_REGEN_DAMAGE_TIME     2000 		//msec since damage before dcc repairs
 #define HUMAN_MAX_CREDITS           2000
