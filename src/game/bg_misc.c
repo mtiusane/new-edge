@@ -3682,7 +3682,7 @@ static const weaponAttributes_t bg_weapons[ ] =
     STAGE_GE_5,           //int  stages
     SLOT_NONE,            //int       slots;
     "mine",            //char      *weaponName;
-    "Mine",            //char      *weaponHumanName;
+    "Sticky Grenade",    //char      *weaponHumanName;
     "",
     1,                    //int       maxAmmo;
     0,                    //int       maxClips;
