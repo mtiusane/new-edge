@@ -1323,27 +1323,6 @@ void Cmd_CallVote_f( gentity_t *ent )
           "Set the ^1next^5 map to '%s'", arg );
       }
     }
-    else if( !Q_stricmp( vote, "draw" ) )
-    {
-      if( !reason[ 0 ] && !G_admin_permission( ent, ADMF_UNACCOUNTABLE ) )
-      {
-        trap_SendServerCommand( ent-g_entities,
-          va( "print \"%s: You must provide a reason\n\"", cmd ) );
-        return;
-      }
-    
-      if( (( level.time - level.startTime ) <= 300 * 1000 )
-        && ( level.numPlayingClients > 0 && level.numConnectedClients > 1 ) )
-      {
-         trap_SendServerCommand( ent-g_entities, "print \"You cannot call for a draw before 5 minutes\n\"" );
-         return;
-      }
-	  
-      
-      strcpy( level.voteString[ team ], "evacuation" );
-      strcpy( level.voteDisplayString[ team ], "End match in a draw" );
-      level.voteDelay[ team ] = 3000;
-    }
     else if( !Q_stricmp( vote, "sudden_death" ) )
     {
       if(!g_suddenDeathVotePercent.integer)
@@ -1402,7 +1381,7 @@ void Cmd_CallVote_f( gentity_t *ent )
     {
       trap_SendServerCommand( ent-g_entities, "print \"Invalid vote string\n\"" );
       trap_SendServerCommand( ent-g_entities, "print \"Valid vote commands are: "
-        "map, nextmap, map_restart, draw, sudden_death, armageddon, kick, poll, mute and unmute\n" );
+        "map, nextmap, map_restart, sudden_death, armageddon, kick, poll, mute and unmute\n" );
       return;
     }
   }
