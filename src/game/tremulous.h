@@ -413,7 +413,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define	MINE_INIT_TIME	            3000
 #define MINE_CHECK_FREQUENCY        100
 #define	MINE_BOOM_TIME		    25
-#define MINE_TAKEDAMAGE             qtrue
+#define MINE_TAKEDAMAGE             qfalse
 #define MINE_HEALTH                 40
 
 #define NADEFLAMES_SPEED            400.0f
