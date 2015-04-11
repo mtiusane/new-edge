@@ -4605,6 +4605,9 @@ qboolean G_admin_say_area( gentity_t *ent )
     return qfalse;
   }
 
+  if( ent->client->pers.namelog->muted )
+    return qfalse;
+
   msg = ConcatArgs( 1 );
 
   for(i = 0; i < 3; i++ )
@@ -4646,6 +4649,9 @@ qboolean G_admin_say( gentity_t *ent )
   saymode_t mode = SAY_ALL;
 
   if( trap_Argc( ) < 2 )
+    return qfalse;
+
+  if( ent->client->pers.namelog->muted )
     return qfalse;
 
   trap_Argv( 0, cmd, sizeof( cmd ) );
@@ -4807,6 +4813,9 @@ qboolean G_admin_m( gentity_t *ent )
     ADMP( va( "usage: %s [name|slot#] [message]\n", cmd ) );
     return qfalse;
   }
+
+  if( ent->client->pers.namelog->muted )
+    return qfalse;
 
   if( !Q_stricmp( cmd, "mt" ) )
     teamonly = qtrue;
