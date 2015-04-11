@@ -1422,6 +1422,12 @@ void Cmd_CallVote_f( gentity_t *ent )
   }
   else if( !Q_stricmp( vote, "admitdefeat" ) )
   {
+    if( ( ( level.time - level.startTime ) < 60 * 10000 ) )
+    {
+      trap_SendServerCommand( ent-g_entities, "print \"You cannot admit defeat in the first 10 minutes.\n\"" );
+      return;
+    }
+
     Com_sprintf( level.voteString[ team ], sizeof( level.voteString[ team ] ),
       "admitdefeat %d", team );
     strcpy( level.voteDisplayString[ team ], "Admit Defeat" );
