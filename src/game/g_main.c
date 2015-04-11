@@ -208,8 +208,8 @@ vmCvar_t  g_MaxAlienExtraBuildPoints;
 vmCvar_t  g_MinHumanExtraBuildPoints;
 vmCvar_t  g_MaxHumanExtraBuildPoints;
 vmCvar_t  g_BuildingCreditsFactor;
-
 vmCvar_t  g_buildPointDeletion;
+vmCvar_t  g_emptyTeamsSkipMapTime;
 
 // copy cvars that can be set in worldspawn so they can be restored later
 static char cv_gravity[ MAX_CVAR_VALUE_STRING ];
@@ -388,8 +388,8 @@ static cvarTable_t   gameCvarTable[ ] =
   { &g_MinHumanExtraBuildPoints, "g_MinHumanExtraBuildPoints", "-800", CVAR_ARCHIVE, 0, qfalse },
   { &g_MaxHumanExtraBuildPoints, "g_MaxHumanExtraBuildPoints", "800", CVAR_ARCHIVE, 0, qfalse },
   { &g_BuildingCreditsFactor, "g_BuildingCreditsFactor", "0.25", CVAR_ARCHIVE, 0, qfalse },
-
-  { &g_buildPointDeletion, "g_buildPointDeletion", "1", CVAR_ARCHIVE, 0, qfalse }
+  { &g_buildPointDeletion, "g_buildPointDeletion", "1", CVAR_ARCHIVE, 0, qfalse },
+  { &g_emptyTeamsSkipMapTime, "g_emptyTeamsSkipMapTime", "15", CVAR_ARCHIVE, 0, qfalse }
 };
 
 static int gameCvarTableSize = sizeof( gameCvarTable ) / sizeof( gameCvarTable[ 0 ] );
@@ -2483,13 +2483,13 @@ void CheckExitRules( void )
     LogExit( "Aliens win." );
     G_MapLog_Result( 'a' );
   }
-  else if( level.suddenDeathBeginTime != 0 && 
-	   level.time > level.suddenDeathBeginTime/2 && 
-	   level.numAlienClients == 0 && level.numHumanClients == 0 )
+  else if( g_emptyTeamsSkipMapTime.integer &&
+    ( level.time - level.startTime ) / 60000 >=
+      g_emptyTeamsSkipMapTime.integer &&
+    level.numAlienClients == 0 && level.numHumanClients == 0 )
   {
-    // Close to sudden death started but no clients connected
     level.lastWin = TEAM_NONE;
-    trap_SendServerCommand( -1, "print \"Half way to sudden death reached with empty teams\n\"" );
+    trap_SendServerCommand( -1, "print \"Empty teams skip map time exceeded.\n\"" );
       trap_SetConfigstring( CS_WINNER, "Stalemate" );
       LogExit( "Timelimit hit." );
       G_MapLog_Result( 't' );
