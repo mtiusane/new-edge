@@ -1395,8 +1395,8 @@ extern  vmCvar_t  g_MaxAlienExtraBuildPoints;
 extern  vmCvar_t  g_MinHumanExtraBuildPoints;
 extern  vmCvar_t  g_MaxHumanExtraBuildPoints;
 extern  vmCvar_t  g_BuildingCreditsFactor;
-
 extern  vmCvar_t  g_buildPointDeletion;
+extern  vmCvar_t  g_emptyTeamsSkipMapTime;
 
 void      trap_Print( const char *fmt );
 void      trap_Error( const char *fmt );
