@@ -3430,6 +3430,11 @@ static void PM_Weapon( void )
 
  
     case WP_MASS_DRIVER:
+      if( pm->ps->ammo > 6 && attack3 )
+        attack3 = attack2 = qtrue;
+      else
+       attack2 = attack3 = qfalse;
+
       //attack2 is handled on the client for zooming (cg_view.c)
       if( !attack1 )
       {
