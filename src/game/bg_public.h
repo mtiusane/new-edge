@@ -161,6 +161,15 @@ typedef enum
 
 #define PMF_ALL_TIMES (PMF_TIME_WATERJUMP|PMF_TIME_LAND|PMF_TIME_KNOCKBACK|PMF_TIME_WALLJUMP)
 
+#define MAX_FORCE_FIELDS 100
+typedef struct
+{
+  int type;
+  vec3_t origin;
+  float force;
+  float range;
+} forceField_t;
+
 typedef struct
 {
   int pouncePayload;
@@ -205,6 +214,9 @@ typedef struct pmove_s
 
 
   int           (*pointcontents)( const vec3_t point, int passEntityNum );
+
+  forceField_t  forceFields[ MAX_FORCE_FIELDS ];
+  int           numForceFields;
 } pmove_t;
 
 // if a full pmove isn't done on the client, you can just update the angles
@@ -1249,3 +1261,5 @@ int cmdcmp( const void *a, const void *b );
 #define DIF_BUILDABLE   0x0002 // has to be 2
 #define DIF_FRIENDLY    0x0004
 #define DIF_PERSISTENT  0x0008 // poison and infection
+
+qboolean BG_ForceFieldForEntity( playerState_t *ps, entityState_t *es, forceField_t *ff );

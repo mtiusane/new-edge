@@ -5449,3 +5449,40 @@ int cmdcmp( const void *a, const void *b )
 {
   return Q_stricmp( (const char *)a, ((dummyCmd_t *)b)->name );
 }
+
+/*
+============
+BG_ForceFieldForEntity
+============
+*/
+qboolean BG_ForceFieldForEntity( playerState_t *ps, entityState_t *es, forceField_t *ff )
+{
+  if( es->eType == ET_BUILDABLE )
+  {
+    if( !( es->eFlags & EF_B_POWERED ) )
+      return qfalse;
+
+    if( !( es->eFlags & EF_B_SPAWNED ) )
+      return qfalse;
+
+    // health
+    if( es->generic1 <= 0 )
+      return qfalse;
+
+    switch( es->modelindex )
+    {
+      case BA_H_LIGHT: //force field
+        if( ps && ps->stats[ STAT_TEAM ] != TEAM_ALIENS )
+          return qfalse;
+
+        ff->type = 0;
+        VectorCopy( es->origin, ff->origin );
+        ff->range = LIGHT_RANGE;
+        ff->force = LIGHT_FORCE;
+
+        return qtrue;
+    }
+  }
+
+  return qfalse;
+}

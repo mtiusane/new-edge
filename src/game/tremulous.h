@@ -1111,12 +1111,14 @@ TREMULOUS EDGE MOD SRC FILE
 #define BARREL_SPLASHRADIUS        		     150
 #define BARREL_VALUE               			 HBVM(BARREL_BP)
 
-#define LIGHT_BP                		     12
-#define LIGHT_BT                 			 12000
-#define LIGHT_HEALTH              		     HBHM(200)
-#define LIGHT_SPLASHDAMAGE        		     15
-#define LIGHT_SPLASHRADIUS        		     180
-#define LIGHT_VALUE               			 HBVM(LIGHT_BP)
+#define LIGHT_BP                    12
+#define LIGHT_BT                    12000
+#define LIGHT_HEALTH                HBHM(200)
+#define LIGHT_SPLASHDAMAGE          15
+#define LIGHT_SPLASHRADIUS          180
+#define LIGHT_VALUE                 HBVM(LIGHT_BP)
+#define LIGHT_RANGE                 220
+#define LIGHT_FORCE                 -1.5e+6
 
 #define COVER_BP                	    	 20
 #define COVER_BT                 			 20000

@@ -3901,6 +3901,45 @@ void PM_UpdateViewAngles( playerState_t *ps, const usercmd_t *cmd )
   }
 }
 
+/*
+================
+PM_ForceFields
+================
+*/
+
+void PM_ForceFields( void )
+{
+  int i;
+  float dt = pml.msec * 0.001f;
+  forceField_t *ff;
+  vec3_t total = { 0 };
+
+  for( i = 0; i < pm->numForceFields; i++ )
+  {
+    vec3_t delta;
+    float distance, force;
+    trace_t tr;
+
+    ff = pm->forceFields + i;
+
+    VectorSubtract( ff->origin, pm->ps->origin, delta );
+    distance = VectorNormalize( delta );
+
+    if( distance > ff->range )
+      continue;
+
+    pm->trace( &tr, pm->ps->origin, NULL, NULL, ff->origin, pm->ps->clientNum, MASK_SOLID );
+
+    if( tr.fraction < 1.0f )
+      continue;
+
+    force = ff->force / distance * ( 1.0f - distance / ff->range );
+
+    VectorMA( total, force, delta, total );
+  }
+
+  VectorMA( pm->ps->velocity, dt, total, pm->ps->velocity );
+}
 
 /*
 ================
@@ -4061,6 +4100,8 @@ void PmoveSingle( pmove_t *pmove )
     PM_DeadMove( );
 
   PM_DropTimers( );
+
+  PM_ForceFields( );
 
   if( pm->ps->pm_type == PM_JETPACK )
     PM_JetPackMove( );

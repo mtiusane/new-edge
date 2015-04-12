@@ -1663,6 +1663,7 @@ void ClientThink_real( gentity_t *ent )
   int       oldEventSequence;
   int       msec;
   usercmd_t *ucmd;
+  int       i;
 
   client = ent->client;
 
@@ -1991,6 +1992,18 @@ void ClientThink_real( gentity_t *ent )
   pm.pointcontents = trap_PointContents;
   pm.debugLevel = g_debugMove.integer;
   pm.noFootsteps = 0;
+
+  for( i = 0; i < level.num_entities; i++ )
+  {
+    gentity_t *ent = g_entities + i;
+
+    if( BG_ForceFieldForEntity( pm.ps, &ent->s,
+      pm.forceFields + pm.numForceFields ) )
+      pm.numForceFields++;
+
+    if( pm.numForceFields == MAX_FORCE_FIELDS )
+      break;
+  }
 
   pm.pmove_fixed = pmove_fixed.integer | client->pers.pmoveFixed;
   pm.pmove_msec = pmove_msec.integer;

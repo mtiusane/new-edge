@@ -1642,13 +1642,8 @@ for forcefield
 */
 void G_Push( gentity_t *self )
 {
-#define PUSH_REPEAT 400
-#define PUSH_RANGE 140
-#define PUSH_FORCE -900
-#define WEAK_PUSH_FORCE -675
-
   int       entityList[ MAX_GENTITIES ];
-  vec3_t    range = { PUSH_RANGE, PUSH_RANGE, PUSH_RANGE };
+  vec3_t    range = { LIGHT_RANGE, LIGHT_RANGE, LIGHT_RANGE };
   vec3_t    mins, maxs;
   int       i, num;
   gentity_t *enemy;
@@ -1656,7 +1651,7 @@ void G_Push( gentity_t *self )
   float     force;
   qboolean  active = qfalse;
  
-  self->nextthink = level.time + PUSH_REPEAT;
+  self->nextthink = level.time + 500;
   
   VectorAdd( self->s.origin, range, maxs );
   VectorSubtract( self->s.origin, range, mins );
@@ -1682,80 +1677,44 @@ void G_Push( gentity_t *self )
 
       if( enemy->flags & FL_NOTARGET )
         continue;
+
       if( !G_Visible( self, enemy, CONTENTS_SOLID ) )
-	continue;
+        continue;
+
       if (enemy->client && enemy->client->notrackEndTime >= level.time)
-      	continue;
+        continue;
+
+      if( Distance( enemy->r.currentOrigin, self->r.currentOrigin ) > LIGHT_RANGE )
+        continue;
 
       if( enemy->client && enemy->client->ps.stats[ STAT_TEAM ] != TEAM_HUMANS )
       {
-	if (enemy == self) 
-	  continue;
+        if (enemy == self) 
+          continue;
 
-	if (!enemy->client)
-	  continue;
+        if (!enemy->client)
+          continue;
 
-	if (enemy == self->parent) 
-	  continue;
+        if (enemy == self->parent) 
+          continue;
 
-	if (!enemy->takedamage) 
-	  continue;
+        if (!enemy->takedamage) 
+          continue;
 
-	active = qtrue;
-	break;
+        active = qtrue;
+        break;
       }
     }
 
     if (active) 
     {
-      for( i = 0; i < num; i++ )
-      {
-	enemy = &g_entities[ entityList[ i ] ];
-
-	if( enemy->flags & FL_NOTARGET )
-	  continue;
-
-	if( !G_Visible( self, enemy, CONTENTS_SOLID ) )
-	  continue;
-
-	if (enemy->client && enemy->client->notrackEndTime >= level.time)
-	  continue;
-
-	if( enemy->client && enemy->client->ps.stats[ STAT_TEAM ] != TEAM_NONE )
-	{
-	  if (enemy == self) 
-	    continue;
-
-	  if (!enemy->client)
-	    continue;
-
-	  if (enemy == self->parent) 
-	    continue;
-
-	  if (!enemy->takedamage) 
-	    continue;
-
-	  if ( enemy->client->ps.stats[ STAT_CLASS ] == PCL_ALIEN_LEVEL5 )
-	    force = PUSH_FORCE;
-	  else
-	    force = WEAK_PUSH_FORCE;
-	  
-	  VectorCopy(enemy->r.currentOrigin, start); 
-	  VectorCopy(self->r.currentOrigin, end); 
-	  VectorSubtract(end, start, dir); 
-	  VectorNormalize(dir); 
-	  VectorScale(dir, force, enemy->client->ps.velocity); 
-	  VectorCopy(dir, enemy->movedir); 
-	}
-      }
-     
       // start the attack animation
       G_AddEvent( self, EV_FORCE_FIELD, DirToByte( self->s.origin2 ) );
   
       if( level.time >= self->timestamp + 500 )
       {
-	self->timestamp = level.time;
-	G_SetBuildableAnim( self, BANIM_ATTACK1, qfalse );
+        self->timestamp = level.time;
+        G_SetBuildableAnim( self, BANIM_ATTACK1, qfalse );
       }
     }
   }
