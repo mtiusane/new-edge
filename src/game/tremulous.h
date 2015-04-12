@@ -810,7 +810,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define INFESTATION_THICKET_BP                    4
 #define INFESTATION_THICKET_BT                    12000
 #define INFESTATION_THICKET_HEALTH                ABHM(250)
-#define INFESTATION_THICKET_REGEN                 1
+#define INFESTATION_THICKET_REGEN                 12
 #define INFESTATION_THICKET_SPLASHDAMAGE          10
 #define INFESTATION_THICKET_SPLASHRADIUS          10
 #define INFESTATION_THICKET_CREEPSIZE             190
@@ -819,7 +819,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define INFESTATION_BLISTER_BP                    3
 #define INFESTATION_BLISTER_BT                    7000
 #define INFESTATION_BLISTER_HEALTH                ABHM(250)
-#define INFESTATION_BLISTER_REGEN                 1
+#define INFESTATION_BLISTER_REGEN                 12
 #define INFESTATION_BLISTER_SPLASHDAMAGE          10
 #define INFESTATION_BLISTER_SPLASHRADIUS          10
 #define INFESTATION_BLISTER_CREEPSIZE             300
@@ -828,7 +828,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define REFLECTOR_BP                 			   3
 #define REFLECTOR_BT                 			   4000
 #define REFLECTOR_HEALTH              			   ABHM(250)
-#define REFLECTOR_REGEN               			   1
+#define REFLECTOR_REGEN               			   12
 #define REFLECTOR_SPLASHDAMAGE        			   5
 #define REFLECTOR_SPLASHRADIUS        			   15
 #define REFLECTOR_CREEPSIZE           			   0
@@ -855,7 +855,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define COCOON_BP                    				35
 #define COCOON_BT                    				20000
 #define COCOON_HEALTH                				ABHM(250)
-#define COCOON_REGEN                 				1
+#define COCOON_REGEN                 				12
 #define COCOON_SPLASHDAMAGE          				10
 #define COCOON_SPLASHRADIUS          				200
 #define COCOON_CREEPSIZE             				60
