@@ -989,7 +989,7 @@ gentity_t *fire_rocket( gentity_t *self, vec3_t start, vec3_t dir )
   bolt->r.ownerNum = self->s.number;
   bolt->parent = self;
   bolt->damage = ROCKETL_DAMAGE;
-  bolt->splashDamage = ROCKETL_DAMAGE;
+  bolt->splashDamage = ROCKETL_SPLASHDAMAGE;
   bolt->splashRadius = ROCKETL_RADIUS;
   bolt->methodOfDeath = MOD_ROCKETL;
   bolt->splashMethodOfDeath = MOD_ROCKETL_SPLASH;
@@ -997,7 +997,7 @@ gentity_t *fire_rocket( gentity_t *self, vec3_t start, vec3_t dir )
   bolt->target_ent = NULL;
   bolt->r.mins[ 0 ] = bolt->r.mins[ 1 ] = bolt->r.mins[ 2 ] = -ROCKETL_SIZE;
   bolt->r.maxs[ 0 ] = bolt->r.maxs[ 1 ] = bolt->r.maxs[ 2 ] = ROCKETL_SIZE;
-  bolt->s.pos.trType = TR_LINEAR;
+  bolt->s.pos.trType = TR_GRAVITY;
   bolt->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;   // move a bit on the very first frame
   VectorCopy( start, bolt->s.pos.trBase );
   VectorScale( dir, ROCKETL_SPEED, bolt->s.pos.trDelta );

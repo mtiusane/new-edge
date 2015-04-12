@@ -543,16 +543,17 @@ TREMULOUS EDGE MOD SRC FILE
 #define LCANNON_CHARGE_TIME_WARN    2000
 #define LCANNON_CHARGE_AMMO         10       // ammo cost of a full charge shot
 
-#define ROCKETL_PRICE               700
+#define ROCKETL_PRICE               800
 #define ROCKETL_AMMO                20
-#define ROCKETL_CLIPS               1
+#define ROCKETL_CLIPS               0
 #define ROCKETL_RELOAD              0
-#define ROCKETL_REPEAT              1200
+#define ROCKETL_REPEAT              1000
 #define ROCKETL_K_SCALE             1.0f
-#define ROCKETL_DAMAGE              HDM(80) // DPS: 66.67
-#define ROCKETL_RADIUS              80
+#define ROCKETL_DAMAGE              HDM(88) // DPS: 88
+#define ROCKETL_SPLASHDAMAGE        ( ROCKETL_DAMAGE / 2 )
+#define ROCKETL_RADIUS              120
 #define ROCKETL_SIZE                5
-#define ROCKETL_SPEED               500
+#define ROCKETL_SPEED               700
 
 #define HBUILD_PRICE                0
 #define HBUILD_REPEAT               1000
