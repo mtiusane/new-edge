@@ -1351,6 +1351,8 @@ typedef struct
   qhandle_t   lightningImpactPS;
 
   sfxHandle_t hitSounds[ 5 ];
+
+  sfxHandle_t rocketlPrimeSound;
 } cgMedia_t;
 
 typedef struct

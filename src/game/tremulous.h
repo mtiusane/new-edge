@@ -547,13 +547,14 @@ TREMULOUS EDGE MOD SRC FILE
 #define ROCKETL_AMMO                20
 #define ROCKETL_CLIPS               0
 #define ROCKETL_RELOAD              0
-#define ROCKETL_REPEAT              1000
+#define ROCKETL_REPEAT              ( 1000 - ROCKETL_DELAY )
 #define ROCKETL_K_SCALE             1.0f
 #define ROCKETL_DAMAGE              HDM(88) // DPS: 88
 #define ROCKETL_SPLASHDAMAGE        ( ROCKETL_DAMAGE / 2 )
 #define ROCKETL_RADIUS              120
 #define ROCKETL_SIZE                5
 #define ROCKETL_SPEED               700
+#define ROCKETL_DELAY               600
 
 #define HBUILD_PRICE                0
 #define HBUILD_REPEAT               1000
