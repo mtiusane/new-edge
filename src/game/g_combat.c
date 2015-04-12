@@ -1163,6 +1163,10 @@ void G_SpawnDamageIndicator( gentity_t *ent, gentity_t *inflictor,
       di->flags |= DIF_INDIRECT | DIF_PERSISTENT;
       break;
 
+    case MOD_NOCREEP:
+      di->flags |= DIF_INDIRECT;
+      break;
+
     case MOD_DECONSTRUCT:
       return;
   }
