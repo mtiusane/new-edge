@@ -96,19 +96,9 @@ vmCvar_t  pmove_fixed;
 vmCvar_t  pmove_msec;
 vmCvar_t  g_minNameChangePeriod;
 vmCvar_t  g_maxNameChanges;
-vmCvar_t  g_alienBuildPoints;
-vmCvar_t  g_alienBuildQueueTime;
-vmCvar_t  g_humanBuildPoints;
-vmCvar_t  g_humanBuildQueueTime;
-vmCvar_t  g_alienColonyBuildPoints;
-vmCvar_t  g_alienColonyBuildPointsRate;
-vmCvar_t  g_alienColonyMaxAge;
 vmCvar_t  g_alienColonyRadius;
 vmCvar_t  g_humanDefenceComputerLimit;
 vmCvar_t  g_humanDefenceComputerRate;
-vmCvar_t  g_humanRefineryBuildPoints;
-vmCvar_t  g_humanRefineryBuildPointsRate;
-vmCvar_t  g_humanRefineryMaxAge;
 vmCvar_t  g_humanRefineryRadius;
 vmCvar_t  g_humanStage;
 vmCvar_t  g_humanCredits;
@@ -139,14 +129,10 @@ vmCvar_t  g_contagionProb;
 vmCvar_t  g_boosterPoisonTime;
 vmCvar_t  g_basiPoisonTime;
 vmCvar_t  g_basiUpgPoisonTime;
-vmCvar_t  g_maxVariableBuildPoints;
-vmCvar_t  g_variableBuildPointsPower;
-vmCvar_t  g_maxFixedBuildPoints;
 vmCvar_t  g_unlagged;
 vmCvar_t  g_disabledEquipment;
 vmCvar_t  g_disabledClasses;
 vmCvar_t  g_disabledBuildables;
-vmCvar_t  g_markDeconstruct;
 vmCvar_t  g_debugMapRotation;
 vmCvar_t  g_currentMapRotation;
 vmCvar_t  g_mapRotationNodes;
@@ -201,15 +187,15 @@ vmCvar_t  g_AutoLevelMinTeamSize;
 vmCvar_t  g_RageQuitScorePenalty;
 vmCvar_t  g_DretchTurretDamage;
 vmCvar_t  g_DretchBuildingDamage;
-vmCvar_t  g_OwnTeamBPFactor;
-vmCvar_t  g_EnemyTeamBPFactor;
-vmCvar_t  g_MinAlienExtraBuildPoints;
-vmCvar_t  g_MaxAlienExtraBuildPoints;
-vmCvar_t  g_MinHumanExtraBuildPoints;
-vmCvar_t  g_MaxHumanExtraBuildPoints;
 vmCvar_t  g_BuildingCreditsFactor;
-vmCvar_t  g_buildPointDeletion;
 vmCvar_t  g_emptyTeamsSkipMapTime;
+
+vmCvar_t  g_buildPointsMode;
+vmCvar_t  g_alienBuildPoints;
+vmCvar_t  g_humanBuildPoints;
+vmCvar_t  g_buildPointsRecovery;
+vmCvar_t  g_buildPointsDecay;
+vmCvar_t  g_buildPointsDecayStart;
 
 // copy cvars that can be set in worldspawn so they can be restored later
 static char cv_gravity[ MAX_CVAR_VALUE_STRING ];
@@ -276,19 +262,9 @@ static cvarTable_t   gameCvarTable[ ] =
   { &g_smoothClients, "g_smoothClients", "1", 0, 0, qfalse},
   { &pmove_fixed, "pmove_fixed", "0", CVAR_SYSTEMINFO, 0, qfalse},
   { &pmove_msec, "pmove_msec", "8", CVAR_SYSTEMINFO, 0, qfalse},
-  { &g_alienBuildPoints, "g_alienBuildPoints", DEFAULT_ALIEN_BUILDPOINTS, 0, 0, qfalse  },
-  { &g_alienBuildQueueTime, "g_alienBuildQueueTime", DEFAULT_ALIEN_QUEUE_TIME, CVAR_ARCHIVE, 0, qfalse  },
-  { &g_alienColonyBuildPoints, "g_alienColonyBuildPoints", "36", CVAR_ARCHIVE, 0, qfalse  },
-  { &g_alienColonyBuildPointsRate, "g_alienColonyBuildPointsRate", "17", CVAR_ARCHIVE, 0, qfalse  },
-  { &g_alienColonyMaxAge, "g_alienColonyMaxAge", "10", CVAR_ARCHIVE, 0, qfalse  },
   { &g_alienColonyRadius, "g_alienColonyRadius", CREEPCOLONY_RADIUS, CVAR_ARCHIVE, 0, qfalse  },
-  { &g_humanBuildPoints, "g_humanBuildPoints", DEFAULT_HUMAN_BUILDPOINTS, 0, 0, qfalse  },
-  { &g_humanBuildQueueTime, "g_humanBuildQueueTime", DEFAULT_HUMAN_QUEUE_TIME, CVAR_ARCHIVE, 0, qfalse  },
   { &g_humanDefenceComputerLimit, "g_humanDefenceComputerLimit", "3", CVAR_ARCHIVE, 0, qfalse  },
   { &g_humanDefenceComputerRate, "g_humanDefenceComputerRate", "4", CVAR_ARCHIVE, 0, qfalse  },
-  { &g_humanRefineryBuildPoints, "g_humanRefineryBuildPoints", "36", CVAR_ARCHIVE, 0, qfalse  },
-  { &g_humanRefineryBuildPointsRate, "g_humanRefineryBuildPointsRate", "20", CVAR_ARCHIVE, 0, qfalse  },
-  { &g_humanRefineryMaxAge, "g_humanRefineryMaxAge", "10", CVAR_ARCHIVE, 0, qfalse  },
   { &g_humanRefineryRadius, "g_humanRefineryRadius", REFINERY_RADIUS, CVAR_ARCHIVE, 0, qfalse  }, 
   { &g_humanStage, "g_humanStage", "0", 0, 0, qfalse  },
   { &g_humanCredits, "g_humanCredits", "0", 0, 0, qfalse  },
@@ -319,9 +295,6 @@ static cvarTable_t   gameCvarTable[ ] =
   { &g_boosterPoisonTime, "g_boosterPoisonTime", "15", CVAR_ARCHIVE, 0, qfalse },
   { &g_basiPoisonTime, "g_basiPoisonTime", "5", CVAR_ARCHIVE, 0, qfalse },
   { &g_basiUpgPoisonTime, "g_basiUpgPoisonTime", "8", CVAR_ARCHIVE, 0, qfalse },
-  { &g_maxVariableBuildPoints, "g_maxVariableBuildPoints", "500", CVAR_ARCHIVE, 0, qfalse  },
-  { &g_variableBuildPointsPower, "g_variableBuildPointsPower", "1.6", CVAR_ARCHIVE, 0, qfalse  },
-  { &g_maxFixedBuildPoints, "g_maxFixedBuildPoints", "100", CVAR_ARCHIVE, 0, qfalse  },
   { &g_unlagged, "g_unlagged", "1", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qtrue  },
   { &g_disabledEquipment, "g_disabledEquipment", "", CVAR_ROM | CVAR_SYSTEMINFO, 0, qfalse  },
   { &g_disabledClasses, "g_disabledClasses", "", CVAR_ROM | CVAR_SYSTEMINFO, 0, qfalse  },
@@ -330,7 +303,6 @@ static cvarTable_t   gameCvarTable[ ] =
   { &g_floodMaxDemerits, "g_floodMaxDemerits", "5000", CVAR_ARCHIVE, 0, qfalse  },
   { &g_floodMinTime, "g_floodMinTime", "2000", CVAR_ARCHIVE, 0, qfalse  },
   { &g_teleportSafeTime, "g_teleportSafeTime", "3000", CVAR_ARCHIVE, 0, qfalse },
-  { &g_markDeconstruct, "g_markDeconstruct", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qtrue  },
   { &g_debugMapRotation, "g_debugMapRotation", "0", 0, 0, qfalse  },
   { &g_currentMapRotation, "g_currentMapRotation", "-1", 0, 0, qfalse  }, // -1 = NOT_ROTATING
   { &g_mapRotationNodes, "g_mapRotationNodes", "", CVAR_ROM, 0, qfalse  },
@@ -381,15 +353,15 @@ static cvarTable_t   gameCvarTable[ ] =
   { &g_RageQuitScorePenalty, "g_RageQuitScorePenalty", "2000", CVAR_ARCHIVE, 0, qfalse },
   { &g_DretchTurretDamage, "g_DretchTurretDamage", "1", CVAR_ARCHIVE, 0, qfalse },
   { &g_DretchBuildingDamage, "g_DretchBuildingDamage", "0.5", CVAR_ARCHIVE, 0, qfalse },
-  { &g_OwnTeamBPFactor, "g_OwnTeamBPFactor", "1.0", CVAR_ARCHIVE, 0, qfalse },
-  { &g_EnemyTeamBPFactor, "g_EnemyTeamBPFactor", "0.0", CVAR_ARCHIVE, 0, qfalse },
-  { &g_MinAlienExtraBuildPoints, "g_MinAlienExtraBuildPoints", "-800", CVAR_ARCHIVE, 0, qfalse },
-  { &g_MaxAlienExtraBuildPoints, "g_MaxAlienExtraBuildPoints", "800", CVAR_ARCHIVE, 0, qfalse },
-  { &g_MinHumanExtraBuildPoints, "g_MinHumanExtraBuildPoints", "-800", CVAR_ARCHIVE, 0, qfalse },
-  { &g_MaxHumanExtraBuildPoints, "g_MaxHumanExtraBuildPoints", "800", CVAR_ARCHIVE, 0, qfalse },
   { &g_BuildingCreditsFactor, "g_BuildingCreditsFactor", "0.25", CVAR_ARCHIVE, 0, qfalse },
-  { &g_buildPointDeletion, "g_buildPointDeletion", "1", CVAR_ARCHIVE, 0, qfalse },
-  { &g_emptyTeamsSkipMapTime, "g_emptyTeamsSkipMapTime", "15", CVAR_ARCHIVE, 0, qfalse }
+  { &g_emptyTeamsSkipMapTime, "g_emptyTeamsSkipMapTime", "15", CVAR_ARCHIVE, 0, qfalse },
+
+  { &g_buildPointsMode,  "g_buildPointsMode", "0", CVAR_ARCHIVE, 0, qfalse },
+  { &g_alienBuildPoints, "g_alienBuildPoints", "0", CVAR_ARCHIVE, 0, qfalse },
+  { &g_humanBuildPoints, "g_humanBuildPoints", "0", CVAR_ARCHIVE, 0, qfalse },
+  { &g_buildPointsRecovery, "g_buildPointsRecovery", "0.5", CVAR_ARCHIVE, 0, qfalse },
+  { &g_buildPointsDecay, "g_buildPointsDecay", "2000", CVAR_ARCHIVE, 0, qfalse },
+  { &g_buildPointsDecayStart, "g_buildPointsDecayStart", "30", CVAR_ARCHIVE, 0, qfalse }
 };
 
 static int gameCvarTableSize = sizeof( gameCvarTable ) / sizeof( gameCvarTable[ 0 ] );
@@ -398,8 +370,6 @@ void G_RunFrame( int levelTime );
 void G_ShutdownGame( int restart );
 void CheckExitRules( void );
 void G_CountSpawns( void );
-void G_CalculateBuildPoints( void );
-void G_CheckForNegativeBuildPoints( void );
 
 /*
 ================
@@ -667,7 +637,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
   level.humanStage2Time = level.humanStage3Time = level.humanStage4Time = level.humanStage5Time = level.startTime;
   level.snd_fry = G_SoundIndex( "sound/misc/fry.wav" ); // FIXME standing in lava / slime
   level.humanRewardScore = level.alienRewardScore = 0.0f;
-  level.alienNoBPFlashTime = level.humanNoBPFlashTime = -1;
+  level.alienBPFlashTime = level.humanBPFlashTime = -1;
   trap_Cvar_Set( "g_version", G_MOD_VERSION );
   trap_Cvar_Set( "newedge_version", NEWEDGE_MOD_VERSION );
   if( g_logFile.string[ 0 ] )
@@ -724,6 +694,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
     &level.clients[ 0 ].ps, sizeof( level.clients[ 0 ] ) );
   level.emoticonCount = BG_LoadEmoticons( level.emoticons, MAX_EMOTICONS );
   trap_SetConfigstring( CS_INTERMISSION, "0" );
+  G_InitBuildPoints( );
   // test to see if a custom buildable layout will be loaded
   G_LayoutSelect( );
   // this has to be flipped after the first UpdateCvars
@@ -762,6 +733,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart )
   G_Printf( "EDGE LOADED SUCCESSFULLY\n" );
   // So the server counts the spawns without a client attached
   G_CountSpawns( );
+  G_RunBuildPoints( );
   G_UpdateTeamConfigStrings( );
   G_MapLog_NewMap( );
   if( g_lockTeamsAtStart.integer )
@@ -1268,296 +1240,6 @@ void LimitSum( double limit, double power, float *r1, float *r2 )
 }
  
 #define PLAYER_COUNT_MOD 5.0f
-
-/*
-============
-G_CalculateBuildPoints
-
-Recalculate the quantity of building points available to the teams
-============
-*/
-void G_CalculateBuildPoints( void )
-{
-  int               i;
-  int a_colonies, h_refineries;
-  int a_colonies_age, h_refineries_age;
-  int age, maxColonyAge, maxRefineryAge;
-  
-
-
-
-  // BP queue updates
-  while( level.alienBuildPointQueue > 0 &&
-         level.alienNextQueueTime < level.time )
-  {
-    level.alienBuildPointQueue--;
-    level.alienNextQueueTime += G_NextQueueTime( level.alienBuildPointQueue,
-                                               g_alienBuildPoints.integer,
-                                               g_alienBuildQueueTime.integer );
-  }
-
-  while( level.humanBuildPointQueue > 0 &&
-         level.humanNextQueueTime < level.time )
-  {
-    level.humanBuildPointQueue--;
-    level.humanNextQueueTime += G_NextQueueTime( level.humanBuildPointQueue,
-                                               g_humanBuildPoints.integer,
-                                               g_humanBuildQueueTime.integer );
-  }
-
-  // Weak Sudden Death checks
-  if( G_TimeTilWeakSuddenDeath( ) <= 0 && level.weakSuddenDeathWarning < TW_PASSED )
-  {
-    G_LogPrintf( "^5Beginning Weak Sudden Death\n" );
-    trap_SendServerCommand( -1, "cp \"^5Weak Sudden Death!\"" );
-    trap_SendServerCommand( -1, "print \"^5Beginning Weak Sudden Death.\n\"" );
-    level.weakSuddenDeathWarning = TW_PASSED;
-  }
-  else if( G_TimeTilWeakSuddenDeath( ) <= WEAKSUDDENDEATHWARNING &&
-    level.weakSuddenDeathWarning < TW_IMMINENT )
-  {
-    trap_SendServerCommand( -1, va( "cp \"Weak Sudden Death in %d seconds!\"",
-          (int)( G_TimeTilWeakSuddenDeath( ) / 1000 ) ) );
-    trap_SendServerCommand( -1, va( "print \"Weak Sudden Death will begin in %d seconds.\n\"",
-          (int)( G_TimeTilWeakSuddenDeath( ) / 1000 ) ) );
-    level.weakSuddenDeathWarning = TW_IMMINENT;
-  }
-
-  // Sudden Death checks
-  if( G_TimeTilSuddenDeath( ) <= 0 && level.suddenDeathWarning < TW_PASSED )
-  {
-    G_LogPrintf( "^5Beginning Sudden Death\n" );
-    trap_SendServerCommand( -1, "cp \"^5Sudden Death!\"" );
-    trap_SendServerCommand( -1, "print \"^5Beginning Sudden Death.\n\"" );
-    level.suddenDeathWarning = TW_PASSED;
-    G_ClearDeconMarks( );
-	//Run buildable reduce code
-    // Clear blueprints, or else structs that cost 0 BP can still be built after SD
-    for( i = 0; i < level.maxclients; i++ )
-    {
-      if( g_entities[ i ].client->ps.stats[ STAT_BUILDABLE ] != BA_NONE )
-        g_entities[ i ].client->ps.stats[ STAT_BUILDABLE ] = BA_NONE;
-    }
-  }
-  else if( G_TimeTilSuddenDeath( ) <= SUDDENDEATHWARNING &&
-    level.suddenDeathWarning < TW_IMMINENT )
-  {
-    trap_SendServerCommand( -1, va( "cp \"Sudden Death in %d seconds!\"",
-          (int)( G_TimeTilSuddenDeath( ) / 1000 ) ) );
-    trap_SendServerCommand( -1, va( "print \"Sudden Death will begin in %d seconds.\n\"",
-          (int)( G_TimeTilSuddenDeath( ) / 1000 ) ) );
-    level.suddenDeathWarning = TW_IMMINENT;
-  }
-
-  level.humanBuildPoints = g_humanBuildPoints.integer - level.humanBuildPointQueue;
-  level.alienBuildPoints = g_alienBuildPoints.integer - level.alienBuildPointQueue;
-  // Iterate through entities
-  a_colonies = 0;
-  h_refineries = 0;
-  a_colonies_age = 0;
-  h_refineries_age = 0;
-  maxColonyAge = (int)( g_alienColonyMaxAge.value * 60000.0f );
-  maxRefineryAge = (int)( g_humanRefineryMaxAge.value * 60000.0f );
-  for( i = MAX_CLIENTS; i < level.num_entities; i++ )
-  {
-    gentity_t         *ent = &g_entities[ i ];
-    buildable_t       buildable;
-    int               cost;
-
-    if( ent->s.eType != ET_BUILDABLE || ent->s.eFlags & EF_DEAD )
-      continue;
-
-    // Subtract the BP from the appropriate pool
-    buildable = ent->s.modelindex;
-    cost = BG_Buildable( buildable )->buildPoints;
-
-    if( ent->buildableTeam == TEAM_ALIENS )
-      level.alienBuildPoints -= cost;
-    if( buildable == BA_H_REPEATER )
-      level.humanBuildPoints -= cost;
-    else if( buildable != BA_H_REACTOR )
-    {
-      gentity_t *power = G_PowerEntityForEntity( ent );
-
-      if( power )
-      {
-        level.humanBuildPoints -= cost;
-	  }
-    }
-	
-	if( ent->powered && ent->spawned )
-	{
-    if( buildable == BA_A_CREEPCOLONY )
-	{
-       a_colonies++;
-       age = level.time - ent->buildTime;
-       a_colonies_age += MIN( age, maxColonyAge );
-    }
-	   else if( buildable == BA_H_REFINERY )
-       { 
-       h_refineries++;
-       age = level.time - ent->buildTime;
-       h_refineries_age += MIN( age, maxRefineryAge );
-       }
-     }
-   } 
-  
-  // Distribute build points from refineries/creep colonies
-  {
-    float aFixed, hFixed, aVar, hVar;
-
-    aVar = a_colonies_age * g_alienColonyBuildPointsRate.value / 60000.0f;
-    hVar = h_refineries_age * g_humanRefineryBuildPointsRate.value / 60000.0f;
-    LimitSum( g_maxVariableBuildPoints.value, g_variableBuildPointsPower.value, &aVar, &hVar );
-
-    aFixed = a_colonies * g_alienColonyBuildPoints.value;
-    hFixed = h_refineries * g_humanRefineryBuildPoints.value;
-//    LimitSum( g_maxFixedBuildPoints.value, 1.0f, &aFixed, &hFixed );
-
-    level.alienExtraBuildPoints = g_OwnTeamBPFactor.value * (aVar + aFixed) + g_EnemyTeamBPFactor.value * (hVar + hFixed);
-    level.humanExtraBuildPoints = g_OwnTeamBPFactor.value * (hVar + hFixed) + g_EnemyTeamBPFactor.value * (aVar + aFixed);
-
-    if (level.alienExtraBuildPoints < g_MinAlienExtraBuildPoints.value) 
-      level.alienExtraBuildPoints = g_MinAlienExtraBuildPoints.value;
-    else if (level.alienExtraBuildPoints > g_MaxAlienExtraBuildPoints.value) 
-      level.alienExtraBuildPoints = g_MaxAlienExtraBuildPoints.value;
-
-    if (level.humanExtraBuildPoints < g_MinHumanExtraBuildPoints.value) 
-      level.humanExtraBuildPoints = g_MinHumanExtraBuildPoints.value;
-    else if (level.humanExtraBuildPoints > g_MaxHumanExtraBuildPoints.value) 
-      level.humanExtraBuildPoints = g_MaxHumanExtraBuildPoints.value;
-
-    level.humanBuildPoints += level.humanExtraBuildPoints;
-    level.alienBuildPoints += level.alienExtraBuildPoints;
-  }
-
-  if( level.alienNoBPFlash )
-  {
-    level.alienNoBPFlash = qfalse;
-    level.alienNoBPFlashTime = level.time;
-  }
-
-  if( level.humanNoBPFlash )
-  {
-    level.humanNoBPFlash = qfalse;
-    level.humanNoBPFlashTime = level.time;
-  }
-
-  trap_SetConfigstring( CS_BUILD_POOLS, va( "%d %d %d %d %d %d", 
-    g_alienBuildPoints.integer + level.alienExtraBuildPoints - level.alienDeletedBuildPoints,
-    g_alienBuildPoints.integer,
-    level.alienNoBPFlashTime,
-    g_humanBuildPoints.integer + level.humanExtraBuildPoints - level.humanDeletedBuildPoints,
-    g_humanBuildPoints.integer,
-    level.humanNoBPFlashTime ) );
-
-//zero bp not allowed
-//  if( level.humanBuildPoints < 0 )
-//    level.humanBuildPoints = 0;
-//  if( level.alienBuildPoints < 0 )
-//    level.alienBuildPoints = 0;
-}
-
-/*
-============
-G_CheckForNegativeBuildPoints
-
-Recalculate the quantity of building points available to the teams
-============
-*/
-void G_CheckForNegativeBuildPoints( void )
-{
-  static const int thinkduration = 1037;
-  int e;
-  gentity_t *ent;
-  const buildableAttributes_t *ba;
-  float dieprob1min;
-  float surviveprob1min;
-  float surviveprobcur;
-  int a_bps, h_bps;
-
-  if( level.nextNegativeBPCheck > level.time )
-    return;
-  level.nextNegativeBPCheck += thinkduration;
-
-  a_bps = G_GetBuildPoints( NULL, TEAM_ALIENS ) + level.alienBuildPointQueue;
-  h_bps = G_GetBuildPoints( NULL, TEAM_HUMANS ) + level.humanBuildPointQueue;
-
-  if( ( a_bps >= 0 ) && ( h_bps >= 0 ) )
-    return;
-
-  for( e = 0; e < level.num_entities; ++e ) {
-    ent = g_entities + e;
-
-    if (!ent->inuse)
-      continue;
-    ba = BG_Buildable( ent->s.modelindex );
-
-    // no gain from a building without BPs
-    if( ba->buildPoints <= 0 )
-      continue;
-
-    // TODO: Add a separate probability for each buildable.
-    // If it's 0, then they won't die at all, and the checks for building types
-    // won't be needed.
-    dieprob1min = 0.42f; /* hard-wired */
-    if( dieprob1min <= 0.0f )
-      continue;
-    surviveprob1min = 1.0f - dieprob1min;
-    surviveprob1min = MAX( 0.0f, surviveprob1min );
-
-    // check for buildings that must not die
-    switch( ent->s.modelindex ) {
-      case BA_H_REACTOR:
-      case BA_H_REFINERY:
-      case BA_A_OVERMIND:
-      case BA_A_CREEPCOLONY:
-        continue;
-    }
-    // TODO end
-
-    if( ( ( ent->buildableTeam == TEAM_ALIENS ) && ( a_bps < 0 ) ) ||
-        ( ( ent->buildableTeam == TEAM_HUMANS ) && ( h_bps < 0 ) ) )
-    {
-      surviveprobcur = pow( surviveprob1min, thinkduration / 60000.0f );
-      if( surviveprobcur * RAND_MAX < rand( ) )
-      {
-        G_Suicide( ent, MOD_NOBP );
-
-        if( ent->buildableTeam == TEAM_ALIENS )
-          level.alienNoBPFlash = qtrue;
-        else
-          level.humanNoBPFlash = qtrue;
-      }
-    }
-  }
-}
-
- /*
- ============
-G_HumanBuildPoints
-
-Return the total human build points, including extra build points coming from
-refineries.
-============
-*/
-int  G_HumanBuildPoints( void )
-{
-  return g_humanBuildPoints.integer + level.humanExtraBuildPoints;
-}
-
-/*
-============
-G_AlienBuildPoints
-
-Return the total alien build points, including extra build points coming from
-creep colonies.
-============
-*/
-int  G_AlienBuildPoints( void )
-{
-  return g_alienBuildPoints.integer + level.alienExtraBuildPoints;
-}
 
 /*
 ============
@@ -2707,7 +2389,6 @@ CheckCvars
 void CheckCvars( void )
 {
   static int lastPasswordModCount   = -1;
-  static int lastMarkDeconModCount  = -1;
   static int lastSDTimeModCount = -1;
 
   if( g_password.modificationCount != lastPasswordModCount )
@@ -2718,14 +2399,6 @@ void CheckCvars( void )
       trap_Cvar_Set( "g_needpass", "1" );
     else
       trap_Cvar_Set( "g_needpass", "0" );
-  }
-
-  // Unmark any structures for deconstruction when
-  // the server setting is changed
-  if( g_markDeconstruct.modificationCount != lastMarkDeconModCount )
-  {
-    lastMarkDeconModCount = g_markDeconstruct.modificationCount;
-    G_ClearDeconMarks( );
   }
 
   // If we change g_suddenDeathTime during a map, we need to update
@@ -2940,9 +2613,8 @@ void G_RunFrame( int levelTime )
   G_UnlaggedStore( );
 
   G_CountSpawns( );
-  G_CalculateBuildPoints( );
-  G_CheckForNegativeBuildPoints( );
   G_CalculateStages( );
+  G_RunBuildPoints( );
   G_SpawnClients( TEAM_ALIENS );
   G_SpawnClients( TEAM_HUMANS );
   G_CalculateAvgPlayers( );

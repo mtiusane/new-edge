@@ -199,27 +199,9 @@ static void CG_AlienBuilderText( char *text, playerState_t *ps )
 
   if( ( es = CG_BuildableInRange( ps, NULL ) ) )
   {
-    if( cgs.markDeconstruct )
-    {
-      if( es->eFlags & EF_B_MARKED )
-      {
-        Q_strcat( text, MAX_TUTORIAL_TEXT,
-            va( "Press %s to unmark this structure for replacement\n",
-              CG_KeyNameForCommand( "deconstruct" ) ) );
-      }
-      else
-      {
-        Q_strcat( text, MAX_TUTORIAL_TEXT,
-            va( "Press %s to mark this structure for replacement\n",
-              CG_KeyNameForCommand( "deconstruct" ) ) );
-      }
-    }
-    else
-    {
-      Q_strcat( text, MAX_TUTORIAL_TEXT,
-          va( "Press %s to destroy this structure\n",
-            CG_KeyNameForCommand( "deconstruct" ) ) );
-    }
+    Q_strcat( text, MAX_TUTORIAL_TEXT,
+        va( "Press %s to destroy this structure\n",
+          CG_KeyNameForCommand( "deconstruct" ) ) );
   }
 
   if( ( ps->stats[ STAT_BUILDABLE ] & ~SB_VALID_TOGGLEBIT ) == BA_NONE )
@@ -375,27 +357,9 @@ static void CG_HumanCkitText( char *text, playerState_t *ps )
 
   if( ( es = CG_BuildableInRange( ps, NULL ) ) )
   {
-    if( cgs.markDeconstruct )
-    {
-      if( es->eFlags & EF_B_MARKED )
-      {
-        Q_strcat( text, MAX_TUTORIAL_TEXT,
-            va( "Press %s to unmark this structure\n",
-              CG_KeyNameForCommand( "deconstruct" ) ) );
-      }
-      else
-      {
-        Q_strcat( text, MAX_TUTORIAL_TEXT,
-            va( "Press %s to mark this structure\n",
-              CG_KeyNameForCommand( "deconstruct" ) ) );
-      }
-    }
-    else
-    {
-      Q_strcat( text, MAX_TUTORIAL_TEXT,
-          va( "Press %s to destroy this structure\n",
-            CG_KeyNameForCommand( "deconstruct" ) ) );
-    }
+    Q_strcat( text, MAX_TUTORIAL_TEXT,
+        va( "Press %s to destroy this structure\n",
+          CG_KeyNameForCommand( "deconstruct" ) ) );
   }
 }
 

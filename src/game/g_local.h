@@ -212,8 +212,6 @@ struct gentity_s
   int               buildTime;          // when this buildable was built
   int               animTime;           // last animation change
   int               time1000;           // timer evaluated every second
-  qboolean          deconstruct;        // deconstruct if no BP left
-  int               deconstructTime;    // time at which structure marked
   int               overmindAttackTimer;
   int               overmindDyingTimer;
   int               overmindSpawnsTimer;
@@ -690,20 +688,6 @@ typedef struct
   int               numLiveHumanClients;
   int               numAlienBuilders;
   int               numHumanBuilders;
-  int               alienBuildPoints;
-  int               alienDeletedBuildPoints;
-  int               alienExtraBuildPoints;
-  int               alienBuildPointQueue;
-  int               alienNextQueueTime;
-  int               humanBuildPoints;
-  int               humanDeletedBuildPoints;
-  int               humanExtraBuildPoints;
-  int               humanBuildPointQueue;
-  int               humanNextQueueTime;
-
-  gentity_t         *markedBuildables[ MAX_GENTITIES ];
-  int               numBuildablesForRemoval;
-
   int               alienKills;
   int               humanKills;
 
@@ -764,10 +748,8 @@ typedef struct
   int               buildId;
   int               numBuildLogs;
 
-  qboolean          alienNoBPFlash;
-  qboolean          humanNoBPFlash;
-  int               alienNoBPFlashTime;
-  int               humanNoBPFlashTime;
+  int               alienBPFlashTime;
+  int               humanBPFlashTime;
 
   int               combatRanksTime;
 } level_locals_t;
@@ -910,9 +892,6 @@ void              G_LayoutForceBuildItem( buildable_t buildable, vec3_t origin,
 					  vec3_t angles, vec3_t origin2, vec3_t angles2 );
 void              G_BaseSelfDestruct( team_t team );
 int               G_NextQueueTime( int queuedBP, int totalBP, int queueBaseRate );
-void              G_QueueBuildPoints( gentity_t *self );
-int               G_GetBuildPoints( const vec3_t pos, team_t team );
-int               G_GetMarkedBuildPoints( const vec3_t pos, team_t team );
 qboolean          G_FindPower( gentity_t *self, qboolean searchUnspawned );
 gentity_t         *G_PowerEntityForPoint( const vec3_t origin );
 gentity_t         *G_PowerEntityForEntity( gentity_t *ent );
@@ -1163,8 +1142,6 @@ void G_ArmageddonStep( void );
 void LogExit( const char *string );
 int  G_TimeTilSuddenDeath( void );
 int  G_TimeTilWeakSuddenDeath( void );
-int  G_HumanBuildPoints( void );
-int  G_AlienBuildPoints( void );
 //
 // g_client.c
 //
@@ -1233,6 +1210,16 @@ void G_namelog_update_score( gclient_t *client );
 void G_namelog_update_name( gclient_t *client );
 void G_namelog_cleanup( void );
 
+//
+// g_buildpoints.c
+//
+
+void G_InitBuildPoints( void );
+void G_AddBuildPoints( const vec3_t point, team_t team, int value );
+void G_RecoverBuildPoints( gentity_t *ent );
+int G_GetBuildPoints( const vec3_t point, team_t team );
+void G_RunBuildPoints( void );
+
 //some maxs
 #define MAX_FILEPATH      144
 
@@ -1286,19 +1273,9 @@ extern  vmCvar_t  g_teamForceBalance;
 extern  vmCvar_t  g_smoothClients;
 extern  vmCvar_t  pmove_fixed;
 extern  vmCvar_t  pmove_msec;
-extern  vmCvar_t  g_alienBuildPoints;
-extern  vmCvar_t  g_alienBuildQueueTime;
-extern  vmCvar_t  g_alienColonyBuildPoints;
-extern  vmCvar_t  g_alienColonyBuildPointsRate;
-extern  vmCvar_t  g_alienColonyMaxAge;
 extern  vmCvar_t  g_alienColonyRadius;
-extern  vmCvar_t  g_humanBuildPoints;
-extern  vmCvar_t  g_humanBuildQueueTime;
 extern  vmCvar_t  g_humanDefenceComputerLimit;
 extern  vmCvar_t  g_humanDefenceComputerRate;
-extern  vmCvar_t  g_humanRefineryBuildPoints;
-extern  vmCvar_t  g_humanRefineryBuildPointsRate;
-extern  vmCvar_t  g_humanRefineryMaxAge;
 extern  vmCvar_t  g_humanRefineryRadius;
 extern  vmCvar_t  g_humanStage;
 extern  vmCvar_t  g_humanCredits;
@@ -1329,14 +1306,10 @@ extern  vmCvar_t  g_contagionProb;
 extern  vmCvar_t  g_boosterPoisonTime;
 extern  vmCvar_t  g_basiPoisonTime;
 extern  vmCvar_t  g_basiUpgPoisonTime;
-extern  vmCvar_t  g_maxVariableBuildPoints;
-extern  vmCvar_t  g_variableBuildPointsPower;
-extern  vmCvar_t  g_maxFixedBuildPoints;
 extern  vmCvar_t  g_unlagged;
 extern  vmCvar_t  g_disabledEquipment;
 extern  vmCvar_t  g_disabledClasses;
 extern  vmCvar_t  g_disabledBuildables;
-extern  vmCvar_t  g_markDeconstruct;
 extern  vmCvar_t  g_debugMapRotation;
 extern  vmCvar_t  g_currentMapRotation;
 extern  vmCvar_t  g_mapRotationNodes;
@@ -1388,15 +1361,15 @@ extern  vmCvar_t  g_AutoLevelMinTeamSize;
 extern  vmCvar_t  g_RageQuitScorePenalty;
 extern  vmCvar_t  g_DretchTurretDamage;
 extern  vmCvar_t  g_DretchBuildingDamage;
-extern  vmCvar_t  g_OwnTeamBPFactor;
-extern  vmCvar_t  g_EnemyTeamBPFactor;
-extern  vmCvar_t  g_MinAlienExtraBuildPoints;
-extern  vmCvar_t  g_MaxAlienExtraBuildPoints;
-extern  vmCvar_t  g_MinHumanExtraBuildPoints;
-extern  vmCvar_t  g_MaxHumanExtraBuildPoints;
 extern  vmCvar_t  g_BuildingCreditsFactor;
-extern  vmCvar_t  g_buildPointDeletion;
 extern  vmCvar_t  g_emptyTeamsSkipMapTime;
+
+extern  vmCvar_t  g_buildPointsMode;
+extern  vmCvar_t  g_alienBuildPoints;
+extern  vmCvar_t  g_humanBuildPoints;
+extern  vmCvar_t  g_buildPointsRecovery;
+extern  vmCvar_t  g_buildPointsDecay;
+extern  vmCvar_t  g_buildPointsDecayStart;
 
 void      trap_Print( const char *fmt );
 void      trap_Error( const char *fmt );

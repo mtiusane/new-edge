@@ -881,20 +881,6 @@ void ClientTimerActions( gentity_t *ent, int msec )
             client->ps.stats[ STAT_BUILDABLE ] |= SB_VALID_TOGGLEBIT;
           else
             client->ps.stats[ STAT_BUILDABLE ] &= ~SB_VALID_TOGGLEBIT;
-
-          // Let the client know which buildables will be removed by building
-          for( i = 0; i < MAX_MISC; i++ )
-          {
-            if( i < level.numBuildablesForRemoval )
-              client->ps.misc[ i ] = level.markedBuildables[ i ]->s.number;
-            else
-              client->ps.misc[ i ] = 0;
-          }
-        }
-        else
-        {
-          for( i = 0; i < MAX_MISC; i++ )
-            client->ps.misc[ i ] = 0;
         }
         break;
 
@@ -2203,13 +2189,8 @@ void ClientThink_real( gentity_t *ent )
     }
   }
 
-  client->ps.persistant[ PERS_BP ] = G_GetBuildPoints( client->ps.origin,
-    client->ps.stats[ STAT_TEAM ] );
-  client->ps.persistant[ PERS_MARKEDBP ] = G_GetMarkedBuildPoints( client->ps.origin,
-    client->ps.stats[ STAT_TEAM ] );
-//no more zero bp?
-//  if( client->ps.persistant[ PERS_BP ] < 0 )
-//    client->ps.persistant[ PERS_BP ] = 0;
+  client->ps.persistant[ PERS_BP ] =
+    G_GetBuildPoints( client->ps.origin, client->ps.stats[ STAT_TEAM ] );
 
   // perform once-a-second actions
   ClientTimerActions( ent, msec );

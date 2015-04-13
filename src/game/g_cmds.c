@@ -1901,16 +1901,9 @@ void Cmd_Destroy_f( gentity_t *ent )
     // Always let the builder prevent the explosion
     if( traceEnt->health <= 0 )
     {
-      G_QueueBuildPoints( traceEnt );
       G_RewardAttackers( traceEnt );
+      G_RecoverBuildPoints( traceEnt );
       G_FreeEntity( traceEnt );
-      return;
-    }
-
-    // Cancel deconstruction (unmark)
-    if( deconstruct && g_markDeconstruct.integer && traceEnt->deconstruct )
-    {
-      traceEnt->deconstruct = qfalse;
       return;
     }
 
@@ -1928,8 +1921,7 @@ void Cmd_Destroy_f( gentity_t *ent )
         lastSpawn = qtrue;
     }
 
-    if( lastSpawn && !g_cheats.integer &&
-        !g_markDeconstruct.integer )
+    if( lastSpawn && !g_cheats.integer )
     {
       G_TriggerMenu( ent->client->ps.clientNum, MN_B_LASTSPAWN );
       return;
@@ -1950,30 +1942,20 @@ void Cmd_Destroy_f( gentity_t *ent )
       return; 
     }
 
-    if( !g_markDeconstruct.integer ||
-        ( ent->client->pers.teamSelection == TEAM_HUMANS &&
-          !G_FindPower( traceEnt, qtrue ) ) )
+    if( ent->client->ps.stats[ STAT_MISC ] > 0 )
     {
-      if( ent->client->ps.stats[ STAT_MISC ] > 0 )
-      {
-        G_AddEvent( ent, EV_BUILD_DELAY, ent->client->ps.clientNum );
-        return;
-      }
+      G_AddEvent( ent, EV_BUILD_DELAY, ent->client->ps.clientNum );
+      return;
     }
 
     if( traceEnt->health > 0 )
     {
+      G_RecoverBuildPoints( traceEnt );
+
       if( !deconstruct )
       {
         G_Damage( traceEnt, ent, ent, forward, tr.endpos,
                   traceEnt->health, 0, MOD_SUICIDE );
-      }
-      else if( g_markDeconstruct.integer &&
-               ( ent->client->pers.teamSelection != TEAM_HUMANS ||
-                 G_FindPower( traceEnt , qtrue ) || lastSpawn ) )
-      {
-        traceEnt->deconstruct     = qtrue; // Mark buildable for deconstruction
-        traceEnt->deconstructTime = level.time;
       }
       else
       {
@@ -1982,6 +1964,7 @@ void Cmd_Destroy_f( gentity_t *ent )
             ent->client->ps.stats[ STAT_MISC ] +=
               BG_Buildable( traceEnt->s.modelindex )->buildTime / 4;
         }
+        
         G_Damage( traceEnt, ent, ent, forward, tr.endpos,
                   traceEnt->health, 0, MOD_DECONSTRUCT );
         G_FreeEntity( traceEnt );

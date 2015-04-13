@@ -803,12 +803,6 @@ void CG_BuildableStatusParse( const char *filename, buildStat_t *bs )
         bs->noPowerShader = trap_R_RegisterShader( s );
       continue;
     }
-    else if( !Q_stricmp( token.string, "markedShader" ) )
-    {
-      if( PC_String_Parse( handle, &s ) )
-        bs->markedShader = trap_R_RegisterShader( s );
-      continue;
-    }
     else if( !Q_stricmp( token.string, "healthSevereColor" ) )
     {
       if( PC_Color_Parse( handle, &c ) )
@@ -922,7 +916,7 @@ static void CG_BuildableStatusDisplay( centity_t *cent )
   int             health;
   float           x, y;
   vec4_t          color;
-  qboolean        powered, marked;
+  qboolean        powered;
   trace_t         tr;
   float           d;
   buildStat_t     *bs;
@@ -1080,7 +1074,6 @@ static void CG_BuildableStatusDisplay( centity_t *cent )
     scale = ( picH / d ) * 3;
 
     powered = es->eFlags & EF_B_POWERED;
-    marked = es->eFlags & EF_B_MARKED;
 
     picH *= scale;
     picW *= scale;
@@ -1159,14 +1152,6 @@ static void CG_BuildableStatusDisplay( centity_t *cent )
       pX = picX + ( subH * bs->horizontalMargin );
 	  trap_R_SetColor( NULL );
       CG_DrawPic( pX, subY, subH, subH, bs->noPowerShader );
-    }
-
-    if( marked )
-    {
-      float mX;
-
-      mX = picX + picW - ( subH * bs->horizontalMargin ) - subH;
-      CG_DrawPic( mX, subY, subH, subH, bs->markedShader );
     }
 
     {

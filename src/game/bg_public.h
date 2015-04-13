@@ -315,7 +315,6 @@ typedef enum
 // buildable flags:
 #define EF_B_SPAWNED        0x0008
 #define EF_B_POWERED        0x0010
-#define EF_B_MARKED         0x0020
 
 #define EF_WARN_CHARGE      0x0020    // Lucifer Cannon is about to overcharge
 #define EF_WALLCLIMB        0x0040    // wall walking

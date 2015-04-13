@@ -119,7 +119,6 @@ void CG_ParseServerinfo( void )
   info = CG_ConfigString( CS_SERVERINFO );
   cgs.timelimit = atoi( Info_ValueForKey( info, "timelimit" ) );
   cgs.maxclients = atoi( Info_ValueForKey( info, "sv_maxclients" ) );
-  cgs.markDeconstruct = atoi( Info_ValueForKey( info, "g_markDeconstruct" ) );
   mapname = Info_ValueForKey( info, "mapname" );
   Com_sprintf( cgs.mapname, sizeof( cgs.mapname ), "maps/%s.bsp", mapname );
 }
@@ -692,12 +691,8 @@ void CG_Menu( int menu, int arg )
     //===============================
 
     case MN_H_NOBP:
-      if( cgs.markDeconstruct )
-        longMsg   = "^5There is no power remaining. Free up power by marking "
-                    "existing buildable objects.";
-      else
-        longMsg   = "There is no power remaining. Free up power by deconstructing "
-                    "existing buildable objects.";
+      longMsg   = "There is no power remaining. Free up power by deconstructing "
+                  "existing buildable objects.";
       shortMsg  = "^5There is no power remaining";
       type      = DT_BUILD;
       break;
