@@ -1370,6 +1370,9 @@ extern  vmCvar_t  g_humanBuildPoints;
 extern  vmCvar_t  g_buildPointsRecovery;
 extern  vmCvar_t  g_buildPointsDecay;
 extern  vmCvar_t  g_buildPointsDecayStart;
+extern  vmCvar_t  g_bpfieldResolution;
+extern  vmCvar_t  g_bpfieldAlienDensity;
+extern  vmCvar_t  g_bpfieldHumanDensity;
 
 void      trap_Print( const char *fmt );
 void      trap_Error( const char *fmt );

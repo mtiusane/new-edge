@@ -196,6 +196,9 @@ vmCvar_t  g_humanBuildPoints;
 vmCvar_t  g_buildPointsRecovery;
 vmCvar_t  g_buildPointsDecay;
 vmCvar_t  g_buildPointsDecayStart;
+vmCvar_t  g_bpfieldResolution;
+vmCvar_t  g_bpfieldAlienDensity;
+vmCvar_t  g_bpfieldHumanDensity;
 
 // copy cvars that can be set in worldspawn so they can be restored later
 static char cv_gravity[ MAX_CVAR_VALUE_STRING ];
@@ -361,7 +364,10 @@ static cvarTable_t   gameCvarTable[ ] =
   { &g_humanBuildPoints, "g_humanBuildPoints", "0", CVAR_ARCHIVE, 0, qfalse },
   { &g_buildPointsRecovery, "g_buildPointsRecovery", "0.5", CVAR_ARCHIVE, 0, qfalse },
   { &g_buildPointsDecay, "g_buildPointsDecay", "2000", CVAR_ARCHIVE, 0, qfalse },
-  { &g_buildPointsDecayStart, "g_buildPointsDecayStart", "30", CVAR_ARCHIVE, 0, qfalse }
+  { &g_buildPointsDecayStart, "g_buildPointsDecayStart", "30", CVAR_ARCHIVE, 0, qfalse },
+  { &g_bpfieldResolution, "g_bpfieldResolution", "300", CVAR_ARCHIVE, 0, qfalse },
+  { &g_bpfieldAlienDensity, "g_bpfieldAlienDensity", "4.0e-7", CVAR_ARCHIVE, 0, qfalse },
+  { &g_bpfieldHumanDensity, "g_bpfieldHumanDensity", "4.0e-7", CVAR_ARCHIVE, 0, qfalse }
 };
 
 static int gameCvarTableSize = sizeof( gameCvarTable ) / sizeof( gameCvarTable[ 0 ] );
