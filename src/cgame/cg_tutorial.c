@@ -199,27 +199,9 @@ static void CG_AlienBuilderText( char *text, playerState_t *ps )
 
   if( ( es = CG_BuildableInRange( ps, NULL ) ) )
   {
-    if( cgs.markDeconstruct )
-    {
-      if( es->eFlags & EF_B_MARKED )
-      {
-        Q_strcat( text, MAX_TUTORIAL_TEXT,
-            va( "Press %s to unmark this structure for replacement\n",
-              CG_KeyNameForCommand( "deconstruct" ) ) );
-      }
-      else
-      {
-        Q_strcat( text, MAX_TUTORIAL_TEXT,
-            va( "Press %s to mark this structure for replacement\n",
-              CG_KeyNameForCommand( "deconstruct" ) ) );
-      }
-    }
-    else
-    {
-      Q_strcat( text, MAX_TUTORIAL_TEXT,
-          va( "Press %s to destroy this structure\n",
-            CG_KeyNameForCommand( "deconstruct" ) ) );
-    }
+    Q_strcat( text, MAX_TUTORIAL_TEXT,
+        va( "Press %s to destroy this structure\n",
+          CG_KeyNameForCommand( "deconstruct" ) ) );
   }
 
   if( ( ps->stats[ STAT_BUILDABLE ] & ~SB_VALID_TOGGLEBIT ) == BA_NONE )
@@ -375,27 +357,9 @@ static void CG_HumanCkitText( char *text, playerState_t *ps )
 
   if( ( es = CG_BuildableInRange( ps, NULL ) ) )
   {
-    if( cgs.markDeconstruct )
-    {
-      if( es->eFlags & EF_B_MARKED )
-      {
-        Q_strcat( text, MAX_TUTORIAL_TEXT,
-            va( "Press %s to unmark this structure\n",
-              CG_KeyNameForCommand( "deconstruct" ) ) );
-      }
-      else
-      {
-        Q_strcat( text, MAX_TUTORIAL_TEXT,
-            va( "Press %s to mark this structure\n",
-              CG_KeyNameForCommand( "deconstruct" ) ) );
-      }
-    }
-    else
-    {
-      Q_strcat( text, MAX_TUTORIAL_TEXT,
-          va( "Press %s to destroy this structure\n",
-            CG_KeyNameForCommand( "deconstruct" ) ) );
-    }
+    Q_strcat( text, MAX_TUTORIAL_TEXT,
+        va( "Press %s to destroy this structure\n",
+          CG_KeyNameForCommand( "deconstruct" ) ) );
   }
 }
 
@@ -512,6 +476,17 @@ static void CG_HumanText( char *text, playerState_t *ps )
         va( "Press %s to use your %s\n",
           CG_KeyNameForCommand( "itemact medkit" ),
           BG_Upgrade( UP_MEDKIT )->humanName ) );
+  }
+
+  if( ps->stats[ STAT_STAMINA ] <= STAMINA_BLACKOUT_LEVEL )
+  {
+    Q_strcat( text, MAX_TUTORIAL_TEXT,
+        "You are blacking out. Stop sprinting to recover stamina\n" );
+  }
+  else if( ps->stats[ STAT_STAMINA ] <= STAMINA_SLOW_LEVEL )
+  {
+    Q_strcat( text, MAX_TUTORIAL_TEXT,
+        "Your stamina is low. Stop sprinting to recover\n" );
   }
 
   switch( cg.nearUsableBuildable )

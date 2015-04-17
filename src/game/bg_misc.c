@@ -2566,7 +2566,7 @@ static const classAttributes_t bg_classList[ ] =
     0.002f,                                         //float   bob;
     1.0f,                                           //float   bobCycle;
     100,                                            //int     steptime;
-    1.25f,                                          //float   speed;
+    1.0f,                                           //float   speed;
     10.0f,                                          //float   acceleration;
     1.0f,                                           //float   airAcceleration;
     6.0f,                                           //float   friction;
@@ -2593,7 +2593,7 @@ static const classAttributes_t bg_classList[ ] =
     0.002f,                                         //float   bob;
     1.0f,                                           //float   bobCycle;
     100,                                            //int     steptime;
-    1.25f,                                          //float   speed;
+    1.0f,                                           //float   speed;
     10.0f,                                          //float   acceleration;
     1.0f,                                           //float   airAcceleration;
     6.0f,                                           //float   friction;
@@ -3682,7 +3682,7 @@ static const weaponAttributes_t bg_weapons[ ] =
     STAGE_GE_5,           //int  stages
     SLOT_NONE,            //int       slots;
     "mine",            //char      *weaponName;
-    "Mine",            //char      *weaponHumanName;
+    "Sticky Grenade",    //char      *weaponHumanName;
     "",
     1,                    //int       maxAmmo;
     0,                    //int       maxClips;
@@ -5448,4 +5448,41 @@ char *BG_TeamName( team_t team )
 int cmdcmp( const void *a, const void *b )
 {
   return Q_stricmp( (const char *)a, ((dummyCmd_t *)b)->name );
+}
+
+/*
+============
+BG_ForceFieldForEntity
+============
+*/
+qboolean BG_ForceFieldForEntity( playerState_t *ps, entityState_t *es, forceField_t *ff )
+{
+  if( es->eType == ET_BUILDABLE )
+  {
+    if( !( es->eFlags & EF_B_POWERED ) )
+      return qfalse;
+
+    if( !( es->eFlags & EF_B_SPAWNED ) )
+      return qfalse;
+
+    // health
+    if( es->generic1 <= 0 )
+      return qfalse;
+
+    switch( es->modelindex )
+    {
+      case BA_H_LIGHT: //force field
+        if( ps && ps->stats[ STAT_TEAM ] != TEAM_ALIENS )
+          return qfalse;
+
+        ff->type = 0;
+        VectorCopy( es->origin, ff->origin );
+        ff->range = LIGHT_RANGE;
+        ff->force = LIGHT_FORCE;
+
+        return qtrue;
+    }
+  }
+
+  return qfalse;
 }

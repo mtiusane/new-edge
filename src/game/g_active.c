@@ -631,6 +631,7 @@ void SpectatorThink( gentity_t *ent, usercmd_t *ucmd )
       client->ps.pm_flags |= PMF_QUEUED;
 
     client->ps.speed = client->pers.flySpeed;
+    client->ps.stats[ STAT_STAMINA ] = 0;
     client->ps.stats[ STAT_MISC ] = 0;
     client->ps.stats[ STAT_BUILDABLE ] = BA_NONE;
     client->ps.stats[ STAT_CLASS ] = PCL_NONE;
@@ -806,10 +807,26 @@ void ClientTimerActions( gentity_t *ent, int msec )
 	  client->ps.stats[ STAT_STATE ] &= ~SS_INVI;
     }
 
-    // Regenerate health if we have got a Biokit
+    // Restore or subtract stamina
+    if( stopped || client->ps.pm_type == PM_JETPACK )
+      client->ps.stats[ STAT_STAMINA ] += STAMINA_STOP_RESTORE;
+    else if( ( client->ps.stats[ STAT_STATE ] & SS_SPEEDBOOST ) &&
+             !( client->buttons & BUTTON_WALKING ) ) // walk overrides sprint
+      client->ps.stats[ STAT_STAMINA ] -= STAMINA_SPRINT_TAKE;
+    else if( walking || crouched )
+      client->ps.stats[ STAT_STAMINA ] += STAMINA_WALK_RESTORE;
+      
+    // Check stamina limits
+    if( client->ps.stats[ STAT_STAMINA ] > STAMINA_MAX )
+      client->ps.stats[ STAT_STAMINA ] = STAMINA_MAX;
+    else if( client->ps.stats[ STAT_STAMINA ] < -STAMINA_MAX )
+      client->ps.stats[ STAT_STAMINA ] = -STAMINA_MAX;
+
+    // Regenerate health and stamina if we have got a Biokit
     if( BG_InventoryContainsUpgrade( UP_BIOKIT, client->ps.stats ) )
     {
       int rate_health  = BIOKIT_HEALTH_RATE;
+      int rate_stamina = BIOKIT_STAMINA_RATE;
 
       if( ent->nextRegenTime < level.time && ent->health > 0 && rate_health > 0 && 
           ent->health < client->ps.stats[ STAT_MAX_HEALTH ] )
@@ -823,6 +840,9 @@ void ClientTimerActions( gentity_t *ent, int msec )
         ent->nextRegenTime = level.time + 5000/rate_health;
         ent->client->alreadyRegenerated = qtrue;
       }
+
+      if( client->ps.stats[ STAT_STAMINA ] + rate_stamina <= STAMINA_MAX )
+        client->ps.stats[ STAT_STAMINA ] += rate_stamina;
     }
 
     if( weapon == WP_ABUILD ||
@@ -861,20 +881,6 @@ void ClientTimerActions( gentity_t *ent, int msec )
             client->ps.stats[ STAT_BUILDABLE ] |= SB_VALID_TOGGLEBIT;
           else
             client->ps.stats[ STAT_BUILDABLE ] &= ~SB_VALID_TOGGLEBIT;
-
-          // Let the client know which buildables will be removed by building
-          for( i = 0; i < MAX_MISC; i++ )
-          {
-            if( i < level.numBuildablesForRemoval )
-              client->ps.misc[ i ] = level.markedBuildables[ i ]->s.number;
-            else
-              client->ps.misc[ i ] = 0;
-          }
-        }
-        else
-        {
-          for( i = 0; i < MAX_MISC; i++ )
-            client->ps.misc[ i ] = 0;
         }
         break;
 
@@ -1643,6 +1649,7 @@ void ClientThink_real( gentity_t *ent )
   int       oldEventSequence;
   int       msec;
   usercmd_t *ucmd;
+  int       i;
 
   client = ent->client;
 
@@ -1972,6 +1979,18 @@ void ClientThink_real( gentity_t *ent )
   pm.debugLevel = g_debugMove.integer;
   pm.noFootsteps = 0;
 
+  for( i = 0; i < level.num_entities; i++ )
+  {
+    gentity_t *ent = g_entities + i;
+
+    if( BG_ForceFieldForEntity( pm.ps, &ent->s,
+      pm.forceFields + pm.numForceFields ) )
+      pm.numForceFields++;
+
+    if( pm.numForceFields == MAX_FORCE_FIELDS )
+      break;
+  }
+
   pm.pmove_fixed = pmove_fixed.integer | client->pers.pmoveFixed;
   pm.pmove_msec = pmove_msec.integer;
 
@@ -2170,13 +2189,8 @@ void ClientThink_real( gentity_t *ent )
     }
   }
 
-  client->ps.persistant[ PERS_BP ] = G_GetBuildPoints( client->ps.origin,
-    client->ps.stats[ STAT_TEAM ] );
-  client->ps.persistant[ PERS_MARKEDBP ] = G_GetMarkedBuildPoints( client->ps.origin,
-    client->ps.stats[ STAT_TEAM ] );
-//no more zero bp?
-//  if( client->ps.persistant[ PERS_BP ] < 0 )
-//    client->ps.persistant[ PERS_BP ] = 0;
+  client->ps.persistant[ PERS_BP ] =
+    G_GetBuildPoints( client->ps.origin, client->ps.stats[ STAT_TEAM ] );
 
   // perform once-a-second actions
   ClientTimerActions( ent, msec );

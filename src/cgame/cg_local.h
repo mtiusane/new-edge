@@ -1351,6 +1351,8 @@ typedef struct
   qhandle_t   lightningImpactPS;
 
   sfxHandle_t hitSounds[ 5 ];
+
+  sfxHandle_t rocketlPrimeSound;
 } cgMedia_t;
 
 typedef struct
@@ -1358,7 +1360,6 @@ typedef struct
   qhandle_t     frameShader;
   qhandle_t     overlayShader;
   qhandle_t     noPowerShader;
-  qhandle_t     markedShader;
   vec4_t        healthSevereColor;
   vec4_t        healthHighColor;
   vec4_t        healthElevatedColor;
@@ -1398,7 +1399,6 @@ typedef struct
   int           timelimit;
   int           maxclients;
   char          mapname[ MAX_QPATH ];
-  qboolean      markDeconstruct;        // Whether or not buildables are marked
 
   int           voteTime[ NUM_TEAMS ];
   int           voteYes[ NUM_TEAMS ];

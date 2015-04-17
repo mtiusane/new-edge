@@ -765,6 +765,8 @@ static void CG_RegisterSounds( void )
 
   for( i = 0; i < 5; i++ )
     cgs.media.hitSounds[ i ]        = trap_S_RegisterSound( hit_sounds[ i ], qfalse );
+
+  cgs.media.rocketlPrimeSound       = trap_S_RegisterSound( "models/weapons/rocketl/prime.wav", qfalse );
 }
 
 

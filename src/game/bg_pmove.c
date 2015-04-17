@@ -406,6 +406,57 @@ static float PM_CmdScale( usercmd_t *cmd )
   
   if( pm->ps->stats[ STAT_TEAM ] == TEAM_HUMANS && pm->ps->pm_type == PM_NORMAL )
   {
+    qboolean wasSprinting;
+    qboolean sprint;
+    wasSprinting = sprint = pm->ps->stats[ STAT_STATE ] & SS_SPEEDBOOST;
+
+    if( pm->ps->persistant[ PERS_STATE ] & PS_SPRINTTOGGLE )
+    {
+      if( cmd->buttons & BUTTON_SPRINT &&
+          !( pm->ps->pm_flags & PMF_SPRINTHELD ) )
+      {
+        sprint = !sprint;
+        pm->ps->pm_flags |= PMF_SPRINTHELD;
+      }
+      else if( pm->ps->pm_flags & PMF_SPRINTHELD &&
+               !( cmd->buttons & BUTTON_SPRINT ) )
+        pm->ps->pm_flags &= ~PMF_SPRINTHELD;
+    }
+    else
+      sprint = cmd->buttons & BUTTON_SPRINT;
+
+    if( sprint )
+      pm->ps->stats[ STAT_STATE ] |= SS_SPEEDBOOST;      
+    else if( wasSprinting && !sprint )
+      pm->ps->stats[ STAT_STATE ] &= ~SS_SPEEDBOOST;
+
+    // Walk overrides sprint. We keep the state that we want to be sprinting
+    //  (above), but don't apply the modifier, and in g_active we skip taking
+    //  the stamina too.
+    if( sprint && !( cmd->buttons & BUTTON_WALKING ) )
+      modifier *= HUMAN_SPRINT_MODIFIER;
+    else
+      modifier *= HUMAN_JOG_MODIFIER;
+
+    if( cmd->forwardmove < 0 )
+    {
+      //can't run backwards
+      modifier *= HUMAN_BACK_MODIFIER;
+    }
+    else if( cmd->rightmove )
+    {
+      //can't move that fast sideways
+      modifier *= HUMAN_SIDE_MODIFIER;
+    }
+
+    //must have have stamina to jump
+    if( pm->ps->stats[ STAT_STAMINA ] < STAMINA_SLOW_LEVEL + STAMINA_JUMP_TAKE )
+      cmd->upmove = 0;
+
+    //slow down once stamina depletes
+    if( pm->ps->stats[ STAT_STAMINA ] <= STAMINA_SLOW_LEVEL )
+      modifier *= (float)( pm->ps->stats[ STAT_STAMINA ] + STAMINA_MAX ) / (float)(STAMINA_SLOW_LEVEL + STAMINA_MAX);
+
     if( pm->ps->stats[ STAT_STATE ] & SS_CREEPSLOWED )
     {
       if( BG_InventoryContainsUpgrade( UP_LIGHTARMOUR, pm->ps->stats ) ||
@@ -906,6 +957,10 @@ static qboolean PM_CheckJump( void )
       pm->ps->stats[ STAT_MISC ] > 0 )
     return qfalse;
 
+  if( ( pm->ps->stats[ STAT_TEAM ] == TEAM_HUMANS ) &&
+      ( pm->ps->stats[ STAT_STAMINA ] < STAMINA_SLOW_LEVEL + STAMINA_JUMP_TAKE ) )
+    return qfalse;
+
   //no bunny hopping off a dodge
   if( pm->ps->stats[ STAT_TEAM ] == TEAM_HUMANS && 
       pm->ps->pm_time )
@@ -943,6 +998,10 @@ static qboolean PM_CheckJump( void )
   pml.groundPlane = qfalse;   // jumping away
   pml.walking = qfalse;
   pm->ps->pm_flags |= PMF_JUMP_HELD;
+
+  // take some stamina off
+  if( pm->ps->stats[ STAT_TEAM ] == TEAM_HUMANS )
+    pm->ps->stats[ STAT_STAMINA ] -= STAMINA_JUMP_TAKE;
 
   pm->ps->groundEntityNum = ENTITYNUM_NONE;
 
@@ -2748,6 +2807,9 @@ static void PM_Footsteps( void )
 
   bobmove *= BG_Class( pm->ps->stats[ STAT_CLASS ] )->bobCycle;
 
+  if( pm->ps->stats[ STAT_STATE ] & SS_SPEEDBOOST )
+    bobmove *= HUMAN_SPRINT_MODIFIER;
+
   // check for footstep / splash sounds
   old = pm->ps->bobCycle;
   pm->ps->bobCycle = (int)( old + bobmove * pml.msec ) & 255;
@@ -2830,13 +2892,18 @@ static void PM_BeginWeaponChange( int weapon )
   if( pm->ps->weaponstate == WEAPON_DROPPING )
     return;
 
+  // prevent storing a primed rocket launcher
+  if( pm->ps->weapon == WP_ROCKET_LAUNCHER &&
+    pm->ps->stats[ STAT_MISC ] > 0 )
+    return;
+
   // cancel a reload
   pm->ps->pm_flags &= ~PMF_WEAPON_RELOAD;
   if( pm->ps->weaponstate == WEAPON_RELOADING )
     pm->ps->weaponTime = 0;
 
   //special case to prevent storing a charged up lcannon
-  if( (pm->ps->weapon == WP_LUCIFER_CANNON || pm->ps->weapon == WP_FLAMER) )
+  if( (pm->ps->weapon == WP_LUCIFER_CANNON || pm->ps->weapon == WP_FLAMER ) )
     pm->ps->stats[ STAT_MISC ] = 0;
 
   pm->ps->weaponstate = WEAPON_DROPPING;
@@ -3058,6 +3125,19 @@ static void PM_Weapon( void )
       pm->ps->eFlags |= EF_WARN_CHARGE;
   }
 
+  if( pm->ps->weapon == WP_ROCKET_LAUNCHER )
+  {
+    if( ( ( !pm->ps->weaponTime && ( pm->cmd.buttons & BUTTON_ATTACK ) )
+      || pm->ps->stats[ STAT_MISC ] > 0 ) && pm->ps->ammo )
+    {
+      if( pm->ps->stats[ STAT_MISC ] == 0 )
+        PM_AddEvent( EV_ROCKETL_PRIME );
+
+      pm->ps->stats[ STAT_MISC ] += pml.msec;
+      pm->ps->eFlags |= EF_WARN_CHARGE;
+    }
+  }
+
   // don't allow attack until all buttons are up
   if( pm->ps->pm_flags & PMF_RESPAWNED )
     return;
@@ -3084,12 +3164,6 @@ static void PM_Weapon( void )
 
   // don't allow attack until all buttons are up
   if( pm->ps->pm_flags & PMF_RESPAWNED )
-    return;
-	
-  // no bite during pounce (except for level5)
-  if( ( pm->ps->weapon == WP_ALEVEL3 || pm->ps->weapon == WP_ALEVEL3_UPG )
-      && ( pm->cmd.buttons & BUTTON_ATTACK )
-      && ( pm->ps->pm_flags & PMF_CHARGE ) )
     return;
 
   // pump weapon delays (repeat times etc)
@@ -3356,16 +3430,12 @@ static void PM_Weapon( void )
 
  
     case WP_MASS_DRIVER:
-	{
-	if(pm->ps->ammo > 6 && attack3)
-	{
-	  attack3 = attack2 = qtrue;
-	}
-	else
-	attack2 = attack3 = qfalse;
-	}
-       //attack2 is handled on the client for zooming (cg_view.c)
+      if( pm->ps->ammo > 6 && attack3 )
+        attack3 = attack2 = qtrue;
+      else
+       attack2 = attack3 = qfalse;
 
+      //attack2 is handled on the client for zooming (cg_view.c)
       if( !attack1 )
       {
         pm->ps->weaponTime = 0;
@@ -3373,6 +3443,19 @@ static void PM_Weapon( void )
         return;
       }
       break;
+
+    case WP_ROCKET_LAUNCHER:
+      if( pm->ps->stats[ STAT_MISC ] > ROCKETL_DELAY )
+      {
+        attack1 = qtrue;
+        pm->ps->stats[ STAT_MISC ] = 0;
+      }
+      else
+      {
+        pm->ps->weaponTime = 0;
+        pm->ps->weaponstate = WEAPON_READY;
+        return;
+      }
 
     default:
       if( !attack1 && !attack2 && !attack3 )
@@ -3845,6 +3928,45 @@ void PM_UpdateViewAngles( playerState_t *ps, const usercmd_t *cmd )
   }
 }
 
+/*
+================
+PM_ForceFields
+================
+*/
+
+void PM_ForceFields( void )
+{
+  int i;
+  float dt = pml.msec * 0.001f;
+  forceField_t *ff;
+  vec3_t total = { 0 };
+
+  for( i = 0; i < pm->numForceFields; i++ )
+  {
+    vec3_t delta;
+    float distance, force;
+    trace_t tr;
+
+    ff = pm->forceFields + i;
+
+    VectorSubtract( ff->origin, pm->ps->origin, delta );
+    distance = VectorNormalize( delta );
+
+    if( distance > ff->range )
+      continue;
+
+    pm->trace( &tr, pm->ps->origin, NULL, NULL, ff->origin, pm->ps->clientNum, MASK_SOLID );
+
+    if( tr.fraction < 1.0f )
+      continue;
+
+    force = ff->force / distance * ( 1.0f - distance / ff->range );
+
+    VectorMA( total, force, delta, total );
+  }
+
+  VectorMA( pm->ps->velocity, dt, total, pm->ps->velocity );
+}
 
 /*
 ================
@@ -4005,6 +4127,8 @@ void PmoveSingle( pmove_t *pmove )
     PM_DeadMove( );
 
   PM_DropTimers( );
+
+  PM_ForceFields( );
 
   if( pm->ps->pm_type == PM_JETPACK )
     PM_JetPackMove( );

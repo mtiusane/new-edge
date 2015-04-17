@@ -450,7 +450,7 @@ void Cmd_Give_f( gentity_t *ent )
   if( trap_Argc( ) < 2 )
   {
     ADMP( "usage: give [what]\n" );
-    ADMP( "usage: valid choices are: all, health, funds [amount], "
+    ADMP( "usage: valid choices are: all, health, funds [amount], stamina, "
           "poison, gas, ammo\n" );
     return;
   }
@@ -486,6 +486,9 @@ void Cmd_Give_f( gentity_t *ent )
 
     G_AddCreditToClient( ent->client, (short)credits, qtrue );
   }
+
+  if( give_all || Q_stricmp( name, "stamina" ) == 0 )
+    ent->client->ps.stats[ STAT_STAMINA ] = STAMINA_MAX;
 
   if( Q_stricmp( name, "poison" ) == 0 )
   {
@@ -1320,27 +1323,6 @@ void Cmd_CallVote_f( gentity_t *ent )
           "Set the ^1next^5 map to '%s'", arg );
       }
     }
-    else if( !Q_stricmp( vote, "draw" ) )
-    {
-      if( !reason[ 0 ] && !G_admin_permission( ent, ADMF_UNACCOUNTABLE ) )
-      {
-        trap_SendServerCommand( ent-g_entities,
-          va( "print \"%s: You must provide a reason\n\"", cmd ) );
-        return;
-      }
-    
-      if( (( level.time - level.startTime ) <= 300 * 1000 )
-        && ( level.numPlayingClients > 0 && level.numConnectedClients > 1 ) )
-      {
-         trap_SendServerCommand( ent-g_entities, "print \"You cannot call for a draw before 5 minutes\n\"" );
-         return;
-      }
-	  
-      
-      strcpy( level.voteString[ team ], "evacuation" );
-      strcpy( level.voteDisplayString[ team ], "End match in a draw" );
-      level.voteDelay[ team ] = 3000;
-    }
     else if( !Q_stricmp( vote, "sudden_death" ) )
     {
       if(!g_suddenDeathVotePercent.integer)
@@ -1399,7 +1381,7 @@ void Cmd_CallVote_f( gentity_t *ent )
     {
       trap_SendServerCommand( ent-g_entities, "print \"Invalid vote string\n\"" );
       trap_SendServerCommand( ent-g_entities, "print \"Valid vote commands are: "
-        "map, nextmap, map_restart, draw, sudden_death, armageddon, kick, poll, mute and unmute\n" );
+        "map, nextmap, map_restart, sudden_death, armageddon, kick, poll, mute and unmute\n" );
       return;
     }
   }
@@ -1440,6 +1422,12 @@ void Cmd_CallVote_f( gentity_t *ent )
   }
   else if( !Q_stricmp( vote, "admitdefeat" ) )
   {
+    if( ( ( level.time - level.startTime ) < 60 * 10000 ) )
+    {
+      trap_SendServerCommand( ent-g_entities, "print \"You cannot admit defeat in the first 10 minutes.\n\"" );
+      return;
+    }
+
     Com_sprintf( level.voteString[ team ], sizeof( level.voteString[ team ] ),
       "admitdefeat %d", team );
     strcpy( level.voteDisplayString[ team ], "Admit Defeat" );
@@ -1913,16 +1901,9 @@ void Cmd_Destroy_f( gentity_t *ent )
     // Always let the builder prevent the explosion
     if( traceEnt->health <= 0 )
     {
-      G_QueueBuildPoints( traceEnt );
       G_RewardAttackers( traceEnt );
+      G_RecoverBuildPoints( traceEnt );
       G_FreeEntity( traceEnt );
-      return;
-    }
-
-    // Cancel deconstruction (unmark)
-    if( deconstruct && g_markDeconstruct.integer && traceEnt->deconstruct )
-    {
-      traceEnt->deconstruct = qfalse;
       return;
     }
 
@@ -1940,8 +1921,7 @@ void Cmd_Destroy_f( gentity_t *ent )
         lastSpawn = qtrue;
     }
 
-    if( lastSpawn && !g_cheats.integer &&
-        !g_markDeconstruct.integer )
+    if( lastSpawn && !g_cheats.integer )
     {
       G_TriggerMenu( ent->client->ps.clientNum, MN_B_LASTSPAWN );
       return;
@@ -1962,30 +1942,20 @@ void Cmd_Destroy_f( gentity_t *ent )
       return; 
     }
 
-    if( !g_markDeconstruct.integer ||
-        ( ent->client->pers.teamSelection == TEAM_HUMANS &&
-          !G_FindPower( traceEnt, qtrue ) ) )
+    if( ent->client->ps.stats[ STAT_MISC ] > 0 )
     {
-      if( ent->client->ps.stats[ STAT_MISC ] > 0 )
-      {
-        G_AddEvent( ent, EV_BUILD_DELAY, ent->client->ps.clientNum );
-        return;
-      }
+      G_AddEvent( ent, EV_BUILD_DELAY, ent->client->ps.clientNum );
+      return;
     }
 
     if( traceEnt->health > 0 )
     {
+      G_RecoverBuildPoints( traceEnt );
+
       if( !deconstruct )
       {
         G_Damage( traceEnt, ent, ent, forward, tr.endpos,
                   traceEnt->health, 0, MOD_SUICIDE );
-      }
-      else if( g_markDeconstruct.integer &&
-               ( ent->client->pers.teamSelection != TEAM_HUMANS ||
-                 G_FindPower( traceEnt , qtrue ) || lastSpawn ) )
-      {
-        traceEnt->deconstruct     = qtrue; // Mark buildable for deconstruction
-        traceEnt->deconstructTime = level.time;
       }
       else
       {
@@ -1994,6 +1964,7 @@ void Cmd_Destroy_f( gentity_t *ent )
             ent->client->ps.stats[ STAT_MISC ] +=
               BG_Buildable( traceEnt->s.modelindex )->buildTime / 4;
         }
+        
         G_Damage( traceEnt, ent, ent, forward, tr.endpos,
                   traceEnt->health, 0, MOD_DECONSTRUCT );
         G_FreeEntity( traceEnt );

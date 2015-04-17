@@ -253,7 +253,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define LEVEL3_POUNCE_TIME          900      // msec for full Dragoon pounce
 #define LEVEL3_POUNCE_TIME_UPG      900      // msec for full Adv. Dragoon pounce
 #define LEVEL3_POUNCE_TIME_MIN      200      // msec before which pounce cancels  
-#define LEVEL3_POUNCE_REPEAT        400      // msec before a new pounce starts (default: 400)
+#define LEVEL3_POUNCE_REPEAT        0        // msec before a new pounce starts (default: 400)
 #define LEVEL3_POUNCE_SPEED_MOD     0.75f    // walking speed modifier for pounce charging
 #define LEVEL3_POUNCE_JUMP_MAG      850      // Dragoon pounce jump power
 #define LEVEL3_POUNCE_JUMP_MAG_UPG  930      // Adv. Dragoon pounce jump power
@@ -324,7 +324,21 @@ TREMULOUS EDGE MOD SRC FILE
  * HUMAN
  */
 
+#define HUMAN_SPRINT_MODIFIER       1.28f
+#define HUMAN_JOG_MODIFIER          1.1f
+#define HUMAN_BACK_MODIFIER         0.8f
+#define HUMAN_SIDE_MODIFIER         0.9f
 #define HUMAN_LAND_FRICTION         3.0f
+#define STAMINA_STOP_RESTORE        20
+#define STAMINA_WALK_RESTORE        15
+#define STAMINA_MEDISTAT_RESTORE    30
+#define STAMINA_SPRINT_TAKE         8
+#define STAMINA_JUMP_TAKE           250
+#define STAMINA_DODGE_TAKE          250
+#define STAMINA_MAX                 1200
+#define STAMINA_BREATHING_LEVEL     0
+#define STAMINA_SLOW_LEVEL          -500
+#define STAMINA_BLACKOUT_LEVEL      -800
 #define HUMAN_SPAWN_REPEAT_TIME     11000
 #define HUMAN_REGEN_DAMAGE_TIME     2000 		//msec since damage before dcc repairs
 #define HUMAN_MAX_CREDITS           2000
@@ -354,14 +368,14 @@ TREMULOUS EDGE MOD SRC FILE
 #define RIFLE_CLIPSIZE              35
 #define RIFLE_MAXCLIPS              5
 #define RIFLE_REPEAT                90
-#define RIFLE_K_SCALE               1.0f
+#define RIFLE_K_SCALE               0.0f
 #define RIFLE_RELOAD                2000
 #define RIFLE_PRICE                 0
 #define RIFLE_SPREAD                200
 #define RIFLE_DMG                   HDM(5) // DPS: 55.55
 
 #define RIFLE_REPEAT2               35
-#define RIFLE_K_SCALE2              1.2f
+#define RIFLE_K_SCALE2              0.0f
 #define RIFLE_RELOAD2               4000
 #define RIFLE_SPREAD2               2000
 #define RIFLE_DMG2                  HDM(4)
@@ -369,7 +383,7 @@ TREMULOUS EDGE MOD SRC FILE
 
 #define PAINSAW_PRICE               100
 #define PAINSAW_REPEAT              75
-#define PAINSAW_K_SCALE             1.0f
+#define PAINSAW_K_SCALE             0.0f
 #define PAINSAW_DAMAGE              HDM(11) // DPS: 146.67
 #define PAINSAW_RANGE               64.0f
 #define PAINSAW_WIDTH               0.0f
@@ -399,7 +413,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define	MINE_INIT_TIME	            3000
 #define MINE_CHECK_FREQUENCY        100
 #define	MINE_BOOM_TIME		    25
-#define MINE_TAKEDAMAGE             qtrue
+#define MINE_TAKEDAMAGE             qfalse
 #define MINE_HEALTH                 40
 
 #define NADEFLAMES_SPEED            400.0f
@@ -424,7 +438,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define SHOTGUN_PELLETS             11 		//used to sync server and client side
 #define SHOTGUN_MAXCLIPS            3
 #define SHOTGUN_REPEAT              1000
-#define SHOTGUN_K_SCALE             1.0f
+#define SHOTGUN_K_SCALE             0.0f
 #define SHOTGUN_RELOAD              2000
 #define SHOTGUN_SPREAD              700
 #define SHOTGUN_DMG                 HDM(5) // DPS: 55
@@ -433,7 +447,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define LASGUN_PRICE                250
 #define LASGUN_AMMO                 250
 #define LASGUN_REPEAT               190
-#define LASGUN_K_SCALE              1.0f
+#define LASGUN_K_SCALE              0.0f
 #define LASGUN_RELOAD               2000
 #define LASGUN_DAMAGE               HDM(9) // DPS: 47.37
 
@@ -450,7 +464,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define MDRIVER_MAXCLIPS            3
 #define MDRIVER_DMG                 HDM(40) // DPS: 40
 #define MDRIVER_REPEAT              1000
-#define MDRIVER_K_SCALE             1.0f
+#define MDRIVER_K_SCALE             0.0f
 #define MDRIVER_RELOAD              2200
 #define MDRIVER2ND_DMG              HDM(40)
 #define MDRIVER2ND_SPLASH_DMG       10
@@ -463,7 +477,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define CHAINGUN_PRICE              400
 #define CHAINGUN_BULLETS            300
 #define CHAINGUN_REPEAT             80
-#define CHAINGUN_K_SCALE            1.0f
+#define CHAINGUN_K_SCALE            0.0f
 #define CHAINGUN_SPREAD             1000
 #define CHAINGUN_DMG                HDM(6) // DPS: 75
 
@@ -493,7 +507,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define PRIFLE_CLIPS                40
 #define PRIFLE_MAXCLIPS             5
 #define PRIFLE_REPEAT               100
-#define PRIFLE_K_SCALE              1.0f
+#define PRIFLE_K_SCALE              0.0f
 #define PRIFLE_RELOAD               2000
 #define PRIFLE_DMG                  HDM(9) // DPS: 90
 #define PRIFLE_SPEED                1200
@@ -503,7 +517,7 @@ TREMULOUS EDGE MOD SRC FILE
 
 #define LIGHTNING_PRICE             500
 #define LIGHTNING_AMMO              300
-#define LIGHTNING_K_SCALE           1
+#define LIGHTNING_K_SCALE           0.0f
 #define LIGHTNING_DPS               120
 #define LIGHTNING_DIFFICULTY        2
 #define LIGHTNING_REPEAT            50 // keep it as low as possible
@@ -529,16 +543,18 @@ TREMULOUS EDGE MOD SRC FILE
 #define LCANNON_CHARGE_TIME_WARN    2000
 #define LCANNON_CHARGE_AMMO         10       // ammo cost of a full charge shot
 
-#define ROCKETL_PRICE               700
+#define ROCKETL_PRICE               800
 #define ROCKETL_AMMO                20
-#define ROCKETL_CLIPS               1
+#define ROCKETL_CLIPS               0
 #define ROCKETL_RELOAD              0
-#define ROCKETL_REPEAT              1200
+#define ROCKETL_REPEAT              ( 1000 - ROCKETL_DELAY )
 #define ROCKETL_K_SCALE             1.0f
-#define ROCKETL_DAMAGE              HDM(80) // DPS: 66.67
-#define ROCKETL_RADIUS              80
+#define ROCKETL_DAMAGE              HDM(88) // DPS: 88
+#define ROCKETL_SPLASHDAMAGE        ( ROCKETL_DAMAGE / 2 )
+#define ROCKETL_RADIUS              120
 #define ROCKETL_SIZE                5
-#define ROCKETL_SPEED               500
+#define ROCKETL_SPEED               700
+#define ROCKETL_DELAY               600
 
 #define HBUILD_PRICE                0
 #define HBUILD_REPEAT               1000
@@ -794,7 +810,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define INFESTATION_THICKET_BP                    4
 #define INFESTATION_THICKET_BT                    12000
 #define INFESTATION_THICKET_HEALTH                ABHM(250)
-#define INFESTATION_THICKET_REGEN                 1
+#define INFESTATION_THICKET_REGEN                 12
 #define INFESTATION_THICKET_SPLASHDAMAGE          10
 #define INFESTATION_THICKET_SPLASHRADIUS          10
 #define INFESTATION_THICKET_CREEPSIZE             190
@@ -803,7 +819,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define INFESTATION_BLISTER_BP                    3
 #define INFESTATION_BLISTER_BT                    7000
 #define INFESTATION_BLISTER_HEALTH                ABHM(250)
-#define INFESTATION_BLISTER_REGEN                 1
+#define INFESTATION_BLISTER_REGEN                 12
 #define INFESTATION_BLISTER_SPLASHDAMAGE          10
 #define INFESTATION_BLISTER_SPLASHRADIUS          10
 #define INFESTATION_BLISTER_CREEPSIZE             300
@@ -812,7 +828,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define REFLECTOR_BP                 			   3
 #define REFLECTOR_BT                 			   4000
 #define REFLECTOR_HEALTH              			   ABHM(250)
-#define REFLECTOR_REGEN               			   1
+#define REFLECTOR_REGEN               			   12
 #define REFLECTOR_SPLASHDAMAGE        			   5
 #define REFLECTOR_SPLASHRADIUS        			   15
 #define REFLECTOR_CREEPSIZE           			   0
@@ -839,7 +855,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define COCOON_BP                    				35
 #define COCOON_BT                    				20000
 #define COCOON_HEALTH                				ABHM(250)
-#define COCOON_REGEN                 				1
+#define COCOON_REGEN                 				12
 #define COCOON_SPLASHDAMAGE          				10
 #define COCOON_SPLASHRADIUS          				200
 #define COCOON_CREEPSIZE             				60
@@ -1097,12 +1113,14 @@ TREMULOUS EDGE MOD SRC FILE
 #define BARREL_SPLASHRADIUS        		     150
 #define BARREL_VALUE               			 HBVM(BARREL_BP)
 
-#define LIGHT_BP                		     12
-#define LIGHT_BT                 			 12000
-#define LIGHT_HEALTH              		     HBHM(200)
-#define LIGHT_SPLASHDAMAGE        		     15
-#define LIGHT_SPLASHRADIUS        		     180
-#define LIGHT_VALUE               			 HBVM(LIGHT_BP)
+#define LIGHT_BP                    12
+#define LIGHT_BT                    12000
+#define LIGHT_HEALTH                HBHM(200)
+#define LIGHT_SPLASHDAMAGE          15
+#define LIGHT_SPLASHRADIUS          180
+#define LIGHT_VALUE                 HBVM(LIGHT_BP)
+#define LIGHT_RANGE                 220
+#define LIGHT_FORCE                 -1.5e+6
 
 #define COVER_BP                	    	 20
 #define COVER_BT                 			 20000

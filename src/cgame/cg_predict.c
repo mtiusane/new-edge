@@ -620,6 +620,23 @@ void CG_PredictPlayerState( void )
 
   cg_pmove.noFootsteps = 0;
 
+/*  for( i = 0; i < cg.snap->numEntities; i++ )
+  {
+    cent  = &cg_entities[ cg.snap->entities[ i ].number ];
+    es    = &cent->currentState;*/
+
+  for( cg_pmove.numForceFields = 0, i = 0; i < cg.snap->numEntities; i++ )
+  {
+    centity_t *cent = cg_entities + cg.snap->entities[ i ].number;
+
+    if( BG_ForceFieldForEntity( &cg.predictedPlayerState, &cent->currentState,
+      cg_pmove.forceFields + cg_pmove.numForceFields ) )
+      cg_pmove.numForceFields++;
+
+    if( cg_pmove.numForceFields == MAX_FORCE_FIELDS )
+      break;
+  }
+
   // save the state before the pmove so we can detect transitions
   oldPlayerState = cg.predictedPlayerState;
 

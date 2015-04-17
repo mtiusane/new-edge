@@ -161,6 +161,15 @@ typedef enum
 
 #define PMF_ALL_TIMES (PMF_TIME_WATERJUMP|PMF_TIME_LAND|PMF_TIME_KNOCKBACK|PMF_TIME_WALLJUMP)
 
+#define MAX_FORCE_FIELDS 100
+typedef struct
+{
+  int type;
+  vec3_t origin;
+  float force;
+  float range;
+} forceField_t;
+
 typedef struct
 {
   int pouncePayload;
@@ -205,6 +214,9 @@ typedef struct pmove_s
 
 
   int           (*pointcontents)( const vec3_t point, int passEntityNum );
+
+  forceField_t  forceFields[ MAX_FORCE_FIELDS ];
+  int           numForceFields;
 } pmove_t;
 
 // if a full pmove isn't done on the client, you can just update the angles
@@ -224,12 +236,13 @@ typedef enum
   STAT_MAX_HEALTH,// health / armor limit, changable by handicap
   STAT_CLASS,     // player class (for aliens AND humans)
   STAT_TEAM,      // player team
+  STAT_STAMINA,   // stamina (human only)
   STAT_STATE,     // client states e.g. wall climbing
   STAT_MISC,      // for uh...misc stuff (pounce, trample, lcannon)
   STAT_BUILDABLE, // which ghost model to display for building
   STAT_FALLDIST,  // the distance the player fell
   STAT_VIEWLOCK   // direction to lock the view in
-  // netcode has space for 4 more
+  // netcode has space for 3 more
 } statIndex_t;
 
 #define SCA_WALLCLIMBER         0x00000001
@@ -302,7 +315,6 @@ typedef enum
 // buildable flags:
 #define EF_B_SPAWNED        0x0008
 #define EF_B_POWERED        0x0010
-#define EF_B_MARKED         0x0020
 
 #define EF_WARN_CHARGE      0x0020    // Lucifer Cannon is about to overcharge
 #define EF_WALLCLIMB        0x0040    // wall walking
@@ -565,7 +577,8 @@ typedef enum
   EV_MGTURRET_SPINUP, // turret spinup sound should play
   EV_RPTUSE_SOUND,    // trigger a sound
   EV_LEV2_ZAP,
-  EV_ACIDBOMB_BOUNCE
+  EV_ACIDBOMB_BOUNCE,
+  EV_ROCKETL_PRIME
 } entity_event_t;
 
 typedef enum
@@ -1248,3 +1261,5 @@ int cmdcmp( const void *a, const void *b );
 #define DIF_BUILDABLE   0x0002 // has to be 2
 #define DIF_FRIENDLY    0x0004
 #define DIF_PERSISTENT  0x0008 // poison and infection
+
+qboolean BG_ForceFieldForEntity( playerState_t *ps, entityState_t *es, forceField_t *ff );

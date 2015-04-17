@@ -993,6 +993,10 @@ void CG_EntityEvent( centity_t *cent, vec3_t position )
         trap_S_StartSound( NULL, es->number, CHAN_AUTO, cgs.media.acidBombBounceSound2 );
       break;
 
+    case EV_ROCKETL_PRIME:
+      trap_S_StartSound( NULL, es->number, CHAN_AUTO, cgs.media.rocketlPrimeSound );
+      break;
+
     //
     // missile impacts
     //
