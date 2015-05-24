@@ -3247,7 +3247,7 @@ void G_BuildableThink( gentity_t *ent, int msec )
       else if( ent->buildableTeam == TEAM_HUMANS && ent->dcc &&
         ( ent->lastDamageTime + HUMAN_REGEN_DAMAGE_TIME ) < level.time )
       {
-        ent->health += g_humanDefenceComputerRate.integer * g_humanDefenceComputerLimit.integer;
+        ent->health += MAX(HUMAN_BREGEN_MIN,(int)((float)HUMAN_BREGEN_MODIFIER*g_humanDefenceComputerRate.integer * g_humanDefenceComputerLimit.integer));
       }
     }
 

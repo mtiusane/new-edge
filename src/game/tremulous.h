@@ -623,10 +623,13 @@ TREMULOUS EDGE MOD SRC FILE
  * ALIEN_BHLTH_MODIFIER - overall health modifier for coarse tuning
  */
 
-#define ALIEN_BHLTH_MODIFIER        1.0f
+#define ALIEN_BHLTH_MODIFIER        4.0f
 #define ABHM(h)                     ((int)((float)h*ALIEN_BHLTH_MODIFIER))
 #define ALIEN_BVALUE_MODIFIER       90.0f
 #define ABVM(h)                     ((int)((float)h*ALIEN_BVALUE_MODIFIER))
+#define ALIEN_BREGEN_MODIFIER       0.2f
+#define ALIEN_BREGEN_MIN            1
+#define ABRM(h)                     MAX(ALIEN_BREGEN_MIN,((int)((float)h*ALIEN_BREGEN_MODIFIER)))
 
 #define CREEP_BASESIZE              700
 #define CREEP_TIMEOUT               1000
@@ -640,7 +643,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define ASPAWN_BP                   10
 #define ASPAWN_BT                   15000
 #define ASPAWN_HEALTH               ABHM(250)
-#define ASPAWN_REGEN                8
+#define ASPAWN_REGEN                ABRM(8)
 #define ASPAWN_SPLASHDAMAGE         50
 #define ASPAWN_SPLASHRADIUS         100
 #define ASPAWN_CREEPSIZE            80
@@ -649,7 +652,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define BARRICADE_BP                5
 #define BARRICADE_BT                13000
 #define BARRICADE_HEALTH            ABHM(350)
-#define BARRICADE_REGEN             14
+#define BARRICADE_REGEN             ABRM(14)
 #define BARRICADE_SPLASHDAMAGE      50
 #define BARRICADE_SPLASHRADIUS      100
 #define BARRICADE_CREEPSIZE         70
@@ -660,7 +663,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define BOOSTER_BP                  14
 #define BOOSTER_BT                  14000
 #define BOOSTER_HEALTH              ABHM(150)
-#define BOOSTER_REGEN               8
+#define BOOSTER_REGEN               ABRM(8)
 #define BOOSTER_SPLASHDAMAGE        50
 #define BOOSTER_SPLASHRADIUS        100
 #define BOOSTER_CREEPSIZE           70
@@ -673,7 +676,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define ACIDTUBE_BP                 6
 #define ACIDTUBE_BT                 8000
 #define ACIDTUBE_HEALTH             ABHM(130)
-#define ACIDTUBE_REGEN              10
+#define ACIDTUBE_REGEN              ABRM(10)
 #define ACIDTUBE_SPLASHDAMAGE       50
 #define ACIDTUBE_SPLASHRADIUS       100
 #define ACIDTUBE_CREEPSIZE          30
@@ -686,7 +689,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define HIVE_BP                     8
 #define HIVE_BT                     13000
 #define HIVE_HEALTH                 ABHM(160)
-#define HIVE_REGEN                  10
+#define HIVE_REGEN                  ABRM(10)
 #define HIVE_SPLASHDAMAGE           30
 #define HIVE_SPLASHRADIUS           200
 #define HIVE_CREEPSIZE              40
@@ -702,7 +705,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define TRAPPER_BP                  4
 #define TRAPPER_BT                  5000
 #define TRAPPER_HEALTH              ABHM(100)
-#define TRAPPER_REGEN               6
+#define TRAPPER_REGEN               ABRM(6)
 #define TRAPPER_SPLASHDAMAGE        15
 #define TRAPPER_SPLASHRADIUS        100
 #define TRAPPER_CREEPSIZE           25
@@ -718,7 +721,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define OVERMIND_BP                 0
 #define OVERMIND_BT                 30000
 #define OVERMIND_HEALTH             ABHM(750)
-#define OVERMIND_REGEN              6
+#define OVERMIND_REGEN              ABRM(6)
 #define OVERMIND_SPLASHDAMAGE       15
 #define OVERMIND_SPLASHRADIUS       300
 #define OVERMIND_CREEPSIZE          120
@@ -729,7 +732,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define PANZER_SMALL_BP                    4
 #define PANZER_SMALL_BT                    4000
 #define PANZER_SMALL_HEALTH                ABHM(160)
-#define PANZER_SMALL_REGEN                 8
+#define PANZER_SMALL_REGEN                 ABRM(8)
 #define PANZER_SMALL_SPLASHDAMAGE          1
 #define PANZER_SMALL_SPLASHRADIUS          10
 #define PANZER_SMALL_CREEPSIZE             0
@@ -738,7 +741,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define PANZER_MEDIUM_BP                    7
 #define PANZER_MEDIUM_BT                    7000
 #define PANZER_MEDIUM_HEALTH                ABHM(260)
-#define PANZER_MEDIUM_REGEN                 10
+#define PANZER_MEDIUM_REGEN                 ABRM(10)
 #define PANZER_MEDIUM_SPLASHDAMAGE          5
 #define PANZER_MEDIUM_SPLASHRADIUS          40
 #define PANZER_MEDIUM_CREEPSIZE             0
@@ -747,7 +750,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define PANZER_LARGE_BP                     9
 #define PANZER_LARGE_BT                     9000
 #define PANZER_LARGE_HEALTH                 ABHM(400)
-#define PANZER_LARGE_REGEN                  12
+#define PANZER_LARGE_REGEN                  ABRM(12)
 #define PANZER_LARGE_SPLASHDAMAGE           10
 #define PANZER_LARGE_SPLASHRADIUS           70
 #define PANZER_LARGE_CREEPSIZE              0
@@ -756,7 +759,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define TENDON_SMALL_BP                     1
 #define TENDON_SMALL_BT                     4000
 #define TENDON_SMALL_HEALTH                 ABHM(25)
-#define TENDON_SMALL_REGEN                  1
+#define TENDON_SMALL_REGEN                  ABRM(1)
 #define TENDON_SMALL_SPLASHDAMAGE           5
 #define TENDON_SMALL_SPLASHRADIUS           10
 #define TENDON_SMALL_CREEPSIZE              0
@@ -765,7 +768,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define TENDON_MEDIUM_BP                    2
 #define TENDON_MEDIUM_BT                    9000
 #define TENDON_MEDIUM_HEALTH                ABHM(50)
-#define TENDON_MEDIUM_REGEN                 1
+#define TENDON_MEDIUM_REGEN                 ABRM(1)
 #define TENDON_MEDIUM_SPLASHDAMAGE          5
 #define TENDON_MEDIUM_SPLASHRADIUS          25
 #define TENDON_MEDIUM_CREEPSIZE             0
@@ -774,7 +777,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define TENDON_LARGE_BP                     3
 #define TENDON_LARGE_BT                     13000
 #define TENDON_LARGE_HEALTH                 ABHM(100)
-#define TENDON_LARGE_REGEN                  1
+#define TENDON_LARGE_REGEN                  ABRM(1)
 #define TENDON_LARGE_SPLASHDAMAGE           5
 #define TENDON_LARGE_SPLASHRADIUS           50
 #define TENDON_LARGE_CREEPSIZE              0
@@ -801,7 +804,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define INFESTATION_SLIME_BP                    12
 #define INFESTATION_SLIME_BT                    16000
 #define INFESTATION_SLIME_HEALTH                ABHM(180)
-#define INFESTATION_SLIME_REGEN                 12
+#define INFESTATION_SLIME_REGEN                 ABRM(12)
 #define INFESTATION_SLIME_SPLASHDAMAGE          15
 #define INFESTATION_SLIME_SPLASHRADIUS          200
 #define INFESTATION_SLIME_CREEPSIZE             170
@@ -810,7 +813,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define INFESTATION_THICKET_BP                    4
 #define INFESTATION_THICKET_BT                    12000
 #define INFESTATION_THICKET_HEALTH                ABHM(250)
-#define INFESTATION_THICKET_REGEN                 12
+#define INFESTATION_THICKET_REGEN                 ABRM(12)
 #define INFESTATION_THICKET_SPLASHDAMAGE          10
 #define INFESTATION_THICKET_SPLASHRADIUS          10
 #define INFESTATION_THICKET_CREEPSIZE             190
@@ -819,7 +822,7 @@ TREMULOUS EDGE MOD SRC FILE
 #define INFESTATION_BLISTER_BP                    3
 #define INFESTATION_BLISTER_BT                    7000
 #define INFESTATION_BLISTER_HEALTH                ABHM(250)
-#define INFESTATION_BLISTER_REGEN                 12
+#define INFESTATION_BLISTER_REGEN                 ABRM(12)
 #define INFESTATION_BLISTER_SPLASHDAMAGE          10
 #define INFESTATION_BLISTER_SPLASHRADIUS          10
 #define INFESTATION_BLISTER_CREEPSIZE             300
@@ -909,10 +912,12 @@ TREMULOUS EDGE MOD SRC FILE
  * HUMAN_BHLTH_MODIFIER - overall health modifier for coarse tuning
  */
 
-#define HUMAN_BHLTH_MODIFIER        1.0f
+#define HUMAN_BHLTH_MODIFIER        4.0f
 #define HBHM(h)                     ((int)((float)h*HUMAN_BHLTH_MODIFIER))
 #define HUMAN_BVALUE_MODIFIER       240.0f
 #define HBVM(h)                     ((int)((float)h*(float)HUMAN_BVALUE_MODIFIER)) // remember these are measured in credits not frags (c.f. ALIEN_CREDITS_PER_KILL)
+#define HUMAN_BREGEN_MODIFIER       0.2f
+#define HUMAN_BREGEN_MIN            1
 
 #define REACTOR_BASESIZE            1000
 #define REPEATER_BASESIZE           500
