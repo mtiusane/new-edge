@@ -939,10 +939,6 @@ static qboolean G_SayTo( gentity_t *ent, gentity_t *other, saymode_t mode, const
 
   if( other->client->pers.connected != CON_CONNECTED )
     return qfalse;
-
-  // ignore messages from people in /ignore list
-  if( Com_ClientListContains( &other->client->sess.ignoreList, (int)( ent - g_entities ) ) )
-    return qfalse;
   
   if( ( ent && !OnSameTeam( ent, other ) ) &&
       ( mode == SAY_TEAM || mode == SAY_AREA || mode == SAY_TPRIVMSG ) )
@@ -2899,74 +2895,6 @@ void Cmd_FollowCycle_f( gentity_t *ent )
   G_FollowNewClient( ent, dir );
 }
 
-static void Cmd_Ignore_f( gentity_t *ent )
-{
-  int pids[ MAX_CLIENTS ];
-  char name[ MAX_NAME_LENGTH ];
-  char cmd[ 9 ];
-  int matches = 0;
-  int i;
-  qboolean ignore = qfalse;
-
-  trap_Argv( 0, cmd, sizeof( cmd ) );
-  if( Q_stricmp( cmd, "ignore" ) == 0 )
-    ignore = qtrue;
-
-  if( trap_Argc() < 2 )
-  {
-    trap_SendServerCommand( ent-g_entities, va( "print \"[skipnotify]"
-      "usage: %s [clientNum | partial name match]\n\"", cmd ) );
-    return;
-  }
-
-  Q_strncpyz( name, ConcatArgs( 1 ), sizeof( name ) );
-  matches = G_ClientNumbersFromString( name, pids, MAX_CLIENTS );
-  if( matches < 1 )
-  {
-    trap_SendServerCommand( ent-g_entities, va( "print \"[skipnotify]"
-      "%s: no clients match the name '%s'\n\"", cmd, name ) );
-    return;
-  }
-
-  for( i = 0; i < matches; i++ )
-  {
-    if( ignore )
-    {
-      if( !Com_ClientListContains( &ent->client->sess.ignoreList, pids[ i ] ) )
-      {
-        Com_ClientListAdd( &ent->client->sess.ignoreList, pids[ i ] );
-        ClientUserinfoChanged( ent->client->ps.clientNum, qfalse );
-        trap_SendServerCommand( ent-g_entities, va( "print \"[skipnotify]"
-          "ignore: added %s^7 to your ignore list\n\"",
-          level.clients[ pids[ i ] ].pers.netname ) );
-      }
-      else
-      {
-        trap_SendServerCommand( ent-g_entities, va( "print \"[skipnotify]"
-          "ignore: %s^7 is already on your ignore list\n\"",
-          level.clients[ pids[ i ] ].pers.netname ) );
-      }
-    }
-    else
-    {
-      if( Com_ClientListContains( &ent->client->sess.ignoreList, pids[ i ] ) )
-      {
-        Com_ClientListRemove( &ent->client->sess.ignoreList, pids[ i ] );
-        ClientUserinfoChanged( ent->client->ps.clientNum, qfalse );
-        trap_SendServerCommand( ent-g_entities, va( "print \"[skipnotify]"
-          "unignore: removed %s^7 from your ignore list\n\"",
-          level.clients[ pids[ i ] ].pers.netname ) );
-      }
-      else
-      {
-        trap_SendServerCommand( ent-g_entities, va( "print \"[skipnotify]"
-          "unignore: %s^7 is not on your ignore list\n\"",
-          level.clients[ pids[ i ] ].pers.netname ) );
-      }
-    }
-  }
-}
-
 /*
 =================
 Cmd_ListMaps_f
@@ -3428,7 +3356,6 @@ commands_t cmds[ ] = {
   { "followprev", CMD_SPEC, Cmd_FollowCycle_f },
   { "give", CMD_CHEAT|CMD_TEAM|CMD_LIVING, Cmd_Give_f },
   { "god", CMD_CHEAT|CMD_TEAM|CMD_LIVING, Cmd_God_f },
-  { "ignore", 0, Cmd_Ignore_f },
   { "itemact", CMD_HUMAN|CMD_LIVING, Cmd_ActivateItem_f },
   { "itemdeact", CMD_HUMAN|CMD_LIVING, Cmd_DeActivateItem_f },
   { "itemtoggle", CMD_HUMAN|CMD_LIVING, Cmd_ToggleItem_f },
@@ -3448,7 +3375,6 @@ commands_t cmds[ ] = {
   { "team", 0, Cmd_Team_f },
   { "teamvote", CMD_TEAM, Cmd_Vote_f },
   { "test", CMD_CHEAT, Cmd_Test_f },
-  { "unignore", 0, Cmd_Ignore_f },
   { "vote", 0, Cmd_Vote_f },
   { "where", 0, Cmd_Where_f }
 };

@@ -1064,9 +1064,8 @@ char *ClientUserinfoChanged( int clientNum, qboolean forceName )
   // print scoreboards, display models, and play custom sounds
 
   Com_sprintf( userinfo, sizeof( userinfo ),
-    "n\\%s\\t\\%i\\model\\%s\\ig\\%16s\\v\\%s",
+    "n\\%s\\t\\%i\\model\\%s\\v\\%s",
     client->pers.netname, client->pers.teamSelection, model,
-    Com_ClientListString( &client->sess.ignoreList ),
     client->pers.voice );
 
   trap_SetConfigstring( CS_PLAYERS + clientNum, userinfo );
@@ -1659,13 +1658,6 @@ void ClientDisconnect( int clientNum )
   G_LeaveTeam( ent );
   G_namelog_disconnect( ent->client );
   G_Vote( ent, TEAM_NONE, qfalse );
-
-  // stop any following clients
-  for( i = 0; i < level.maxclients; i++ )
-  {
-    // remove any /ignore settings for this clientNum
-    Com_ClientListRemove( &level.clients[ i ].sess.ignoreList, clientNum );
-  }
 
   // send effect if they were completely connected
   if( ent->client->pers.connected == CON_CONNECTED &&

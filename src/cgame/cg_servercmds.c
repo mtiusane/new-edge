@@ -948,7 +948,6 @@ static void CG_Say( int clientNum, saymode_t mode, const char *text )
 {
   char *name;
   char prefix[ 11 ] = "";
-  char *ignore = "";
   char *location = "";
   char *color;
   char *maybeColon;
@@ -968,9 +967,6 @@ static void CG_Say( int clientNum, saymode_t mode, const char *text )
     if( cg_chatTeamPrefix.integer )
       Com_sprintf( prefix, sizeof( prefix ), "[%s%c" S_COLOR_WHITE "] ",
                    tcolor, toupper( *( BG_TeamName( ci->team ) ) ) );
-
-    if( Com_ClientListContains( &cgs.ignoreList, clientNum ) )
-      ignore = "[skipnotify]";
 
     if( ( mode == SAY_TEAM || mode == SAY_AREA ) &&
         cg.snap->ps.pm_type != PM_INTERMISSION )
@@ -1016,37 +1012,32 @@ static void CG_Say( int clientNum, saymode_t mode, const char *text )
   switch( mode )
   {
     case SAY_ALL:
-      // might already be ignored but in that case no harm is done
-      if( cg_teamChatsOnly.integer )
-        ignore = "[skipnotify]";
-
-      CG_Printf( "%s%s%s" S_COLOR_WHITE "%s %c" S_COLOR_GREEN "%s\n",
-                 ignore, prefix, name, maybeColon, INDENT_MARKER, text );
+      CG_Printf( "%s%s" S_COLOR_WHITE "%s %c" S_COLOR_GREEN "%s\n",
+                 prefix, name, maybeColon, INDENT_MARKER, text );
       break;
     case SAY_TEAM:
-      CG_Printf( "%s%s(%s" S_COLOR_WHITE ")%s%s %c" S_COLOR_CYAN "%s\n",
-                 ignore, prefix, name, location, maybeColon, INDENT_MARKER, text );
+      CG_Printf( "%s(%s" S_COLOR_WHITE ")%s%s %c" S_COLOR_CYAN "%s\n",
+                 prefix, name, location, maybeColon, INDENT_MARKER, text );
       break;
     case SAY_ADMINS:
     case SAY_ADMINS_PUBLIC:
-      CG_Printf( "%s%s%s%s" S_COLOR_WHITE "%s %c" S_COLOR_MAGENTA "%s\n",
-                 ignore, prefix,
+      CG_Printf( "%s%s%s" S_COLOR_WHITE "%s %c" S_COLOR_MAGENTA "%s\n",
+                 prefix,
                  ( mode == SAY_ADMINS ) ? "[ADMIN]" : "[PLAYER]",
                  name, maybeColon, INDENT_MARKER, text );
       break;
     case SAY_AREA:
-      CG_Printf( "%s%s<%s" S_COLOR_WHITE ">%s%s %c" S_COLOR_BLUE "%s\n",
-                 ignore, prefix, name, location, maybeColon, INDENT_MARKER, text );
+      CG_Printf( "%s<%s" S_COLOR_WHITE ">%s%s %c" S_COLOR_BLUE "%s\n",
+                 prefix, name, location, maybeColon, INDENT_MARKER, text );
       break;
     case SAY_PRIVMSG:
     case SAY_TPRIVMSG:
       color = ( mode == SAY_TPRIVMSG ) ? S_COLOR_CYAN : S_COLOR_GREEN;
-      CG_Printf( "%s%s[%s" S_COLOR_WHITE " -> %s" S_COLOR_WHITE "]%s %c%s%s\n",
-                 ignore, prefix, name, cgs.clientinfo[ cg.clientNum ].name,
+      CG_Printf( "%s[%s" S_COLOR_WHITE " -> %s" S_COLOR_WHITE "]%s %c%s%s\n",
+                 prefix, name, cgs.clientinfo[ cg.clientNum ].name,
                  maybeColon, INDENT_MARKER, color, text );
-      if( !ignore[0] )
-        CG_CenterPrint( va( "%sPrivate message from: " S_COLOR_WHITE "%s", 
-                            color, name ), 200, GIANTCHAR_WIDTH * 4 );
+      CG_CenterPrint( va( "%sPrivate message from: " S_COLOR_WHITE "%s", 
+                          color, name ), 200, GIANTCHAR_WIDTH * 4 );
       break;
     case SAY_RAW:
       CG_Printf( "%s\n", text );
@@ -1189,10 +1180,6 @@ static void CG_ParseVoice( void )
 
   // no audio track to play
   if( !track )
-    return;
-
-  // don't play audio track for lamers
-  if( Com_ClientListContains( &cgs.ignoreList, clientNum ) )
     return;
 
   switch( vChan )

@@ -1456,7 +1456,6 @@ typedef struct
   cgMedia_t           media;
 
   voice_t       *voices;
-  clientList_t  ignoreList;
 
   int           alienBuildPool;
   int           alienBuildPoolMax;
