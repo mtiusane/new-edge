@@ -1617,6 +1617,7 @@ extern  vmCvar_t    cg_healthBarSize;
 extern  vmCvar_t    cg_healthBarAlpha;
 
 extern  vmCvar_t    cg_hitSounds;
+extern  vmCvar_t    cg_hitStats;
 
 //
 // cg_main.c

@@ -3853,6 +3853,25 @@ typedef struct
 #define MAX_DAMAGE_INDICATORS 50
 cg_damageIndicator_t cg_damageIndicators[ MAX_DAMAGE_INDICATORS ];
 
+typedef struct
+{
+  int time;
+  int value;
+} cg_damageStat;
+
+enum
+{
+  DS_DIRECT,
+  DS_INDIRECT,
+  DS_DIRECT_BUILDABLE,
+  DS_INDIRECT_BUILDABLE,
+  DS_PERSISTENT,
+  DS_FRIENDLY,
+  DS_MAX
+};
+
+cg_damageStat cg_damageStats[ DS_MAX ];
+
 /*
 =================
 CG_SpawnDamageIndicator
@@ -3862,8 +3881,9 @@ Creates a new local damage indicator
 */
 void CG_SpawnDamageIndicator( vec3_t origin, int value, int flags )
 {
-  int i;
+  int i, dsx;
   cg_damageIndicator_t *di, *oldest = NULL;
+	cg_damageStat *ds;
 
   for( i = 0; i < MAX_DAMAGE_INDICATORS; i++ )
   {
@@ -3902,6 +3922,24 @@ found:
 
     trap_S_StartLocalSound( cgs.media.hitSounds[ index ], CHAN_LOCAL_SOUND );
   }
+
+  if( flags & DIF_FRIENDLY )
+    dsx = DS_FRIENDLY;
+  else if( flags & DIF_PERSISTENT )
+    dsx = DS_PERSISTENT;
+  else if( flags & DIF_BUILDABLE )
+    dsx = ( flags & DIF_INDIRECT ) ? DS_INDIRECT_BUILDABLE : DS_DIRECT_BUILDABLE;
+  else
+    dsx = ( flags & DIF_INDIRECT ) ? DS_INDIRECT : DS_DIRECT;
+
+  ds = cg_damageStats + dsx;
+
+  if( cg.time - ds->time > 1000 )
+    ds->value = value;
+  else
+    ds->value += value;
+
+  ds->time = cg.time;
 }
 
 /*
@@ -3912,17 +3950,19 @@ Draws a centered (horizontally and vertically) number using the
 cgs.media.numbersAlt charset. Used by damage indicators and health bars.
 =================
 */
-static void CG_DrawAltNumber( float x, float y, float h, char *str )
+static void CG_DrawAltNumber( float x, float y, float h, char *str,
+                              qboolean center )
 {
-  int index, len;
+  int index;
   float w;
   char *p;
 
-  len = strlen( str );
   w = h * cgDC.aspectScale * 0.75f;
 
   y -= h / 2;
-  x -= len * w / 2;
+
+  if( center )
+    x -= strlen( str ) * w / 2;
 
   for( p = str; *p; p++ )
   {
@@ -4006,13 +4046,76 @@ static void CG_DrawDamageIndicators( void )
 
     color[ 3 ] = cg_damageIndicatorAlpha.value * fade;
     trap_R_SetColor( color );
-    CG_DrawAltNumber( x, y, scale, str );
+    CG_DrawAltNumber( x, y, scale, str, qtrue );
 
     VectorMA( di->origin, dt, di->velocity, di->origin );
     di->velocity[ 2 ] -= 300 * dt;
   }
 
   trap_R_SetColor( NULL );
+}
+
+/*
+=================
+CG_DrawDamageStats
+=================
+*/
+static void CG_DrawDamageStats( void )
+{
+	int i;
+	float x, y, h, f;
+	char str[ 30 ];
+	vec4_t color;
+
+	x = 360;
+	h = 10;
+	y = 240 - 0.5 * h * DS_MAX;
+
+	for( i = 0; i < DS_MAX; i++, y += h )
+	{
+		const cg_damageStat *ds = cg_damageStats + i;
+
+		f = ( cg.time - ds->time ) / 1000.0f;
+
+		if( !ds->value || f > 1 )
+		  continue;
+
+		Com_sprintf( str, sizeof( str ), "%d", ds->value );
+
+		switch( i )
+		{
+			case DS_FRIENDLY:
+				VectorSet( color, 1, 0, 0 );
+				break;
+
+			case DS_PERSISTENT:
+				VectorSet( color, 0, 1, 0 );
+				break;
+
+			case DS_INDIRECT_BUILDABLE:
+				VectorSet( color, 1, 0.5, 0 );
+				break;
+
+			case DS_DIRECT_BUILDABLE:
+				VectorSet( color, 0.7, 0.7, 0.7 );
+				break;
+		
+			case DS_INDIRECT:
+				VectorSet( color, 1, 1, 0 );
+				break;
+
+			case DS_DIRECT:
+				VectorSet( color, 1, 1, 1 );
+				break;
+		}
+
+    color[ 3 ] = 1.0 - f;
+    trap_R_SetColor( color );
+
+		CG_DrawAltNumber( x, y, h, str, qfalse );
+	}
+
+	trap_R_SetColor( NULL );
 }
 
 /*
@@ -4139,7 +4242,7 @@ static void CG_DrawHealthBars( void )
 
     VectorSet( color, 1, 1, 1 );
     trap_R_SetColor( color );
-    CG_DrawAltNumber( x, y, h, buffer );
+    CG_DrawAltNumber( x, y, h, buffer, qtrue );
   }
 }
 
@@ -4196,6 +4299,7 @@ static void CG_Draw2D( void )
 
   CG_DrawHealthBars( );
   CG_DrawDamageIndicators( );
+  CG_DrawDamageStats( );
 
   if( !menu )
   {

@@ -239,6 +239,7 @@ vmCvar_t  cg_healthBarSize;
 vmCvar_t  cg_healthBarAlpha;
 
 vmCvar_t  cg_hitSounds;
+vmCvar_t  cg_hitStats;
 
 typedef struct
 {
@@ -395,7 +396,8 @@ static cvarTable_t cvarTable[ ] =
   { &cg_healthBarSize, "cg_healthBarSize", "2000", CVAR_ARCHIVE },
   { &cg_healthBarAlpha, "cg_healthBarAlpha", "0.5", CVAR_ARCHIVE },
   
-  { &cg_hitSounds, "cg_hitSounds", "1", CVAR_ARCHIVE }
+  { &cg_hitSounds, "cg_hitSounds", "1", CVAR_ARCHIVE },
+  { &cg_hitStats, "cg_hitStats", "0", CVAR_ARCHIVE }
 };
 
 static int   cvarTableSize = sizeof( cvarTable ) / sizeof( cvarTable[0] );
