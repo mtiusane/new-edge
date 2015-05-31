@@ -1665,7 +1665,7 @@ void Cmd_Class_f( gentity_t *ent )
   vec3_t    mins, maxs;
   int       num;
   gentity_t *other;
-  int       oldBoostTime = -1;
+  int       oldBoostTime = -1,oldTimeStamp;
   vec3_t    oldVel;
 
   clientNum = ent->client - level.clients;
@@ -1835,6 +1835,7 @@ void Cmd_Class_f( gentity_t *ent )
 
           if( ent->client->ps.stats[ STAT_STATE ] & SS_BOOSTED )
             oldBoostTime = ent->client->boostedTime;
+	  oldTimeStamp = ( ent->client->ps.weapon == WP_ALEVEL1 ) ? ent->timestamp : 0;
 
           ClientSpawn( ent, ent, ent->s.pos.trBase, ent->s.apos.trBase );
 
@@ -1844,6 +1845,11 @@ void Cmd_Class_f( gentity_t *ent )
             ent->client->boostedTime = oldBoostTime;
             ent->client->ps.stats[ STAT_STATE ] |= SS_BOOSTED;
           }
+	  if( newClass == PCL_ALIEN_LEVEL1_UPG )
+	  {
+	    ent->timestamp = oldTimeStamp;
+	    ent->client->ps.ammo = 0;
+	  }
         }
         else
           G_TriggerMenuArgs( clientNum, MN_A_CANTEVOLVE, newClass );

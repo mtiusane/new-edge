@@ -1751,7 +1751,7 @@ void ClientThink_real( gentity_t *ent )
     client->ps.pm_type = PM_GRABBED;
   else if( BG_InventoryContainsUpgrade( UP_JETPACK, client->ps.stats ) && BG_UpgradeIsActive( UP_JETPACK, client->ps.stats ) )
     client->ps.pm_type = PM_JETPACK;
-  else if( client->ps.weapon == WP_ALEVEL5 )
+  else if( client->ps.weapon == WP_ALEVEL5 && G_Overmind() )
     //hummel fly
     client->ps.pm_type = PM_HUMMEL;
   else
