@@ -243,7 +243,7 @@ WideBloodSpurt
 Calculates the position of a blood spurt for wide traces and generates an event
 ===============
 */
-static void WideBloodSpurt( gentity_t *attacker, gentity_t *victim, trace_t *tr )
+static void WideBloodSpurt( gentity_t *attacker, gentity_t *victim, trace_t *tr, int mod )
 {
   gentity_t *tent;
   vec3_t normal, origin;
@@ -286,7 +286,19 @@ static void WideBloodSpurt( gentity_t *attacker, gentity_t *victim, trace_t *tr 
   tent->s.eventParm = DirToByte( normal );
   tent->s.otherEntityNum = victim->s.number;
   tent->s.weapon = attacker->s.weapon;
-  tent->s.generic1 = attacker->s.generic1; // weaponMode
+
+  if( mod == MOD_LEVEL3_CLAW )
+  {
+    tent->s.generic1 = WPM_PRIMARY;
+  }
+  else if( mod == MOD_LEVEL3_POUNCE )
+  {
+    tent->s.generic1 = WPM_SECONDARY;
+  }
+  else
+  {
+    tent->s.generic1 = attacker->s.generic1;
+  }
 }
 
 /*
@@ -309,7 +321,7 @@ void meleeAttack( gentity_t *ent, float range, float width, float height,
   if( traceEnt == NULL || !traceEnt->takedamage )
     return;
 
-  WideBloodSpurt( ent, traceEnt, &tr );
+  WideBloodSpurt( ent, traceEnt, &tr, mod );
   G_Damage( traceEnt, ent, ent, forward, tr.endpos, damage, DAMAGE_NO_KNOCKBACK, mod );
 }
 
@@ -1151,7 +1163,7 @@ qboolean CheckVenomAttack( gentity_t *ent )
   }
 
   // send blood impact
-  WideBloodSpurt( ent, traceEnt, &tr );
+  WideBloodSpurt( ent, traceEnt, &tr, MOD_LEVEL0_BITE );
 
   G_Damage( traceEnt, ent, ent, forward, tr.endpos, damage, DAMAGE_NO_KNOCKBACK, MOD_LEVEL0_BITE );
   ent->client->ps.weaponTime += LEVEL0_BITE_REPEAT;
@@ -1222,7 +1234,7 @@ qboolean CheckVenomAttack2( gentity_t *ent )
     }
   }
   // send blood impact
-  WideBloodSpurt( ent, traceEnt, &tr );
+  WideBloodSpurt( ent, traceEnt, &tr, MOD_LEVEL0_BITE );
   G_Damage( traceEnt, ent, ent, forward, tr.endpos, damage, DAMAGE_NO_KNOCKBACK, MOD_LEVEL0_BITE );
   ent->client->ps.weaponTime += LEVEL0_BITE_REPEAT;
   return qtrue;
@@ -1673,7 +1685,7 @@ qboolean CheckPounceAttack( gentity_t *ent )
 
   // Send blood impact
   if( traceEnt->takedamage )
-    WideBloodSpurt( ent, traceEnt, &tr );
+    WideBloodSpurt( ent, traceEnt, &tr, MOD_LEVEL3_POUNCE );
 
   if( !traceEnt->takedamage )
     return qfalse;
@@ -1757,7 +1769,7 @@ void G_ChargeAttack( gentity_t *ent, gentity_t *victim )
       victim - g_entities;
   }
 
-  WideBloodSpurt( ent, victim, NULL );
+  WideBloodSpurt( ent, victim, NULL, MOD_LEVEL4_TRAMPLE );
 
   damage = LEVEL4_TRAMPLE_DMG * ent->client->ps.stats[ STAT_MISC ] /
            LEVEL4_TRAMPLE_DURATION;
