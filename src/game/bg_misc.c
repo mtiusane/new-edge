@@ -2288,37 +2288,9 @@ static const classAttributes_t bg_classList[ ] =
     400.0f,                                         //float   stopSpeed;
     250.0f,                                         //float   jumpMagnitude;
     2.0f,                                           //float   knockbackScale;
-    { PCL_ALIEN_LEVEL1, PCL_ALIEN_LEVEL0_UPG, PCL_NONE },       //int     children[ 3 ];
+    { PCL_ALIEN_LEVEL1, PCL_NONE },                 //int     children[ 3 ];
     LEVEL0_COST,                                    //int     cost;
     LEVEL0_VALUE,                                    //int     value;
-  },
-  {
-    PCL_ALIEN_LEVEL0_UPG,                           //int     classnum;
-    "level0upg",                                    //char    *classname;
-    "In addition to the basic Dretch abilities, the Advanced "
-      "Dretch has the ability to pounce and spread infections. "
-      "Advanced Dretch can also damage defensive structures.",
-    STAGE_GE_2,                                     //int  stages
-    LEVEL0_UPG_HEALTH,                              //int     health;
-    0.0f,                                           //float   fallDamage;
-    LEVEL0_UPG_REGEN,                               //float   regenRate;
-    SCA_WALLCLIMBER|SCA_FOVWARPS|SCA_ALIENSENSE,    //int     abilities;
-    WP_ALEVEL0_UPG,                                 //weapon_t  startWeapon
-    0.0f,                                           //float   buildDist;
-    140,                                            //int     fov;
-    0.0f,                                           //float   bob;
-    2.5f,                                           //float   bobCycle;
-    25,                                             //int     steptime;
-    LEVEL0_UPG_SPEED,                               //float   speed;
-    10.0f,                                          //float   acceleration;
-    1.0f,                                           //float   airAcceleration;
-    6.0f,                                           //float   friction;
-    400.0f,                                         //float   stopSpeed;
-    250.0f,                                         //float   jumpMagnitude;
-    2.0f,                                           //float   knockbackScale;
-    { PCL_ALIEN_LEVEL1, PCL_NONE, PCL_NONE },       //int     children[ 3 ];
-    LEVEL0_UPG_COST,                                //int     cost;
-    LEVEL0_UPG_VALUE                                //int     value;
   },
   {
     PCL_ALIEN_LEVEL1,                               //int     classnum;
@@ -3093,31 +3065,6 @@ static const weaponAttributes_t bg_weapons[ ] =
     SLOT_WEAPON,          //int       slots;
     "level0",             //char      *weaponName;
     "Bite",               //char      *humanName;
-    "",
-    0,                    //int       maxAmmo;
-    0,                    //int       maxClips;
-    qtrue,                //int       infiniteAmmo;
-    qfalse,               //int       usesEnergy;
-    LEVEL0_BITE_REPEAT,   //int       repeatRate1;
-    0,                    //int       repeatRate2;
-    0,                    //int       repeatRate3;
-    0,                    //int       reloadTime;
-    LEVEL0_BITE_K_SCALE,  //float     knockbackScale;
-    qfalse,               //qboolean  hasAltMode;
-    qfalse,               //qboolean  hasThirdMode;
-    qfalse,               //qboolean  canZoom;
-    90.0f,                //float     zoomFov;
-    qfalse,               //qboolean  purchasable;
-    qfalse,               //qboolean  longRanged;
-    TEAM_ALIENS           //team_t    team;
-  },
-  {
-    WP_ALEVEL0_UPG,       //int       weaponNum;
-    0,                    //int       price;
-    STAGE_GE_2,           //int  stages
-    SLOT_WEAPON,          //int       slots;
-    "level0upg",          //char      *weaponName;
-    "Bite Upgrade",       //char      *humanName;
     "",
     0,                    //int       maxAmmo;
     0,                    //int       maxClips;

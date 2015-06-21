@@ -260,7 +260,6 @@ typedef enum
 #define SS_GRABBED              0x00000008
 #define SS_BLOBLOCKED           0x00000010
 #define SS_POISONED             0x00000020
-#define SS_INFECTED             0x00000040
 #define SS_BOOSTED              0x00000080
 
 #define SS_INVI                 0x00008000
@@ -351,7 +350,6 @@ typedef enum
 {
   WP_NONE,
   WP_ALEVEL0,
-  WP_ALEVEL0_UPG,
   WP_ALEVEL1,
   WP_ALEVEL1_UPG,
   WP_ALEVEL2,
@@ -805,7 +803,6 @@ typedef enum
   PCL_ALIEN_BUILDER0_UPG,
   //offensive classes
   PCL_ALIEN_LEVEL0,
-  PCL_ALIEN_LEVEL0_UPG,
   PCL_ALIEN_LEVEL1,
   PCL_ALIEN_LEVEL1_UPG,
   PCL_ALIEN_LEVEL2,

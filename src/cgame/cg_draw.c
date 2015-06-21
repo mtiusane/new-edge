@@ -1118,8 +1118,6 @@ static void CG_DrawPlayerHealthCross( rectDef_t *rect, vec4_t ref_color )
   }
   else if( cg.snap->ps.stats[ STAT_STATE ] & SS_POISONED )
     shader = cgs.media.healthCrossPoisoned;
-  else if( cg.snap->ps.stats[ STAT_STATE ] & SS_INFECTED )
-    shader = cgs.media.healthCrossPoisoned;
 
   // Pick the alpha value
   Vector4Copy( ref_color, color );
@@ -1176,11 +1174,6 @@ static float CG_ChargeProgress( void )
   {
     min = LEVEL5_POUNCE_TIME_MIN;
     max = LEVEL5_POUNCE_TIME;
-  }
-  if( cg.snap->ps.weapon == WP_ALEVEL0_UPG )
-  {
-    min = LEVEL0_DRILL_TIME_MIN;
-    max = LEVEL0_DRILL_TIME;
   }
   else if( cg.snap->ps.weapon == WP_ALEVEL3 )
   {

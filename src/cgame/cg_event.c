@@ -462,9 +462,6 @@ static void CG_Obituary( entityState_t *ent )
         message = "^5should have used a medkit against^7";
         message2 = "^5's poison";
         break;
-      case MOD_INFECTION:
-        message = "^5got infected by^7";
-        break;
       case MOD_LEVEL1_PCLOUD:
         message = "^5was gassed by^7";
         Com_sprintf( className, 64, "^5's %s",

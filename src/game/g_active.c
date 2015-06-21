@@ -521,7 +521,7 @@ void  G_UseMedkit( gentity_t *ent )
   BG_RemoveUpgradeFromInventory( UP_MEDKIT, client->ps.stats );
 
   // don't poison and/or infect the client anymore
-  tclient->ps.stats[ STAT_STATE ] &= ~( SS_POISONED | SS_INFECTED );
+  tclient->ps.stats[ STAT_STATE ] &= ~SS_POISONED;
   tclient->poisonImmunityTime = level.time + MEDKIT_POISON_IMMUNITY_TIME;
 
   tclient->ps.stats[ STAT_STATE ] |= SS_HEALING_2X;
@@ -964,60 +964,6 @@ void ClientTimerActions( gentity_t *ent, int msec )
 
       G_Damage( ent, client->lastPoisonClient, client->lastPoisonClient, NULL,
         0, damage, 0, MOD_POISON );
-    }
-
-    //client is infected
-    if( client->ps.stats[ STAT_STATE ] & SS_INFECTED )
-    {
-      int time   = ALIEN_INFECTION_TIME;
-      int damage = ALIEN_INFECTION_DMG;
-
-      if( BG_InventoryContainsUpgrade( UP_BIOKIT, client->ps.stats ) )
-      {
-        time    = ALIEN_INFECTION_TIME/2;
-        damage -= BIOKIT_INFECTION_PROTECTION;
-      }
-
-      if( BG_InventoryContainsUpgrade( UP_BATTLESUIT, client->ps.stats ) )
-        damage -= BSUIT_INFECTION_PROTECTION;
-
-      if( BG_InventoryContainsUpgrade( UP_HELMET, client->ps.stats ) )
-        damage -= HELMET_INFECTION_PROTECTION;
-
-      if( BG_InventoryContainsUpgrade( UP_LIGHTARMOUR, client->ps.stats ) )
-        damage -= LIGHTARMOUR_INFECTION_PROTECTION;
-
-      //infect others who comes into contact with you
-      if( client->lastInfectionTime + time > level.time )
-      {
-        int i, num, entityList[ MAX_GENTITIES ];
-        vec3_t range = { 150, 150, 150 }, mins, maxs;
-        gentity_t *target;
-
-        VectorAdd( ent->s.origin, range, maxs );
-        VectorSubtract( ent->s.origin, range, mins );
-        num = trap_EntitiesInBox( mins, maxs, entityList, MAX_GENTITIES );
-        for( i = 0; i < num; i++ )
-        {
-          target = &g_entities[ entityList[ i ] ];
- 
-          // client + not infected + human + visible + not the same + has health
-          if( target->client && !( target->client->ps.stats[ STAT_STATE ] & SS_INFECTED ) &&
-              target->client->ps.stats[ STAT_TEAM ] == TEAM_HUMANS &&
-              G_Visible( ent, target, CONTENTS_SOLID || CONTENTS_FOG ) &&
-              ent != target && target->health > 0 )
-          {
-            target->client->ps.stats[ STAT_STATE ] |= SS_INFECTED;
-            target->client->lastInfectionTime = level.time;
-            target->client->lastInfectionClient = client->lastInfectionClient;
-          }
-        }
-        G_Damage( ent, client->lastInfectionClient, client->lastInfectionClient, NULL,
-                  0, damage, 0, MOD_INFECTION );
-      }
-      // it's over until the next one
-      else
-        client->ps.stats[ STAT_STATE ] &= ~SS_INFECTED;
     }
 
     // turn off life support when a team admits defeat
@@ -2032,18 +1978,6 @@ void ClientThink_real( gentity_t *ent )
   {
     case WP_ALEVEL0:
       if( !CheckVenomAttack( ent ) )
-      {
-        client->ps.weaponstate = WEAPON_READY;
-      }
-      else
-      {
-        client->ps.generic1 = WPM_PRIMARY;
-        G_AddEvent( ent, EV_FIRE_WEAPON, 0 );
-      }
-      break;
-
-    case WP_ALEVEL0_UPG:
-      if( !CheckVenomAttack2( ent ) )
       {
         client->ps.weaponstate = WEAPON_READY;
       }

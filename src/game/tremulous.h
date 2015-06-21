@@ -123,27 +123,12 @@ TREMULOUS EDGE MOD SRC FILE
 #define LEVEL0_HEALTH               AHM(30)
 #define LEVEL0_REGEN                (0.05f * LEVEL0_HEALTH)
 #define LEVEL0_COST                 0
-#define LEVEL0_UPG_SPEED            1.5f
-#define LEVEL0_UPG_VALUE            AVM(200)
-#define LEVEL0_UPG_HEALTH           AHM(40)
-#define LEVEL0_UPG_REGEN            (0.06f * LEVEL0_UPG_HEALTH)
-#define LEVEL0_UPG_COST             1
-#define LEVEL0_UPG_BITE_RANGE       70.0f
-#define LEVEL0_UPG_BITE_WIDTH       8.0f
 
 #define LEVEL0_BITE_DMG             ADM(40)
-#define LEVEL0_BITE_DMG_UPG         ADM(45) 
 #define LEVEL0_BITE_RANGE           64.0f
 #define LEVEL0_BITE_WIDTH           6.0f
 #define LEVEL0_BITE_REPEAT          500
 #define LEVEL0_BITE_K_SCALE         1.0f
-#define LEVEL0_DRILL_RANGE          48.0f
-#define LEVEL0_DRILL_WIDTH          14.0f
-#define LEVEL0_DRILL_TIME           600      // msec for full Dretch pounce
-#define LEVEL0_DRILL_TIME_MIN       200      // msec before which pounce cancels  
-#define LEVEL0_DRILL_REPEAT         320      // msec before a new pounce starts
-#define LEVEL0_DRILL_SPEED_MOD      0.75f    // walking speed modifier for pounce charging
-#define LEVEL0_DRILL_JUMP_MAG       500      // Dretch pounce jump power
 
 //Basilik
 #define LEVEL1_SPEED                1.25f

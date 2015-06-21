@@ -2762,9 +2762,6 @@ void HMedistat_Think( gentity_t *self )
       if( player->client && player->client->ps.stats[ STAT_STATE ] & SS_POISONED )
         player->client->ps.stats[ STAT_STATE ] &= ~SS_POISONED;
 
-      if( player->client && player->client->ps.stats[ STAT_STATE ] & SS_INFECTED )
-        player->client->ps.stats[ STAT_STATE ] &= ~SS_INFECTED;
-
       if( self->enemy == player && player->client &&
           player->client->ps.stats[ STAT_TEAM ] == TEAM_HUMANS &&
           player->health < player->client->ps.stats[ STAT_MAX_HEALTH ] &&

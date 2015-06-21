@@ -495,10 +495,6 @@ static float PM_CmdScale( usercmd_t *cmd )
       //slow player if using 2nd rifle mode
       else if( pm->ps->weapon == WP_MACHINEGUN && pm->ps->weaponstate != WEAPON_RELOADING )
 	modifier *= RIFLE_2NDMOD;
-
-      //slow player if charging up for a drill
-      else if( pm->ps->weapon == WP_ALEVEL0_UPG )
-	modifier *= LEVEL0_DRILL_SPEED_MOD;
     }
     //slow the player if slow locked
     if( pm->ps->stats[ STAT_STATE ] & SS_SLOWLOCKED )
@@ -638,8 +634,7 @@ static qboolean PM_CheckPounce( void )
 {
   int jumpMagnitude;
 
-  if( pm->ps->weapon != WP_ALEVEL0_UPG &&
-      pm->ps->weapon != WP_ALEVEL3 &&
+  if( pm->ps->weapon != WP_ALEVEL3 &&
       pm->ps->weapon != WP_ALEVEL3_UPG)
     return qfalse;
 
@@ -648,10 +643,7 @@ static qboolean PM_CheckPounce( void )
       ( pm->ps->pm_flags & PMF_CHARGE ) )
   {
     pm->ps->pm_flags &= ~PMF_CHARGE;
-    if( pm->ps->weapon != WP_ALEVEL0_UPG )
     pm->ps->weaponTime += LEVEL3_POUNCE_REPEAT;
-    else
-      pm->ps->weaponTime += LEVEL0_DRILL_REPEAT;
     return qfalse;
   }
 
@@ -663,28 +655,17 @@ static qboolean PM_CheckPounce( void )
   }
   
   // Can't start a pounce
-  if( pm->ps->weapon != WP_ALEVEL0_UPG )
-  {
   if( ( pm->ps->pm_flags & PMF_CHARGE ) ||
       pm->ps->stats[ STAT_MISC ] < LEVEL3_POUNCE_TIME_MIN ||
       pm->ps->groundEntityNum == ENTITYNUM_NONE )
     return qfalse;
-  }
-  else
-  {
-    if( ( pm->ps->pm_flags & PMF_CHARGE ) || pm->ps->stats[ STAT_MISC ] < LEVEL0_DRILL_TIME_MIN || pm->ps->groundEntityNum == ENTITYNUM_NONE )
-      return qfalse;
-  }
 
   // Give the player forward velocity and simulate a jump
   pml.groundPlane = qfalse;
   pml.walking = qfalse;
   pm->ps->pm_flags |= PMF_CHARGE;
   pm->ps->groundEntityNum = ENTITYNUM_NONE;
-  if( pm->ps->weapon == WP_ALEVEL0_UPG )
-    jumpMagnitude = pm->ps->stats[ STAT_MISC ] *
-                    LEVEL0_DRILL_JUMP_MAG / LEVEL0_DRILL_TIME;
-  else  if( pm->ps->weapon == WP_ALEVEL3 )
+  if( pm->ps->weapon == WP_ALEVEL3 )
     jumpMagnitude = pm->ps->stats[ STAT_MISC ] *
                     LEVEL3_POUNCE_JUMP_MAG / LEVEL3_POUNCE_TIME;
   else
@@ -943,10 +924,6 @@ static qboolean PM_CheckJump( void )
     return qfalse;
 
   //can't jump and pounce at the same time
-  if( pm->ps->weapon == WP_ALEVEL0_UPG &&
-      pm->ps->stats[ STAT_MISC ] > 0 )
-    return qfalse;
-
   if( ( pm->ps->weapon == WP_ALEVEL3 ||
         pm->ps->weapon == WP_ALEVEL3_UPG ) &&
       pm->ps->stats[ STAT_MISC ] > 0 )
@@ -3001,7 +2978,7 @@ static void PM_Weapon( void )
 
   // Charging for or canceling a pounce/drill attack
   if( pm->ps->weapon == WP_ALEVEL3 || pm->ps->weapon == WP_ALEVEL3_UPG ||
-      pm->ps->weapon == WP_ALEVEL5 || pm->ps->weapon == WP_ALEVEL0_UPG )
+      pm->ps->weapon == WP_ALEVEL5 )
   {
     int max;
     
@@ -3014,9 +2991,6 @@ static void PM_Weapon( void )
       break;
     case WP_ALEVEL5:
       max = LEVEL5_POUNCE_TIME;
-      break;
-    default:
-      max = LEVEL0_DRILL_TIME;
       break;
     }
     
@@ -3309,7 +3283,6 @@ static void PM_Weapon( void )
   switch( pm->ps->weapon )
   {
     case WP_ALEVEL0:
-    case WP_ALEVEL0_UPG:
       //venom is only autohit
       return;
 
@@ -3554,7 +3527,6 @@ static void PM_Weapon( void )
     switch( pm->ps->weapon )
     {
       case WP_ALEVEL0:
-      case WP_ALEVEL0_UPG:
         pm->ps->generic1 = WPM_PRIMARY;
         PM_AddEvent( EV_FIRE_WEAPON );
         addTime = BG_Weapon( pm->ps->weapon )->repeatRate1;
