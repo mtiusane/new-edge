@@ -1900,41 +1900,6 @@ void ASpitefulAbcess_Die( gentity_t *self, gentity_t *inflictor, gentity_t *atta
   self->powered = qfalse; //free up power
   self->s.eFlags &= ~EF_FIRING; //prevent any firing effects
 
-  if ( self->spawned )
-  {
-    // Grab all entities around us
-    VectorAdd(self->s.origin, range, maxs);
-    VectorSubtract(self->s.origin, range, mins);
-
-    total_entities = trap_EntitiesInBox(mins, maxs, entityList, MAX_GENTITIES);
-
-    // Loop entities looking for an enemy body
-    for( i = 0; i < total_entities; i++ )
-    {
-      target = &g_entities[entityList[i]];
-      if( target->client && target->client->ps.stats[ STAT_TEAM ] == TEAM_HUMANS )
-      {
-        if( G_Visible( self, target, MASK_SHOT ) )
-        {
-          if( BG_InventoryContainsUpgrade( UP_LIGHTARMOUR, target->client->ps.stats ) )
-            continue;
-    
-          if( BG_InventoryContainsUpgrade( UP_BATTLESUIT, target->client->ps.stats ) )
-            continue;
-  
-          if( !( target->client->ps.eFlags & EF_POISONCLOUDED ) )
-          {
-            //target->client->ps.stats[ STAT_STATE ] |= SS_POISONCLOUDED;
-            target->client->ps.eFlags |= EF_POISONCLOUDED;
-            target->client->lastPoisonCloudedTime = level.time;
-            //target->client->lastPoisonCloudedClient = self;
-            trap_SendServerCommand( target->client->ps.clientNum, "poisoncloud" );
-          }
-        }
-      }
-    }
-  }
-
   //pretty events and item cleanup
   self->s.eFlags |= EF_NODRAW; //don't draw the model once its destroyed
   G_AddEvent( self, EV_ALIEN_BUILDABLE_EXPLOSION, DirToByte( dir ) );

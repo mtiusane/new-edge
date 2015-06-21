@@ -465,14 +465,6 @@ static float PM_CmdScale( usercmd_t *cmd )
       else
         modifier *= CREEP_MODIFIER;
     }
-    if( pm->ps->eFlags & EF_POISONCLOUDED )
-    {
-      if( BG_InventoryContainsUpgrade( UP_LIGHTARMOUR, pm->ps->stats ) ||
-          BG_InventoryContainsUpgrade( UP_BATTLESUIT, pm->ps->stats ) )
-        modifier *= PCLOUD_ARMOUR_MODIFIER;
-      else
-        modifier *= PCLOUD_MODIFIER;
-    }
   }
 
   if( pm->ps->weapon == WP_ALEVEL4 && pm->ps->pm_flags & PMF_CHARGE )
@@ -3473,14 +3465,6 @@ static void PM_Weapon( void )
         pm->ps->weaponTime += 200;
         return;
       }
-
-      //hacky special case for acid bomb
-      if( (pm->ps->weapon == WP_ALEVEL1 || pm->ps->weapon == WP_ALEVEL1_UPG) && !pm->ps->ammo )
-      {
-        pm->ps->weaponTime += 200;
-        return;
-      }
-
 	  
       pm->ps->generic1 = WPM_TERTIARY;
       PM_AddEvent( EV_FIRE_WEAPON3 );
@@ -3575,16 +3559,6 @@ static void PM_Weapon( void )
     //       weapon.cfg
     switch( pm->ps->weapon )
     {
-      case WP_ALEVEL1_UPG:
-      case WP_ALEVEL1:
-        if( attack1 )
-        {
-          num /= RAND_MAX / 6 + 1;
-          PM_ForceLegsAnim( NSPA_ATTACK1 );
-          PM_StartWeaponAnim( WANIM_ATTACK1 + num );
-        }
-        break;
-
       case WP_ALEVEL2_UPG:
         if( attack2 )
         {
@@ -3671,13 +3645,7 @@ static void PM_Weapon( void )
     if( pm->ps->ammo < 0 )
       pm->ps->ammo = 0;
   }
-  else if( (pm->ps->weapon == WP_ALEVEL1 || pm->ps->weapon == WP_ALEVEL1_UPG ) && attack3 )
-  {
-      pm->ps->ammo--;
-      // Stay on the safe side
-      if( pm->ps->ammo < 0 )
-        pm->ps->ammo = 0;
-  }
+
   //FIXME: predicted angles miss a problem??
   if( pm->ps->weapon == WP_CHAINGUN )
   {

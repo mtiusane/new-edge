@@ -74,8 +74,6 @@ TREMULOUS EDGE MOD SRC FILE
 #define ALIEN_POISON_TIME           10000
 #define ALIEN_POISON_DMG            5
 #define ALIEN_POISON_DIVIDER        (1.0f/1.32f) 	//about 1.0/(time`th root of damage)
-#define ALIEN_INFECTION_TIME        7000
-#define ALIEN_INFECTION_DMG         2
 #define ALIEN_SPAWN_REPEAT_TIME     11000
 #define ALIEN_REGEN_DAMAGE_TIME     2000 			//msec since damage that regen starts again
 #define ALIEN_REGEN_NOCREEP_MOD     (1.0f/3.0f) 	//regen off creep
@@ -130,55 +128,12 @@ TREMULOUS EDGE MOD SRC FILE
 #define LEVEL0_BITE_REPEAT          500
 #define LEVEL0_BITE_K_SCALE         1.0f
 
-//Basilik
-#define LEVEL1_SPEED                1.25f
-#define LEVEL1_VALUE                AVM(270)
-#define LEVEL1_HEALTH               AHM(60)
-#define LEVEL1_REGEN                (0.03f * LEVEL1_HEALTH)
-#define LEVEL1_COST                 1
-#define LEVEL1_UPG_SPEED            1.25f
-#define LEVEL1_UPG_VALUE            AVM(330)
-#define LEVEL1_UPG_HEALTH           AHM(80)
-#define LEVEL1_UPG_REGEN            (0.03f * LEVEL1_UPG_HEALTH)
-#define LEVEL1_UPG_COST             1
-
-#define LEVEL1_CLAW_DMG             ADM(32)
-#define LEVEL1_CLAW_RANGE           64.0f
-#define LEVEL1_CLAW_U_RANGE         LEVEL1_CLAW_RANGE + 3.0f
-#define LEVEL1_CLAW_WIDTH           10.0f
-#define LEVEL1_CLAW_REPEAT          600
-#define LEVEL1_CLAW_U_REPEAT        500
-#define LEVEL1_CLAW_K_SCALE         1.0f
-#define LEVEL1_CLAW_U_K_SCALE       1.0f
-#define LEVEL1_GRAB_RANGE           96.0f
-#define LEVEL1_GRAB_U_RANGE         LEVEL1_GRAB_RANGE + 3.0f
-#define LEVEL1_GRAB_TIME            300
-#define LEVEL1_GRAB_U_TIME          300
-#define LEVEL1_PCLOUD_DMG           ADM(5)
-#define LEVEL1_PCLOUD_RANGE         150.0f
-#define LEVEL1_PCLOUD_REPEAT        2000
-#define LEVEL1_PCLOUD_TIME          10000
-#define LEVEL1_REGEN_MOD            2.0f
-#define LEVEL1_UPG_REGEN_MOD        3.0f
-#define LEVEL1_REGEN_SCOREINC       AVM(100) // score added for healing per 10s
-#define LEVEL1_UPG_REGEN_SCOREINC   AVM(200)
-#define ABOMB_DMG                   ADM(60)
-#define ABOMB_SPLASH_DMG            ADM(200)
-#define ABOMB_SPLASH_RADIUS         200
-#define ABOMB_SPEED                 400.0f
-#define ABOMB_REPEAT                1000
-#define ABOMB2_DMG                  ADM(50)
-#define ABOMB2_SPLASH_DMG           ADM(170)
-#define ABOMB2_SPLASH_RADIUS        180
-#define ABOMB2_SPEED                500.0f
-#define ABOMB2_REPEAT               1000
-
 //Marauder
 #define LEVEL2_SPEED                1.2f
 #define LEVEL2_VALUE                AVM(420)
 #define LEVEL2_HEALTH               AHM(150)
 #define LEVEL2_REGEN                (0.03f * LEVEL2_HEALTH)
-#define LEVEL2_COST                 1
+#define LEVEL2_COST                 2
 #define LEVEL2_UPG_SPEED            1.2f
 #define LEVEL2_UPG_VALUE            AVM(540)
 #define LEVEL2_UPG_HEALTH           AHM(175)
@@ -550,14 +505,10 @@ TREMULOUS EDGE MOD SRC FILE
  */
 #define LIGHTARMOUR_PRICE           50
 #define LIGHTARMOUR_POISON_PROTECTION 1
-#define LIGHTARMOUR_INFECTION_PROTECTION 0
-#define LIGHTARMOUR_PCLOUD_PROTECTION 1000
 
 #define HELMET_PRICE                80
 #define HELMET_RANGE                1000.0f
 #define HELMET_POISON_PROTECTION    1
-#define HELMET_INFECTION_PROTECTION 1
-#define HELMET_PCLOUD_PROTECTION    1000
 
 #define SPAWN_WITH_MEDKIT           1
 #define MEDKIT_PRICE                50
@@ -576,8 +527,6 @@ TREMULOUS EDGE MOD SRC FILE
 
 #define BSUIT_PRICE                 400
 #define BSUIT_POISON_PROTECTION     3
-#define BSUIT_INFECTION_PROTECTION  1
-#define BSUIT_PCLOUD_PROTECTION     3000
 
 #define MGCLIP_PRICE                0
 
@@ -591,7 +540,6 @@ TREMULOUS EDGE MOD SRC FILE
 
 #define BIOKIT_PRICE                200
 #define BIOKIT_POISON_PROTECTION    1
-#define BIOKIT_INFECTION_PROTECTION 3
 #define BIOKIT_HEALTH_RATE          2.0 		// 5000/BIOKIT_HEALTH_RATE = * msec before regenerate
 #define BIOKIT_STAMINA_RATE         2
 
@@ -618,9 +566,6 @@ TREMULOUS EDGE MOD SRC FILE
 #define CREEP_MODIFIER              0.5f
 #define CREEP_ARMOUR_MODIFIER       0.75f
 #define CREEP_SCALEDOWN_TIME        3000
-
-#define PCLOUD_MODIFIER             0.5f
-#define PCLOUD_ARMOUR_MODIFIER      0.75f
 
 #define ASPAWN_BP                   10
 #define ASPAWN_BT                   15000

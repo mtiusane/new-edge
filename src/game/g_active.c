@@ -790,23 +790,6 @@ void ClientTimerActions( gentity_t *ent, int msec )
   
     client->time100 -= 100;
 
-    // Client is not moving
-	//client->ps.stats[ STAT_STATE ] &= ~SS_INVI;
-    if( client->ps.weapon == WP_ALEVEL1_UPG )
-    {
-      client->ps.eFlags &= ~EF_MOVER_STOP;
-
-      if( !G_Overmind( ) )
-        client->ps.eFlags &= ~EF_MOVER_STOP;
-      else
-        if( stopped && !jumping && !( ucmd->buttons & BUTTON_ATTACK ) && ent->health >= 80 ){
-	  client->ps.eFlags |= EF_MOVER_STOP;
-	  client->ps.stats[ STAT_STATE ] |= SS_INVI;
-	}
-	else
-	  client->ps.stats[ STAT_STATE ] &= ~SS_INVI;
-    }
-
     // Restore or subtract stamina
     if( stopped || client->ps.pm_type == PM_JETPACK )
       client->ps.stats[ STAT_STAMINA ] += STAMINA_STOP_RESTORE;
@@ -991,11 +974,8 @@ void ClientTimerActions( gentity_t *ent, int msec )
         client->pers.aliveSeconds % g_freeFundPeriod.integer == 0 )
     {
       // Give clients some credit periodically
-      // Basilisks receive even after sudden death
       const class_t class = client->ps.stats[ STAT_CLASS ];
-      if( ( G_TimeTilSuddenDeath( ) > 0 ) ||
-              ( class == PCL_ALIEN_LEVEL1 ) ||
-              ( class == PCL_ALIEN_LEVEL1_UPG ) ) 
+      if( ( G_TimeTilSuddenDeath( ) > 0 ) )
       {
         if( client->ps.stats[ STAT_TEAM ] == TEAM_ALIENS )
           G_AddCreditToClient( client, FREEKILL_ALIEN, qtrue );
@@ -1039,17 +1019,6 @@ void ClientTimerActions( gentity_t *ent, int msec )
     {
       AddScore( ent, HUMAN_BUILDER_SCOREINC );
     }
-
-    // Give score to basis that healed other aliens
-    if( ent->client->pers.hasHealed )
-    {
-      if( client->ps.weapon == WP_ALEVEL1 )
-        AddScore( ent, LEVEL1_REGEN_SCOREINC );
-      else if( client->ps.weapon == WP_ALEVEL1_UPG )
-        AddScore( ent, LEVEL1_UPG_REGEN_SCOREINC );
-
-      ent->client->pers.hasHealed = qfalse;
-    }
   }
 
   //LVL2UPG barb regen (new)
@@ -1089,30 +1058,6 @@ void ClientTimerActions( gentity_t *ent, int msec )
     else if( client->ps.ammo < BG_Weapon( WP_ALEVEL5 )->maxAmmo )
     {
       if( ent->timestamp + WP_ALEVEL5 < level.time )
-      {
-        client->ps.ammo++;
-        ent->timestamp = level.time;
-      }
-    }
-    else
-      ent->timestamp = level.time;
-   }
- 
-   
-  // Regenerate Basilisk acid bomb
-  if( client->ps.weapon == WP_ALEVEL1 || client->ps.weapon == WP_ALEVEL1_UPG )
-  {
-    if( client->ps.ammo < BG_Weapon( WP_ALEVEL1 )->maxAmmo )
-    {
-      if( ent->timestamp + 45000 < level.time )
-      {
-        client->ps.ammo++;
-        ent->timestamp = level.time;
-      }
-    }
-    else if( client->ps.ammo < BG_Weapon( WP_ALEVEL1_UPG )->maxAmmo )
-    {
-      if( ent->timestamp + 45000 < level.time )
       {
         client->ps.ammo++;
         ent->timestamp = level.time;
@@ -1725,12 +1670,6 @@ void ClientThink_real( gentity_t *ent )
       client->ps.stats[ STAT_STATE ] |= SS_BOOSTEDWARNING;
   }
 
-  // Check if poison cloud has worn off
-  if( ( client->ps.eFlags & EF_POISONCLOUDED ) &&
-      BG_PlayerPoisonCloudTime( &client->ps ) - level.time +
-      client->lastPoisonCloudedTime <= 0 )
-    client->ps.eFlags &= ~EF_POISONCLOUDED;
-
   if( client->ps.stats[ STAT_STATE ] & SS_POISONED &&
       client->poisonExpiryTime < level.time )
     client->ps.stats[ STAT_STATE ] &= ~SS_POISONED;
@@ -1808,18 +1747,6 @@ void ClientThink_real( gentity_t *ent )
         {
           class_t class = boost->client->ps.stats[ STAT_CLASS ];
           qboolean didBoost = qfalse;
-
-          if( class == PCL_ALIEN_LEVEL1 && modifier < LEVEL1_REGEN_MOD )
-          {
-            modifier = LEVEL1_REGEN_MOD;
-            didBoost = qtrue;
-          }
-          else if( class == PCL_ALIEN_LEVEL1_UPG &&
-                   modifier < LEVEL1_UPG_REGEN_MOD )
-          {
-            modifier = LEVEL1_UPG_REGEN_MOD;
-            didBoost = qtrue;
-          }
 
           if( didBoost && ent->health < client->ps.stats[ STAT_MAX_HEALTH ] )
             boost->client->pers.hasHealed = qtrue;
@@ -1986,11 +1913,6 @@ void ClientThink_real( gentity_t *ent )
         client->ps.generic1 = WPM_PRIMARY;
         G_AddEvent( ent, EV_FIRE_WEAPON, 0 );
       }
-      break;
-
-    case WP_ALEVEL1:
-    case WP_ALEVEL1_UPG:
-      CheckGrabAttack( ent );
       break;
 
     case WP_ALEVEL3:

@@ -561,39 +561,6 @@ static void CG_DrawPlayerBoosterBolt( rectDef_t *rect, vec4_t backColor,
 }
 
 
-
-/*
-==============
-CG_DrawInvisbleStatus
-==============
-*/
-static void CG_DrawInvisbleStatus( rectDef_t *rect, vec4_t color, qhandle_t shader )
-{
-  qhandle_t   detail1;
-  if( cg.snap->ps.stats[ STAT_STATE ] & SS_INVI && cg.snap->ps.weapon == WP_ALEVEL1_UPG)
-  {
-
-			 detail1 = trap_R_RegisterShader( "icons/advbasiinvi.tga" );
-			 CG_DrawPic( rect->x, rect->y, rect->w, rect->h, detail1 );
-   }
-}
-
-/*
-==============
-CG_DrawInvisbleOverlay
-==============
-*/
-static void CG_DrawInvisbleOverlay( rectDef_t *rect, vec4_t color, qhandle_t shader )
-{
-  qhandle_t   detail2;
-  if( cg.snap->ps.stats[ STAT_STATE ] & SS_INVI && cg.snap->ps.weapon == WP_ALEVEL1_UPG)
-  {
-		     detail2 = trap_R_RegisterShader( "gfx/edge/basi_invisble_overlay" );
-			 CG_DrawPic( rect->x, rect->y, rect->w, rect->h, detail2 );
-   }
-}
-
-
 /*
 ==============
 CG_DrawPlayerPrickles (ammo)
@@ -609,9 +576,9 @@ static void CG_DrawPlayerPrickles( rectDef_t *rect, vec4_t color, qhandle_t shad
 
   maxBarbs = BG_Weapon( cg.snap->ps.weapon )->maxAmmo;
   numBarbs = cg.snap->ps.ammo;
-  
-if( cg.snap->ps.weapon == WP_ALEVEL2_UPG || cg.snap->ps.weapon == WP_ALEVEL3 || cg.snap->ps.weapon == WP_ALEVEL3_UPG || cg.snap->ps.weapon == WP_ALEVEL1 || cg.snap->ps.weapon == WP_ALEVEL1_UPG || cg.snap->ps.weapon == WP_ALEVEL4 )
-  return;
+
+  if( cg.snap->ps.weapon != WP_ALEVEL5 )
+    return;
   
   if( maxBarbs <= 0 || numBarbs <= 0 )
     return;
@@ -670,8 +637,8 @@ static void CG_DrawPlayerFbreath( rectDef_t *rect, vec4_t color, qhandle_t shade
   maxBarbs = BG_Weapon( cg.snap->ps.weapon )->maxAmmo;
   numBarbs = cg.snap->ps.ammo;
   
-  if( cg.snap->ps.weapon == WP_ALEVEL2_UPG || cg.snap->ps.weapon == WP_ALEVEL3 || cg.snap->ps.weapon == WP_ALEVEL3_UPG || cg.snap->ps.weapon == WP_ALEVEL1 || cg.snap->ps.weapon == WP_ALEVEL1_UPG || cg.snap->ps.weapon == WP_ALEVEL5 )
-  return;
+  if( cg.snap->ps.weapon != WP_ALEVEL4 )
+    return;
   
   if( maxBarbs <= 0 || numBarbs <= 0 )
     return;
@@ -713,68 +680,6 @@ static void CG_DrawPlayerFbreath( rectDef_t *rect, vec4_t color, qhandle_t shade
 
   trap_R_SetColor( NULL );
 }
-
-
-/*
-==============
-CG_DrawPlayerBombs
-==============
-*/
-static void CG_DrawPlayerBombs( rectDef_t *rect, vec4_t color, qhandle_t shader )
-{
-  qboolean vertical;
-  float    x = rect->x, y = rect->y;
-  float    width = rect->w, height = rect->h;
-  float    diff;
-  int      iconsize, numBarbs, maxBarbs;
-
-  maxBarbs = BG_Weapon( cg.snap->ps.weapon )->maxAmmo;
-  numBarbs = cg.snap->ps.ammo;
-  
-  if( !(cg.snap->ps.weapon == WP_ALEVEL1 || cg.snap->ps.weapon == WP_ALEVEL1_UPG) )
-  return;
-  
-  if( maxBarbs <= 0 || numBarbs <= 0 )
-    return;
-
-  // adjust these first to ensure the aspect ratio of the barb image is
-  // preserved
-  CG_AdjustFrom640( &x, &y, &width, &height );
-
-  if( height > width )
-  {
-    vertical = qtrue;
-    iconsize = width;
-    if( maxBarbs != 1 ) // avoid division by zero
-      diff = ( height - iconsize ) / (float)( maxBarbs - 1 );
-    else
-      diff = 0; // doesn't matter, won't be used
-  }
-  else
-  {
-    vertical = qfalse;
-    iconsize = height;
-    if( maxBarbs != 1 )
-      diff = ( width - iconsize ) / (float)( maxBarbs - 1 );
-    else
-      diff = 0;
-  }
-
-
-
-  for( ; numBarbs > 0; numBarbs-- )
-  {
-    trap_R_DrawStretchPic( x, y, iconsize, iconsize, 0, 0, 1, 1, shader );
-    if( vertical )
-      y += diff;
-    else
-      x += diff;
-  }
-  
-
-  trap_R_SetColor( NULL );
-}
-
 
 
 /*
@@ -2137,8 +2042,6 @@ static void CG_DrawTeamOverlay( rectDef_t *rect, float scale, vec4_t color )
         {
           if( ci->curWeaponClass == PCL_ALIEN_BUILDER0 || 
               ci->curWeaponClass == PCL_ALIEN_BUILDER0_UPG ||
-              ci->curWeaponClass == PCL_ALIEN_LEVEL1 || 
-              ci->curWeaponClass == PCL_ALIEN_LEVEL1_UPG ||
               ci->curWeaponClass == WP_HBUILD )
           {
             displayClients[ maxDisplayCount++ ] = i;
@@ -2234,7 +2137,7 @@ static void CG_DrawTeamOverlay( rectDef_t *rect, float scale, vec4_t color )
       }
       else
       {
-        if( curWeapon == WP_ALEVEL1_UPG || curWeapon == WP_ALEVEL2_UPG ||
+        if( curWeapon == WP_ALEVEL2_UPG ||
             curWeapon == WP_ALEVEL3_UPG )
         {
           CG_DrawPic( x + iconSize + leftMargin, y, iconSize, 
@@ -3163,17 +3066,8 @@ void CG_OwnerDraw( float x, float y, float w, float h, float text_x,
     case CG_PLAYER_PRICKLES:
       CG_DrawPlayerPrickles( &rect, foreColor, shader );
       break;
-    case CG_PLAYER_BOMBS:
-      CG_DrawPlayerBombs( &rect, foreColor, shader );
-      break;
     case CG_PLAYER_POISON_BARBS:
       CG_DrawPlayerPoisonBarbs( &rect, foreColor, shader );
-      break;
-    case CG_DRAW_INVI_STAT:
-      CG_DrawInvisbleStatus( &rect, foreColor, shader );
-      break;
-    case CG_DRAW_INVI_OVERLAY:
-      CG_DrawInvisbleOverlay( &rect, foreColor, shader );
       break;
     case CG_PLAYER_ALIEN_SENSE:
       CG_DrawAlienSense( &rect );

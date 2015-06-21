@@ -246,10 +246,6 @@ static void CG_Obituary( entityState_t *ent )
           message = "^5was terminated by own flames";
         break;
 
-      case MOD_ABOMB:
-        message = "^5bombed himself up";
-        break;
-
       default:
         if( gender == GENDER_FEMALE )
           message = "^5killed herself";
@@ -365,12 +361,6 @@ static void CG_Obituary( entityState_t *ent )
       case MOD_LEVEL0_BITE:
         message = "^5was bitten by^7";
         break;
-      case MOD_LEVEL1_CLAW:
-        message = "^5was swiped by^7";
-        Com_sprintf( className, 64, "^5's %s",
-            BG_ClassConfig( PCL_ALIEN_LEVEL1 )->humanName );
-        message2 = className;
-        break;
       case MOD_LEVEL2_CLAW:
       case MOD_LEVEL2_CLAW_UPG:
         message = "^5was clawed by^7";
@@ -462,24 +452,10 @@ static void CG_Obituary( entityState_t *ent )
         message = "^5should have used a medkit against^7";
         message2 = "^5's poison";
         break;
-      case MOD_LEVEL1_PCLOUD:
-        message = "^5was gassed by^7";
-        Com_sprintf( className, 64, "^5's %s",
-            BG_ClassConfig( PCL_ALIEN_LEVEL1 )->humanName );
-        message2 = className;
-        break;
-		
 
       case MOD_TELEFRAG:
         message = "^5tried to invade^7";
         message2 = "^5's personal space";
-        break;
-        
-      case MOD_ABOMB:
-        message = "^5was bombed by^7";
-        Com_sprintf( className, 64, "^5's %s",
-            BG_ClassConfig( PCL_ALIEN_LEVEL1 )->humanName );
-        message2 = className;
         break;
         
       default:

@@ -978,10 +978,6 @@ static float G_CalcDamageModifier( vec3_t point, gentity_t *targ, gentity_t *att
   if( dflags & DAMAGE_NO_LOCDAMAGE )
   {
     const int mod = targ->client->lasthurt_mod;
-    // basi - flamer protection
-    if( ( ( mod == MOD_FLAMER ) || ( mod == MOD_FLAMER_SPLASH ) ) &&
-        ( ( class == PCL_ALIEN_LEVEL1 ) || ( class == PCL_ALIEN_LEVEL1_UPG ) ) )
-      return 0.1f;
  
     return GetNonLocDamageModifier( targ, class );
 	}
@@ -1448,19 +1444,15 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	  && mod != MOD_POISON 
 	  && mod != MOD_LEVEL2_ZAP
 	  && mod != MOD_LEVEL5_ZAP
-	  && mod != MOD_LEVEL1_PCLOUD 
 	  && mod != MOD_HSPAWN 
 	  && mod != MOD_ASPAWN 
 	  && mod != MOD_LEVEL5_PRICKLES
 	  && mod != MOD_FLAMER_SPLASH)
         poisonTime = level.time + ALIEN_POISON_TIME;
       // no more zap poisen   
-      else if( mod == MOD_LEVEL1_CLAW && ( mod != MOD_LEVEL2_ZAP ||  mod != MOD_LEVEL5_ZAP ||  mod != MOD_FLAMES ))
+      else if( mod != MOD_LEVEL2_ZAP ||  mod != MOD_LEVEL5_ZAP ||  mod != MOD_FLAMES )
       {
-        if( attacker->client->ps.weapon == WP_ALEVEL1_UPG )
-          poisonTime = level.time + g_basiPoisonTime.integer * 1000;
-        else
-          poisonTime = level.time + g_basiUpgPoisonTime.integer * 1000;
+        poisonTime = level.time + g_basiUpgPoisonTime.integer * 1000;
       }
       if( poisonTime > 0 ) 
       {

@@ -505,14 +505,6 @@ void Cmd_Give_f( gentity_t *ent )
     }
   }
 
-  if( Q_stricmp( name, "gas" ) == 0 )
-  {
-    ent->client->ps.eFlags |= EF_POISONCLOUDED;
-    ent->client->lastPoisonCloudedTime = level.time;
-    trap_SendServerCommand( ent->client->ps.clientNum,
-                              "poisoncloud" );
-  }
-
   if( give_all || Q_stricmp( name, "ammo" ) == 0 )
   {
     gclient_t *client = ent->client;
@@ -1835,7 +1827,6 @@ void Cmd_Class_f( gentity_t *ent )
 
           if( ent->client->ps.stats[ STAT_STATE ] & SS_BOOSTED )
             oldBoostTime = ent->client->boostedTime;
-	  oldTimeStamp = ( ent->client->ps.weapon == WP_ALEVEL1 ) ? ent->timestamp : 0;
 
           ClientSpawn( ent, ent, ent->s.pos.trBase, ent->s.apos.trBase );
 
@@ -1845,11 +1836,6 @@ void Cmd_Class_f( gentity_t *ent )
             ent->client->boostedTime = oldBoostTime;
             ent->client->ps.stats[ STAT_STATE ] |= SS_BOOSTED;
           }
-	  if( newClass == PCL_ALIEN_LEVEL1_UPG )
-	  {
-	    ent->timestamp = oldTimeStamp;
-	    ent->client->ps.ammo = 0;
-	  }
         }
         else
           G_TriggerMenuArgs( clientNum, MN_A_CANTEVOLVE, newClass );

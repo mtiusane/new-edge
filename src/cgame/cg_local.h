@@ -669,8 +669,6 @@ typedef struct centity_s
   particleSystem_t      *jetPackPS;
   jetPackState_t        jetPackState;
 
-  particleSystem_t      *poisonCloudedPS;
-
   particleSystem_t      *entityPS;
   qboolean              entityPSMissing;
 

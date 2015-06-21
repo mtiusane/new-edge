@@ -1291,23 +1291,6 @@ static void CG_ServerCloseMenus_f( void )
   trap_SendConsoleCommand( "closemenus\n" );
 }
 
-/*
-=================
-CG_PoisonCloud_f
-=================
-*/
-static void CG_PoisonCloud_f( void )
-{
-  cg.poisonedTime = cg.time;
-
-  if( CG_IsParticleSystemValid( &cg.poisonCloudPS ) )
-  {
-    cg.poisonCloudPS = CG_SpawnNewParticleSystem( cgs.media.poisonCloudPS );
-    CG_SetAttachmentCent( &cg.poisonCloudPS->attachment, &cg.predictedPlayerEntity );
-    CG_AttachToCent( &cg.poisonCloudPS->attachment );
-  }
-}
-
 static void CG_GameCmds_f( void )
 {
   int i;
@@ -1349,7 +1332,6 @@ static consoleCommand_t svcommands[ ] =
   { "cs", CG_ConfigStringModified },
   { "di", CG_DamageIndicator_f },
   { "map_restart", CG_MapRestart },
-  { "poisoncloud", CG_PoisonCloud_f },
   { "print", CG_Print_f },
   { "scores", CG_ParseScores },
   { "serverclosemenus", CG_ServerCloseMenus_f },

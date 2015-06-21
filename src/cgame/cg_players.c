@@ -2019,50 +2019,6 @@ void CG_Player( centity_t *cent )
     legs.hModel = ci->nonSegModel;
     legs.customSkin = ci->nonSegSkin;
 
-    // we can't hit what we can't see :P
-    if( es->weapon == WP_ALEVEL1_UPG )
-    {
-      if( es->eFlags & EF_MOVER_STOP )
-      {
-        if( !cent->invisible )
-        {
-          cent->invisibleTime = cg.time;
-          cent->invisible = qtrue;
-        }
-      }
-      else
-      {
-        if( cent->invisible )
-        {
-          cent->invisibleTime = cg.time;
-          cent->invisible = qfalse;
-        }
-      }
-
-      if( cent->invisible )
-      {
-        legs.shaderTime = cent->invisibleTime/1000.0f;
-
-        if( cg.time - cent->invisibleTime < 1000.0f )
-          legs.customShader = cgs.media.invisibleFadeShader;
-		  
-        else{
-			if( ci->team != cg.snap->ps.stats[ STAT_TEAM ] )
-                legs.customShader = cgs.media.invisibleShader;
-				else
-                 legs.customShader = cgs.media.invisibleShaderTeam;
-		    }
-      }
-      else
-      {
-        if( cg.time - cent->invisibleTime < 500.0f )
-        {
-          legs.shaderTime = (cent->invisibleTime+500.0f)/1000.0f;
-          legs.customShader = cgs.media.invisibleFadeShader;
-        }
-	  }
-    }
-
   if( ( cent->currentState.legsAnim & ~ANIM_TOGGLEBIT ) == NSPA_SWIM  && es->weapon == WP_ALEVEL5)
     {
         trap_S_AddLoopingSound( cent->currentState.number, cent->lerpOrigin, vec3_origin, cgs.media.hummelSound );
@@ -2190,22 +2146,6 @@ void CG_Player( centity_t *cent )
     head.renderfx = renderfx;
 
     trap_R_AddRefEntityToScene( &head );
-	
-	
-    // if this player has been hit with poison cloud, add an effect PS
-    if( ( es->eFlags & EF_POISONCLOUDED ) &&
-        ( es->number != cg.snap->ps.clientNum || cg.renderingThirdPerson ) )
-    {
-      if( !CG_IsParticleSystemValid( &cent->poisonCloudedPS ) )
-        cent->poisonCloudedPS = CG_SpawnNewParticleSystem( cgs.media.poisonCloudedPS );
-
-      CG_SetAttachmentTag( &cent->poisonCloudedPS->attachment,
-                           head, head.hModel, "tag_head" );
-      CG_SetAttachmentCent( &cent->poisonCloudedPS->attachment, cent );
-      CG_AttachToTag( &cent->poisonCloudedPS->attachment );
-    }
-    else if( CG_IsParticleSystemValid( &cent->poisonCloudedPS ) )
-      CG_DestroyParticleSystem( &cent->poisonCloudedPS );
   }
 
   //

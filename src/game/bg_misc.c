@@ -2288,72 +2288,9 @@ static const classAttributes_t bg_classList[ ] =
     400.0f,                                         //float   stopSpeed;
     250.0f,                                         //float   jumpMagnitude;
     2.0f,                                           //float   knockbackScale;
-    { PCL_ALIEN_LEVEL1, PCL_NONE },                 //int     children[ 3 ];
+    { PCL_ALIEN_LEVEL2, PCL_NONE },                 //int     children[ 3 ];
     LEVEL0_COST,                                    //int     cost;
     LEVEL0_VALUE,                                    //int     value;
-  },
-  {
-    PCL_ALIEN_LEVEL1,                               //int     classnum;
-    "level1",                                       //char    *classname;
-    "A support class able to crawl on walls and ceilings. Its melee "
-      "attack is most effective when combined with the ability to grab "
-      "and hold its victims in place. Provides a weak healing aura "
-      "that accelerates the healing rate of nearby aliens. It also has "
-      "an acid bomb that can be used to deal moderate area damage. "
-      "The basilisk is also resistant to flamer.",
-    STAGE_GE_1,                                     //int     stages
-    LEVEL1_HEALTH,                                  //int     health;
-    0.0f,                                           //float   fallDamage;
-    LEVEL1_REGEN,                                   //float   regenRate;
-    SCA_FOVWARPS|SCA_WALLCLIMBER|SCA_ALIENSENSE,    //int     abilities;
-    WP_ALEVEL1,                                     //weapon_t  startWeapon
-    0.0f,                                           //float   buildDist;
-    120,                                            //int     fov;
-    0.001f,                                         //float   bob;
-    1.8f,                                           //float   bobCycle;
-    60,                                             //int     steptime;
-    LEVEL1_SPEED,                                   //float   speed;
-    10.0f,                                          //float   acceleration;
-    1.0f,                                           //float   airAcceleration;
-    6.0f,                                           //float   friction;
-    300.0f,                                         //float   stopSpeed;
-    310.0f,                                         //float   jumpMagnitude;
-    1.2f,                                           //float   knockbackScale;
-    { PCL_ALIEN_LEVEL2, PCL_ALIEN_LEVEL1_UPG, PCL_NONE },   //int     children[ 3 ];
-    LEVEL1_COST,                                     //int     cost;
-    LEVEL1_VALUE,                                    //int     value;
-  },
-  {
-    PCL_ALIEN_LEVEL1_UPG,                           //int     classnum;
-    "level1upg",                                    //char    *classname;
-    "In addition to the basic Basilisk abilities, the Advanced "
-      "Basilisk sprays a poisonous gas which slows down and disorients "
-      "nearby humans. Has a strong healing aura that that accelerates "
-      "the healing rate of nearby aliens. It is invisible while staying "
-      "still and at full health as long as there is an overmind around. "
-      "It also has an acid bomb similar to basilisk's one but stronger."
-      "The adv. basilisk is also resistant to flamer.",
-    STAGE_GE_3,                                     //int  stages
-    LEVEL1_UPG_HEALTH,                              //int     health;
-    0.0f,                                           //float   fallDamage;
-    LEVEL1_UPG_REGEN,                               //float   regenRate;
-    SCA_FOVWARPS|SCA_WALLCLIMBER|SCA_ALIENSENSE,    //int     abilities;
-    WP_ALEVEL1_UPG,                                 //weapon_t  startWeapon
-    0.0f,                                           //float   buildDist;
-    120,                                            //int     fov;
-    0.001f,                                         //float   bob;
-    1.8f,                                           //float   bobCycle;
-    60,                                             //int     steptime;
-    LEVEL1_UPG_SPEED,                               //float   speed;
-    10.0f,                                          //float   acceleration;
-    1.0f,                                           //float   airAcceleration;
-    6.0f,                                           //float   friction;
-    300.0f,                                         //float   stopSpeed;
-    310.0f,                                         //float   jumpMagnitude;
-    1.1f,                                           //float   knockbackScale;
-    { PCL_ALIEN_LEVEL2, PCL_NONE, PCL_NONE },       //int     children[ 3 ];
-    LEVEL1_UPG_COST,                                //int     cost;
-    LEVEL1_UPG_VALUE,                                //int     value;
   },
   {
     PCL_ALIEN_LEVEL2,                               //int     classnum;
@@ -3081,56 +3018,6 @@ static const weaponAttributes_t bg_weapons[ ] =
     90.0f,                //float     zoomFov;
     qfalse,               //qboolean  purchasable;
     qfalse,               //qboolean  longRanged;
-    TEAM_ALIENS           //team_t    team;
-  },
-  {
-    WP_ALEVEL1,           //int       weaponNum;
-    0,                    //int       price;
-    STAGE_GE_1,           //int  stages
-    SLOT_WEAPON,          //int       slots;
-    "level1",             //char      *weaponName;
-    "Claws",              //char      *humanName;
-    "",
-    1,                    //int       maxAmmo;
-    0,                    //int       maxClips;
-    qtrue,                //int       infiniteAmmo;
-    qfalse,               //int       usesEnergy;
-    LEVEL1_CLAW_REPEAT,   //int       repeatRate1;
-    0,                    //int       repeatRate2;
-    ABOMB2_REPEAT,                    //int       repeatRate3;
-    0,                    //int       reloadTime;
-    LEVEL1_CLAW_K_SCALE,  //float     knockbackScale;
-    qfalse,               //qboolean  hasAltMode;
-    qtrue,               //qboolean  hasThirdMode;
-    qfalse,               //qboolean  canZoom;
-    90.0f,                //float     zoomFov;
-    qfalse,               //qboolean  purchasable;
-    qfalse,               //qboolean  longRanged;
-    TEAM_ALIENS           //team_t    team;
-  },
-  {
-    WP_ALEVEL1_UPG,       //int       weaponNum;
-    0,                    //int       price;
-    STAGE_GE_3,           //int  stages
-    SLOT_WEAPON,          //int       slots;
-    "level1upg",          //char      *weaponName;
-    "Claws Upgrade",      //char      *humanName;
-    "",
-    1,                    //int       maxAmmo;
-    0,                    //int       maxClips;
-    qtrue,                //int       infiniteAmmo;
-    qfalse,               //int       usesEnergy;
-    LEVEL1_CLAW_U_REPEAT, //int       repeatRate1;
-    LEVEL1_PCLOUD_REPEAT, //int       repeatRate2;
-    ABOMB_REPEAT,                    //int       repeatRate3;
-    0,                    //int       reloadTime;
-    LEVEL1_CLAW_U_K_SCALE,//float     knockbackScale;
-    qtrue,                //qboolean  hasAltMode;
-    qtrue,               //qboolean  hasThirdMode;
-    qfalse,               //qboolean  canZoom;
-    90.0f,                //float     zoomFov;
-    qfalse,               //qboolean  purchasable;
-    qtrue,                //qboolean  longRanged;
     TEAM_ALIENS           //team_t    team;
   },
   {
@@ -4850,25 +4737,6 @@ qboolean BG_PlayerCanChangeWeapon( playerState_t *ps )
     return qfalse;
 
   return ps->weaponTime <= 0 || ps->weaponstate != WEAPON_FIRING;
-}
-
-/*
-=================
-BG_PlayerPoisonCloudTime
-=================
-*/
-int BG_PlayerPoisonCloudTime( playerState_t *ps )
-{
-  int time = LEVEL1_PCLOUD_TIME;
-
-  if( BG_InventoryContainsUpgrade( UP_BATTLESUIT, ps->stats ) )
-    time -= BSUIT_PCLOUD_PROTECTION;
-  if( BG_InventoryContainsUpgrade( UP_HELMET, ps->stats ) )
-    time -= HELMET_PCLOUD_PROTECTION;
-  if( BG_InventoryContainsUpgrade( UP_LIGHTARMOUR, ps->stats ) )
-    time -= LIGHTARMOUR_PCLOUD_PROTECTION;
-    
-  return time;
 }
 
 /*

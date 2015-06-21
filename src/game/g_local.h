@@ -1039,8 +1039,6 @@ gentity_t *launch_mine( gentity_t *self, vec3_t start, vec3_t dir );
 gentity_t *launch_flames( gentity_t *self, vec3_t start, vec3_t dir );
 gentity_t *launch_smoke( gentity_t *self, vec3_t start, vec3_t dir );
 gentity_t *fire_rocket( gentity_t *self, vec3_t start, vec3_t dir );
-gentity_t *fire_acidBomb( gentity_t *self, vec3_t start, vec3_t dir, int wp );
-gentity_t *fire_acidBomb2( gentity_t *self, vec3_t start, vec3_t dir, int wp );
 gentity_t *fire_fern( vec3_t origin, vec3_t angles, int lifespan );
 
 gentity_t *Prickles_Fire( gentity_t *self, vec3_t start, vec3_t dir );

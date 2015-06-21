@@ -17,7 +17,6 @@ CSW( CSW_GRENADE,       MOD_GRENADE,    "Grenade",         GRENADE_DAMAGE ),
 
 CSW( CSW_ABUILDER,      MOD_ABUILDER_CLAW,     "Granger",         ABUILDER_CLAW_DMG ),
 CSW( CSW_ABUILDER_ALT,  MOD_SLOWBLOB,          "Granger Spit",    ABUILDER_BLOB_DMG ),
-CSW( CSW_LEVEL1,        MOD_LEVEL1_CLAW,       "Basilisk",        LEVEL1_CLAW_DMG ),
 CSW( CSW_LEVEL2,        MOD_LEVEL2_CLAW,       "Marauder",        LEVEL2_CLAW_DMG ),
 CSW( CSW_LEVEL2_UPG,    MOD_LEVEL2_CLAW_UPG,   "Adv. Marauder",   LEVEL2_CLAW_UPG_DMG ),
 CSW( CSW_LEVEL2_ALT,    MOD_LEVEL2_ZAP,        "Marauder Zap",    LEVEL2_AREAZAP_DMG ),

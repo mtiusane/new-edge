@@ -324,7 +324,6 @@ typedef enum
 #define EF_FIRING2          0x0400    // alt fire
 #define EF_FIRING3          0x0800    // third fire
 #define EF_MOVER_STOP       0x1000    // will push otherwise
-#define EF_POISONCLOUDED    0x2000    // player hit with basilisk gas
 #define EF_CONNECTION       0x4000    // draw a connection trouble sprite
 #define EF_BLOBLOCKED       0x8000    // caught by a trapper
 
@@ -350,8 +349,6 @@ typedef enum
 {
   WP_NONE,
   WP_ALEVEL0,
-  WP_ALEVEL1,
-  WP_ALEVEL1_UPG,
   WP_ALEVEL2,
   WP_ALEVEL2_UPG,
   WP_ALEVEL5,
@@ -803,8 +800,6 @@ typedef enum
   PCL_ALIEN_BUILDER0_UPG,
   //offensive classes
   PCL_ALIEN_LEVEL0,
-  PCL_ALIEN_LEVEL1,
-  PCL_ALIEN_LEVEL1_UPG,
   PCL_ALIEN_LEVEL2,
   PCL_ALIEN_LEVEL2_UPG,
   PCL_ALIEN_LEVEL5,
@@ -1061,7 +1056,6 @@ void      BG_PositionBuildableRelativeToPlayer( const playerState_t *ps,
                                                 vec3_t outOrigin, vec3_t outAngles, trace_t *tr );
 int       BG_GetValueOfPlayer( playerState_t *ps );
 qboolean  BG_PlayerCanChangeWeapon( playerState_t *ps );
-int       BG_PlayerPoisonCloudTime( playerState_t *ps );
 weapon_t  BG_GetPlayerWeapon( playerState_t *ps );
 qboolean  BG_HasEnergyWeapon( playerState_t *ps );
 

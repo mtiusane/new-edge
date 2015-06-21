@@ -695,21 +695,6 @@ void throwMine( gentity_t *ent )
 
 /*
 ======================================================================
-ACID BOMBS
-======================================================================
-*/
-void acidBombFire( gentity_t *ent, int wp )
-{
-  fire_acidBomb( ent, muzzle, forward, wp );
-}
-
-void acidBombFire2x( gentity_t *ent, int wp )
-{
-  fire_acidBomb2( ent, muzzle, forward, wp );
-}
-
-/*
-======================================================================
 LAS GUN
 ======================================================================
 */
@@ -1168,130 +1153,6 @@ qboolean CheckVenomAttack( gentity_t *ent )
   G_Damage( traceEnt, ent, ent, forward, tr.endpos, damage, DAMAGE_NO_KNOCKBACK, MOD_LEVEL0_BITE );
   ent->client->ps.weaponTime += LEVEL0_BITE_REPEAT;
   return qtrue;
-}
-
-/*
-======================================================================
-LEVEL1
-======================================================================
-*/
-/*
-===============
-CheckGrabAttack
-===============
-*/
-void CheckGrabAttack( gentity_t *ent )
-{
-  trace_t   tr;
-  vec3_t    end, dir;
-  float     dot;
-  gentity_t *traceEnt;
-
-  // set aiming directions
-  AngleVectors( ent->client->ps.viewangles, forward, right, up );
-  CalcMuzzlePoint( ent, forward, right, up, muzzle );
-
-  if( ent->client->ps.weapon == WP_ALEVEL1 )
-    VectorMA( muzzle, LEVEL1_GRAB_RANGE, forward, end );
-  else if( ent->client->ps.weapon == WP_ALEVEL1_UPG )
-    VectorMA( muzzle, LEVEL1_GRAB_U_RANGE, forward, end );
-
-  trap_Trace( &tr, muzzle, NULL, NULL, end, ent->s.number, MASK_SHOT );
-  if( tr.surfaceFlags & SURF_NOIMPACT )
-    return;
-
-  traceEnt = &g_entities[ tr.entityNum ];
-
-  if( !traceEnt->takedamage )
-    return;
-
-  if( traceEnt->client )
-  {
-    if( traceEnt->client->ps.stats[ STAT_TEAM ] == TEAM_ALIENS )
-      return;
-
-    if( traceEnt->client->ps.stats[ STAT_HEALTH ] <= 0 )
-      return;
-
-    // NOTE: Re-using end,dir for optimal/current target direction in the following
-    if( !( traceEnt->client->ps.stats[ STAT_STATE ] & SS_GRABBED ) )  
-    {
-      AngleVectors( traceEnt->client->ps.viewangles, dir, NULL, NULL );
-      traceEnt->client->ps.stats[ STAT_VIEWLOCK ] = DirToByte( dir );
-      VectorSubtract(traceEnt->client->ps.origin,ent->client->ps.origin,end);
-      VectorNormalize(end);
-      ent->client->ps.stats[ STAT_MISC ] = DotProduct(dir, end);
- 
-      //event for client side grab effect
-      G_AddPredictableEvent( ent, EV_LEV1_GRAB, 0 );
-    } else if (traceEnt->client->ps.pm_type == PM_JETPACK) {
-      // jetpack enabled, do nothing
-    } else if (ent->client->ps.stats[ STAT_MISC ] >= 0.9f) {
-      VectorSubtract(traceEnt->client->ps.origin,ent->client->ps.origin,end);
-      VectorNormalize(end);
-      traceEnt->client->ps.stats[ STAT_VIEWLOCK ] = DirToByte( end );
-    } else {
-      VectorSubtract(traceEnt->client->ps.origin,ent->client->ps.origin,end);
-      VectorNormalize(end);
-
-      AngleVectors( traceEnt->client->ps.viewangles, dir, NULL, NULL );
-      dot = DotProduct(dir, end);
-
-      if (dot >= ent->client->ps.stats[ STAT_MISC ]) {
-         traceEnt->client->ps.stats[ STAT_VIEWLOCK ] = DirToByte( end );
-         ent->client->ps.stats[ STAT_MISC ] = dot;
-      } 
-    }
-
-    traceEnt->client->ps.stats[ STAT_STATE ] |= SS_GRABBED;
-
-    if( ent->client->ps.weapon == WP_ALEVEL1 )
-      traceEnt->client->grabExpiryTime = level.time + LEVEL1_GRAB_TIME;
-    else if( ent->client->ps.weapon == WP_ALEVEL1_UPG )
-      traceEnt->client->grabExpiryTime = level.time + LEVEL1_GRAB_U_TIME;
-  }
-}
-
-/*
-===============
-poisonCloud
-===============
-*/
-void poisonCloud( gentity_t *ent )
-{
-  int       entityList[ MAX_GENTITIES ];
-  vec3_t    range = { LEVEL1_PCLOUD_RANGE, LEVEL1_PCLOUD_RANGE, LEVEL1_PCLOUD_RANGE };
-  vec3_t    mins, maxs;
-  int       i, num;
-  gentity_t *humanPlayer;
-  trace_t   tr;
-
-  VectorAdd( ent->client->ps.origin, range, maxs );
-  VectorSubtract( ent->client->ps.origin, range, mins );
-
-  G_UnlaggedOn( ent, ent->client->ps.origin, LEVEL1_PCLOUD_RANGE );
-  num = trap_EntitiesInBox( mins, maxs, entityList, MAX_GENTITIES );
-  for( i = 0; i < num; i++ )
-  {
-    humanPlayer = &g_entities[ entityList[ i ] ];
-
-    if( humanPlayer->client &&
-        humanPlayer->client->pers.teamSelection == TEAM_HUMANS )
-    {
-      trap_Trace( &tr, muzzle, NULL, NULL, humanPlayer->s.origin,
-                  humanPlayer->s.number, CONTENTS_SOLID );
-
-      //can't see target from here
-      if( tr.entityNum == ENTITYNUM_WORLD )
-        continue;
-
-      humanPlayer->client->ps.eFlags |= EF_POISONCLOUDED;
-      humanPlayer->client->lastPoisonCloudedTime = level.time;
-
-      trap_SendServerCommand( humanPlayer->client->ps.clientNum,"poisoncloud" );
-    }
-  }
-  G_UnlaggedOff( );
 }
 
 /*
@@ -1852,13 +1713,6 @@ void FireWeapon3( gentity_t *ent )
 	  massDriverFire2( ent );
       }
       break;
-	  
-    case WP_ALEVEL1:
-      acidBombFire2x( ent, WP_ALEVEL1 );
-      break;
-    case WP_ALEVEL1_UPG:
-      acidBombFire( ent, WP_ALEVEL1_UPG );
-      break;
 
     default:
       break;
@@ -1890,10 +1744,6 @@ void FireWeapon2( gentity_t *ent )
   
     case WP_MACHINEGUN:
       bulletFire( ent, RIFLE_SPREAD2, RIFLE_DMG2, MOD_MACHINEGUN );
-      break;
-  
-    case WP_ALEVEL1_UPG:
-      poisonCloud( ent );
       break;
 
     case WP_ALEVEL2_UPG:
@@ -1956,14 +1806,6 @@ void FireWeapon( gentity_t *ent )
   // fire the specific weapon
   switch( ent->s.weapon )
   {
-    case WP_ALEVEL1:
-      meleeAttack( ent, LEVEL1_CLAW_RANGE, LEVEL1_CLAW_WIDTH, LEVEL1_CLAW_WIDTH,
-                   LEVEL1_CLAW_DMG, MOD_LEVEL1_CLAW );
-      break;
-    case WP_ALEVEL1_UPG:
-      meleeAttack( ent, LEVEL1_CLAW_U_RANGE, LEVEL1_CLAW_WIDTH, LEVEL1_CLAW_WIDTH,
-                   LEVEL1_CLAW_DMG, MOD_LEVEL1_CLAW );
-      break;
     case WP_ALEVEL3:
       meleeAttack( ent, LEVEL3_CLAW_RANGE, LEVEL3_CLAW_WIDTH, LEVEL3_CLAW_WIDTH,
                    LEVEL3_CLAW_DMG, MOD_LEVEL3_CLAW );

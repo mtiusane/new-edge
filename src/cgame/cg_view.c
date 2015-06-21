@@ -782,27 +782,6 @@ void CG_OffsetFirstPersonView( void )
       cg.upMoveTime = cg.time;
   }
 
-  if( ( cg.predictedPlayerEntity.currentState.eFlags & EF_POISONCLOUDED ) &&
-      ( cg.time - cg.poisonedTime < PCLOUD_DISORIENT_DURATION) &&
-      !( cg.snap->ps.pm_flags & PMF_FOLLOW ) )
-  {
-    float scale, fraction, pitchFraction;
-    
-    scale = 1.0f - (float)( cg.time - cg.poisonedTime ) /
-            BG_PlayerPoisonCloudTime( &cg.predictedPlayerState );
-    if( scale < 0.0f )
-      scale = 0.0f;
-
-    fraction = sin( ( cg.time - cg.poisonedTime ) / 500.0f * M_PI * PCLOUD_ROLL_FREQUENCY ) *
-               scale;
-    pitchFraction = sin( ( cg.time - cg.poisonedTime ) / 200.0f * M_PI * PCLOUD_ROLL_FREQUENCY ) *
-                    scale;
-
-    angles[ ROLL ] += fraction * PCLOUD_ROLL_AMPLITUDE;
-    angles[ YAW ] += fraction * PCLOUD_ROLL_AMPLITUDE;
-    angles[ PITCH ] += pitchFraction * PCLOUD_ROLL_AMPLITUDE / 2.0f;
-  }
-
   // this *feels* more realisitic for humans
   if( cg.predictedPlayerState.stats[ STAT_TEAM ] == TEAM_HUMANS &&
       ( cg.predictedPlayerState.pm_type == PM_NORMAL ||
@@ -1021,21 +1000,6 @@ static int CG_CalcFov( void )
   }
   else
     inwater = qfalse;
-
-  if( ( cg.predictedPlayerEntity.currentState.eFlags & EF_POISONCLOUDED ) &&
-      ( cg.time - cg.poisonedTime < PCLOUD_DISORIENT_DURATION) &&
-      cg.predictedPlayerState.stats[ STAT_HEALTH ] > 0 &&
-      !( cg.snap->ps.pm_flags & PMF_FOLLOW ) )
-  {
-    float scale = 1.0f - (float)( cg.time - cg.poisonedTime ) /
-                  BG_PlayerPoisonCloudTime( &cg.predictedPlayerState );
-      
-    phase = ( cg.time - cg.poisonedTime ) / 1000.0f * PCLOUD_ZOOM_FREQUENCY * M_PI * 2.0f;
-    v = PCLOUD_ZOOM_AMPLITUDE * sin( phase ) * scale;
-    fov_x += v;
-    fov_y += v;
-  }
-
 
   // set it
   cg.refdef.fov_x = fov_x;
