@@ -101,6 +101,8 @@ void G_ExplodeMissile( gentity_t *ent )
 
   ent->s.eType = ET_GENERAL;
 
+  G_AddEvent( ent, EV_MISSILE_MISS, DirToByte( dir ) );
+
   ent->freeAfterEvent = qtrue;
 
   // splash damage
