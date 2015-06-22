@@ -571,7 +571,7 @@ gentity_t *FlameTurretFireNormal( gentity_t *self, vec3_t start, vec3_t dir )
   bolt = G_Spawn( );
   bolt->classname = "mgturret2";
   bolt->pointAgainstWorld = qfalse;
-  bolt->nextthink = level.time + FLAMER2_LIFETIME;
+  bolt->nextthink = level.time + 350;
   bolt->think = G_ExplodeMissile;
   bolt->s.eType = ET_MISSILE;
   bolt->r.svFlags = SVF_USE_CURRENT_ORIGIN;

@@ -585,31 +585,6 @@ void prifleStasisFire( gentity_t *ent )
   fire_prifle_stasis( ent, muzzle, forward );
 }
 
-
-/*
-===============
-FLAME THROWER
-Napalm Charge
-===============
-*/
-void NapalmFire( gentity_t *ent, qboolean secondary )
-{
-  int damage;
-
-  damage = ent->client->ps.stats[ STAT_MISC ] *
-           LCANNON_DAMAGE / LCANNON_CHARGE_TIME_MAX;
-
-  G_CombatStats_Fire( ent, CSW_FLAMER, damage );
-
-  NapalmChargeFire( ent, muzzle, forward,
-                    damage, LCANNON_RADIUS, LCANNON_SPEED );
-
-  NapalmChargeImp( ent, muzzle, forward,
-                   damage, LCANNON_RADIUS, LCANNON_SPEED );
-
-  ent->client->ps.stats[ STAT_MISC ] = 0;
-}
-
 /*
 ===============
 FLAME THROWER
@@ -1747,10 +1722,6 @@ void FireWeapon2( gentity_t *ent )
     case WP_CHAINGUN:
       bulletFire( ent, CHAINGUN_SPREAD2, CHAINGUN_DMG2, MOD_CHAINGUN );
       break;
-	  
-    case WP_FLAMER:
-      FlamerNormal( ent );
-      break;
 
     case WP_LAS_GUN:
       lasGunFire2( ent );
@@ -1832,7 +1803,7 @@ void FireWeapon( gentity_t *ent )
       bulletFire( ent, CHAINGUN_SPREAD, CHAINGUN_DMG, MOD_CHAINGUN );
       break;
     case WP_FLAMER:
-      NapalmFire( ent, qfalse );
+      FlamerNormal( ent );
       break;
     case WP_PULSE_RIFLE:
       pulseRifleFire( ent );

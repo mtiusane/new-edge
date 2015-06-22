@@ -2872,7 +2872,7 @@ static void PM_BeginWeaponChange( int weapon )
     pm->ps->weaponTime = 0;
 
   //special case to prevent storing a charged up lcannon
-  if( (pm->ps->weapon == WP_LUCIFER_CANNON || pm->ps->weapon == WP_FLAMER ) )
+  if( pm->ps->weapon == WP_LUCIFER_CANNON )
     pm->ps->stats[ STAT_MISC ] = 0;
 
   pm->ps->weaponstate = WEAPON_DROPPING;
@@ -3108,30 +3108,6 @@ static void PM_Weapon( void )
   if( pm->ps->pm_flags & PMF_RESPAWNED )
     return;
 
-	
-	
-  // Charging up a flamer
-  if( pm->ps->weapon == WP_FLAMER )
-  {
-    if( !pm->ps->weaponTime && pm->ps->weaponstate != WEAPON_NEEDS_RESET && ( pm->cmd.buttons & BUTTON_ATTACK ) )
-    {
-      pm->ps->stats[ STAT_MISC ] += pml.msec;
-      if( pm->ps->stats[ STAT_MISC ] >= FLAMER_CHARGE_TIME_MAX )
-        pm->ps->stats[ STAT_MISC ] = FLAMER_CHARGE_TIME_MAX;
-      if( pm->ps->stats[ STAT_MISC ] > pm->ps->ammo * FLAMER_CHARGE_TIME_MAX /
-                                              FLAMER_CHARGE_AMMO )
-        pm->ps->stats[ STAT_MISC ] = pm->ps->ammo * FLAMER_CHARGE_TIME_MAX /
-                                            FLAMER_CHARGE_AMMO;
-    }
-	// Set overcharging flag so other players can hear the warning beep
-    if( pm->ps->stats[ STAT_MISC ] > LCANNON_CHARGE_TIME_WARN )
-      pm->ps->eFlags |= EF_WARN_CHARGE;
-  }
-
-  // don't allow attack until all buttons are up
-  if( pm->ps->pm_flags & PMF_RESPAWNED )
-    return;
-
   // pump weapon delays (repeat times etc)
   if( pm->ps->weaponTime > 0 )
     pm->ps->weaponTime -= pml.msec;
@@ -3286,59 +3262,6 @@ static void PM_Weapon( void )
       if( !attack1 && !attack2 && !attack3 )
         return;
       break;
-
-    case WP_FLAMER:
-      attack3 = qfalse;
-      
-      // Prevent firing of the Lucifer Cannon after an overcharge
-      if( pm->ps->weaponstate == WEAPON_NEEDS_RESET )
-      {
-        if( attack1 )
-          return;
-        pm->ps->weaponstate = WEAPON_READY;
-      }
-
-      // Can't fire secondary while primary is charging
-      if( attack1 || pm->ps->stats[ STAT_MISC ] > 0 )
-        attack2 = qfalse;
-        
-      if( ( attack1 || pm->ps->stats[ STAT_MISC ] == 0 ) && !attack2 )
-      {
-        pm->ps->weaponTime = 0;
-
-        // Charging
-        if( pm->ps->stats[ STAT_MISC ] < FLAMER_CHARGE_TIME_MAX )
-        {
-          pm->ps->weaponstate = WEAPON_READY;
-          return;
-        }
-
-        // Overcharge
-        pm->ps->weaponstate = WEAPON_NEEDS_RESET;
-      }
-
-      if( pm->ps->stats[ STAT_MISC ] > FLAMER_CHARGE_TIME_MIN )
-      {
-        // Fire primary attack
-        attack1 = qtrue;
-        attack2 = qfalse;
-      }
-      else if( pm->ps->stats[ STAT_MISC ] > 0 )
-      {
-        // Not enough charge
-        pm->ps->stats[ STAT_MISC ] = 0;
-        pm->ps->weaponTime = 0;
-        pm->ps->weaponstate = WEAPON_READY;
-        return;
-      }
-      else if( !attack2 )
-      {
-        // Idle
-        pm->ps->weaponTime = 0;
-        pm->ps->weaponstate = WEAPON_READY;
-        return;
-      }
-      break;	  
 
     case WP_LUCIFER_CANNON:
       attack3 = qfalse;
@@ -3623,12 +3546,6 @@ static void PM_Weapon( void )
       if( attack1 && !attack2 ) {
 	pm->ps->ammo -= ( pm->ps->stats[ STAT_MISC ] * LCANNON_CHARGE_AMMO +
 			  LCANNON_CHARGE_TIME_MAX - 1 ) / LCANNON_CHARGE_TIME_MAX;
-      } else pm->ps->ammo--;
-      break;
-    case WP_FLAMER:
-      if( attack1 && !attack2 ) {
-	pm->ps->ammo -= ( pm->ps->stats[ STAT_MISC ] * FLAMER_CHARGE_AMMO +
-			  FLAMER_CHARGE_TIME_MAX - 1 ) / FLAMER_CHARGE_TIME_MAX;
       } else pm->ps->ammo--;
       break;
     case WP_LAS_GUN:

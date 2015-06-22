@@ -3336,12 +3336,12 @@ static const weaponAttributes_t bg_weapons[ ] =
     qfalse,               //int       infiniteAmmo;
     qfalse,               //int       usesEnergy;
     FLAMER_REPEAT,        //int       repeatRate1;
-    FLAMER_SECONDARY_REPEAT,        //int       repeatRate2;
-    FLAMER_REPEAT,        //int       repeatRate3;
+    0,                    //int       repeatRate2;
+    0,                    //int       repeatRate3;
     3000,                 //int       reloadTime;
     FLAMER_K_SCALE,       //float     knockbackScale;
-    qtrue,                //qboolean  hasAltMode;
-    qtrue,                //qboolean  hasThirdMode;
+    qfalse,               //qboolean  hasAltMode;
+    qfalse,               //qboolean  hasThirdMode;
     qfalse,               //qboolean  canZoom;
     90.0f,                //float     zoomFov;
     qtrue,                //qboolean  purchasable;
@@ -4646,7 +4646,7 @@ BG_PlayerCanChangeWeapon
 qboolean BG_PlayerCanChangeWeapon( playerState_t *ps )
 {
   // Do not allow Lucifer Cannon "canceling" via weapon switch
-  if( (ps->weapon == WP_LUCIFER_CANNON || ps->weapon == WP_FLAMER) &&
+  if( ps->weapon == WP_LUCIFER_CANNON &&
       ps->stats[ STAT_MISC ] > LCANNON_CHARGE_TIME_MIN )
     return qfalse;
 

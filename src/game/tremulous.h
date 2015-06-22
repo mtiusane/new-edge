@@ -427,7 +427,7 @@ TREMULOUS EDGE MOD SRC FILE
 
 #define FLAMER_PRICE                550
 #define FLAMER_GAS                  200
-#define FLAMER_REPEAT               150
+#define FLAMER_REPEAT               200
 #define FLAMER_K_SCALE              2.0f
 #define FLAMER_DMG                  HDM(20) // DPS: 133.33
 #define FLAMER_SPLASHDAMAGE         HDM(12)
@@ -437,11 +437,6 @@ TREMULOUS EDGE MOD SRC FILE
 #define FLAMER_LIFETIME2             600.0f
 #define FLAMER_SPEED                550.0f
 #define FLAMER_LAG                  0.65f    		// the amount of player velocity that is added to the fireball
-#define FLAMER2_LIFETIME            350.0f
-#define FLAMER_CHARGE_TIME_MIN      200
-#define FLAMER_CHARGE_TIME_MAX      3000
-#define FLAMER_CHARGE_AMMO          50       // ammo cost of a full charge shot
-#define FLAMER_SECONDARY_REPEAT     200
 
 #define PRIFLE_PRICE                450
 #define PRIFLE_CLIPS                40
