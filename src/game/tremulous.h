@@ -629,22 +629,6 @@ TREMULOUS EDGE MOD SRC FILE
 #define HIVE_DIR_CHANGE_PERIOD      400
 #define HIVE_VALUE                  ABVM(HIVE_BP)
 
-#define TRAPPER_BP                  4
-#define TRAPPER_BT                  5000
-#define TRAPPER_HEALTH              ABHM(100)
-#define TRAPPER_REGEN               6
-#define TRAPPER_SPLASHDAMAGE        15
-#define TRAPPER_SPLASHRADIUS        100
-#define TRAPPER_CREEPSIZE           25
-#define TRAPPER_RANGE               400
-#define TRAPPER_REPEAT              1000
-#define TRAPPER_VALUE               ABVM(TRAPPER_BP)
-#define LOCKBLOB_SPEED              650.0f
-#define LOCKBLOB_LOCKTIME           5000
-#define LOCKBLOB_DOT                0.85f // max angle = acos( LOCKBLOB_DOT )
-#define LOCKBLOB_K_SCALE            1.0f
-#define TRAPPER_ACCURACY            9 // lower is better
-
 #define OVERMIND_BP                 0
 #define OVERMIND_BT                 30000
 #define OVERMIND_HEALTH             ABHM(750)

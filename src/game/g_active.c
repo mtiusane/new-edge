@@ -1637,9 +1637,6 @@ void ClientThink_real( gentity_t *ent )
     client->ps.pm_type = PM_NOCLIP;
   else if( client->ps.stats[ STAT_HEALTH ] <= 0 )
     client->ps.pm_type = PM_DEAD;
-  else if( client->ps.stats[ STAT_STATE ] & SS_BLOBLOCKED ||
-           client->ps.stats[ STAT_STATE ] & SS_GRABBED )
-    client->ps.pm_type = PM_GRABBED;
   else if( BG_InventoryContainsUpgrade( UP_JETPACK, client->ps.stats ) && BG_UpgradeIsActive( UP_JETPACK, client->ps.stats ) )
     client->ps.pm_type = PM_JETPACK;
   else if( client->ps.weapon == WP_ALEVEL5 && G_Overmind() )
@@ -1647,14 +1644,6 @@ void ClientThink_real( gentity_t *ent )
     client->ps.pm_type = PM_HUMMEL;
   else
     client->ps.pm_type = PM_NORMAL;
-
-  if( ( client->ps.stats[ STAT_STATE ] & SS_GRABBED ) &&
-      client->grabExpiryTime < level.time )
-    client->ps.stats[ STAT_STATE ] &= ~SS_GRABBED;
-
-  if( ( client->ps.stats[ STAT_STATE ] & SS_BLOBLOCKED ) &&
-      client->lastLockTime + LOCKBLOB_LOCKTIME < level.time )
-    client->ps.stats[ STAT_STATE ] &= ~SS_BLOBLOCKED;
 
   if( ( client->ps.stats[ STAT_STATE ] & SS_SLOWLOCKED ) &&
       client->lastSlowTime + ABUILDER_BLOB_TIME < level.time )

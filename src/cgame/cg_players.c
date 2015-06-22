@@ -1546,25 +1546,6 @@ static void CG_PlayerUpgrades( centity_t *cent, refEntity_t *torso )
 
     trap_R_AddRefEntityToScene( &battpack );
   }
-
-  if( es->eFlags & EF_BLOBLOCKED )
-  {
-    vec3_t  temp, origin, up = { 0.0f, 0.0f, 1.0f };
-    trace_t tr;
-    float   size;
-
-    VectorCopy( es->pos.trBase, temp );
-    temp[ 2 ] -= 4096.0f;
-
-    CG_Trace( &tr, es->pos.trBase, NULL, NULL, temp, es->number, MASK_SOLID );
-    VectorCopy( tr.endpos, origin );
-
-    size = 32.0f;
-
-    if( size > 0.0f )
-      CG_ImpactMark( cgs.media.creepShader, origin, up,
-                     0.0f, 1.0f, 1.0f, 1.0f, 1.0f, qfalse, size, qtrue );
-  }
 }
 
 

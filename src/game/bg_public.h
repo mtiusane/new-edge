@@ -257,8 +257,6 @@ typedef enum
 #define SS_WALLCLIMBING         0x00000001
 #define SS_CREEPSLOWED          0x00000002
 #define SS_SPEEDBOOST           0x00000004
-#define SS_GRABBED              0x00000008
-#define SS_BLOBLOCKED           0x00000010
 #define SS_POISONED             0x00000020
 #define SS_BOOSTED              0x00000080
 
@@ -325,7 +323,6 @@ typedef enum
 #define EF_FIRING3          0x0800    // third fire
 #define EF_MOVER_STOP       0x1000    // will push otherwise
 #define EF_CONNECTION       0x4000    // draw a connection trouble sprite
-#define EF_BLOBLOCKED       0x8000    // caught by a trapper
 
 typedef enum
 {
@@ -369,7 +366,6 @@ typedef enum
   WP_ROCKET_LAUNCHER,
   WP_GRENADE,
   WP_MINE,
-  WP_LOCKBLOB_LAUNCHER,
   WP_HIVE,
   WP_TESLAGEN,
   WP_MGTURRET,
@@ -414,7 +410,6 @@ typedef enum
   BA_A_OVERMIND,
   BA_A_BARRICADE,
   BA_A_ACIDTUBE,
-  BA_A_TRAPPER,
   BA_A_BOOSTER,
   BA_A_HIVE,
   BA_A_PANZER_SMALL,

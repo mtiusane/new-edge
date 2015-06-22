@@ -526,20 +526,6 @@ void massDriverFire2( gentity_t *ent )
   fire_md2( ent, origin, forward );
 }
 
-
-/*
-======================================================================
-
-LOCKBLOB
-
-======================================================================
-*/
-
-void lockBlobLauncherFire( gentity_t *ent )
-{
-  fire_lockblob( ent, muzzle, forward );
-}
-
 /*
 ======================================================================
 
@@ -1874,9 +1860,6 @@ void FireWeapon( gentity_t *ent )
       break;
     case WP_MINE:
       throwMine( ent );
-      break;
-    case WP_LOCKBLOB_LAUNCHER:
-      lockBlobLauncherFire( ent );
       break;
     case WP_HIVE:
       hiveFire( ent );

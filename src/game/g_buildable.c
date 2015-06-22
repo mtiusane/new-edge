@@ -2022,170 +2022,6 @@ void HNone_Think( gentity_t *self )
   self->nextthink = level.time + 1000;
 }
 
-/*
-================
-ATrapper_FireOnEnemy
-
-Used by ATrapper_Think to fire at enemy
-================
-*/
-void ATrapper_FireOnEnemy( gentity_t *self, int firespeed, float range )
-{
-  gentity_t *enemy = self->enemy;
-  vec3_t    dirToTarget;
-  vec3_t    halfAcceleration, thirdJerk;
-  float     distanceToTarget = BG_Buildable( self->s.modelindex )->turretRange;
-  int       lowMsec = 0;
-  int       highMsec = (int)( (
-    ( ( distanceToTarget * LOCKBLOB_SPEED ) +
-      ( distanceToTarget * BG_Class( enemy->client->ps.stats[ STAT_CLASS ] )->speed ) ) /
-    ( LOCKBLOB_SPEED * LOCKBLOB_SPEED ) ) * 1000.0f );
-
-  VectorScale( enemy->acceleration, 1.0f / 2.0f, halfAcceleration );
-  VectorScale( enemy->jerk, 1.0f / 3.0f, thirdJerk );
-
-  // highMsec and lowMsec can only move toward
-  // one another, so the loop must terminate
-  while( highMsec - lowMsec > TRAPPER_ACCURACY )
-  {
-    int   partitionMsec = ( highMsec + lowMsec ) / 2;
-    float time = (float)partitionMsec / 1000.0f;
-    float projectileDistance = LOCKBLOB_SPEED * time;
-
-    VectorMA( enemy->s.pos.trBase, time, enemy->s.pos.trDelta, dirToTarget );
-    VectorMA( dirToTarget, time * time, halfAcceleration, dirToTarget );
-    VectorMA( dirToTarget, time * time * time, thirdJerk, dirToTarget );
-    VectorSubtract( dirToTarget, self->s.pos.trBase, dirToTarget );
-    distanceToTarget = VectorLength( dirToTarget );
-
-    if( projectileDistance < distanceToTarget )
-      lowMsec = partitionMsec;
-    else if( projectileDistance > distanceToTarget )
-      highMsec = partitionMsec;
-    else if( projectileDistance == distanceToTarget )
-      break; // unlikely to happen
-  }
-
-  VectorNormalize( dirToTarget );
-  vectoangles( dirToTarget, self->turretAim );
-
-  //fire at target
-  FireWeapon( self );
-  G_SetBuildableAnim( self, BANIM_ATTACK1, qfalse );
-  self->count = level.time + firespeed;
-}
-
-/*
-================
-ATrapper_CheckTarget
-
-Used by ATrapper_Think to check enemies for validity
-================
-*/
-qboolean ATrapper_CheckTarget( gentity_t *self, gentity_t *target, int range )
-{
-  vec3_t    distance;
-  trace_t   trace;
-
-  if( !target ) // Do we have a target?
-    return qfalse;
-  if( !target->inuse ) // Does the target still exist?
-    return qfalse;
-  if( target == self ) // is the target us?
-    return qfalse;
-  if( !target->client ) // is the target a bot or player?
-    return qfalse;
-  if( target->flags & FL_NOTARGET ) // is the target cheating?
-    return qfalse;
-  if( target->client->ps.stats[ STAT_TEAM ] == TEAM_ALIENS ) // one of us?
-    return qfalse;
-  if( target->client->sess.spectatorState != SPECTATOR_NOT ) // is the target alive?
-    return qfalse;
-  if( target->health <= 0 ) // is the target still alive?
-    return qfalse;
-  if( target->client->ps.stats[ STAT_STATE ] & SS_BLOBLOCKED ) // locked?
-    return qfalse;
-  if( target->client->notrackEndTime >= level.time)
-    return qfalse;
-
-  VectorSubtract( target->r.currentOrigin, self->r.currentOrigin, distance );
-  if( VectorLength( distance ) > range ) // is the target within range?
-    return qfalse;
-
-  //only allow a narrow field of "vision"
-  VectorNormalize( distance ); //is now direction of target
-  if( DotProduct( distance, self->s.origin2 ) < LOCKBLOB_DOT )
-    return qfalse;
-
-  trap_Trace( &trace, self->s.pos.trBase, NULL, NULL, target->s.pos.trBase, self->s.number, MASK_SHOT );
-  if ( trace.contents & CONTENTS_SOLID ) // can we see the target?
-    return qfalse;
-
-  return qtrue;
-}
-
-/*
-================
-ATrapper_FindEnemy
-
-Used by ATrapper_Think to locate enemy gentities
-================
-*/
-void ATrapper_FindEnemy( gentity_t *ent, int range )
-{
-  gentity_t *target;
-  int       i;
-  int       start;
-
-  // iterate through entities
-  // note that if we exist then level.num_entities != 0
-  start = rand( ) / ( RAND_MAX / level.num_entities + 1 );
-  for( i = start; i < level.num_entities + start; i++ )
-  {
-    target = g_entities + ( i % level.num_entities );
-    //if target is not valid keep searching
-    if( !ATrapper_CheckTarget( ent, target, range ) )
-      continue;
-
-    //we found a target
-    ent->enemy = target;
-    return;
-  }
-
-  //couldn't find a target
-  ent->enemy = NULL;
-}
-
-/*
-================
-ATrapper_Think
-
-think function for Alien Defense
-================
-*/
-void ATrapper_Think( gentity_t *self )
-{
-  int range =     BG_Buildable( self->s.modelindex )->turretRange;
-  int firespeed = BG_Buildable( self->s.modelindex )->turretFireSpeed;
-
-  AGeneric_Think( self );
-
-  if( self->spawned && self->powered )
-  {
-    //if the current target is not valid find a new one
-    if( !ATrapper_CheckTarget( self, self->enemy, range ) )
-      ATrapper_FindEnemy( self, range );
-
-    //if a new target cannot be found don't do anything
-    if( !self->enemy )
-      return;
-
-    //if we are pointing at our target and we can fire shoot it
-    if( self->count < level.time )
-      ATrapper_FireOnEnemy( self, firespeed, range );
-  }
-}
-
 qboolean CheckGatherer( gentity_t *self )
 {
   // suicide if there is another refinery/creep colony of the same team nearby
@@ -3569,7 +3405,6 @@ static int G_CompareBuildablesForRemoval( const void *a, const void *b )
 
     BA_A_BARRICADE,
     BA_A_ACIDTUBE,
-    BA_A_TRAPPER,
     BA_A_HIVE,
     BA_A_BOOSTER,
     BA_A_SPAWN,
@@ -4448,12 +4283,6 @@ static gentity_t *G_Build( gentity_t *builder, buildable_t buildable,
       built->die = AGeneric_Die;
       built->think = AHive_Think;
       built->pain = AHive_Pain;
-      break;
-
-    case BA_A_TRAPPER:
-      built->die = AGeneric_Die;
-      built->think = ATrapper_Think;
-      built->pain = AGeneric_Pain;
       break;
 
     case BA_A_OVERMIND:

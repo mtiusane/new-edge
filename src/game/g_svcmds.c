@@ -587,7 +587,6 @@ static void Svcmd_Armageddon_f( void )
 
     switch( ent->s.modelindex )
     {
-      case BA_A_TRAPPER:
       case BA_H_MGTURRET:
       case BA_H_MGTURRET2:
 	  case BA_A_ACIDTUBE:

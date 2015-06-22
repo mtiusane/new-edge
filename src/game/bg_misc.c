@@ -187,41 +187,6 @@ static const buildableAttributes_t bg_buildableList[ ] =
     ACIDTUBE_VALUE,        //int       value;
   },
   {
-    BA_A_TRAPPER,          //int       buildNum;
-    "trapper",             //char      *buildName;
-    "Trapper",             //char      *humanName;
-    "Fires a blob of adhesive spit at any non-alien in its line of "
-    "sight. This hinders their movement, making them an easy target "
-    "for other defensive structures or aliens.",
-    "team_alien_trapper",  //char      *entityName;
-    TR_GRAVITY,            //trType_t  traj;
-    0.0,                   //float     bounce;
-    TRAPPER_BP,            //int       buildPoints;
-    STAGE_GE_2,            //int  stages
-    TRAPPER_HEALTH,        //int       health;
-    TRAPPER_REGEN,         //int       regenRate;
-    TRAPPER_SPLASHDAMAGE,  //int       splashDamage;
-    TRAPPER_SPLASHRADIUS,  //int       splashRadius;
-    MOD_ASPAWN,            //int       meansOfDeath;
-    TEAM_ALIENS,            //int       team;
-    ( 1 << WP_ABUILD ),    //weapon_t  buildWeapon;
-    BANIM_IDLE1,           //int       idleAnim;
-    100,                   //int       nextthink;
-    TRAPPER_BT,            //int       buildTime;
-    qfalse,                //qboolean  usable;
-    TRAPPER_RANGE,         //int       turretRange;
-    TRAPPER_REPEAT,        //int       turretFireSpeed;
-    WP_LOCKBLOB_LAUNCHER,  //weapon_t  turretProjType;
-    0.0f,                  //float     minNormal;
-    qtrue,                 //qboolean  invertNormal;
-    qtrue,                 //qboolean  creepTest;
-    TRAPPER_CREEPSIZE,     //int       creepSize;
-    qfalse,                //qboolean  dccTest;
-    qtrue,                 //qboolean  transparentTest;
-    qfalse,                //qboolean  uniqueTest;
-    TRAPPER_VALUE,         //int       value;
-  },
-  {
     BA_A_BOOSTER,          //int       buildNum;
     "booster",             //char      *buildName;
     "Booster",             //char      *humanName;
@@ -3536,31 +3501,6 @@ static const weaponAttributes_t bg_weapons[ ] =
     TEAM_HUMANS            //WUTeam_t  team;
   },
   {
-    WP_LOCKBLOB_LAUNCHER, //int       weaponNum;
-    0,                    //int       price;
-    STAGE_GE_1,           //int  stages
-    SLOT_WEAPON,          //int       slots;
-    "lockblob",           //char      *weaponName;
-    "Lock Blob",          //char      *humanName;
-    "",
-    0,                    //int       maxAmmo;
-    0,                    //int       maxClips;
-    qtrue,                //int       infiniteAmmo;
-    qfalse,               //int       usesEnergy;
-    500,                  //int       repeatRate1;
-    500,                  //int       repeatRate2;
-    500,                  //int       repeatRate3;
-    0,                    //int       reloadTime;
-    LOCKBLOB_K_SCALE,     //float     knockbackScale;
-    qfalse,               //qboolean  hasAltMode;
-    qfalse,               //qboolean  hasThirdMode;
-    qfalse,               //qboolean  canZoom;
-    90.0f,                //float     zoomFov;
-    qfalse,               //qboolean  purchasable;
-    qfalse,               //qboolean  longRanged;
-    TEAM_ALIENS           //team_t    team;
-  },
-  {
     WP_HIVE,              //int       weaponNum;
     0,                    //int       price;
     STAGE_GE_1,           //int  stages
@@ -4275,11 +4215,6 @@ void BG_PlayerStateToEntityState( playerState_t *ps, entityState_t *s, qboolean 
   else
     s->eFlags &= ~EF_DEAD;
 
-  if( ps->stats[ STAT_STATE ] & SS_BLOBLOCKED )
-    s->eFlags |= EF_BLOBLOCKED;
-  else
-    s->eFlags &= ~EF_BLOBLOCKED;
-
   if( ps->externalEvent )
   {
     s->event = ps->externalEvent;
@@ -4380,11 +4315,6 @@ void BG_PlayerStateToEntityStateExtraPolate( playerState_t *ps, entityState_t *s
     s->eFlags |= EF_DEAD;
   else
     s->eFlags &= ~EF_DEAD;
-
-  if( ps->stats[ STAT_STATE ] & SS_BLOBLOCKED )
-    s->eFlags |= EF_BLOBLOCKED;
-  else
-    s->eFlags &= ~EF_BLOBLOCKED;
 
   if( ps->externalEvent )
   {

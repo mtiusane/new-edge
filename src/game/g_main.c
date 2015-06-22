@@ -2669,7 +2669,6 @@ void G_ArmageddonStep( void )
     case BA_H_ARMOURY:
     case BA_H_REPEATER:
       continue; //dont get killed
-    case BA_A_TRAPPER:
     case BA_H_MGTURRET:
     case BA_H_MGTURRET2:
     case BA_H_LIGHT:
