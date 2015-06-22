@@ -486,17 +486,8 @@ struct gclient_s
   int                 medKitIncrementTime;
   int                 lastCreepSlowTime;    // time until creep can be removed
 
-  // cloak
-  int                 lastCloakTime;
-  qboolean            cloakActivated;
-  qboolean            cloakReady;
-
   // biokit
   qboolean            alreadyRegenerated;
-
-  // infection
-  int                 lastInfectionTime;
-  gentity_t           *lastInfectionClient;
 
   qboolean            charging;
 

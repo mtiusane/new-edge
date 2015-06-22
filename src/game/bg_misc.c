@@ -3759,22 +3759,6 @@ static const upgradeAttributes_t bg_upgrades[ ] =
     TEAM_HUMANS             //team_t  team;
   },
   {
-    UP_CLOAK,               //int   upgradeNum;
-    CLOAK_PRICE,            //int   price;
-    STAGE_GE_4,             //int  stages
-    SLOT_NONE,              //int   slots;
-    "cloak",                //char  *upgradeName;
-    "[yecloa]Cloak",                //char  *humanName;
-    "Invisibility cloak that can be used to sneak up on aliens "
-      "without being seen. The cloak lasts for 30 seconds once it "
-      "is activated. Back-mounted battery pack and jet pack will "
-      "stay visible.",
-    "icons/iconu_cloak",
-    qtrue,                  //qboolean purchasable
-    qtrue,                  //qboolean usable
-    TEAM_HUMANS             //team_t  team;
-  },
-  {
     UP_BATTPACK,            //int   upgradeNum;
     BATTPACK_PRICE,         //int   price;
     STAGE_GE_3,             //int  stages

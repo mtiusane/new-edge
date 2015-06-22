@@ -839,15 +839,6 @@ void ClientTimerActions( gentity_t *ent, int msec )
           client->ps.stats[ STAT_MISC ] = 0;
     }
 
-    if( ent->client->cloakActivated )
-    {
-      if( !( ent->client->cloakReady ) )
-        {
-          if( level.time - ent->client->lastCloakTime > CLOAK_TIME || ent->health <= 0 )
-            ent->client->ps.eFlags &= ~EF_MOVER_STOP;
-        }
-    }
-
     switch( weapon )
     {
       case WP_ABUILD:
@@ -1668,21 +1659,6 @@ void ClientThink_real( gentity_t *ent )
   if( BG_InventoryContainsUpgrade( UP_MEDKIT, client->ps.stats ) &&
       BG_UpgradeIsActive( UP_MEDKIT, client->ps.stats ) )
     G_UseMedkit( ent );
-
-  if( BG_InventoryContainsUpgrade( UP_CLOAK, client->ps.stats ) &&
-      BG_UpgradeIsActive( UP_CLOAK, client->ps.stats ) )
-  {
-    if( ent->client->cloakReady )
-    {
-      BG_DeactivateUpgrade( UP_CLOAK, client->ps.stats );
-      BG_RemoveUpgradeFromInventory( UP_CLOAK, client->ps.stats );
-      ent->client->cloakActivated = qtrue;
-      ent->client->cloakReady = qfalse;
-      ent->client->lastCloakTime = level.time;
-      ent->client->ps.eFlags |= EF_MOVER_STOP;
-    }
-  }
-
 
   // Replenish alien health
   if( level.surrenderTeam != client->pers.teamSelection &&

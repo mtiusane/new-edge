@@ -318,8 +318,6 @@ void ScoreboardMessage( gentity_t *ent )
         upgrade = UP_LIGHTARMOUR;
       else if( BG_InventoryContainsUpgrade( UP_BIOKIT, cl->ps.stats ) )
         upgrade = UP_BIOKIT;
-      else if( BG_InventoryContainsUpgrade( UP_CLOAK, cl->ps.stats ) )
-        upgrade = UP_CLOAK;
       else
         upgrade = UP_NONE;
     }
@@ -2254,12 +2252,6 @@ void Cmd_Buy_f( gentity_t *ent )
     if( upgrade == UP_BATTPACK )
       G_GiveClientMaxAmmo( ent, qtrue );
 
-    if( upgrade == UP_CLOAK )
-    {
-      ent->client->cloakReady = qtrue;
-      ent->client->ps.eFlags &= ~EF_MOVER_STOP;
-    }
-
     //subtract from funds
     G_AddCreditToClient( ent->client, -(short)BG_Upgrade( upgrade )->price, qfalse );
   }
@@ -2368,12 +2360,6 @@ void Cmd_Sell_f( gentity_t *ent )
       if( upgrade == UP_BATTPACK )
         G_GiveClientMaxAmmo( ent, qtrue );
 
-
-      if( upgrade == UP_CLOAK )
-      {
-        ent->client->cloakReady = qfalse;
-        ent->client->ps.eFlags &= ~EF_MOVER_STOP;
-      }
       //add to funds
       G_AddCreditToClient( ent->client, (short)BG_Upgrade( upgrade )->price, qfalse );
     }
@@ -2437,12 +2423,6 @@ void Cmd_Sell_f( gentity_t *ent )
 
         if( i == UP_BATTPACK )
           G_GiveClientMaxAmmo( ent, qtrue );
-
-        if( i == UP_CLOAK )
-        {
-          ent->client->cloakReady = qfalse;
-          ent->client->ps.eFlags &= ~EF_MOVER_STOP;
-        }
 
         //add to funds
         G_AddCreditToClient( ent->client, (short)BG_Upgrade( i )->price, qfalse );
