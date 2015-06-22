@@ -1021,8 +1021,6 @@ static void CG_DrawPlayerHealthCross( rectDef_t *rect, vec4_t ref_color )
     else
       shader = cgs.media.healthCrossMedkit;
   }
-  else if( cg.snap->ps.stats[ STAT_STATE ] & SS_POISONED )
-    shader = cgs.media.healthCrossPoisoned;
 
   // Pick the alpha value
   Vector4Copy( ref_color, color );

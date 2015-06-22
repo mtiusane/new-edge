@@ -71,9 +71,6 @@ TREMULOUS EDGE MOD SRC FILE
 
 #define ALIENSENSE_RANGE            1000.0f
 #define REGEN_BOOST_RANGE           200.0f
-#define ALIEN_POISON_TIME           10000
-#define ALIEN_POISON_DMG            5
-#define ALIEN_POISON_DIVIDER        (1.0f/1.32f) 	//about 1.0/(time`th root of damage)
 #define ALIEN_SPAWN_REPEAT_TIME     11000
 #define ALIEN_REGEN_DAMAGE_TIME     2000 			//msec since damage that regen starts again
 #define ALIEN_REGEN_NOCREEP_MOD     (1.0f/3.0f) 	//regen off creep
@@ -499,11 +496,9 @@ TREMULOUS EDGE MOD SRC FILE
  * HUMAN upgrades
  */
 #define LIGHTARMOUR_PRICE           50
-#define LIGHTARMOUR_POISON_PROTECTION 1
 
 #define HELMET_PRICE                80
 #define HELMET_RANGE                1000.0f
-#define HELMET_POISON_PROTECTION    1
 
 #define SPAWN_WITH_MEDKIT           1
 #define MEDKIT_PRICE                50
@@ -521,7 +516,6 @@ TREMULOUS EDGE MOD SRC FILE
 #define JETPACK_DISABLE_CHANCE      0.3f
 
 #define BSUIT_PRICE                 400
-#define BSUIT_POISON_PROTECTION     3
 
 #define MGCLIP_PRICE                0
 
@@ -529,12 +523,10 @@ TREMULOUS EDGE MOD SRC FILE
 
 #define GAS_PRICE                   0
 
-#define MEDKIT_POISON_IMMUNITY_TIME 0
 #define MEDKIT_STARTUP_TIME         4000
 #define MEDKIT_STARTUP_SPEED        5
 
 #define BIOKIT_PRICE                200
-#define BIOKIT_POISON_PROTECTION    1
 #define BIOKIT_HEALTH_RATE          2.0 		// 5000/BIOKIT_HEALTH_RATE = * msec before regenerate
 #define BIOKIT_STAMINA_RATE         2
 

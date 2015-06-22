@@ -135,10 +135,6 @@ vmCvar_t  g_alienAnticampRange;
 vmCvar_t  g_humanAnticampBonusMax;
 vmCvar_t  g_humanAnticampBonus1;
 vmCvar_t  g_humanAnticampRange; 
-vmCvar_t  g_contagionProb;
-vmCvar_t  g_boosterPoisonTime;
-vmCvar_t  g_basiPoisonTime;
-vmCvar_t  g_basiUpgPoisonTime;
 vmCvar_t  g_maxVariableBuildPoints;
 vmCvar_t  g_variableBuildPointsPower;
 vmCvar_t  g_maxFixedBuildPoints;
@@ -315,10 +311,6 @@ static cvarTable_t   gameCvarTable[ ] =
   { &g_humanAnticampBonusMax, "g_humanAnticampBonusMax", "1", 0, 0, qfalse  },
   { &g_humanAnticampBonus1, "g_humanAnticampBonus1", "0.3", 0, 0, qfalse  },
   { &g_humanAnticampRange, "g_humanAnticampRange", "800", 0, 0, qfalse  }, 
-  { &g_contagionProb, "g_contagionProb", "0.5", CVAR_ARCHIVE, 0, qfalse },
-  { &g_boosterPoisonTime, "g_boosterPoisonTime", "15", CVAR_ARCHIVE, 0, qfalse },
-  { &g_basiPoisonTime, "g_basiPoisonTime", "5", CVAR_ARCHIVE, 0, qfalse },
-  { &g_basiUpgPoisonTime, "g_basiUpgPoisonTime", "8", CVAR_ARCHIVE, 0, qfalse },
   { &g_maxVariableBuildPoints, "g_maxVariableBuildPoints", "500", CVAR_ARCHIVE, 0, qfalse  },
   { &g_variableBuildPointsPower, "g_variableBuildPointsPower", "1.6", CVAR_ARCHIVE, 0, qfalse  },
   { &g_maxFixedBuildPoints, "g_maxFixedBuildPoints", "100", CVAR_ARCHIVE, 0, qfalse  },

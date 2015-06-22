@@ -473,11 +473,6 @@ struct gclient_s
 
   char                *areabits;
 
-  int                 poisonExpiryTime;
-  int                 lastPoisonTime;
-  int                 poisonImmunityTime;
-  gentity_t           *lastPoisonClient;
-  int                 lastPoisonCloudedTime;
   int                 grabExpiryTime;
   int                 lastLockTime;
   int                 lastSlowTime;
@@ -1311,10 +1306,6 @@ extern  vmCvar_t  g_alienAnticampRange;
 extern  vmCvar_t  g_humanAnticampBonusMax;
 extern  vmCvar_t  g_humanAnticampBonus1;
 extern  vmCvar_t  g_humanAnticampRange; 
-extern  vmCvar_t  g_contagionProb;
-extern  vmCvar_t  g_boosterPoisonTime;
-extern  vmCvar_t  g_basiPoisonTime;
-extern  vmCvar_t  g_basiUpgPoisonTime;
 extern  vmCvar_t  g_maxVariableBuildPoints;
 extern  vmCvar_t  g_variableBuildPointsPower;
 extern  vmCvar_t  g_maxFixedBuildPoints;

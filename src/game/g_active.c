@@ -299,51 +299,6 @@ static qboolean ClientIsOnMedi( gclient_t *cl ) {
   return ( g_entities[ ent ].s.modelindex == BA_H_MEDISTAT );
 }
 
-static void ClientContagion( gentity_t *ent, gentity_t *other ) {
-  gclient_t *c1 = ent->client, *c2;
-  qboolean poisoned1 = c1->ps.stats[ STAT_STATE ] & SS_POISONED, poisoned2;
-  int expiryTime;
-
-  if( ( c1->pers.teamSelection != TEAM_HUMANS ) ||
-      ( c1->poisonImmunityTime >= level.time ) || 
-      ClientIsOnMedi(c1) )
-    return;
-
-  if( other->client && !BG_InventoryContainsUpgrade( UP_BIOKIT, c1->ps.stats ) ) {
-    // touching another human
-    c2 = other->client;
-    poisoned2 = c2->ps.stats[ STAT_STATE ] & SS_POISONED;
-
-    if( !( poisoned1 || poisoned2) ||
-        ( c2->pers.teamSelection != TEAM_HUMANS ) ||
-        ( c2->poisonImmunityTime >= level.time ) ||
-        ClientIsOnMedi(c2) )
-      return;
-    if( random() > g_contagionProb.value )
-        return;
-
-    if (poisoned1 && !poisoned2) {
-      expiryTime = c1->poisonExpiryTime;
-      c2->lastPoisonClient = c1->lastPoisonClient;
-    } else if (!poisoned1 && poisoned2) {
-      expiryTime = c2->poisonExpiryTime;
-      c1->lastPoisonClient = c2->lastPoisonClient;
-    } else { // both are poisoned
-      expiryTime = MAX(c1->poisonExpiryTime, c2->poisonExpiryTime);
-    }
-    c1->poisonExpiryTime = expiryTime;
-    c2->poisonExpiryTime = expiryTime;
-    c1->ps.stats[ STAT_STATE ] |= SS_POISONED;
-    c2->ps.stats[ STAT_STATE ] |= SS_POISONED;
-  } else if( ( other->s.eType == ET_BUILDABLE) &&
-             ( other->s.modelindex == BA_A_BOOSTER ) &&
-             other->spawned && ( other->health > 0 ) && other->powered ) {
-    // touching booster
-    c1->ps.stats[ STAT_STATE ] |= SS_POISONED;
-    c1->poisonExpiryTime = level.time + g_boosterPoisonTime.integer * 1000;
-    c1->lastPoisonClient = &g_entities[ ENTITYNUM_WORLD ];
-  }
-} 
 /*
 ==============
 ClientImpacts
@@ -379,10 +334,6 @@ void ClientImpacts( gentity_t *ent, pmove_t *pm )
     // shove players
     if( ent->client && other->client )
       ClientShove( ent, other );
-
-    // spread poison
-    if( ent->client )
-      ClientContagion( ent, other );
 
     // touch triggers
     if( other->touch )
@@ -476,8 +427,7 @@ qboolean G_NeedsMedkit( gclient_t *client )
 {
   //not if currently using a medkit or have no need for a medkit now
   return !( client->ps.stats[ STAT_STATE ] & SS_HEALING_2X ) &&
-    ( client->ps.stats[ STAT_HEALTH ] < client->ps.stats[ STAT_MAX_HEALTH ] ||
-      ( client->ps.stats[ STAT_STATE ] & SS_POISONED ) );
+    ( client->ps.stats[ STAT_HEALTH ] < client->ps.stats[ STAT_MAX_HEALTH ] );
 }
 /*
 ============
@@ -519,10 +469,6 @@ void  G_UseMedkit( gentity_t *ent )
   //remove anti toxin
   BG_DeactivateUpgrade( UP_MEDKIT, client->ps.stats );
   BG_RemoveUpgradeFromInventory( UP_MEDKIT, client->ps.stats );
-
-  // don't poison and/or infect the client anymore
-  tclient->ps.stats[ STAT_STATE ] &= ~SS_POISONED;
-  tclient->poisonImmunityTime = level.time + MEDKIT_POISON_IMMUNITY_TIME;
 
   tclient->ps.stats[ STAT_STATE ] |= SS_HEALING_2X;
   tclient->lastMedKitTime = level.time;
@@ -918,27 +864,6 @@ void ClientTimerActions( gentity_t *ent, int msec )
   while( client->time1000 >= 1000 )
   {
     client->time1000 -= 1000;
-
-    //client is poisoned
-    if( client->ps.stats[ STAT_STATE ] & SS_POISONED )
-    {
-      int damage = ALIEN_POISON_DMG;
-
-      if( BG_InventoryContainsUpgrade( UP_BIOKIT, client->ps.stats ) )
-        damage -= BIOKIT_POISON_PROTECTION;
-
-      if( BG_InventoryContainsUpgrade( UP_BATTLESUIT, client->ps.stats ) )
-        damage -= BSUIT_POISON_PROTECTION;
-
-      if( BG_InventoryContainsUpgrade( UP_HELMET, client->ps.stats ) )
-        damage -= HELMET_POISON_PROTECTION;
-
-      if( BG_InventoryContainsUpgrade( UP_LIGHTARMOUR, client->ps.stats ) )
-        damage -= LIGHTARMOUR_POISON_PROTECTION;
-
-      G_Damage( ent, client->lastPoisonClient, client->lastPoisonClient, NULL,
-        0, damage, 0, MOD_POISON );
-    }
 
     // turn off life support when a team admits defeat
     if( client->ps.stats[ STAT_TEAM ] == TEAM_ALIENS &&
@@ -1649,10 +1574,6 @@ void ClientThink_real( gentity_t *ent )
     else if( level.time - client->boostedTime >= BOOST_WARN_TIME )
       client->ps.stats[ STAT_STATE ] |= SS_BOOSTEDWARNING;
   }
-
-  if( client->ps.stats[ STAT_STATE ] & SS_POISONED &&
-      client->poisonExpiryTime < level.time )
-    client->ps.stats[ STAT_STATE ] &= ~SS_POISONED;
 
   client->ps.gravity = g_gravity.value;
 

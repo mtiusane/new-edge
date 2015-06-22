@@ -449,7 +449,7 @@ void Cmd_Give_f( gentity_t *ent )
   {
     ADMP( "usage: give [what]\n" );
     ADMP( "usage: valid choices are: all, health, funds [amount], stamina, "
-          "poison, gas, ammo\n" );
+          "ammo\n" );
     return;
   }
 
@@ -487,21 +487,6 @@ void Cmd_Give_f( gentity_t *ent )
 
   if( give_all || Q_stricmp( name, "stamina" ) == 0 )
     ent->client->ps.stats[ STAT_STAMINA ] = STAMINA_MAX;
-
-  if( Q_stricmp( name, "poison" ) == 0 )
-  {
-    if( ent->client->pers.teamSelection == TEAM_HUMANS )
-    {
-      ent->client->ps.stats[ STAT_STATE ] |= SS_POISONED;
-      ent->client->lastPoisonTime = level.time;
-      ent->client->lastPoisonClient = ent;
-    }
-    else
-    {
-      ent->client->ps.stats[ STAT_STATE ] |= SS_BOOSTED;
-      ent->client->boostedTime = level.time;
-    }
-  }
 
   if( give_all || Q_stricmp( name, "ammo" ) == 0 )
   {

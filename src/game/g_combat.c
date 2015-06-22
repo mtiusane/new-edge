@@ -1154,10 +1154,6 @@ void G_SpawnDamageIndicator( gentity_t *ent, gentity_t *inflictor,
 
   switch( mod )
   {
-    case MOD_POISON:
-      di->flags |= DIF_INDIRECT | DIF_PERSISTENT;
-      break;
-
     case MOD_NOCREEP:
       di->flags |= DIF_INDIRECT;
       break;
@@ -1217,7 +1213,6 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
   int     take;
   int     asave = 0;
   int     knockback;
-  int     poisonTime = 0;
   // int client_z, min_z;
   // Can't deal damage sometimes
   if( !targ->takedamage || targ->health <= 0 || level.intermissionQueued )
@@ -1431,39 +1426,6 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
     take = (int)( take * G_CalcDamageModifier( point, targ, attacker,
                                                client->ps.stats[ STAT_CLASS ],
                                                dflags ) + 0.5f );
-
-
-    // check possible poisoning
-    if( ( attacker->client ) && 
-        ( targ->client->poisonImmunityTime < level.time ) &&
-        ( targ->client->ps.stats[ STAT_TEAM ] == TEAM_HUMANS ) )
-    {
-      //if boosted poison every attack
-      if( ( attacker->client->ps.stats[ STAT_STATE ] & SS_BOOSTED ) 
-	  
-	  && mod != MOD_POISON 
-	  && mod != MOD_LEVEL2_ZAP
-	  && mod != MOD_LEVEL5_ZAP
-	  && mod != MOD_HSPAWN 
-	  && mod != MOD_ASPAWN 
-	  && mod != MOD_LEVEL5_PRICKLES
-	  && mod != MOD_FLAMER_SPLASH)
-        poisonTime = level.time + ALIEN_POISON_TIME;
-      // no more zap poisen   
-      else if( mod != MOD_LEVEL2_ZAP ||  mod != MOD_LEVEL5_ZAP ||  mod != MOD_FLAMES )
-      {
-        poisonTime = level.time + g_basiUpgPoisonTime.integer * 1000;
-      }
-      if( poisonTime > 0 ) 
-      {
-        targ->client->ps.stats[ STAT_STATE ] |= SS_POISONED;
-	if( poisonTime > targ->client->poisonExpiryTime ) {
-          targ->client->poisonExpiryTime = poisonTime;
-          targ->client->lastPoisonClient = attacker;
-
-        }
-      }
-    }
   }
 
   if( take < 1 )

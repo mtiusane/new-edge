@@ -257,7 +257,6 @@ typedef enum
 #define SS_WALLCLIMBING         0x00000001
 #define SS_CREEPSLOWED          0x00000002
 #define SS_SPEEDBOOST           0x00000004
-#define SS_POISONED             0x00000020
 #define SS_BOOSTED              0x00000080
 
 #define SS_INVI                 0x00008000

@@ -200,14 +200,7 @@ void G_LeaveTeamReal( gentity_t *self, qboolean reset_score )
     if( !ent->inuse )
       continue;
 
-    if( ent->client && ent->client->pers.connected == CON_CONNECTED )
-    {
-      // cure poison
-      if( ent->client->ps.stats[ STAT_STATE ] & SS_POISONED &&
-          ent->client->lastPoisonClient == self )
-        ent->client->ps.stats[ STAT_STATE ] &= ~SS_POISONED;
-    }
-    else if( ent->s.eType == ET_MISSILE && ent->r.ownerNum == self->s.number )
+    if( ent->s.eType == ET_MISSILE && ent->r.ownerNum == self->s.number )
       G_FreeEntity( ent );
   }
 

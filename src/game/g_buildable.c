@@ -2558,10 +2558,6 @@ void HMedistat_Think( gentity_t *self )
 
       if( player->flags & FL_NOTARGET )
         continue; // notarget cancels even beneficial effects?
-      
-      //remove poison from everyone, not just the healed player
-      if( player->client && player->client->ps.stats[ STAT_STATE ] & SS_POISONED )
-        player->client->ps.stats[ STAT_STATE ] &= ~SS_POISONED;
 
       if( self->enemy == player && player->client &&
           player->client->ps.stats[ STAT_TEAM ] == TEAM_HUMANS &&
