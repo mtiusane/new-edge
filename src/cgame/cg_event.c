@@ -361,6 +361,12 @@ static void CG_Obituary( entityState_t *ent )
       case MOD_LEVEL0_BITE:
         message = "^5was bitten by^7";
         break;
+      case MOD_LEVEL1_CLAW:
+        message = "^5was swiped by^7";
+        Com_sprintf( className, 64, "^5's %s",
+            BG_ClassConfig( PCL_ALIEN_LEVEL1 )->humanName );
+        message2 = className;
+        break;
       case MOD_LEVEL2_CLAW:
       case MOD_LEVEL2_CLAW_UPG:
         message = "^5was clawed by^7";

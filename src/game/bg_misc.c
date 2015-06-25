@@ -2253,9 +2253,40 @@ static const classAttributes_t bg_classList[ ] =
     400.0f,                                         //float   stopSpeed;
     250.0f,                                         //float   jumpMagnitude;
     2.0f,                                           //float   knockbackScale;
-    { PCL_ALIEN_LEVEL2, PCL_NONE },                 //int     children[ 3 ];
+    { PCL_ALIEN_LEVEL1, PCL_NONE },                 //int     children[ 3 ];
     LEVEL0_COST,                                    //int     cost;
     LEVEL0_VALUE,                                    //int     value;
+  },
+  {
+    PCL_ALIEN_LEVEL1,                               //int     classnum;
+    "level1",                                       //char    *classname;
+    "A support class able to crawl on walls and ceilings. Its melee "
+      "attack is most effective when combined with the ability to grab "
+      "and hold its victims in place. Provides a weak healing aura "
+      "that accelerates the healing rate of nearby aliens. It also has "
+      "an acid bomb that can be used to deal moderate area damage. "
+      "The basilisk is also resistant to flamer.",
+    STAGE_GE_1,                                     //int     stages
+    LEVEL1_HEALTH,                                  //int     health;
+    0.0f,                                           //float   fallDamage;
+    LEVEL1_REGEN,                                   //float   regenRate;
+    SCA_FOVWARPS|SCA_WALLCLIMBER|SCA_ALIENSENSE,    //int     abilities;
+    WP_ALEVEL1,                                     //weapon_t  startWeapon
+    0.0f,                                           //float   buildDist;
+    120,                                            //int     fov;
+    0.001f,                                         //float   bob;
+    1.8f,                                           //float   bobCycle;
+    60,                                             //int     steptime;
+    LEVEL1_SPEED,                                   //float   speed;
+    10.0f,                                          //float   acceleration;
+    1.0f,                                           //float   airAcceleration;
+    6.0f,                                           //float   friction;
+    300.0f,                                         //float   stopSpeed;
+    310.0f,                                         //float   jumpMagnitude;
+    1.2f,                                           //float   knockbackScale;
+    { PCL_ALIEN_LEVEL2, PCL_NONE, PCL_NONE },       //int     children[ 3 ];
+    LEVEL1_COST,                                    //int     cost;
+    LEVEL1_VALUE,                                   //int     value;
   },
   {
     PCL_ALIEN_LEVEL2,                               //int     classnum;
@@ -2977,6 +3008,31 @@ static const weaponAttributes_t bg_weapons[ ] =
     0,                    //int       repeatRate3;
     0,                    //int       reloadTime;
     LEVEL0_BITE_K_SCALE,  //float     knockbackScale;
+    qfalse,               //qboolean  hasAltMode;
+    qfalse,               //qboolean  hasThirdMode;
+    qfalse,               //qboolean  canZoom;
+    90.0f,                //float     zoomFov;
+    qfalse,               //qboolean  purchasable;
+    qfalse,               //qboolean  longRanged;
+    TEAM_ALIENS           //team_t    team;
+  },
+  {
+    WP_ALEVEL1,           //int       weaponNum;
+    0,                    //int       price;
+    STAGE_GE_1,           //int  stages
+    SLOT_WEAPON,          //int       slots;
+    "level1",             //char      *weaponName;
+    "Claws",              //char      *humanName;
+    "",
+    1,                    //int       maxAmmo;
+    0,                    //int       maxClips;
+    qtrue,                //int       infiniteAmmo;
+    qfalse,               //int       usesEnergy;
+    LEVEL1_CLAW_REPEAT,   //int       repeatRate1;
+    0,                    //int       repeatRate2;
+    0,                    //int       repeatRate3;
+    0,                    //int       reloadTime;
+    LEVEL1_CLAW_K_SCALE,  //float     knockbackScale;
     qfalse,               //qboolean  hasAltMode;
     qfalse,               //qboolean  hasThirdMode;
     qfalse,               //qboolean  canZoom;

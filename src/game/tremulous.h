@@ -125,12 +125,26 @@ TREMULOUS EDGE MOD SRC FILE
 #define LEVEL0_BITE_REPEAT          500
 #define LEVEL0_BITE_K_SCALE         1.0f
 
+//Basilik
+#define LEVEL1_SPEED                1.25f
+#define LEVEL1_VALUE                AVM(270)
+#define LEVEL1_HEALTH               AHM(60)
+#define LEVEL1_REGEN                (0.03f * LEVEL1_HEALTH)
+#define LEVEL1_COST                 1
+
+#define LEVEL1_CLAW_DMG             ADM(32)
+#define LEVEL1_CLAW_RANGE           64.0f
+#define LEVEL1_CLAW_U_RANGE         LEVEL1_CLAW_RANGE + 3.0f
+#define LEVEL1_CLAW_WIDTH           10.0f
+#define LEVEL1_CLAW_REPEAT          600
+#define LEVEL1_CLAW_K_SCALE         1.0f
+
 //Marauder
 #define LEVEL2_SPEED                1.2f
 #define LEVEL2_VALUE                AVM(420)
 #define LEVEL2_HEALTH               AHM(150)
 #define LEVEL2_REGEN                (0.03f * LEVEL2_HEALTH)
-#define LEVEL2_COST                 2
+#define LEVEL2_COST                 1
 #define LEVEL2_UPG_SPEED            1.2f
 #define LEVEL2_UPG_VALUE            AVM(540)
 #define LEVEL2_UPG_HEALTH           AHM(175)
