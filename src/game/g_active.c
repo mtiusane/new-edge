@@ -1669,6 +1669,17 @@ void ClientThink_real( gentity_t *ent )
     }
   }
 
+  if( client->ps.weapon == WP_ALEVEL1 &&
+      client->lastWarpTime + LEVEL1_WARP_REGEN_DELAY <= level.time )
+  {
+    client->ps.stats[ STAT_MISC ] += msec * LEVEL1_WARP_REGEN_RATE;
+
+    if( client->ps.stats[ STAT_MISC ] > LEVEL1_WARP_TIME )
+    {
+      client->ps.stats[ STAT_MISC ] = LEVEL1_WARP_TIME;
+    }
+  }
+
   if( BG_InventoryContainsUpgrade( UP_GRENADE, client->ps.stats ) &&
       BG_UpgradeIsActive( UP_GRENADE, client->ps.stats ) )
   {
@@ -1798,6 +1809,38 @@ void ClientThink_real( gentity_t *ent )
       {
         client->ps.generic1 = WPM_PRIMARY;
         G_AddEvent( ent, EV_FIRE_WEAPON, 0 );
+      }
+      break;
+
+    case WP_ALEVEL1:
+      if( pm.pmext->warpExitedBlocked )
+      {
+        G_Damage( ent, NULL, ent, NULL, NULL, 10000, DAMAGE_NO_KNOCKBACK, MOD_CRUSH );
+      }
+      else
+      {
+        int old_contents;
+
+        old_contents = ent->r.contents;
+
+        if( ent->s.eFlags & EF_WARPING )
+        {
+          ent->r.contents = 0;
+          ent->clipmask = 0;
+          ent->flags |= FL_NOTARGET;
+          ent->client->lastWarpTime = level.time;
+        }
+        else
+        {
+          ent->r.contents = CONTENTS_BODY;
+          ent->clipmask = MASK_PLAYERSOLID;
+          ent->flags &= ~FL_NOTARGET;
+        }
+
+        if( ent->r.contents != old_contents )
+        {
+          trap_LinkEntity( ent );
+        }
       }
       break;
 

@@ -174,6 +174,8 @@ typedef struct
 {
   int pouncePayload;
   float fallVelocity;
+  qboolean warpExitBlocked;
+  qboolean warpExitedBlocked;
 } pmoveExt_t;
 
 #define MAXTOUCH  32
@@ -321,6 +323,7 @@ typedef enum
 #define EF_FIRING2          0x0400    // alt fire
 #define EF_FIRING3          0x0800    // third fire
 #define EF_MOVER_STOP       0x1000    // will push otherwise
+#define EF_WARPING          0x2000    // Wraith warping
 #define EF_CONNECTION       0x4000    // draw a connection trouble sprite
 
 typedef enum
@@ -568,7 +571,9 @@ typedef enum
   EV_RPTUSE_SOUND,    // trigger a sound
   EV_LEV2_ZAP,
   EV_ACIDBOMB_BOUNCE,
-  EV_ROCKETL_PRIME
+  EV_ROCKETL_PRIME,
+  EV_WARP_ENTER,
+  EV_WARP_EXIT
 } entity_event_t;
 
 typedef enum

@@ -1663,7 +1663,7 @@ static void PM_CheckLadder( void )
 
   VectorMA( pm->ps->origin, 1.0f, forward, end );
 
-  pm->trace( &trace, pm->ps->origin, pm->mins, pm->maxs, end, pm->ps->clientNum, MASK_PLAYERSOLID );
+  pm->trace( &trace, pm->ps->origin, pm->mins, pm->maxs, end, pm->ps->clientNum, pm->tracemask );
 
   if( ( trace.fraction < 1.0f ) && ( trace.surfaceFlags & SURF_LADDER ) )
     pml.ladder = qtrue;
@@ -2625,7 +2625,8 @@ static void PM_Footsteps( void )
     pm->xyspeed = sqrt( pm->ps->velocity[ 0 ] * pm->ps->velocity[ 0 ]
       + pm->ps->velocity[ 1 ] * pm->ps->velocity[ 1 ] );
 
-  if( pm->ps->groundEntityNum == ENTITYNUM_NONE )
+  if( pm->ps->groundEntityNum == ENTITYNUM_NONE || 
+      ( pm->ps->eFlags & EF_WARPING ) )
   {
     // airborne leaves position in cycle intact, but doesn't advance
     if( pm->waterlevel > 1 )
@@ -3836,6 +3837,82 @@ void PM_ForceFields( void )
 
 /*
 ================
+PM_WraithMechanics
+================
+*/
+
+void PM_WraithMechanics( void )
+{
+  qboolean target, force_exit;
+
+  pm->pmext->warpExitBlocked = qfalse;
+  pm->pmext->warpExitedBlocked = qfalse;
+
+  target = !!( pm->cmd.buttons & BUTTON_ATTACK2 );
+  force_exit = qfalse;
+
+  if( pm->ps->stats[ STAT_MISC ] <= 0 )
+  {
+    target = qfalse;
+    force_exit = qtrue;
+#ifdef GAME
+    //Com_Printf( "out of ammo\n" );
+#endif
+  }
+
+  if( !!( pm->ps->eFlags & EF_WARPING ) == target )
+  {
+    goto done;
+  }
+
+  if( target )
+  {
+    pm->ps->eFlags |= EF_WARPING;
+    PM_AddEvent( EV_WARP_ENTER );
+  }
+  else
+  {
+    trace_t tr;
+    vec3_t mins, maxs;
+
+    BG_ClassBoundingBox( PCL_ALIEN_LEVEL1, mins, maxs, NULL, NULL, NULL );
+
+    pm->trace( &tr, pm->ps->origin, mins, maxs, pm->ps->origin, pm->ps->clientNum, MASK_PLAYERSOLID );
+
+    if( tr.startsolid )
+    {
+      if( force_exit )
+      {
+        pm->pmext->warpExitedBlocked = qtrue;
+      }
+      else
+      {
+        pm->pmext->warpExitBlocked = qtrue;
+        goto done;
+      }
+    }
+
+    pm->ps->eFlags &= ~EF_WARPING;
+    PM_AddEvent( EV_WARP_EXIT );
+  }
+
+done:
+
+  if( pm->ps->eFlags & EF_WARPING )
+  {
+    pm->tracemask = MASK_SOLID;
+    pm->ps->stats[ STAT_MISC ] -= pml.msec;
+    pm->ps->eFlags |= EF_NODRAW;
+  }
+  else
+  {
+    pm->tracemask = MASK_PLAYERSOLID;
+    pm->ps->eFlags &= ~EF_NODRAW;
+  }
+}
+
+/*
+================
 PmoveSingle
 
 ================
@@ -3946,6 +4023,11 @@ void PmoveSingle( pmove_t *pmove )
     pm->cmd.forwardmove = 0;
     pm->cmd.rightmove = 0;
     pm->cmd.upmove = 0;
+  }
+
+  if( pm->ps->weapon == WP_ALEVEL1 )
+  {
+    PM_WraithMechanics( );
   }
 
   if( pm->ps->pm_type == PM_SPECTATOR )

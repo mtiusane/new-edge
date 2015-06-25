@@ -1101,6 +1101,11 @@ static float CG_ChargeProgress( void )
       max = LEVEL4_TRAMPLE_CHARGE_MAX;
     }
   }
+  else if( cg.snap->ps.weapon == WP_ALEVEL1 )
+  {
+    min = 0;
+    max = LEVEL1_WARP_TIME;
+  }
 
   else if( cg.snap->ps.weapon == WP_LUCIFER_CANNON || cg.snap->ps.weapon == WP_FLAMER )
   {
@@ -4131,6 +4136,27 @@ static void CG_DrawHealthBars( void )
   }
 }
 
+/*
+=================
+CG_DrawWarpOverlay
+=================
+*/
+static void CG_DrawWarpOverlay( void )
+{
+  if( !( cg.predictedPlayerEntity.currentState.eFlags & EF_WARPING ) ||
+      cg.renderingThirdPerson )
+  {
+    return;
+  }
+
+  trap_R_SetColor( NULL );
+  CG_DrawPic( 0, 0, 640, 480, cgs.media.warpOverlay );
+
+  if( cg.warpExitBlocked )
+  {
+    CG_DrawPic( 0, 0, 640, 480, cgs.media.warpOverlayBlocked );
+  }
+}
 
 //==================================================================================
 
@@ -4153,6 +4179,8 @@ static void CG_Draw2D( void )
   // fading to black if stamina runs out
   // (only 2D that can't be disabled)
   CG_DrawLighting( );
+
+  CG_DrawWarpOverlay( );
 
   if( cg_draw2D.integer == 0 )
     return;

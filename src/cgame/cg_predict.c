@@ -910,6 +910,8 @@ void CG_PredictPlayerState( void )
     cg.physicsTime, cg.time, cg.predictedPlayerState.origin );
 
 
+  cg.warpExitBlocked = cg.pmext.warpExitBlocked;
+
   // fire events and other transition triggered things
   CG_TransitionPlayerState( &cg.predictedPlayerState, &oldPlayerState );
 

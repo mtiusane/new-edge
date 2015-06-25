@@ -507,6 +507,8 @@ struct gclient_s
 
   g_damageIndicator_t  diBuffer[ MAX_BUFFERED_DAMAGE_INDICATORS ];
   int                  diBufferCounter;
+
+  int                 lastWarpTime;
 };
 
 

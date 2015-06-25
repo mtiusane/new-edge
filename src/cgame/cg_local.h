@@ -1161,6 +1161,8 @@ typedef struct
   int           nextWeaponClickTime;
 
   float         viewQuake;
+
+  qboolean      warpExitBlocked;
 } cg_t;
 
 
@@ -1351,6 +1353,14 @@ typedef struct
   sfxHandle_t hitSounds[ 5 ];
 
   sfxHandle_t rocketlPrimeSound;
+
+  sfxHandle_t warpEnterSound;
+  qhandle_t   warpEnterPS;
+  sfxHandle_t warpExitSound;
+  qhandle_t   warpExitPS;
+  sfxHandle_t warpingSound;
+  qhandle_t   warpOverlay;
+  qhandle_t   warpOverlayBlocked;
 } cgMedia_t;
 
 typedef struct

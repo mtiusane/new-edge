@@ -769,6 +769,10 @@ static void CG_RegisterSounds( void )
     cgs.media.hitSounds[ i ]        = trap_S_RegisterSound( hit_sounds[ i ], qfalse );
 
   cgs.media.rocketlPrimeSound       = trap_S_RegisterSound( "models/weapons/rocketl/prime.wav", qfalse );
+
+  cgs.media.warpEnterSound          = trap_S_RegisterSound( "sound/player/level1/warp1.wav", qfalse );
+  cgs.media.warpExitSound           = trap_S_RegisterSound( "sound/player/level1/warp2.wav", qfalse );
+  cgs.media.warpingSound            = trap_S_RegisterSound( "sound/player/level1/warping.wav", qfalse );
 }
 
 
@@ -929,6 +933,11 @@ static void CG_RegisterGraphics( void )
   cgs.media.headShotPS                = CG_RegisterParticleSystem( "headShotPS" );
 
   cgs.media.lightningImpactPS         = CG_RegisterParticleSystem( "models/weapons/lightning/impactPS" );
+
+  cgs.media.warpEnterPS               = CG_RegisterParticleSystem( "gfx/level1/warpEnterPS" );
+  cgs.media.warpExitPS                = CG_RegisterParticleSystem( "gfx/level1/warpExitPS" );
+  cgs.media.warpOverlay               = trap_R_RegisterShader( "gfx/level1/warpOverlay" );
+  cgs.media.warpOverlayBlocked        = trap_R_RegisterShader( "gfx/level1/warpOverlayBlocked" );
 
   CG_BuildableStatusParse( "ui/assets/human/buildstat.cfg", &cgs.humanBuildStat );
   CG_BuildableStatusParse( "ui/assets/alien/buildstat.cfg", &cgs.alienBuildStat );

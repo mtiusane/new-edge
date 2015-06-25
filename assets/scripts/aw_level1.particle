@@ -1,0 +1,51 @@
+gfx/level1/warpEnterPS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/level1/warpParticle1
+      displacement          0 0 0 0
+
+      velocityType          static
+      velocityDir           linear
+      velocityMagnitude     0
+      velocity              0 0 1 0
+
+      radius                0 100 0
+      alpha                 0 1.0 -
+
+      lifeTime              100
+    }
+
+    count   1
+    delay   0
+    period  0 - 0
+  }
+}
+
+gfx/level1/warpExitPS
+{
+  ejector
+  {
+    particle
+    {
+      shader sync gfx/level1/warpParticle1
+      displacement          0 0 0 0
+
+      velocityType          static
+      velocityDir           linear
+      velocityMagnitude     0
+      velocity              0 0 1 0
+
+      radius                0 100 0
+      alpha                 0 1.0 -
+
+      lifeTime              100
+    }
+
+    count   1
+    delay   0
+    period  0 - 0
+  }
+}

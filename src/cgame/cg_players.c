@@ -1964,7 +1964,9 @@ void CG_Player( centity_t *cent )
   // add the shadow
   if( ( es->number == cg.snap->ps.clientNum && cg.renderingThirdPerson ) ||
       es->number != cg.snap->ps.clientNum )
-  shadow = CG_PlayerShadow( cent, &shadowPlane, class );
+  {
+    shadow = CG_PlayerShadow( cent, &shadowPlane, class );
+  }
 
   // add a water splash if partially in and out of water
   CG_PlayerSplash( cent, class );

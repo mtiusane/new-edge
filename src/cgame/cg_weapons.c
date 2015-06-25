@@ -1131,6 +1131,13 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
       CG_DestroyParticleSystem( &cent->muzzlePS );
   }
 
+
+  if( ps && ( cent->currentState.eFlags & EF_WARPING ) )
+  {
+    trap_S_AddLoopingSound( cent->currentState.number, cent->lerpOrigin,
+                            vec3_origin, cgs.media.warpingSound );
+  }
+
   // add the flash
   if( !weapon->wim[ weaponMode ].continuousFlash || !firing )
   {

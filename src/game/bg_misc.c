@@ -3024,7 +3024,7 @@ static const weaponAttributes_t bg_weapons[ ] =
     "level1",             //char      *weaponName;
     "Claws",              //char      *humanName;
     "",
-    1,                    //int       maxAmmo;
+    0,                    //int       maxAmmo;
     0,                    //int       maxClips;
     qtrue,                //int       infiniteAmmo;
     qfalse,               //int       usesEnergy;

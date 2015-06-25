@@ -976,6 +976,38 @@ void CG_EntityEvent( centity_t *cent, vec3_t position )
       trap_S_StartSound( NULL, es->number, CHAN_AUTO, cgs.media.rocketlPrimeSound );
       break;
 
+    case EV_WARP_ENTER:
+      {
+        particleSystem_t *ps;
+
+        ps = CG_SpawnNewParticleSystem( cgs.media.warpEnterPS );
+
+        if( CG_IsParticleSystemValid( &ps ) )
+        {
+          CG_SetAttachmentPoint( &ps->attachment, position );
+          CG_AttachToPoint( &ps->attachment );
+        }
+
+        trap_S_StartSound( NULL, es->number, CHAN_AUTO, cgs.media.warpEnterSound );
+      }
+      break;
+
+    case EV_WARP_EXIT:
+      {
+        particleSystem_t *ps;
+
+        ps = CG_SpawnNewParticleSystem( cgs.media.warpExitPS );
+
+        if( CG_IsParticleSystemValid( &ps ) )
+        {
+          CG_SetAttachmentPoint( &ps->attachment, position );
+          CG_AttachToPoint( &ps->attachment );
+        }
+
+        trap_S_StartSound( NULL, es->number, CHAN_AUTO, cgs.media.warpExitSound );
+      }
+      break;
+
     //
     // missile impacts
     //

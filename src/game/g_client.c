@@ -1480,6 +1480,11 @@ void ClientSpawn( gentity_t *ent, gentity_t *spawn, vec3_t origin, vec3_t angles
   client->ps.ammo = maxAmmo;
   client->ps.clips = maxClips;
 
+  if( weapon == WP_ALEVEL1 )
+  {
+    client->ps.stats[ STAT_MISC ] = LEVEL1_WARP_TIME;
+  }
+
   // We just spawned, not changing weapons
   client->ps.persistant[ PERS_NEWWEAPON ] = 0;
 
