@@ -1471,6 +1471,7 @@ void ClientThink_real( gentity_t *ent )
   int       msec;
   usercmd_t *ucmd;
   int       i;
+  float     modifier = 1.0f;
 
   client = ent->client;
 
@@ -1596,7 +1597,6 @@ void ClientThink_real( gentity_t *ent )
       int       i, num;
       int       count, interval;
       vec3_t    range, mins, maxs;
-      float     modifier = 1.0f;
 
       VectorSet( range, REGEN_BOOST_RANGE, REGEN_BOOST_RANGE,
                  REGEN_BOOST_RANGE );
@@ -1670,9 +1670,10 @@ void ClientThink_real( gentity_t *ent )
   }
 
   if( client->ps.weapon == WP_ALEVEL1 &&
-      client->lastWarpTime + LEVEL1_WARP_REGEN_DELAY <= level.time )
+      client->lastWarpTime + LEVEL1_WARP_REGEN_DELAY <= level.time &&
+      G_Overmind( ) )
   {
-    client->ps.stats[ STAT_MISC ] += msec * LEVEL1_WARP_REGEN_RATE;
+    client->ps.stats[ STAT_MISC ] += msec * LEVEL1_WARP_REGEN_RATE * modifier;
 
     if( client->ps.stats[ STAT_MISC ] > LEVEL1_WARP_TIME )
     {

@@ -1898,8 +1898,8 @@ void CG_Player( centity_t *cent )
     return;
 
   if( ( es->eFlags & EF_WARPING ) &&
-      ( cgs.clientinfo[ es->number ].team != cg.snap->ps.stats[ STAT_TEAM ] ||
-        cg.snap->ps.stats[ STAT_TEAM ] == TEAM_NONE ) )
+      ( cgs.clientinfo[ es->number ].team != cg.snap->ps.stats[ STAT_TEAM ] &&
+        cg.snap->ps.stats[ STAT_TEAM ] != TEAM_NONE ) )
   {
     return;
   }

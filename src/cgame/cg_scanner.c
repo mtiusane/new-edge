@@ -58,7 +58,7 @@ void CG_UpdateEntityPositions( void )
   {
     cent = &cg_entities[ cg.snap->entities[ i ].number ];
 
-    if( cent->currentState.eFlags & EF_NODRAW )
+    if( cent->currentState.eFlags & EF_WARPING )
     {
       continue;
     }

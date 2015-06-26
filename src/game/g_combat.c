@@ -1575,6 +1575,9 @@ qboolean G_SelectiveRadiusDamage( vec3_t origin, gentity_t *attacker, float dama
     if( !ent->takedamage )
       continue;
 
+    if( ent->s.eFlags & EF_WARPING )
+      continue;
+
     if( ent->flags & FL_NOTARGET )
       continue;
 
@@ -1690,6 +1693,9 @@ qboolean G_RadiusDamage( vec3_t origin, gentity_t *attacker, float damage,
     ent = &g_entities[ entityList[ e ] ];
 
     if( ent == ignore )
+      continue;
+
+    if( ent->s.eFlags & EF_WARPING )
       continue;
 
     if( !ent->takedamage )

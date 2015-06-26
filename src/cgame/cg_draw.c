@@ -4043,7 +4043,7 @@ static void CG_DrawHealthBars( void )
     cent  = cg_entities + cg.snap->entities[ i ].number;
     es = &cent->currentState;
 
-    if( es->eFlags & ( EF_DEAD | EF_NODRAW ) )
+    if( es->eFlags & ( EF_DEAD | EF_NODRAW | EF_WARPING ) )
       continue;
 
     switch( es->eType )

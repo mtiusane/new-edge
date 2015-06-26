@@ -1177,8 +1177,9 @@ void CG_EntityEvent( centity_t *cent, vec3_t position )
       break;
 
     case EV_BLEED:
-      if( cg_bleedSelfWounds.integer ||
-          cent->currentState.number != cg.snap->ps.clientNum )
+      if( !warpingEnemyWraith &&
+          ( cg_bleedSelfWounds.integer ||
+            cent->currentState.number != cg.snap->ps.clientNum ) )
       {
         particleSystem_t *ps = NULL;
         if( ci->team == TEAM_ALIENS )
