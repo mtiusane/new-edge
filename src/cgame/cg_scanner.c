@@ -58,6 +58,11 @@ void CG_UpdateEntityPositions( void )
   {
     cent = &cg_entities[ cg.snap->entities[ i ].number ];
 
+    if( cent->currentState.eFlags & EF_NODRAW )
+    {
+      continue;
+    }
+
     if( cent->currentState.eType == ET_BUILDABLE &&
 	!( cent->currentState.eFlags & EF_DEAD ))
     {

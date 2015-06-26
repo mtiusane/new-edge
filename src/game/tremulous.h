@@ -127,8 +127,8 @@ TREMULOUS EDGE MOD SRC FILE
 
 //Wraith
 #define LEVEL1_SPEED                1.25f
-#define LEVEL1_VALUE                AVM(270)
-#define LEVEL1_HEALTH               AHM(60)
+#define LEVEL1_VALUE                AVM(370)
+#define LEVEL1_HEALTH               AHM(80)
 #define LEVEL1_REGEN                (0.03f * LEVEL1_HEALTH)
 #define LEVEL1_COST                 1
 
@@ -139,9 +139,10 @@ TREMULOUS EDGE MOD SRC FILE
 #define LEVEL1_CLAW_REPEAT          600
 #define LEVEL1_CLAW_K_SCALE         1.0f
 
-#define LEVEL1_WARP_TIME            5000
+#define LEVEL1_WARP_TIME            5500
 #define LEVEL1_WARP_REGEN_DELAY     2000
 #define LEVEL1_WARP_REGEN_RATE      1
+#define LEVEL1_WARP_COST            500
 
 //Marauder
 #define LEVEL2_SPEED                1.2f

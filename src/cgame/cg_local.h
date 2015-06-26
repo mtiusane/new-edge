@@ -1361,6 +1361,7 @@ typedef struct
   sfxHandle_t warpingSound;
   qhandle_t   warpOverlay;
   qhandle_t   warpOverlayBlocked;
+  qhandle_t   warpingShader;
 } cgMedia_t;
 
 typedef struct

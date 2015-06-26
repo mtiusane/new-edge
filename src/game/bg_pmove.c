@@ -2625,8 +2625,7 @@ static void PM_Footsteps( void )
     pm->xyspeed = sqrt( pm->ps->velocity[ 0 ] * pm->ps->velocity[ 0 ]
       + pm->ps->velocity[ 1 ] * pm->ps->velocity[ 1 ] );
 
-  if( pm->ps->groundEntityNum == ENTITYNUM_NONE || 
-      ( pm->ps->eFlags & EF_WARPING ) )
+  if( pm->ps->groundEntityNum == ENTITYNUM_NONE )
   {
     // airborne leaves position in cycle intact, but doesn't advance
     if( pm->waterlevel > 1 )
@@ -3808,6 +3807,11 @@ void PM_ForceFields( void )
   forceField_t *ff;
   vec3_t total = { 0 };
 
+  if( pm->ps->eFlags & EF_WARPING )
+  {
+    return;
+  }
+
   for( i = 0; i < pm->numForceFields; i++ )
   {
     vec3_t delta;
@@ -3869,6 +3873,7 @@ void PM_WraithMechanics( void )
   {
     pm->ps->eFlags |= EF_WARPING;
     PM_AddEvent( EV_WARP_ENTER );
+    pm->ps->stats[ STAT_MISC ] -= LEVEL1_WARP_COST;
   }
   else
   {
@@ -3902,12 +3907,10 @@ done:
   {
     pm->tracemask = MASK_SOLID;
     pm->ps->stats[ STAT_MISC ] -= pml.msec;
-    pm->ps->eFlags |= EF_NODRAW;
   }
   else
   {
     pm->tracemask = MASK_PLAYERSOLID;
-    pm->ps->eFlags &= ~EF_NODRAW;
   }
 }
 

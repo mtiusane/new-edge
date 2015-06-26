@@ -25,3 +25,17 @@ gfx/level1/warpParticle1
 		blendFunc add
 	}
 }
+
+gfx/level1/warping
+{
+	{
+		map gfx/level1/warping2.jpg
+		blendFunc filter
+		tcMod scroll 3 3
+	}
+	{
+		map gfx/level1/warping.jpg
+		blendFunc add
+		tcMod scroll -2.19384 -1.95281
+	}
+}

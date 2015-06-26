@@ -1897,6 +1897,13 @@ void CG_Player( centity_t *cent )
   if( es->eFlags & EF_NODRAW )
     return;
 
+  if( ( es->eFlags & EF_WARPING ) &&
+      ( cgs.clientinfo[ es->number ].team != cg.snap->ps.stats[ STAT_TEAM ] ||
+        cg.snap->ps.stats[ STAT_TEAM ] == TEAM_NONE ) )
+  {
+    return;
+  }
+
   // get the player model information
   renderfx = 0;
   if( es->number == cg.snap->ps.clientNum )
@@ -2059,6 +2066,11 @@ void CG_Player( centity_t *cent )
   VectorMA( legs.origin, BG_ClassConfig( class )->zOffset, surfNormal, legs.origin );
   VectorCopy( legs.origin, legs.lightingOrigin );
   VectorCopy( legs.origin, legs.oldorigin ); // don't positionally lerp at all
+
+  if( es->eFlags & EF_WARPING )
+  {
+    legs.customShader = cgs.media.warpingShader;
+  }
 
   trap_R_AddRefEntityToScene( &legs );
 

@@ -938,6 +938,7 @@ static void CG_RegisterGraphics( void )
   cgs.media.warpExitPS                = CG_RegisterParticleSystem( "gfx/level1/warpExitPS" );
   cgs.media.warpOverlay               = trap_R_RegisterShader( "gfx/level1/warpOverlay" );
   cgs.media.warpOverlayBlocked        = trap_R_RegisterShader( "gfx/level1/warpOverlayBlocked" );
+  cgs.media.warpingShader             = trap_R_RegisterShader( "gfx/level1/warping" );
 
   CG_BuildableStatusParse( "ui/assets/human/buildstat.cfg", &cgs.humanBuildStat );
   CG_BuildableStatusParse( "ui/assets/alien/buildstat.cfg", &cgs.alienBuildStat );

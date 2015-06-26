@@ -620,6 +620,7 @@ void CG_EntityEvent( centity_t *cent, vec3_t position )
   int           clientNum;
   clientInfo_t  *ci;
   int           steptime;
+  qboolean      warpingEnemyWraith = qfalse;
 
   if( cg.snap->ps.persistant[ PERS_SPECSTATE ] != SPECTATOR_NOT )
     steptime = 200;
@@ -642,13 +643,20 @@ void CG_EntityEvent( centity_t *cent, vec3_t position )
 
   ci = &cgs.clientinfo[ clientNum ];
 
+  if( ci->team != cg.snap->ps.stats[ STAT_TEAM ] &&
+      ( es->eFlags & EF_WARPING ) )
+  {
+    warpingEnemyWraith = qtrue;
+  }
+
   switch( event )
   {
     //
     // movement generated events
     //
     case EV_FOOTSTEP:
-      if( cg_footsteps.integer && ci->footsteps != FOOTSTEP_NONE )
+      if( cg_footsteps.integer && ci->footsteps != FOOTSTEP_NONE && 
+          !warpingEnemyWraith )
       {
         if( ci->footsteps == FOOTSTEP_CUSTOM )
           trap_S_StartSound( NULL, es->number, CHAN_BODY,
@@ -660,7 +668,8 @@ void CG_EntityEvent( centity_t *cent, vec3_t position )
       break;
 
     case EV_FOOTSTEP_METAL:
-      if( cg_footsteps.integer && ci->footsteps != FOOTSTEP_NONE )
+      if( cg_footsteps.integer && ci->footsteps != FOOTSTEP_NONE &&
+          !warpingEnemyWraith )
       {
         if( ci->footsteps == FOOTSTEP_CUSTOM )
           trap_S_StartSound( NULL, es->number, CHAN_BODY,
@@ -672,7 +681,8 @@ void CG_EntityEvent( centity_t *cent, vec3_t position )
       break;
 
     case EV_FOOTSTEP_SQUELCH:
-      if( cg_footsteps.integer && ci->footsteps != FOOTSTEP_NONE )
+      if( cg_footsteps.integer && ci->footsteps != FOOTSTEP_NONE &&
+          !warpingEnemyWraith )
       {
         trap_S_StartSound( NULL, es->number, CHAN_BODY,
           cgs.media.footsteps[ FOOTSTEP_FLESH ][ rand( ) & 3 ] );
@@ -680,7 +690,8 @@ void CG_EntityEvent( centity_t *cent, vec3_t position )
       break;
 
     case EV_FOOTSPLASH:
-      if( cg_footsteps.integer && ci->footsteps != FOOTSTEP_NONE )
+      if( cg_footsteps.integer && ci->footsteps != FOOTSTEP_NONE &&
+          !warpingEnemyWraith )
       {
         trap_S_StartSound( NULL, es->number, CHAN_BODY,
           cgs.media.footsteps[ FOOTSTEP_SPLASH ][ rand( ) & 3 ] );
@@ -688,7 +699,8 @@ void CG_EntityEvent( centity_t *cent, vec3_t position )
       break;
 
     case EV_FOOTWADE:
-      if( cg_footsteps.integer && ci->footsteps != FOOTSTEP_NONE )
+      if( cg_footsteps.integer && ci->footsteps != FOOTSTEP_NONE &&
+          !warpingEnemyWraith )
       {
         trap_S_StartSound( NULL, es->number, CHAN_BODY,
           cgs.media.footsteps[ FOOTSTEP_SPLASH ][ rand( ) & 3 ] );
@@ -696,7 +708,8 @@ void CG_EntityEvent( centity_t *cent, vec3_t position )
       break;
 
     case EV_SWIM:
-      if( cg_footsteps.integer && ci->footsteps != FOOTSTEP_NONE )
+      if( cg_footsteps.integer && ci->footsteps != FOOTSTEP_NONE &&
+          !warpingEnemyWraith )
       {
         trap_S_StartSound( NULL, es->number, CHAN_BODY,
           cgs.media.footsteps[ FOOTSTEP_SPLASH ][ rand( ) & 3 ] );
@@ -794,33 +807,35 @@ void CG_EntityEvent( centity_t *cent, vec3_t position )
       }
 
     case EV_JUMP:
-      trap_S_StartSound( NULL, es->number, CHAN_VOICE, CG_CustomSound( es->number, "*jump1.wav" ) );
-
-      if( BG_ClassHasAbility( cg.predictedPlayerState.stats[ STAT_CLASS ], SCA_WALLJUMPER ) )
+      if( !warpingEnemyWraith )
       {
-        vec3_t  surfNormal, refNormal = { 0.0f, 0.0f, 1.0f };
-        vec3_t  is;
+        trap_S_StartSound( NULL, es->number, CHAN_VOICE, CG_CustomSound( es->number, "*jump1.wav" ) );
 
-        if( clientNum != cg.predictedPlayerState.clientNum )
-          break;
-
-        //set surfNormal
-        VectorCopy( cg.predictedPlayerState.grapplePoint, surfNormal );
-
-        //if we are moving from one surface to another smooth the transition
-        if( !VectorCompare( surfNormal, cg.lastNormal ) && surfNormal[ 2 ] != 1.0f )
+        if( BG_ClassHasAbility( cg.predictedPlayerState.stats[ STAT_CLASS ], SCA_WALLJUMPER ) )
         {
-          CrossProduct( refNormal, surfNormal, is );
-          VectorNormalize( is );
+          vec3_t  surfNormal, refNormal = { 0.0f, 0.0f, 1.0f };
+          vec3_t  is;
 
-          //add the op
-          CG_addSmoothOp( is, 15.0f, 1.0f );
+          if( clientNum != cg.predictedPlayerState.clientNum )
+            break;
+
+          //set surfNormal
+          VectorCopy( cg.predictedPlayerState.grapplePoint, surfNormal );
+
+          //if we are moving from one surface to another smooth the transition
+          if( !VectorCompare( surfNormal, cg.lastNormal ) && surfNormal[ 2 ] != 1.0f )
+          {
+            CrossProduct( refNormal, surfNormal, is );
+            VectorNormalize( is );
+
+            //add the op
+            CG_addSmoothOp( is, 15.0f, 1.0f );
+          }
+
+          //copy the current normal to the lastNormal
+          VectorCopy( surfNormal, cg.lastNormal );
         }
-
-        //copy the current normal to the lastNormal
-        VectorCopy( surfNormal, cg.lastNormal );
       }
-
       break;
 
     case EV_AIRPOUNCE:
