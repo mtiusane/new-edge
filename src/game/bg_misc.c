@@ -2265,7 +2265,7 @@ static const classAttributes_t bg_classList[ ] =
     "and pass through buildings and other players. In this state "
     "the Wraith cannot be seen, heard or hurt. Provides a healing "
     "aura that accelerates the healing rate of nearby aliens.",
-    STAGE_GE_3,                                     //int     stages
+    STAGE_GE_2,                                     //int     stages
     LEVEL1_HEALTH,                                  //int     health;
     0.0f,                                           //float   fallDamage;
     LEVEL1_REGEN,                                   //float   regenRate;
