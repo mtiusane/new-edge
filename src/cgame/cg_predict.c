@@ -910,6 +910,7 @@ void CG_PredictPlayerState( void )
     cg.physicsTime, cg.time, cg.predictedPlayerState.origin );
 
 
+  cg.warping = !!( cg.predictedPlayerEntity.currentState.eFlags & EF_WARPING );
   cg.warpExitBlocked = cg.pmext.warpExitBlocked;
 
   // fire events and other transition triggered things

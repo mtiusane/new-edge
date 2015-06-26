@@ -3855,25 +3855,39 @@ void PM_WraithMechanics( void )
   target = !!( pm->cmd.buttons & BUTTON_ATTACK2 );
   force_exit = qfalse;
 
-  if( pm->ps->stats[ STAT_MISC ] <= 0 )
+  if( pm->ps->stats[ STAT_MISC ] < 0 )
   {
+    if( target && pm->ps->weaponTime <= 0 )
+    {
+      PM_AddEvent( EV_NOAMMO );
+      pm->ps->weaponTime += 500;
+    }
+    
     target = qfalse;
     force_exit = qtrue;
-#ifdef GAME
-    //Com_Printf( "out of ammo\n" );
-#endif
   }
 
-  if( !!( pm->ps->eFlags & EF_WARPING ) == target )
+  if( ( !force_exit && pm->ps->weaponTime ) ||
+      !!( pm->ps->eFlags & EF_WARPING ) == target )
   {
     goto done;
   }
 
   if( target )
   {
+    if( pm->ps->stats[ STAT_MISC ] < LEVEL1_WARP_MIN_TIME )
+    {
+      if( pm->ps->weaponTime <= 0 )
+      {
+        PM_AddEvent( EV_NOAMMO );
+        pm->ps->weaponTime += 500;
+      }
+      goto done;
+    }
+
     pm->ps->eFlags |= EF_WARPING;
     PM_AddEvent( EV_WARP_ENTER );
-    pm->ps->stats[ STAT_MISC ] -= LEVEL1_WARP_COST;
+    pm->ps->weaponTime += LEVEL1_WARP_MIN_TIME;
   }
   else
   {
@@ -3899,6 +3913,7 @@ void PM_WraithMechanics( void )
 
     pm->ps->eFlags &= ~EF_WARPING;
     PM_AddEvent( EV_WARP_EXIT );
+    pm->ps->weaponTime += LEVEL1_WARP_REPEAT;
   }
 
 done:
@@ -3907,6 +3922,7 @@ done:
   {
     pm->tracemask = MASK_SOLID;
     pm->ps->stats[ STAT_MISC ] -= pml.msec;
+    pm->cmd.buttons &= ~BUTTON_ATTACK;
   }
   else
   {

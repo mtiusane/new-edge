@@ -140,9 +140,13 @@ TREMULOUS EDGE MOD SRC FILE
 #define LEVEL1_CLAW_K_SCALE         1.0f
 
 #define LEVEL1_WARP_TIME            5500
+#define LEVEL1_WARP_MIN_TIME        500
+#define LEVEL1_WARP_REPEAT          500
 #define LEVEL1_WARP_REGEN_DELAY     2000
 #define LEVEL1_WARP_REGEN_RATE      1
-#define LEVEL1_WARP_COST            500
+
+#define LEVEL1_REGEN_MOD            2.0f
+#define LEVEL1_REGEN_MOD_WARPING    3.0f
 
 //Marauder
 #define LEVEL2_SPEED                1.2f

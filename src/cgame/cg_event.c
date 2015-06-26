@@ -135,6 +135,9 @@ static void CG_Obituary( entityState_t *ent )
     case MOD_SPITEFUL_ABCESS:
       message = "^5was raped by a Spiteful Abcess";
       break;
+    case MOD_WARP_BLOCKED:
+      message = "^5warped into a wall";
+      break;
     default:
       message = NULL;
       break;
@@ -644,6 +647,7 @@ void CG_EntityEvent( centity_t *cent, vec3_t position )
   ci = &cgs.clientinfo[ clientNum ];
 
   if( ci->team != cg.snap->ps.stats[ STAT_TEAM ] &&
+      cg.snap->ps.stats[ STAT_TEAM ] != TEAM_NONE &&
       ( es->eFlags & EF_WARPING ) )
   {
     warpingEnemyWraith = qtrue;

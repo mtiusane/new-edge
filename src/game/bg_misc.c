@@ -2260,12 +2260,11 @@ static const classAttributes_t bg_classList[ ] =
   {
     PCL_ALIEN_LEVEL1,                               //int     classnum;
     "level1",                                       //char    *classname;
-    "A support class able to crawl on walls and ceilings. Its melee "
-      "attack is most effective when combined with the ability to grab "
-      "and hold its victims in place. Provides a weak healing aura "
-      "that accelerates the healing rate of nearby aliens. It also has "
-      "an acid bomb that can be used to deal moderate area damage. "
-      "The basilisk is also resistant to flamer.",
+    "Has a melee attack, the ability to crawl on walls and "
+    "ceilings and the ability to temporarily become incorporeal "
+    "and pass through buildings and other players. In this state "
+    "the Wraith cannot be seen, heard or hurt. Provides a healing "
+    "aura that accelerates the healing rate of nearby aliens.",
     STAGE_GE_1,                                     //int     stages
     LEVEL1_HEALTH,                                  //int     health;
     0.0f,                                           //float   fallDamage;

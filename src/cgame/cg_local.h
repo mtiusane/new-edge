@@ -1162,6 +1162,7 @@ typedef struct
 
   float         viewQuake;
 
+  qboolean      warping;
   qboolean      warpExitBlocked;
 } cg_t;
 

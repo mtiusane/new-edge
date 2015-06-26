@@ -4143,7 +4143,7 @@ CG_DrawWarpOverlay
 */
 static void CG_DrawWarpOverlay( void )
 {
-  if( !( cg.predictedPlayerEntity.currentState.eFlags & EF_WARPING ) ||
+  if( !cg.warping ||
       cg.renderingThirdPerson )
   {
     return;

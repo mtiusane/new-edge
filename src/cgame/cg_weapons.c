@@ -1132,7 +1132,7 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
   }
 
 
-  if( ps && ( cent->currentState.eFlags & EF_WARPING ) )
+  if( ps && cg.warping )
   {
     trap_S_AddLoopingSound( cent->currentState.number, cent->lerpOrigin,
                             vec3_origin, cgs.media.warpingSound );

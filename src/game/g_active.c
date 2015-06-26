@@ -1471,7 +1471,6 @@ void ClientThink_real( gentity_t *ent )
   int       msec;
   usercmd_t *ucmd;
   int       i;
-  float     modifier = 1.0f;
 
   client = ent->client;
 
@@ -1597,6 +1596,7 @@ void ClientThink_real( gentity_t *ent )
       int       i, num;
       int       count, interval;
       vec3_t    range, mins, maxs;
+      float     modifier = 1.0f;
 
       VectorSet( range, REGEN_BOOST_RANGE, REGEN_BOOST_RANGE,
                  REGEN_BOOST_RANGE );
@@ -1633,6 +1633,20 @@ void ClientThink_real( gentity_t *ent )
         {
           class_t class = boost->client->ps.stats[ STAT_CLASS ];
           qboolean didBoost = qfalse;
+
+          if( class == PCL_ALIEN_LEVEL1 && modifier < LEVEL1_REGEN_MOD )
+          {
+            if( boost->s.eFlags & EF_WARPING )
+            {
+              modifier = LEVEL1_REGEN_MOD_WARPING;
+            }
+            else
+            {
+              modifier = LEVEL1_REGEN_MOD;
+            }
+
+            didBoost = qtrue;
+          }
 
           if( didBoost && ent->health < client->ps.stats[ STAT_MAX_HEALTH ] )
             boost->client->pers.hasHealed = qtrue;
@@ -1673,7 +1687,7 @@ void ClientThink_real( gentity_t *ent )
       client->lastWarpTime + LEVEL1_WARP_REGEN_DELAY <= level.time &&
       G_Overmind( ) )
   {
-    client->ps.stats[ STAT_MISC ] += msec * LEVEL1_WARP_REGEN_RATE * modifier;
+    client->ps.stats[ STAT_MISC ] += msec * LEVEL1_WARP_REGEN_RATE;
 
     if( client->ps.stats[ STAT_MISC ] > LEVEL1_WARP_TIME )
     {
@@ -1816,7 +1830,7 @@ void ClientThink_real( gentity_t *ent )
     case WP_ALEVEL1:
       if( pm.pmext->warpExitedBlocked )
       {
-        G_Damage( ent, NULL, ent, NULL, NULL, 10000, DAMAGE_NO_KNOCKBACK, MOD_CRUSH );
+        G_Damage( ent, NULL, ent, NULL, NULL, 10000, DAMAGE_NO_KNOCKBACK, MOD_WARP_BLOCKED );
       }
       else
       {
