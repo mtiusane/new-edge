@@ -1448,6 +1448,11 @@ static void CG_PlayerUpgrades( centity_t *cent, refEntity_t *torso )
     //FIXME: change to tag_back when it exists
     CG_PositionRotatedEntityOnTag( &jetpack, torso, torso->hModel, "tag_head" );
 
+    if( cg.warping )
+    {
+      jetpack.customShader = cgs.media.warpingEnvironmentShader;
+    }
+
     trap_R_AddRefEntityToScene( &jetpack );
 
     if( active & ( 1 << UP_JETPACK ) )
@@ -1543,6 +1548,11 @@ static void CG_PlayerUpgrades( centity_t *cent, refEntity_t *torso )
 
     //FIXME: change to tag_back when it exists
     CG_PositionRotatedEntityOnTag( &battpack, torso, torso->hModel, "tag_head" );
+
+    if( cg.warping )
+    {
+      battpack.customShader = cgs.media.warpingEnvironmentShader;
+    }
 
     trap_R_AddRefEntityToScene( &battpack );
   }
@@ -2071,6 +2081,10 @@ void CG_Player( centity_t *cent )
   {
     legs.customShader = cgs.media.warpingShader;
   }
+  else if( cg.warping )
+  {
+    legs.customShader = cgs.media.warpingEnvironmentShader;
+  }
 
   trap_R_AddRefEntityToScene( &legs );
 
@@ -2109,6 +2123,11 @@ void CG_Player( centity_t *cent )
     torso.shadowPlane = shadowPlane;
     torso.renderfx = renderfx;
 
+    if( cg.warping )
+    {
+      torso.customShader = cgs.media.warpingEnvironmentShader;
+    }
+
     trap_R_AddRefEntityToScene( &torso );
 
     //
@@ -2139,6 +2158,11 @@ void CG_Player( centity_t *cent )
 
     head.shadowPlane = shadowPlane;
     head.renderfx = renderfx;
+
+    if( cg.warping )
+    {
+      head.customShader = cgs.media.warpingEnvironmentShader;
+    }
 
     trap_R_AddRefEntityToScene( &head );
   }
@@ -2287,6 +2311,11 @@ void CG_Corpse( centity_t *cent )
     legs.nonNormalizedAxes = qtrue;
   }
 
+  if( cg.warping )
+  {
+    legs.customShader = cgs.media.warpingEnvironmentShader;
+  }
+
   trap_R_AddRefEntityToScene( &legs );
 
   // if the model failed, allow the default nullmodel to be displayed
@@ -2311,6 +2340,11 @@ void CG_Corpse( centity_t *cent )
     torso.shadowPlane = shadowPlane;
     torso.renderfx = renderfx;
 
+    if( cg.warping )
+    {
+      torso.customShader = cgs.media.warpingEnvironmentShader;
+    }
+
     trap_R_AddRefEntityToScene( &torso );
 
     //
@@ -2328,6 +2362,11 @@ void CG_Corpse( centity_t *cent )
 
     head.shadowPlane = shadowPlane;
     head.renderfx = renderfx;
+
+    if( cg.warping )
+    {
+      head.customShader = cgs.media.warpingEnvironmentShader;
+    }
 
     trap_R_AddRefEntityToScene( &head );
   }

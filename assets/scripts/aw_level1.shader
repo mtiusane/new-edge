@@ -39,3 +39,11 @@ gfx/level1/warping
 		tcMod scroll -2.19384 -1.95281
 	}
 }
+
+gfx/level1/warpingEnvironment
+{
+	{
+		map gfx/level1/warpingEnvironment.jpg
+		tcMod scroll 0.06 -0.029
+	}
+}

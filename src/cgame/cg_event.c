@@ -1008,6 +1008,8 @@ void CG_EntityEvent( centity_t *cent, vec3_t position )
         }
 
         trap_S_StartSound( NULL, es->number, CHAN_AUTO, cgs.media.warpEnterSound );
+
+        CG_InduceViewQuake( cent->lerpOrigin, 15 );
       }
       break;
 
@@ -1024,6 +1026,8 @@ void CG_EntityEvent( centity_t *cent, vec3_t position )
         }
 
         trap_S_StartSound( NULL, es->number, CHAN_AUTO, cgs.media.warpExitSound );
+
+        CG_InduceViewQuake( cent->lerpOrigin, 15 );
       }
       break;
 

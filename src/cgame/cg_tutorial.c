@@ -270,6 +270,36 @@ static void CG_AlienLevel1Text( char *text, playerState_t *ps )
       va( "Press %s to swipe\n",
         CG_KeyNameForCommand( "+attack" ) ) );
 
+  if( cg.warping )
+  {
+    if( cg.warpExitBlocked )
+    {      
+      Q_strcat( text, MAX_TUTORIAL_TEXT,
+          va( "You can't stop warping if you're intersecting a "
+              "player or a building\n" ) );
+    }
+    else
+    {
+      Q_strcat( text, MAX_TUTORIAL_TEXT,
+          va( "Release %s to stop warping\n",
+            CG_KeyNameForCommand( "+button5" ) ) );
+    }
+  }
+  else
+  {
+    if( ps->stats[ STAT_MISC ] < LEVEL1_WARP_MIN_TIME )
+    {
+      Q_strcat( text, MAX_TUTORIAL_TEXT,
+        va( "You have to wait before warping again.\n" ) );
+    }
+    else
+    {
+      Q_strcat( text, MAX_TUTORIAL_TEXT,
+          va( "Hold down %s to warp\n",
+            CG_KeyNameForCommand( "+button5" ) ) );
+    }
+  }
+
   Q_strcat( text, MAX_TUTORIAL_TEXT,
       va( "Press %s to walk on walls\n",
         CG_KeyNameForCommand( "+movedown" ) ) );

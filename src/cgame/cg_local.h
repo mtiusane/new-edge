@@ -1363,6 +1363,7 @@ typedef struct
   qhandle_t   warpOverlay;
   qhandle_t   warpOverlayBlocked;
   qhandle_t   warpingShader;
+  qhandle_t   warpingEnvironmentShader;
 } cgMedia_t;
 
 typedef struct

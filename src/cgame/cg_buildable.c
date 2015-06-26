@@ -1399,6 +1399,11 @@ void CG_Buildable( centity_t *cent )
   if( CG_PlayerIsBuilder( es->modelindex ) && CG_BuildableRemovalPending( es->number ) )
     ent.customShader = cgs.media.redBuildShader;
 
+  if( cg.warping )
+  {
+    ent.customShader = cgs.media.warpingEnvironmentShader;
+  }
+
   //add to refresh list
   trap_R_AddRefEntityToScene( &ent );
 
@@ -1444,6 +1449,11 @@ void CG_Buildable( centity_t *cent )
     if( CG_PlayerIsBuilder( es->modelindex ) && CG_BuildableRemovalPending( es->number ) )
       turretBarrel.customShader = cgs.media.redBuildShader;
 
+    if( cg.warping )
+    {
+      turretBarrel.customShader = cgs.media.warpingEnvironmentShader;
+    }
+
     trap_R_AddRefEntityToScene( &turretBarrel );
   }
 
@@ -1488,6 +1498,11 @@ void CG_Buildable( centity_t *cent )
 
     if( CG_PlayerIsBuilder( es->modelindex ) && CG_BuildableRemovalPending( es->number ) )
       turretTop.customShader = cgs.media.redBuildShader;
+
+    if( cg.warping )
+    {
+      turretTop.customShader = cgs.media.warpingEnvironmentShader;
+    }
 
     trap_R_AddRefEntityToScene( &turretTop );
   }
