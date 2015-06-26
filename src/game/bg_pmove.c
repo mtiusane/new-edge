@@ -3857,11 +3857,11 @@ void PM_WraithMechanics( void )
 
   if( pm->ps->stats[ STAT_MISC ] < 0 )
   {
-    if( target && pm->ps->weaponTime <= 0 )
+    /*if( target && pm->ps->weaponTime <= 0 )
     {
       PM_AddEvent( EV_NOAMMO );
       pm->ps->weaponTime += 500;
-    }
+    }*/
     
     target = qfalse;
     force_exit = qtrue;
@@ -3877,11 +3877,11 @@ void PM_WraithMechanics( void )
   {
     if( pm->ps->stats[ STAT_MISC ] < LEVEL1_WARP_MIN_TIME )
     {
-      if( pm->ps->weaponTime <= 0 )
+      /*if( pm->ps->weaponTime <= 0 )
       {
         PM_AddEvent( EV_NOAMMO );
         pm->ps->weaponTime += 500;
-      }
+      }*/
       goto done;
     }
 
@@ -3920,7 +3920,7 @@ done:
 
   if( pm->ps->eFlags & EF_WARPING )
   {
-    pm->tracemask = MASK_SOLID;
+    pm->tracemask = MASK_DEADSOLID;
     pm->ps->stats[ STAT_MISC ] -= pml.msec;
     pm->cmd.buttons &= ~BUTTON_ATTACK;
   }

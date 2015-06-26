@@ -1007,7 +1007,14 @@ void CG_EntityEvent( centity_t *cent, vec3_t position )
           CG_AttachToPoint( &ps->attachment );
         }
 
-        trap_S_StartSound( NULL, es->number, CHAN_AUTO, cgs.media.warpEnterSound );
+        if( clientNum == cg.predictedPlayerState.clientNum )
+        {
+          trap_S_StartSound( NULL, es->number, CHAN_AUTO, cgs.media.warpEnterSound );
+        }
+        else
+        {
+          trap_S_StartSound( position, ENTITYNUM_WORLD, CHAN_AUTO, cgs.media.warpEnterSound );
+        }
 
         CG_InduceViewQuake( cent->lerpOrigin, 15 );
       }
@@ -1025,7 +1032,14 @@ void CG_EntityEvent( centity_t *cent, vec3_t position )
           CG_AttachToPoint( &ps->attachment );
         }
 
-        trap_S_StartSound( NULL, es->number, CHAN_AUTO, cgs.media.warpExitSound );
+        if( clientNum == cg.predictedPlayerState.clientNum )
+        {
+          trap_S_StartSound( NULL, es->number, CHAN_AUTO, cgs.media.warpExitSound );
+        }
+        else
+        {
+          trap_S_StartSound( position, ENTITYNUM_WORLD, CHAN_AUTO, cgs.media.warpExitSound );
+        }
 
         CG_InduceViewQuake( cent->lerpOrigin, 15 );
       }

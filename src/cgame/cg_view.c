@@ -1439,6 +1439,9 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView, qboolean demo
   cg.renderingThirdPerson = ( cg_thirdPerson.integer || ( cg.snap->ps.stats[ STAT_HEALTH ] <= 0 ) || 
                             ( cg.chaseFollow && cg.snap->ps.pm_flags & PMF_FOLLOW) );
 
+  cg.warping = ( cg.predictedPlayerEntity.currentState.eFlags & EF_WARPING ) &&
+               cg.predictedPlayerState.weapon == WP_ALEVEL1;
+
   // update speedometer
   CG_AddSpeed( );
 
