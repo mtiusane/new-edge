@@ -687,3 +687,12 @@ gfx/misc/nopower
     rgbGen identity
   }
 }
+
+
+gfx/brighten
+{
+  {
+    map *white
+    blendFunc GL_DST_COLOR GL_ONE
+  }
+}

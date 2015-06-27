@@ -241,6 +241,8 @@ vmCvar_t  cg_healthBarAlpha;
 vmCvar_t  cg_hitSounds;
 vmCvar_t  cg_hitStats;
 
+vmCvar_t  cg_brighten;
+
 typedef struct
 {
   vmCvar_t  *vmCvar;
@@ -397,7 +399,9 @@ static cvarTable_t cvarTable[ ] =
   { &cg_healthBarAlpha, "cg_healthBarAlpha", "0.5", CVAR_ARCHIVE },
   
   { &cg_hitSounds, "cg_hitSounds", "1", CVAR_ARCHIVE },
-  { &cg_hitStats, "cg_hitStats", "0", CVAR_ARCHIVE }
+  { &cg_hitStats, "cg_hitStats", "0", CVAR_ARCHIVE },
+
+  { &cg_brighten, "cg_brighten", "0", CVAR_ARCHIVE }
 };
 
 static int   cvarTableSize = sizeof( cvarTable ) / sizeof( cvarTable[0] );
@@ -941,6 +945,8 @@ static void CG_RegisterGraphics( void )
   cgs.media.warpingShader             = trap_R_RegisterShader( "gfx/level1/warping" );
   cgs.media.warpingEnvironmentShader  = trap_R_RegisterShader( "gfx/level1/warpingEnvironment" );
   cgs.media.warpParticle              = trap_R_RegisterShader( "gfx/level1/warpParticle1" );
+
+  cgs.media.brightenShader            = trap_R_RegisterShader( "gfx/brighten" );
 
   CG_BuildableStatusParse( "ui/assets/human/buildstat.cfg", &cgs.humanBuildStat );
   CG_BuildableStatusParse( "ui/assets/alien/buildstat.cfg", &cgs.alienBuildStat );

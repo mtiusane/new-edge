@@ -4138,6 +4138,21 @@ static void CG_DrawHealthBars( void )
 
 /*
 =================
+CG_Brighten
+=================
+*/
+static void CG_Brighten( int iterations )
+{
+  int i;
+
+  for( i = 0; i < iterations; i++ )
+  {
+    CG_DrawPic( 0, 0, 640, 480, cgs.media.brightenShader );
+  }
+}
+
+/*
+=================
 CG_DrawWarpOverlay
 =================
 */
@@ -4176,6 +4191,12 @@ static void CG_DrawWarpOverlay( void )
   if( cg.warping )
   {
     trap_R_SetColor( NULL );
+
+    if( cg_brighten.integer < 2 )
+    {
+      CG_Brighten( MIN( 2 - cg_brighten.integer, 2 ) );
+    }
+
     CG_DrawPic( 0, 0, 640, 480, cgs.media.warpOverlay );
 
     if( cg.warpExitBlocked )
@@ -4210,6 +4231,8 @@ static void CG_Draw2D( void )
   // fading to black if stamina runs out
   // (only 2D that can't be disabled)
   CG_DrawLighting( );
+
+  CG_Brighten( cg_brighten.integer );
 
   CG_DrawWarpOverlay( );
 

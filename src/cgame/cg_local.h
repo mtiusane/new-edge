@@ -1365,6 +1365,8 @@ typedef struct
   qhandle_t   warpingShader;
   qhandle_t   warpingEnvironmentShader;
   qhandle_t   warpParticle;
+
+  qhandle_t   brightenShader;
 } cgMedia_t;
 
 typedef struct
@@ -1630,6 +1632,8 @@ extern  vmCvar_t    cg_healthBarAlpha;
 
 extern  vmCvar_t    cg_hitSounds;
 extern  vmCvar_t    cg_hitStats;
+
+extern  vmCvar_t    cg_brighten;
 
 //
 // cg_main.c
