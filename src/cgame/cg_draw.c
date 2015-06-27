@@ -4141,13 +4141,28 @@ static void CG_DrawHealthBars( void )
 CG_Brighten
 =================
 */
-static void CG_Brighten( int iterations )
+static void CG_Brighten( float target )
 {
   int i;
 
-  for( i = 0; i < iterations; i++ )
+  if( target <= 1 )
   {
-    CG_DrawPic( 0, 0, 640, 480, cgs.media.brightenShader );
+    return;
+  }
+
+repeat:
+  for( i = 0; i < NUM_BRIGHTEN_SHADERS; i++ )
+  {
+    float factor;
+
+    factor = 1.0 + pow( 2, -i );
+
+    if( target >= factor )
+    {
+      CG_DrawPic( 0, 0, 640, 480, cgs.media.brightenShaders[ i ] );
+      target /= factor;
+      goto repeat;
+    }
   }
 }
 
@@ -4192,11 +4207,6 @@ static void CG_DrawWarpOverlay( void )
   {
     trap_R_SetColor( NULL );
 
-    if( cg_brighten.integer < 2 )
-    {
-      CG_Brighten( MIN( 2 - cg_brighten.integer, 2 ) );
-    }
-
     CG_DrawPic( 0, 0, 640, 480, cgs.media.warpOverlay );
 
     if( cg.warpExitBlocked )
@@ -4232,7 +4242,14 @@ static void CG_Draw2D( void )
   // (only 2D that can't be disabled)
   CG_DrawLighting( );
 
-  CG_Brighten( cg_brighten.integer );
+  if( cg.warping && cg_brightenWraith.value >= cg_brighten.value )
+  {
+    CG_Brighten( cg_brightenWraith.value );
+  }
+  else
+  {
+    CG_Brighten( cg_brighten.value );
+  }
 
   CG_DrawWarpOverlay( );
 

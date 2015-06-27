@@ -689,10 +689,43 @@ gfx/misc/nopower
 }
 
 
-gfx/brighten
+gfx/brighten0 // x2
 {
   {
     map *white
     blendFunc GL_DST_COLOR GL_ONE
   }
 }
+
+gfx/brighten1 // x1.5
+{
+  {
+    map gfx/gray_128
+    blendFunc GL_DST_COLOR GL_ONE
+  }
+}
+
+gfx/brighten2 // x1.25
+{
+  {
+    map gfx/gray_64
+    blendFunc GL_DST_COLOR GL_ONE
+  }
+}
+
+gfx/brighten3 // x1.125
+{
+  {
+    map gfx/gray_32
+    blendFunc GL_DST_COLOR GL_ONE
+  }
+}
+
+gfx/brighten4 // x1.0625
+{
+  {
+    map gfx/gray_16
+    blendFunc GL_DST_COLOR GL_ONE
+  }
+}
+

@@ -1166,6 +1166,7 @@ typedef struct
   qboolean      warpExitBlocked;
 } cg_t;
 
+#define NUM_BRIGHTEN_SHADERS 5
 
 // all of the model, shader, and sound references that are
 // loaded at gamestate time are stored in cgMedia_t
@@ -1366,7 +1367,7 @@ typedef struct
   qhandle_t   warpingEnvironmentShader;
   qhandle_t   warpParticle;
 
-  qhandle_t   brightenShader;
+  qhandle_t   brightenShaders[ NUM_BRIGHTEN_SHADERS ];
 } cgMedia_t;
 
 typedef struct
@@ -1634,6 +1635,7 @@ extern  vmCvar_t    cg_hitSounds;
 extern  vmCvar_t    cg_hitStats;
 
 extern  vmCvar_t    cg_brighten;
+extern  vmCvar_t    cg_brightenWraith;
 
 //
 // cg_main.c
