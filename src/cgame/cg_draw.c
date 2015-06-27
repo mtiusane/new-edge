@@ -4143,19 +4143,50 @@ CG_DrawWarpOverlay
 */
 static void CG_DrawWarpOverlay( void )
 {
-  if( !cg.warping ||
-      cg.renderingThirdPerson )
+  static qboolean last_valid = qfalse, last_warping;
+  static int timestamp = 0;
+  
+  if( cg.renderingThirdPerson ||
+      cg.predictedPlayerState.weapon != WP_ALEVEL1 )
   {
+    last_valid = qfalse;
     return;
   }
 
-  trap_R_SetColor( NULL );
-  CG_DrawPic( 0, 0, 640, 480, cgs.media.warpOverlay );
-
-  if( cg.warpExitBlocked )
+  if( last_valid )
   {
-    CG_DrawPic( 0, 0, 640, 480, cgs.media.warpOverlayBlocked );
+    if( last_warping != cg.warping )
+    {
+      timestamp = cg.time;
+    }
+
+    if( timestamp && cg.time < timestamp + 200 )
+    {
+      float frac;
+  
+      frac = ( 1.0f - ( cg.time - timestamp ) / 200.0f );
+      frac = pow( frac, 4 ) * 6;
+
+      CG_DrawPic( 320 - 320 * frac, 240 - 240 * frac,
+                  640 * frac, 480 * frac,
+                  cgs.media.warpParticle );
+    }
   }
+
+  if( cg.warping )
+  {
+    trap_R_SetColor( NULL );
+    CG_DrawPic( 0, 0, 640, 480, cgs.media.warpOverlay );
+
+    if( cg.warpExitBlocked )
+    {
+      CG_DrawPic( 0, 0, 640, 480, cgs.media.warpOverlayBlocked );
+    }
+  }
+
+out:
+  last_valid = qtrue;
+  last_warping = cg.warping;
 }
 
 //==================================================================================

@@ -940,6 +940,7 @@ static void CG_RegisterGraphics( void )
   cgs.media.warpOverlayBlocked        = trap_R_RegisterShader( "gfx/level1/warpOverlayBlocked" );
   cgs.media.warpingShader             = trap_R_RegisterShader( "gfx/level1/warping" );
   cgs.media.warpingEnvironmentShader  = trap_R_RegisterShader( "gfx/level1/warpingEnvironment" );
+  cgs.media.warpParticle              = trap_R_RegisterShader( "gfx/level1/warpParticle1" );
 
   CG_BuildableStatusParse( "ui/assets/human/buildstat.cfg", &cgs.humanBuildStat );
   CG_BuildableStatusParse( "ui/assets/alien/buildstat.cfg", &cgs.alienBuildStat );
