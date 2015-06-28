@@ -2861,9 +2861,10 @@ static void PM_BeginWeaponChange( int weapon )
   if( pm->ps->weaponstate == WEAPON_DROPPING )
     return;
 
-  // prevent storing a primed rocket launcher
-  if( pm->ps->weapon == WP_ROCKET_LAUNCHER &&
-    pm->ps->stats[ STAT_MISC ] > 0 )
+  // prevent storing a primed rocket launcher or grenade
+  if( ( pm->ps->weapon == WP_ROCKET_LAUNCHER || 
+        pm->ps->weapon == WP_GRENADE ) &&
+      pm->ps->stats[ STAT_MISC ] > 0 )
     return;
 
   // cancel a reload
@@ -2932,9 +2933,17 @@ static void PM_TorsoAnimation( void )
     if( !( pm->ps->persistant[ PERS_STATE ] & PS_NONSEGMODEL ) )
     {
       if( pm->ps->weapon == WP_BLASTER )
+      {
         PM_ContinueTorsoAnim( TORSO_STAND2 );
+      }
+      else if( pm->ps->weapon == WP_GRENADE )
+      {
+        PM_ContinueTorsoAnim( TORSO_STAND3 );
+      }
       else
+      {
         PM_ContinueTorsoAnim( TORSO_STAND );
+      }
     }
 
     PM_ContinueWeaponAnim( WANIM_IDLE );
@@ -3104,6 +3113,32 @@ static void PM_Weapon( void )
     }
   }
 
+  if( pm->ps->weapon == WP_GRENADE )
+  {
+    if( !pm->ps->weaponTime &&
+        pm->ps->stats[ STAT_GRENADES ] > 0 &&
+        ( ( pm->cmd.buttons & BUTTON_ATTACK ) ||
+          pm->ps->stats[ STAT_MISC ] > 0 ) )
+    {
+      int old_time;
+
+      old_time = pm->ps->stats[ STAT_MISC ];
+
+      if( old_time == 0 )
+      {
+        PM_AddEvent( EV_GRENADE_PRIME );
+      }
+
+      pm->ps->stats[ STAT_MISC ] += pml.msec;
+
+      if( pm->ps->stats[ STAT_MISC ] < GRENADE_FUSE_TIME &&
+          old_time / 1000 < pm->ps->stats[ STAT_MISC ] / 1000 )
+      {
+        PM_AddEvent( EV_GRENADE_TICK );
+      }
+    }
+  }
+
   // don't allow attack until all buttons are up
   if( pm->ps->pm_flags & PMF_RESPAWNED )
     return;
@@ -3200,7 +3235,9 @@ static void PM_Weapon( void )
   else minAmmo = 1;
 
   // check for out of ammo
-  if( pm->ps->ammo < minAmmo && !pm->ps->clips && !BG_Weapon( pm->ps->weapon )->infiniteAmmo )
+  if( ( pm->ps->weapon != WP_GRENADE && pm->ps->ammo < minAmmo &&
+        !pm->ps->clips && !BG_Weapon( pm->ps->weapon )->infiniteAmmo ) ||
+      ( pm->ps->weapon == WP_GRENADE && pm->ps->stats[ STAT_GRENADES ] <= 0 ) )
   {
     if( attack1 || ( BG_Weapon( pm->ps->weapon )->hasAltMode && attack2 ) || ( BG_Weapon( pm->ps->weapon )->hasThirdMode && attack3 ) )
     {
@@ -3345,6 +3382,36 @@ static void PM_Weapon( void )
         return;
       }
 
+    case WP_GRENADE:
+      if( attack1 || pm->ps->stats[ STAT_MISC ] == 0 )
+      {
+        pm->ps->weaponTime = 0;
+
+        if( pm->ps->stats[ STAT_MISC ] < GRENADE_FUSE_TIME )
+        {
+          pm->ps->weaponstate = WEAPON_READY;
+          return;
+        }
+      }
+
+      if( pm->ps->stats[ STAT_MISC ] > GRENADE_TIME_MIN )
+      {
+        attack1 = qtrue;
+      }
+      else if( pm->ps->stats[ STAT_MISC ] > 0 )
+      {
+        pm->ps->weaponTime = 0;
+        pm->ps->weaponstate = WEAPON_READY;
+        return;
+      }
+      else
+      {
+        pm->ps->weaponTime = 0;
+        pm->ps->weaponstate = WEAPON_READY;
+        return;
+      }
+      break;
+
     default:
       if( !attack1 && !attack2 && !attack3 )
       {
@@ -3462,7 +3529,11 @@ static void PM_Weapon( void )
     //FIXME: this should be an option in the client weapon.cfg
     switch( pm->ps->weapon )
     {
-		
+      case WP_GRENADE:
+        PM_StartTorsoAnim( TORSO_ATTACK3 );
+        PM_StartWeaponAnim( WANIM_ATTACK1 );
+        break;
+
       case WP_BLASTER:
         PM_StartTorsoAnim( TORSO_ATTACK2 );
         PM_StartWeaponAnim( WANIM_ATTACK1 );
@@ -3544,27 +3615,39 @@ static void PM_Weapon( void )
       ( pm->ps->weapon == WP_ALEVEL4 && attack3 )|| 
       ( pm->ps->weapon == WP_ALEVEL5 && attack3 ))
   {
-    switch( pm->ps->weapon ) {
-    case WP_MASS_DRIVER:
-      if( attack3 ) {
-	pm->ps->ammo -= 7;
-	if( pm->ps->ammo < 7 ) pm->ps->ammo += 1;
-      } else pm->ps->ammo--;
-      break;
-    case WP_LUCIFER_CANNON:
-      if( attack1 && !attack2 ) {
-	pm->ps->ammo -= ( pm->ps->stats[ STAT_MISC ] * LCANNON_CHARGE_AMMO +
-			  LCANNON_CHARGE_TIME_MAX - 1 ) / LCANNON_CHARGE_TIME_MAX;
-      } else pm->ps->ammo--;
-      break;
-    case WP_LAS_GUN:
-      if( attack2 ) {
-	pm->ps->ammo -= 25;
-      } else pm->ps->ammo--;     
-      break;
-    default:
-      pm->ps->ammo--;
-      break;
+    switch( pm->ps->weapon )
+    {
+      case WP_LUCIFER_CANNON:
+        if( attack1 && !attack2 )
+        {
+          pm->ps->ammo -=
+            ( pm->ps->stats[ STAT_MISC ] * LCANNON_CHARGE_AMMO +
+            LCANNON_CHARGE_TIME_MAX - 1 ) / LCANNON_CHARGE_TIME_MAX;
+        }
+        else
+        {
+          pm->ps->ammo--;
+        }
+        break;
+
+      case WP_LAS_GUN:
+        if( attack2 )
+        {
+          pm->ps->ammo -= 25;
+        }
+        else
+        {
+          pm->ps->ammo--;
+        }
+        break;
+
+      case WP_GRENADE:
+        pm->ps->stats[ STAT_GRENADES ]--;
+        break;
+
+      default:
+        pm->ps->ammo--;
+        break;
     }
 
     // Stay on the safe side

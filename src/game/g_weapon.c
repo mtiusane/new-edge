@@ -80,7 +80,12 @@ void G_GiveClientMaxAmmo( gentity_t *ent, qboolean buyingEnergyAmmo )
   for( i = WP_NONE + 1; i < WP_NUM_WEAPONS; i++ )
   {
     qboolean energyWeapon;
-  
+
+    if( i == WP_GRENADE )
+    {
+      continue;
+    }
+
     energyWeapon = BG_Weapon( i )->usesEnergy;
     if( !BG_InventoryContainsWeapon( i, ent->client->ps.stats ) ||
         BG_Weapon( i )->infiniteAmmo ||
@@ -626,9 +631,20 @@ GRENADE
 
 void throwGrenade( gentity_t *ent )
 {
+  int fuse_left;
+
   G_CombatStats_Fire( ent, CSW_GRENADE, GRENADE_DAMAGE );
 
-  launch_grenade( ent, muzzle, forward );
+  fuse_left = GRENADE_FUSE_TIME - ent->client->ps.stats[ STAT_MISC ];
+
+  if( fuse_left < 0 )
+  {
+    fuse_left = 0;
+  }
+
+  launch_grenade( ent, muzzle, forward, fuse_left );
+
+  ent->client->ps.stats[ STAT_MISC ] = 0;
 }
 
 /*
@@ -937,7 +953,7 @@ void CheckCkitRepair( gentity_t *ent )
   int         bHealth;
 
   if( ent->client->ps.weaponTime > 0 ||
-      ent->client->ps.stats[ STAT_MISC ] > 0 )
+      ent->client->ps.stats[ STAT_BUILD_TIMER ] > 0 )
     return;
 
   BG_GetClientViewOrigin( &ent->client->ps, viewOrigin );
@@ -997,7 +1013,7 @@ void buildFire( gentity_t *ent, dynMenu_t menu )
 
   if( buildable > BA_NONE )
   {
-    if( ent->client->ps.stats[ STAT_MISC ] > 0 )
+    if( ent->client->ps.stats[ STAT_BUILD_TIMER ] > 0 )
     {
       G_AddEvent( ent, EV_BUILD_DELAY, ent->client->ps.clientNum );
       return;
@@ -1007,7 +1023,7 @@ void buildFire( gentity_t *ent, dynMenu_t menu )
     {
       if( !g_cheats.integer )
       {
-        ent->client->ps.stats[ STAT_MISC ] +=
+        ent->client->ps.stats[ STAT_BUILD_TIMER ] +=
           BG_Buildable( buildable )->buildTime;
       }
 

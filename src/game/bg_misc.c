@@ -3190,8 +3190,7 @@ static const weaponAttributes_t bg_weapons[ ] =
     qfalse,               //qboolean  longRanged;
     TEAM_ALIENS           //team_t    team;
   },
-  
-    {
+  {
     WP_BLASTER,           //int       weaponNum;
     0,                    //int       price;
     STAGE_GE_1,           //int  stages
@@ -3507,11 +3506,11 @@ static const weaponAttributes_t bg_weapons[ ] =
   },
   {
     WP_GRENADE,           //int       weaponNum;
-    GRENADE_PRICE,        //int       price;
-    STAGE_GE_3,           //int  stages
-    SLOT_NONE,            //int       slots;
+    0,                    //int       price;
+    STAGE_GE_1,           //int       stages
+    0,                    //int       slots;
     "grenade",            //char      *weaponName;
-    "Grenade",            //char      *humanName;
+    "[yenade]Grenades",   //char      *humanName;
     "",
     1,                    //int       maxAmmo;
     0,                    //int       maxClips;
@@ -3838,7 +3837,7 @@ static const upgradeAttributes_t bg_upgrades[ ] =
     STAGE_GE_4,             //int  stages
     SLOT_NONE,              //int   slots;
     "gren",                 //char  *upgradeName;
-    "[yenade]Explosive Grenade",              //char  *humanName;
+    "[yenade]Grenade",      //char  *humanName;
     "A small incendinary device ideal for damaging tightly packed "
       "alien structures. Has a five second timer.",
     0,
@@ -4101,7 +4100,12 @@ char *eventnames[ ] =
   "EV_MGTURRET_SPINUP", // trigger a sound
   "EV_RPTUSE_SOUND",    // trigger a sound
   "EV_LEV2_ZAP",
-  "EV_ACIDBOMB_BOUNCE"
+  "EV_ACIDBOMB_BOUNCE",
+  "EV_ROCKETL_PRIME",
+  "EV_WARP_ENTER",
+  "EV_WARP_EXIT",
+  "EV_GRENADE_PRIME",
+  "EV_GRENADE_TICK"
 };
 
 /*
@@ -4382,8 +4386,9 @@ Does the player hold a weapon?
 */
 qboolean BG_InventoryContainsWeapon( int weapon, int stats[ ] )
 {
-  // humans always have a blaster
-  if( stats[ STAT_TEAM ] == TEAM_HUMANS && weapon == WP_BLASTER )
+  // humans always have a blaster and a grenade thrower
+  if( stats[ STAT_TEAM ] == TEAM_HUMANS &&
+      ( weapon == WP_BLASTER || weapon == WP_GRENADE ) )
     return qtrue;
 
   return ( stats[ STAT_WEAPON ] == weapon );
@@ -4400,8 +4405,12 @@ int BG_SlotsForInventory( int stats[ ] )
   int i, slot, slots;
 
   slots = BG_Weapon( stats[ STAT_WEAPON ] )->slots;
+
   if( stats[ STAT_TEAM ] == TEAM_HUMANS )
-    slots |= BG_Weapon( WP_BLASTER )->slots;
+  {
+    slots |= BG_Weapon( WP_BLASTER )->slots |
+             BG_Weapon( WP_GRENADE )->slots;
+  }
 
   for( i = UP_NONE; i < UP_NUM_UPGRADES; i++ )
   {
@@ -4652,6 +4661,12 @@ qboolean BG_PlayerCanChangeWeapon( playerState_t *ps )
   if( ps->weapon == WP_LUCIFER_CANNON &&
       ps->stats[ STAT_MISC ] > LCANNON_CHARGE_TIME_MIN )
     return qfalse;
+
+  if( ps->weapon == WP_GRENADE &&
+      ps->stats[ STAT_MISC ] > 0 )
+  {
+    return qfalse;
+  }
 
   return ps->weaponTime <= 0 || ps->weaponstate != WEAPON_FIRING;
 }
@@ -5100,6 +5115,11 @@ weapon_t BG_PrimaryWeapon( int stats[ ] )
 
   if( BG_InventoryContainsWeapon( WP_BLASTER, stats ) )
     return WP_BLASTER;
+
+  if( BG_InventoryContainsWeapon( WP_GRENADE, stats ) )
+  {
+    return WP_GRENADE;
+  }
 
   return WP_NONE;
 }

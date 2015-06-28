@@ -1554,7 +1554,7 @@ void ClientSpawn( gentity_t *ent, gentity_t *spawn, vec3_t origin, vec3_t angles
   {
     spawn_angles[ YAW ] += 180.0f;
     AngleNormalize360( spawn_angles[ YAW ] );
-    
+
     //
     G_Sound( ent, CHAN_VOICE, G_SoundIndex( "sound/buildables/human/spawn1.wav" ) );
   }

@@ -461,7 +461,8 @@ static void CG_SetUIVars( void )
         BG_Upgrade( i )->purchasable )
       strcat( carriageCvar, va( "U%d ", i ) );
   }
-  strcat( carriageCvar, "$" );
+
+  strcat( carriageCvar, va( "G%d $", cg.snap->ps.stats[ STAT_GRENADES ] ) );
 
   trap_Cvar_Set( "ui_carriage", carriageCvar );
 
@@ -777,6 +778,9 @@ static void CG_RegisterSounds( void )
   cgs.media.warpEnterSound          = trap_S_RegisterSound( "sound/player/level1/warp1.wav", qfalse );
   cgs.media.warpExitSound           = trap_S_RegisterSound( "sound/player/level1/warp2.wav", qfalse );
   cgs.media.warpingSound            = trap_S_RegisterSound( "sound/player/level1/warping.wav", qfalse );
+
+  cgs.media.grenadePrimeSound       = trap_S_RegisterSound( "sound/weapons/grenade/prime.wav", qfalse );
+  cgs.media.grenadeTickSound        = trap_S_RegisterSound( "sound/weapons/grenade/tick.wav", qfalse );
 }
 
 

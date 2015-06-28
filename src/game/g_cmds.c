@@ -449,7 +449,7 @@ void Cmd_Give_f( gentity_t *ent )
   {
     ADMP( "usage: give [what]\n" );
     ADMP( "usage: valid choices are: all, health, funds [amount], stamina, "
-          "ammo\n" );
+          "ammo, grenades\n" );
     return;
   }
 
@@ -488,18 +488,32 @@ void Cmd_Give_f( gentity_t *ent )
   if( give_all || Q_stricmp( name, "stamina" ) == 0 )
     ent->client->ps.stats[ STAT_STAMINA ] = STAMINA_MAX;
 
+  if( give_all || Q_stricmp( name, "grenades" ) == 0 )
+  {
+    ent->client->ps.stats[ STAT_GRENADES ] = GRENADE_MAX;
+  }
+
   if( give_all || Q_stricmp( name, "ammo" ) == 0 )
   {
     gclient_t *client = ent->client;
+    int weapon;
 
     if( client->ps.weapon != WP_ALEVEL3_UPG &&
         BG_Weapon( client->ps.weapon )->infiniteAmmo )
       return;
 
-    client->ps.ammo = BG_Weapon( client->ps.weapon )->maxAmmo;
-    client->ps.clips = BG_Weapon( client->ps.weapon )->maxClips;
+    weapon = BG_PrimaryWeapon( client->ps.stats );
 
-    if( BG_Weapon( client->ps.weapon )->usesEnergy &&
+    if( weapon == WP_BLASTER ||
+        weapon == WP_GRENADE )
+    {
+      return;
+    }
+
+    client->ps.ammo = BG_Weapon( weapon )->maxAmmo;
+    client->ps.clips = BG_Weapon( weapon )->maxClips;
+
+    if( BG_Weapon( weapon )->usesEnergy &&
         BG_InventoryContainsUpgrade( UP_BATTPACK, client->ps.stats ) )
       client->ps.ammo = (int)( (float)client->ps.ammo * BATTPACK_MODIFIER );
   }
@@ -1777,7 +1791,7 @@ void Cmd_Class_f( gentity_t *ent )
       if( ent->client->sess.spectatorState == SPECTATOR_NOT &&
           ( currentClass == PCL_ALIEN_BUILDER0 ||
             currentClass == PCL_ALIEN_BUILDER0_UPG ) &&
-          ent->client->ps.stats[ STAT_MISC ] > 0 )
+          ent->client->ps.stats[ STAT_BUILD_TIMER ] > 0 )
       {
         G_TriggerMenu( ent->client->ps.clientNum, MN_A_EVOLVEBUILDTIMER );
         return;
@@ -1925,7 +1939,7 @@ void Cmd_Destroy_f( gentity_t *ent )
         ( ent->client->pers.teamSelection == TEAM_HUMANS &&
           !G_FindPower( traceEnt, qtrue ) ) )
     {
-      if( ent->client->ps.stats[ STAT_MISC ] > 0 )
+      if( ent->client->ps.stats[ STAT_BUILD_TIMER ] > 0 )
       {
         G_AddEvent( ent, EV_BUILD_DELAY, ent->client->ps.clientNum );
         return;
@@ -1950,7 +1964,7 @@ void Cmd_Destroy_f( gentity_t *ent )
       {
         if( !g_cheats.integer ) // add a bit to the build timer
         {
-            ent->client->ps.stats[ STAT_MISC ] +=
+            ent->client->ps.stats[ STAT_BUILD_TIMER ] +=
               BG_Buildable( traceEnt->s.modelindex )->buildTime / 4;
         }
         G_Damage( traceEnt, ent, ent, forward, tr.endpos,
@@ -1978,7 +1992,8 @@ void Cmd_ActivateItem_f( gentity_t *ent )
   // "weapon" aliased to whatever weapon you have
   if( !Q_stricmp( "weapon", s ) )
   {
-    if( ent->client->ps.weapon == WP_BLASTER &&
+    if( ( ent->client->ps.weapon == WP_BLASTER ||
+          ent->client->ps.weapon == WP_GRENADE ) &&
         BG_PlayerCanChangeWeapon( &ent->client->ps ) )
       G_ForceWeaponChange( ent, WP_NONE );
     return;
@@ -1986,6 +2001,13 @@ void Cmd_ActivateItem_f( gentity_t *ent )
 
   upgrade = BG_UpgradeByName( s )->number;
   weapon = BG_WeaponByName( s )->number;
+
+  // for backward compatibility
+  if( upgrade == UP_GRENADE )
+  {
+    upgrade = UP_NONE;
+    weapon = WP_GRENADE;
+  }
 
   if( upgrade != UP_NONE && BG_InventoryContainsUpgrade( upgrade, ent->client->ps.stats ) )
     BG_ActivateUpgrade( upgrade, ent->client->ps.stats );
@@ -2045,7 +2067,8 @@ void Cmd_ToggleItem_f( gentity_t *ent )
 
     //special case to allow switching between
     //the blaster and the primary weapon
-    if( ent->client->ps.weapon != WP_BLASTER )
+    if( ent->client->ps.weapon != WP_BLASTER &&
+        ent->client->ps.weapon != WP_GRENADE )
       weapon = WP_BLASTER;
     else
       weapon = WP_NONE;
@@ -2211,6 +2234,12 @@ void Cmd_Buy_f( gentity_t *ent )
       return;
     }
 
+    if( upgrade == UP_GRENADE && ent->client->ps.stats[ STAT_GRENADES ] >= GRENADE_MAX )
+    {
+      trap_SendServerCommand( ent-g_entities, "print \"You can't carry any more grenades\n\"" );
+      return;
+    }
+
     if( upgrade == UP_AMMO )
       G_GiveClientMaxAmmo( ent, energyOnly );
     else
@@ -2230,8 +2259,16 @@ void Cmd_Buy_f( gentity_t *ent )
         ent->client->ps.eFlags ^= EF_TELEPORT_BIT;
       }
 
-      //add to inventory
-      BG_AddUpgradeToInventory( upgrade, ent->client->ps.stats );
+      //UP_GRENADE isn't actually an upgrade, it's ammo for WP_GRENADE
+      if( upgrade == UP_GRENADE )
+      {
+        ent->client->ps.stats[ STAT_GRENADES ]++;
+      }
+      else
+      {
+        //add to inventory
+        BG_AddUpgradeToInventory( upgrade, ent->client->ps.stats );
+      }
     }
 
     if( upgrade == UP_BATTPACK )
@@ -2294,7 +2331,7 @@ void Cmd_Sell_f( gentity_t *ent )
     if( BG_InventoryContainsWeapon( weapon, ent->client->ps.stats ) )
     {
       //guard against selling the HBUILD weapons exploit
-      if( weapon == WP_HBUILD && ent->client->ps.stats[ STAT_MISC ] > 0 )
+      if( weapon == WP_HBUILD && ent->client->ps.stats[ STAT_BUILD_TIMER ] > 0 )
       {
         G_TriggerMenu( ent->client->ps.clientNum, MN_H_ARMOURYBUILDTIMER );
         return;
@@ -2320,8 +2357,18 @@ void Cmd_Sell_f( gentity_t *ent )
       trap_SendServerCommand( ent-g_entities, "print \"You can't sell this item\n\"" );
       return;
     }
+
+    //UP_GRENADE is not an actual upgrade, it's ammo for WP_GRENADE
+    if( upgrade == UP_GRENADE )
+    {
+      if( ent->client->ps.stats[ STAT_GRENADES ] > 0 )
+      {
+        ent->client->ps.stats[ STAT_GRENADES ]--;
+        G_AddCreditToClient( ent->client, (short)BG_Upgrade( upgrade )->price, qfalse );
+      }
+    }
     //remove upgrade if carried
-    if( BG_InventoryContainsUpgrade( upgrade, ent->client->ps.stats ) )
+    else if( BG_InventoryContainsUpgrade( upgrade, ent->client->ps.stats ) )
     {
       // shouldn't really need to test for this, but just to be safe
       if( upgrade == UP_BATTLESUIT )
@@ -2412,6 +2459,14 @@ void Cmd_Sell_f( gentity_t *ent )
         //add to funds
         G_AddCreditToClient( ent->client, (short)BG_Upgrade( i )->price, qfalse );
       }
+    }
+
+    if( ent->client->ps.stats[ STAT_GRENADES ] > 0 )
+    {
+      G_AddCreditToClient( ent->client,
+        ent->client->ps.stats[ STAT_GRENADES ] *
+        (short)BG_Upgrade( UP_GRENADE )->price, qfalse );
+      ent->client->ps.stats[ STAT_GRENADES ] = 0;
     }
   }
   else

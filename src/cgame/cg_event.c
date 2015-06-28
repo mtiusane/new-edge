@@ -1007,6 +1007,14 @@ void CG_EntityEvent( centity_t *cent, vec3_t position )
       }
       break;
 
+    case EV_GRENADE_PRIME:
+      trap_S_StartSound( NULL, es->number, CHAN_AUTO, cgs.media.grenadePrimeSound );
+      break;
+
+    case EV_GRENADE_TICK:
+      trap_S_StartSound( NULL, es->number, CHAN_AUTO, cgs.media.grenadeTickSound );
+      break;
+
     //
     // missile impacts
     //

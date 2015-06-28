@@ -357,11 +357,15 @@ TREMULOUS EDGE MOD SRC FILE
 #define PAINSAW_BLADERANGE          100.0f
 
 #define GRENADE_PRICE               200
-#define GRENADE_REPEAT              0
+#define GRENADE_MAX                 3
+#define GRENADE_REPEAT              500
 #define GRENADE_K_SCALE             1.0f
-#define GRENADE_DAMAGE              HDM(340)
+#define GRENADE_DAMAGE              HDM(200)
 #define GRENADE_RANGE               192.0f
 #define GRENADE_SPEED               700.0f
+#define GRENADE_TIME_MIN            500
+#define GRENADE_TIME_WARN           1500
+#define GRENADE_FUSE_TIME           3000
 
 #define SHOTGUN_PRICE               150
 #define SHOTGUN_SHELLS              8

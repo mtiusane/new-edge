@@ -1367,6 +1367,9 @@ typedef struct
   qhandle_t   warpParticle;
 
   qhandle_t   brightenShaders[ NUM_BRIGHTEN_SHADERS ];
+
+  sfxHandle_t grenadePrimeSound;
+  sfxHandle_t grenadeTickSound;
 } cgMedia_t;
 
 typedef struct

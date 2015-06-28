@@ -315,7 +315,7 @@ static void CG_DrawPlayerCreditsValue( rectDef_t *rect, vec4_t color, qboolean p
   ps = &cg.snap->ps;
 
   //if the build timer pie is showing don't show this
-  if( ( cent->currentState.weapon == WP_ABUILD ) && ps->stats[ STAT_MISC ] )
+  if( ( cent->currentState.weapon == WP_ABUILD ) && ps->stats[ STAT_BUILD_TIMER ] )
     return;
 
   value = ps->persistant[ PERS_CREDIT ];
@@ -454,7 +454,7 @@ static void CG_DrawPlayerClipsRing( rectDef_t *rect, vec4_t backColor,
 {
   playerState_t *ps = &cg.snap->ps;
   centity_t     *cent;
-  float         buildTime = ps->stats[ STAT_MISC ];
+  float         buildTime = ps->stats[ STAT_BUILD_TIMER ];
   float         progress;
   float         maxDelay;
   weapon_t      weapon;
@@ -502,7 +502,7 @@ static void CG_DrawPlayerBuildTimerRing( rectDef_t *rect, vec4_t backColor,
 {
   playerState_t *ps = &cg.snap->ps;
   // centity_t     *cent;
-  float         buildTime = ps->stats[ STAT_MISC ];
+  float         buildTime = ps->stats[ STAT_BUILD_TIMER ];
   float         progress;
   vec4_t        color;
 
@@ -764,7 +764,11 @@ static void CG_DrawPlayerAmmoValue( rectDef_t *rect, vec4_t color )
   int valueMarked = -1;
   qboolean bp = qfalse;
 
-  switch( BG_PrimaryWeapon( cg.snap->ps.stats ) )
+  if( cg.snap->ps.weapon == WP_GRENADE )
+  {
+    value = cg.snap->ps.stats[ STAT_GRENADES ];
+  }
+  else switch( BG_PrimaryWeapon( cg.snap->ps.stats ) )
   {
     case WP_NONE:
     case WP_BLASTER:
@@ -932,7 +936,7 @@ static void CG_DrawPlayerBuildTimer( rectDef_t *rect, vec4_t color )
 
   ps = &cg.snap->ps;
 
-  if( ps->stats[ STAT_MISC ] <= 0 )
+  if( ps->stats[ STAT_BUILD_TIMER ] <= 0 )
     return;
 
   switch( BG_PrimaryWeapon( ps->stats ) )
@@ -945,7 +949,7 @@ static void CG_DrawPlayerBuildTimer( rectDef_t *rect, vec4_t color )
       return;
   }
 
-  index = 8 * ( ps->stats[ STAT_MISC ] - 1 ) / MAXIMUM_BUILD_TIME;
+  index = 8 * ( ps->stats[ STAT_BUILD_TIMER ] - 1 ) / MAXIMUM_BUILD_TIME;
   if( index > 7 )
     index = 7;
   else if( index < 0 )
@@ -970,6 +974,10 @@ static void CG_DrawPlayerClipsValue( rectDef_t *rect, vec4_t color )
   int           value;
   playerState_t *ps = &cg.snap->ps;
 
+  if( cg.snap->ps.weapon == WP_GRENADE )
+  {
+    return;
+  }
   switch( BG_PrimaryWeapon( ps->stats ) )
   {
     case WP_NONE:
@@ -1106,11 +1114,15 @@ static float CG_ChargeProgress( void )
     min = 0;
     max = LEVEL1_WARP_TIME;
   }
-
   else if( cg.snap->ps.weapon == WP_LUCIFER_CANNON || cg.snap->ps.weapon == WP_FLAMER )
   {
     min = LCANNON_CHARGE_TIME_MIN;
     max = LCANNON_CHARGE_TIME_MAX;
+  }
+  else if( cg.snap->ps.weapon == WP_GRENADE )
+  {
+    min = 0;
+    max = GRENADE_FUSE_TIME;
   }
 
   if( max - min <= 0.0f )
@@ -1186,14 +1198,17 @@ static void CG_DrawPlayerChargeBar( rectDef_t *rect, vec4_t ref_color,
   color[ 3 ] = ref_color[ 3 ] * cg.chargeMeterAlpha;
 
   // Flash red for Lucifer Cannon warning
- if( (cg.snap->ps.weapon == WP_FLAMER ) &&
-
-      cg.snap->ps.stats[ STAT_MISC ] >= LCANNON_CHARGE_TIME_WARN &&
-      ( cg.time & 128 ) )
-  {
-    color[ 0 ] = 1.0f;
-    color[ 1 ] = 0.0f;
-    color[ 2 ] = 0.0f;
+ if( cg.time & 128 )
+ {
+    if( ( cg.snap->ps.weapon == WP_LUCIFER_CANNON &&
+          cg.snap->ps.stats[ STAT_MISC ] >= LCANNON_CHARGE_TIME_WARN ) ||
+        ( cg.snap->ps.weapon == WP_GRENADE &&
+          cg.snap->ps.stats[ STAT_MISC ] >= GRENADE_TIME_WARN ) )
+    {
+      color[ 0 ] = 1.0f;
+      color[ 1 ] = 0.0f;
+      color[ 2 ] = 0.0f;
+    }
   }
 
   x = rect->x;
@@ -2745,7 +2760,12 @@ void CG_DrawWeaponIcon( rectDef_t *rect, vec4_t color )
     return;
   }
 
-  if( ps->clips == 0 && !BG_Weapon( weapon )->infiniteAmmo )
+  if( weapon == WP_GRENADE && ps->stats[ STAT_GRENADES ] <= 0 ) 
+  {
+    color[ 0 ] = 1.0f;
+    color[ 1 ] = color[ 2 ] = 0.0f;
+  }
+  else if( weapon != WP_GRENADE && ps->clips == 0 && !BG_Weapon( weapon )->infiniteAmmo )
   {
     float ammoPercent = (float)ps->ammo / (float)maxAmmo;
 

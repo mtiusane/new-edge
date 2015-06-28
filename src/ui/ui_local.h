@@ -270,6 +270,7 @@ typedef struct
 
   int         weapons;
   int         upgrades;
+  int         grenades;
 
   serverStatus_t serverStatus;
 

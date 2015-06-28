@@ -1401,6 +1401,32 @@ void CG_AddViewWeapon( playerState_t *ps )
               hand.origin );
   }
 
+  // Grenade animations
+  // too tired to do this the right way...
+  if( weapon == WP_GRENADE )
+  {
+    float dx = 8.0f, dy = -5.0f, dz = -5.0f;
+
+    if( ps->stats[ STAT_GRENADES ] <= 0 )
+    {
+      return;
+    }
+
+    if( ps->stats[ STAT_MISC ] > 0 )
+    {
+      dx -= 4.0f * ps->stats[ STAT_MISC ] / 100;
+      dz += 2.0f * ps->stats[ STAT_MISC ] / 100;
+    }
+    else if( ps->weaponTime > 0 )
+    {
+      dz -= 0.015f * ps->weaponTime;
+    }
+
+    VectorMA( hand.origin, dx, cg.refdef.viewaxis[ 0 ], hand.origin );
+    VectorMA( hand.origin, dy, cg.refdef.viewaxis[ 1 ], hand.origin );
+    VectorMA( hand.origin, dz, cg.refdef.viewaxis[ 2 ], hand.origin );
+  }
+
   AnglesToAxis( angles, hand.axis );
 
   // map torso animations to weapon animations
@@ -1517,10 +1543,18 @@ void CG_DrawItemSelect( rectDef_t *rect, vec4_t color )
     if( !BG_InventoryContainsWeapon( i, cg.snap->ps.stats ) )
       continue;
 
-    if( !ps->ammo && !ps->clips && !BG_Weapon( i )->infiniteAmmo )
+    if( i == WP_GRENADE && ps->stats[ STAT_GRENADES ] <= 0 )
+    {
       colinfo[ numItems ] = 1;
+    }
+    else if( i != WP_GRENADE && !ps->ammo && !ps->clips && !BG_Weapon( i )->infiniteAmmo )
+    {
+      colinfo[ numItems ] = 1;
+    }
     else
+    {
       colinfo[ numItems ] = 0;
+    }
 
     if( i == cg.weaponSelect )
       selectedItem = numItems;

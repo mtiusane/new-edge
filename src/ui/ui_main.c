@@ -2353,6 +2353,17 @@ static void UI_ParseCarriageList( void )
 
       uiInfo.upgrades |= ( 1 << i );
     }
+    else if( iterator[ 0 ] == 'G' )
+    {
+      iterator++;
+
+      while( iterator[ 0 ] != ' ' )
+        *bufPointer++ = *iterator++;
+
+      *bufPointer++ = '\n';
+
+      uiInfo.grenades = atoi( buffer );
+    }
 
     iterator++;
   }
@@ -2444,7 +2455,7 @@ static void UI_LoadHumanArmourySells( void )
   {
     if( uiInfo.weapons & ( 1 << i ) )
     {
-      uiInfo.humanArmourySellList[ j ].text = BG_Weapon( i )->humanName;
+      uiInfo.humanArmourySellList[ j ].text =BG_Weapon( i )->humanName;
       uiInfo.humanArmourySellList[ j ].cmd =
         String_Alloc( va( "cmd sell %s\n", BG_Weapon( i )->name ) );
       uiInfo.humanArmourySellList[ j ].type = INFOTYPE_WEAPON;
@@ -2458,9 +2469,18 @@ static void UI_LoadHumanArmourySells( void )
 
   for( i = UP_NONE + 1; i < UP_NUM_UPGRADES; i++ )
   {
-    if( uiInfo.upgrades & ( 1 << i ) )
+    if( ( uiInfo.upgrades & ( 1 << i ) ) ||
+        ( i == UP_GRENADE && uiInfo.grenades ) )
     {
-      uiInfo.humanArmourySellList[ j ].text = BG_Upgrade( i )->humanName;
+      if( i == UP_GRENADE )
+      {
+        uiInfo.humanArmourySellList[ j ].text =
+          String_Alloc( va( "%s (%d)", BG_Upgrade( i )->humanName, uiInfo.grenades ) );
+      }
+      else
+      {
+        uiInfo.humanArmourySellList[ j ].text = BG_Upgrade( i )->humanName;
+      }
       uiInfo.humanArmourySellList[ j ].cmd =
         String_Alloc( va( "cmd sell %s\n", BG_Upgrade( i )->name ) );
       uiInfo.humanArmourySellList[ j ].type = INFOTYPE_UPGRADE;
@@ -2482,10 +2502,13 @@ static void UI_ArmouryRefreshCb( void *data )
 {
   int oldWeapons  = uiInfo.weapons;
   int oldUpgrades = uiInfo.upgrades;
+  int oldGrenades = uiInfo.grenades;
 
   UI_ParseCarriageList( );
 
-  if( uiInfo.weapons != oldWeapons || uiInfo.upgrades != oldUpgrades )
+  if( uiInfo.weapons != oldWeapons ||
+      uiInfo.upgrades != oldUpgrades ||
+      uiInfo.grenades != oldGrenades )
   {
     UI_LoadHumanArmouryBuys( );
     UI_LoadHumanArmourySells( );

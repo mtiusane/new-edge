@@ -302,7 +302,7 @@ void G_BalanceTeams( void )
       // Refund all weapons and equipment before team change
       for( i = WP_NONE+1; i < WP_NUM_WEAPONS; ++i )
       {
-        if ( i == WP_HBUILD && ent->client->ps.stats[ STAT_MISC ] > 0 ) 
+        if ( i == WP_HBUILD && ent->client->ps.stats[ STAT_BUILD_TIMER ] > 0 ) 
 		continue;
         if (BG_InventoryContainsWeapon( i, ent->client->ps.stats ) && BG_Weapon( i )->purchasable )
         {

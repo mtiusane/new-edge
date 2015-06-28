@@ -432,6 +432,21 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
   if( level.intermissiontime )
     return;
 
+  if( self->client->ps.weapon == WP_GRENADE &&
+      self->client->ps.stats[ STAT_MISC ] > 0 )
+  {
+    int fuse_left;
+
+    fuse_left = GRENADE_FUSE_TIME - self->client->ps.stats[ STAT_MISC ];
+
+    if( fuse_left < 0 )
+    {
+      fuse_left = 0;
+    }
+
+    launch_grenade( self, self->s.origin, vec3_origin, fuse_left );
+  }
+
   self->client->ps.pm_type = PM_DEAD;
   self->suicideTime = 0;
 

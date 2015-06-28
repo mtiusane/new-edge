@@ -243,8 +243,10 @@ typedef enum
   STAT_MISC,      // for uh...misc stuff (pounce, trample, lcannon)
   STAT_BUILDABLE, // which ghost model to display for building
   STAT_FALLDIST,  // the distance the player fell
-  STAT_VIEWLOCK   // direction to lock the view in
-  // netcode has space for 3 more
+  STAT_VIEWLOCK,   // direction to lock the view in
+  STAT_GRENADES,
+  STAT_BUILD_TIMER
+  // netcode has space for 1 more
 } statIndex_t;
 
 #define SCA_WALLCLIMBER         0x00000001
@@ -569,7 +571,9 @@ typedef enum
   EV_ACIDBOMB_BOUNCE,
   EV_ROCKETL_PRIME,
   EV_WARP_ENTER,
-  EV_WARP_EXIT
+  EV_WARP_EXIT,
+  EV_GRENADE_PRIME,
+  EV_GRENADE_TICK
 } entity_event_t;
 
 typedef enum
@@ -659,10 +663,12 @@ typedef enum
   TORSO_GESTURE,
   TORSO_ATTACK,
   TORSO_ATTACK2,
+  TORSO_ATTACK3,
   TORSO_DROP,
   TORSO_RAISE,
   TORSO_STAND,
   TORSO_STAND2,
+  TORSO_STAND3,
   LEGS_WALKCR,
   LEGS_WALK,
   LEGS_RUN,
