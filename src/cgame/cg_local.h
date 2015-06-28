@@ -1232,7 +1232,6 @@ typedef struct
   sfxHandle_t turretSpinupSound;
   sfxHandle_t hardBounceSound1;
   sfxHandle_t hardBounceSound2;
-  sfxHandle_t mineBounceSound1;
 
   sfxHandle_t airpounce;
   sfxHandle_t acidBombBounceSound1;

@@ -224,8 +224,6 @@ void SP_misc_portal_surface( gentity_t *ent );
 void SP_shooter_rocket( gentity_t *ent );
 void SP_shooter_plasma( gentity_t *ent );
 void SP_shooter_grenade( gentity_t *ent );
-void SP_mine_grenade( gentity_t *ent );
-void SP_smoke_grenade( gentity_t *ent );
 
 void SP_misc_particle_system( gentity_t *ent );
 void SP_misc_anim_model( gentity_t *ent );

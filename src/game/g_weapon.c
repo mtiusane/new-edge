@@ -607,17 +607,6 @@ Normal
 }
 
 /*
-===============
-FireBreath Tyrant
-===============
-*/
-void FireBreath_tyrant( gentity_t *ent )
-{
-  G_CombatStats_Fire( ent, CSW_LEVEL4_ALT, LEVEL4_FIREBREATHDMG );
-  FireBreath_fire( ent, muzzle, forward, 0, LCANNON_RADIUS, LCANNON_SPEED );
-}
-
-/*
 ======================================================================
 FlameTurret
 ======================================================================
@@ -640,18 +629,6 @@ void throwGrenade( gentity_t *ent )
   G_CombatStats_Fire( ent, CSW_GRENADE, GRENADE_DAMAGE );
 
   launch_grenade( ent, muzzle, forward );
-  launch_grenade_flames( ent, muzzle, forward );
-}
-
-/*
-======================================================================
-MINE
-======================================================================
-*/
-
-void throwMine( gentity_t *ent )
-{
-  launch_mine( ent, muzzle, forward );
 }
 
 /*
@@ -1160,8 +1137,6 @@ static void G_FindZapChainTargets( zap_t *zap )
             enemy->client->ps.stats[ STAT_TEAM ] == TEAM_HUMANS ) ||
           ( enemy->s.eType == ET_BUILDABLE &&
             BG_Buildable( enemy->s.modelindex )->team == TEAM_HUMANS ) ||
-	  ( enemy->s.eType == ET_MISSILE &&
-	    enemy->s.weapon == WP_MINE ) ||
 	  ( enemy->client &&
 	    enemy->client->ps.stats[ STAT_TEAM ] == TEAM_ALIENS &&
 	    enemy->client->ps.stats[ STAT_CLASS ] == PCL_ALIEN_LEVEL2_UPG ) ) &&
@@ -1382,8 +1357,6 @@ void areaZapFire( gentity_t *ent )
   if( ( traceEnt->client && traceEnt->client->ps.stats[ STAT_TEAM ] == TEAM_HUMANS ) ||
       ( traceEnt->s.eType == ET_BUILDABLE &&
         BG_Buildable( traceEnt->s.modelindex )->team == TEAM_HUMANS ) ||
-      ( traceEnt->s.eType == ET_MISSILE &&
-	traceEnt->s.weapon == WP_MINE ) ||
       ( traceEnt->client && traceEnt->client->ps.stats[ STAT_TEAM ] == TEAM_ALIENS &&
 	traceEnt->client->ps.stats[ STAT_CLASS ] == PCL_ALIEN_LEVEL2_UPG ) )
   {
@@ -1832,9 +1805,6 @@ void FireWeapon( gentity_t *ent )
       break;
     case WP_GRENADE:
       throwGrenade( ent );
-      break;
-    case WP_MINE:
-      throwMine( ent );
       break;
     case WP_HIVE:
       hiveFire( ent );

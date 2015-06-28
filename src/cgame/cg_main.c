@@ -752,9 +752,7 @@ static void CG_RegisterSounds( void )
 
   cgs.media.hardBounceSound1        = trap_S_RegisterSound( "sound/misc/hard_bounce1.wav", qfalse );
   cgs.media.hardBounceSound2        = trap_S_RegisterSound( "sound/misc/hard_bounce2.wav", qfalse );
-  
-  cgs.media.mineBounceSound1        = trap_S_RegisterSound( "sound/misc/mine_bounce1.wav", qfalse );
-  
+
   cgs.media.airpounce               = trap_S_RegisterSound( "models/weapons/level5/airpounce.wav", qfalse );
   
   cgs.media.acidBombBounceSound1    = trap_S_RegisterSound( "sound/misc/abomb_bounce1.wav", qfalse );

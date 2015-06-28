@@ -363,36 +363,6 @@ TREMULOUS EDGE MOD SRC FILE
 #define GRENADE_RANGE               192.0f
 #define GRENADE_SPEED               700.0f
 
-#define MINE_PRICE		    600
-#define MINE_REPEAT                 0
-#define MINE_K_SCALE                1.0f
-#define MINE_DAMAGE                 HDM(250)
-#define MINE_RANGE		    200.0f
-#define MINE_DETECT		    100.0f
-#define MINE_SPEED                  500.0f
-#define	MINE_INIT_TIME	            3000
-#define MINE_CHECK_FREQUENCY        100
-#define	MINE_BOOM_TIME		    25
-#define MINE_TAKEDAMAGE             qfalse
-#define MINE_HEALTH                 40
-
-#define NADEFLAMES_SPEED            400.0f
-#define CHECK_FREQUENCY             100
-
-#define FLAMES_RANGE		    40.0f
-#define FLAMES_DETECT		    50.0f
-#define FLAMES_CHECK_FREQUENCY      100
-#define FLAMES_SPEED                400.0f
-
-#define SMOKE_PRICE		    250
-#define SMOKE_REPEAT                0
-#define SMOKE_K_SCALE               1.0f
-#define SMOKE_SPEED                 400.0f
-#define SMOKE_DAMAGE                HDM(1)
-#define SMOKE_RANGE		    10.0f
-#define SMOKE_DETECT		    10.0f
-#define SMOKE_CHECK_FREQUENCY       100
-
 #define SHOTGUN_PRICE               150
 #define SHOTGUN_SHELLS              8
 #define SHOTGUN_PELLETS             11 		//used to sync server and client side

@@ -3531,31 +3531,6 @@ static const weaponAttributes_t bg_weapons[ ] =
     TEAM_HUMANS           //team_t    team;
   },
   {
-    WP_MINE,         //int       weaponNum;
-    MINE_PRICE,        //int       price;
-    STAGE_GE_5,           //int  stages
-    SLOT_NONE,            //int       slots;
-    "mine",            //char      *weaponName;
-    "Sticky Grenade",    //char      *weaponHumanName;
-    "",
-    1,                    //int       maxAmmo;
-    0,                    //int       maxClips;
-    qfalse,               //int       infiniteAmmo;
-    qfalse,               //int       usesEnergy;
-    MINE_REPEAT,       //int       repeatRate1;
-    0,                    //int       repeatRate2;
-    0,                    //int       repeatRate3;
-    0,                    //int       reloadTime;
-    MINE_K_SCALE,      //float     knockbackScale;
-    qfalse,               //qboolean  hasAltMode;
-    qfalse,               //qboolean  hasThirdMode;
-    qfalse,               //qboolean  canZoom;
-    90.0f,                //float     zoomFov;
-    qfalse,               //qboolean  purchasable;
-    qfalse,               //qboolean  longRanged;
-    TEAM_HUMANS            //WUTeam_t  team;
-  },
-  {
     WP_HIVE,              //int       weaponNum;
     0,                    //int       price;
     STAGE_GE_1,           //int  stages
@@ -3872,32 +3847,6 @@ static const upgradeAttributes_t bg_upgrades[ ] =
     TEAM_HUMANS             //team_t  team;
   },
   {
-    UP_MINE,             	//int   upgradeNum;
-    MINE_PRICE,          	//int   price;
-    STAGE_GE_5,             //int  stages
-    SLOT_NONE,              //int   slots;
-    "min",                  //char  *upgradeName;
-    "[yenade]Mine",              //char  *upgradeHumanName;
-    "",
-    0,
-    qtrue,                  //qboolean purchasable
-    qtrue,                  //qboolean usable
-    TEAM_HUMANS             //WUTeam_t  team;
-  },
-  {
-    UP_SMOKE,               //int   upgradeNum;
-    SMOKE_PRICE,            //int   price;
-    STAGE_GE_5,             //int  stages
-    SLOT_NONE,              //int   slots;
-    "smo",                  //char  *upgradeName;
-    "[yenade]Smoke Grenade",              //char  *upgradeHumanName;
-    "",
-    0,
-    qfalse,                 //qboolean purchasable
-    qtrue,                  //qboolean usable
-    TEAM_HUMANS              //WUTeam_t  team;
-  },
-  {
     UP_AMMO,                //int   upgradeNum;
     0,                      //int   price;
     STAGE_GE_1,             //int  stages
@@ -4106,7 +4055,6 @@ char *eventnames[ ] =
   "EV_PLAYER_TELEPORT_IN",
   "EV_PLAYER_TELEPORT_OUT",
   "EV_GRENADE_BOUNCE",  // eventParm will be the soundindex
-  "EV_MINE_BOUNCE",  // eventParm will be the soundindex
   "EV_GENERAL_SOUND",
   "EV_GLOBAL_SOUND",  // no attenuation
   "EV_BULLET_HIT_FLESH",

@@ -368,7 +368,6 @@ typedef enum
   WP_LUCIFER_CANNON,
   WP_ROCKET_LAUNCHER,
   WP_GRENADE,
-  WP_MINE,
   WP_HIVE,
   WP_TESLAGEN,
   WP_MGTURRET,
@@ -389,8 +388,6 @@ typedef enum
   UP_JETPACK,
   UP_BATTLESUIT,
   UP_GRENADE,
-  UP_MINE,
-  UP_SMOKE,
   UP_AMMO,
   UP_NUM_UPGRADES
 } upgrade_t;
@@ -523,7 +520,6 @@ typedef enum
   EV_PLAYER_TELEPORT_IN,
   EV_PLAYER_TELEPORT_OUT,
   EV_GRENADE_BOUNCE,    // eventParm will be the soundindex
-  EV_MINE_BOUNCE,    // eventParm will be the soundindex
   EV_GENERAL_SOUND,
   EV_GLOBAL_SOUND,    // no attenuation
   EV_BULLET_HIT_FLESH,

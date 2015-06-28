@@ -148,7 +148,6 @@ static void CG_Obituary( entityState_t *ent )
     switch( mod )
     {
       case MOD_FLAMER_SPLASH:
-      case MOD_LEVEL4_FLAMES:
         if( gender == GENDER_FEMALE )
           message = "^5toasted herself";
         else if( gender == GENDER_NEUTER )
@@ -220,7 +219,7 @@ static void CG_Obituary( entityState_t *ent )
         else
           message = "^5spiked himself";
         break;
-		
+
       case MOD_PRIFLE:
         if( gender == GENDER_FEMALE )
           message = "^5pulse rifled herself";
@@ -228,25 +227,6 @@ static void CG_Obituary( entityState_t *ent )
           message = "^5pulse rifled itself";
         else
           message = "^5pulse rifled himself";
-        break;
-        
-
-      case MOD_MINE:
-        if( gender == GENDER_FEMALE )
-          message = "^5was betrayed by own mine";
-        else if( gender == GENDER_NEUTER )
-          message = "^5it betrayed by own mine";
-        else
-          message = "^5was betrayed by own mine";
-        break;
-		
-		case MOD_FLAMES:
-        if( gender == GENDER_FEMALE )
-          message = "^5was terminated by own flames";
-        else if( gender == GENDER_NEUTER )
-          message = "^5it terminated by own flames";
-        else
-          message = "^5was terminated by own flames";
         break;
 
       default:
@@ -345,16 +325,6 @@ static void CG_Obituary( entityState_t *ent )
       case MOD_PSAWBLADE:
         message = "^5was sliced by^7";
         message2 = "^5's ^5blades";
-        break;
-      case MOD_MINE:
-        message = "^5found^7";
-        message2 = "^5's ^5mine";
-        break;  
-
-     case MOD_FLAMES:
-     case MOD_LEVEL4_FLAMES:
-        message = "^5tasted^7";
-        message2 = "^5's ^5flames";
         break;
 
       case MOD_ABUILDER_CLAW:
@@ -974,14 +944,6 @@ void CG_EntityEvent( centity_t *cent, vec3_t position )
         trap_S_StartSound( NULL, es->number, CHAN_AUTO, cgs.media.hardBounceSound1 );
       else
         trap_S_StartSound( NULL, es->number, CHAN_AUTO, cgs.media.hardBounceSound2 );
-      break;
-
-	case EV_MINE_BOUNCE:
-      if( rand( ) & 1 )
-        trap_S_StartSound( NULL, es->number, CHAN_AUTO, cgs.media.mineBounceSound1 );
-		else
-        trap_S_StartSound( NULL, es->number, CHAN_AUTO, cgs.media.mineBounceSound1 );
-      break;
       break;
 
     case EV_ACIDBOMB_BOUNCE:

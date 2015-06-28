@@ -63,8 +63,6 @@ void CG_RegisterUpgrade( int upgradeNum )
   //la la la la la, i'm not listening!
   if( upgradeNum == UP_GRENADE )
     upgradeInfo->upgradeIcon = cg_weapons[ WP_GRENADE ].weaponIcon;
-  else if( upgradeNum == UP_MINE )
-    upgradeInfo->upgradeIcon = cg_weapons[ WP_MINE ].weaponIcon;
   else if( ( icon = BG_Upgrade( upgradeNum )->icon ) )
     upgradeInfo->upgradeIcon = trap_R_RegisterShader( icon );
 }

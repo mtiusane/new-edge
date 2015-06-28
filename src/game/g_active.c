@@ -1710,21 +1710,6 @@ void ClientThink_real( gentity_t *ent )
     ent->s.weapon = lastWeapon;
   }
 
-  if( BG_InventoryContainsUpgrade( UP_MINE, client->ps.stats ) &&
-      BG_UpgradeIsActive( UP_MINE, client->ps.stats ) )
-  {
-    int lastWeapon = ent->s.weapon;
-
-    //remove MINE
-    BG_DeactivateUpgrade( UP_MINE, client->ps.stats );
-    BG_RemoveUpgradeFromInventory( UP_MINE, client->ps.stats );
-
-    //M-M-M-M-MONSTER HACK
-    ent->s.weapon = WP_MINE;
-    FireWeapon( ent );
-    ent->s.weapon = lastWeapon;
-  }
-
   // set speed
   if( client->ps.pm_type == PM_NOCLIP )
     client->ps.speed = client->pers.flySpeed;

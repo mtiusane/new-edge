@@ -1001,12 +1001,7 @@ void G_LogCombatStats( gentity_t *ent );
 //
 void      G_RunMissile( gentity_t *ent );
 
-gentity_t *launch_grenade2( gentity_t *self, vec3_t start, vec3_t dir );
 gentity_t *fire_prifle_stasis( gentity_t *self, vec3_t start, vec3_t dir );
-gentity_t *flamerchageimpact( gentity_t *self, vec3_t start, vec3_t dir, int damage, int radius, int speed );
-gentity_t *launch_nadeflames( gentity_t *self, vec3_t start, vec3_t dir );
-gentity_t *flamerfire3( gentity_t *self, vec3_t start, vec3_t dir, int damage, int radius, int speed );
-gentity_t *flamerfire( gentity_t *self, vec3_t start, vec3_t dir );
 gentity_t *fire_flamer( gentity_t *self, vec3_t start, vec3_t aimdir );
 gentity_t *fire_blaster( gentity_t *self, vec3_t start, vec3_t dir );
 gentity_t *fire_pulseRifle( gentity_t *self, vec3_t start, vec3_t dir );
@@ -1021,9 +1016,6 @@ gentity_t *launch_grenade_flames( gentity_t *self, vec3_t start, vec3_t dir );
 gentity_t *launch_shield( gentity_t *self, vec3_t start, vec3_t dir );
 gentity_t *launch_saw( gentity_t *self, vec3_t start, vec3_t dir );
 gentity_t *fire_md2( gentity_t *self, vec3_t start, vec3_t dir );
-gentity_t *launch_mine( gentity_t *self, vec3_t start, vec3_t dir );
-gentity_t *launch_flames( gentity_t *self, vec3_t start, vec3_t dir );
-gentity_t *launch_smoke( gentity_t *self, vec3_t start, vec3_t dir );
 gentity_t *fire_rocket( gentity_t *self, vec3_t start, vec3_t dir );
 gentity_t *fire_fern( vec3_t origin, vec3_t angles, int lifespan );
 
