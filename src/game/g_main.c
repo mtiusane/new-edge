@@ -1562,8 +1562,8 @@ G_CalculateStages
 */
 void G_CalculateStages( void )
 {
-  float         alienPlayerCountMod     = level.averageNumAlienClients / PLAYER_COUNT_MOD;
-  float         humanPlayerCountMod     = level.averageNumHumanClients / PLAYER_COUNT_MOD;
+  float         alienPlayerCountMod     = MAX(4,level.averageNumAlienClients) / PLAYER_COUNT_MOD;
+  float         humanPlayerCountMod     = MAX(4,level.averageNumHumanClients) / PLAYER_COUNT_MOD;
   int           alienNextStageThreshold, humanNextStageThreshold;
   static int    lastAlienStageModCount  = 1;
   static int    lastHumanStageModCount  = 1;
