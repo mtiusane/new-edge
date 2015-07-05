@@ -1350,6 +1350,8 @@ extern  vmCvar_t  g_InstantRewardMultiplierH;
 extern  vmCvar_t  g_KillRewardMultiplierA;
 extern  vmCvar_t  g_KillRewardMultiplierH;
 extern  vmCvar_t  g_ConstantRewardFactor;
+extern  vmCvar_t  g_TeamRewardFactor;
+extern  vmCvar_t  g_PlayerRewardFactor;
 extern  vmCvar_t  g_MinRewardFactor;
 extern  vmCvar_t  g_MaxRewardFactor;
 extern  vmCvar_t  g_RewardFactorPower;

@@ -187,6 +187,8 @@ vmCvar_t  g_InstantRewardMultiplierH;
 vmCvar_t  g_KillRewardMultiplierA;
 vmCvar_t  g_KillRewardMultiplierH;
 vmCvar_t  g_ConstantRewardFactor;
+vmCvar_t  g_TeamRewardFactor;
+vmCvar_t  g_PlayerRewardFactor;
 vmCvar_t  g_MinRewardFactor;
 vmCvar_t  g_MaxRewardFactor;
 vmCvar_t  g_RewardFactorPower;
@@ -362,9 +364,11 @@ static cvarTable_t   gameCvarTable[ ] =
   { &g_InstantRewardMultiplierH, "g_InstantRewardMultiplierH", "1", CVAR_ARCHIVE, 0, qfalse },
   { &g_KillRewardMultiplierA, "g_KillRewardMultiplierA", "1", CVAR_ARCHIVE, 0, qfalse },
   { &g_KillRewardMultiplierH, "g_KillRewardMultiplierH", "1", CVAR_ARCHIVE, 0, qfalse },
-  { &g_ConstantRewardFactor, "g_ConstantRewardFactor", "0", CVAR_ARCHIVE, 0, qfalse },
-  { &g_MinRewardFactor, "g_MinRewardFactor", "0.2", CVAR_ARCHIVE, 0, qfalse },
-  { &g_MaxRewardFactor, "g_MaxRewardFactor", "5.0", CVAR_ARCHIVE, 0, qfalse },
+  { &g_ConstantRewardFactor, "g_ConstantRewardFactor", "0.2", CVAR_ARCHIVE, 0, qfalse },
+  { &g_TeamRewardFactor, "g_TeamRewardFactor", "0.6", CVAR_ARCHIVE, 0, qfalse },
+  { &g_PlayerRewardFactor, "g_PlayerRewardFactor", "0.2", CVAR_ARCHIVE, 0, qfalse },
+  { &g_MinRewardFactor, "g_MinRewardFactor", "0.33", CVAR_ARCHIVE, 0, qfalse },
+  { &g_MaxRewardFactor, "g_MaxRewardFactor", "3.0", CVAR_ARCHIVE, 0, qfalse },
   { &g_RewardFactorPower, "g_RewardFactorPower", "0.3025", CVAR_ARCHIVE, 0, qfalse },
   { &g_TimerPeriod, "g_TimerPeriod", "0", CVAR_ARCHIVE, 0, qfalse },
   { &g_TimerCommand, "g_TimerCommand", "", CVAR_ARCHIVE, 0, qfalse },

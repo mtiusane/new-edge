@@ -191,30 +191,32 @@ float G_CamperRewardBonus(  gentity_t *self )
   return 1.0f;
 } 
 
+#define REWARDPOWER(x) pow((float)(x),g_RewardFactorPower.value)
+#define REWARDSCALE(a,b) (((a) > 0.0f && (b) > 0.0f) ? (a)/(b) : 1.0f)
+#define REWARDFACTOR(a,b) MIN(MAX(REWARDSCALE(REWARDPOWER(a),REWARDPOWER(b)),g_MinRewardFactor.value),g_MaxRewardFactor.value)
 float G_RewardScaleFactor( gentity_t *self, gentity_t *target )
 {
   float targetScore;
   if( level.humanRewardScore <= 0.0f || level.alienRewardScore <= 0.0f ) return 1.0f;
   switch( self->client->ps.stats[ STAT_TEAM ] ) {
   case TEAM_ALIENS:
-    targetScore = level.humanRewardScore/level.alienRewardScore;
+    targetScore = g_TeamRewardFactor.value*REWARDFACTOR(level.humanRewardScore,level.alienRewardScore);
     break;
   case TEAM_HUMANS:
-    targetScore = level.alienRewardScore/level.humanRewardScore;
+    targetScore = g_TeamRewardFactor.value*REWARDFACTOR(level.alienRewardScore,level.humanRewardScore);
     break;
   default:
     return 0.0f;
   }
   if ( target->client != NULL ) {
-    if( self->client->ps.persistant[ PERS_SCORE ] > 0 && target->client->ps.persistant[ PERS_SCORE ] > 0)
-      targetScore *= pow(target->client->ps.persistant[ PERS_SCORE ],g_RewardFactorPower.value)/pow(self->client->ps.persistant[ PERS_SCORE ],g_RewardFactorPower.value);
+    targetScore += g_PlayerRewardFactor.value*REWARDFACTOR(target->client->ps.persistant[ PERS_SCORE ],self->client->ps.persistant[ PERS_SCORE ]);
   }
-  targetScore *= 1.0f-g_ConstantRewardFactor.value;
   targetScore += g_ConstantRewardFactor.value;
-  if (targetScore < g_MinRewardFactor.value) targetScore = g_MinRewardFactor.value;
-  else if (targetScore > g_MaxRewardFactor.value) targetScore = g_MaxRewardFactor.value;
   return targetScore;
 }
+#undef REWARDFACTOR
+#undef REWARDSCALE
+#undef REWARDPOWER
 
 /* Instantly reward the current attacker */
 float G_InstantRewardAttacker( gentity_t *self, gentity_t *target, float damage )
