@@ -1658,7 +1658,7 @@ void FireWeapon3( gentity_t *ent )
       break;
 
     case WP_MASS_DRIVER:
-      if(g_humanStage.integer == S5 && BG_InventoryContainsUpgrade( UP_BATTPACK, ent->client->ps.stats ))
+      if(g_humanStage.integer == S4 && BG_InventoryContainsUpgrade( UP_BATTPACK, ent->client->ps.stats ))
       {
 	  massDriverFire2( ent );
       }

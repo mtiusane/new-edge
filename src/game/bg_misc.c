@@ -37,8 +37,8 @@ void trap_FS_FCloseFile( fileHandle_t f );
 void trap_FS_Seek( fileHandle_t f, long offset, fsOrigin_t origin ); // fsOrigin_t
 int  trap_FS_GetFileList(  const char *path, const char *extension, char *listbuf, int bufsize );
 
-#define STAGE_GE_5   ((1 << S5))
-#define STAGE_GE_4   ((1 << S4) | STAGE_GE_5)
+// #define STAGE_GE_5   ((1 << S5))
+#define STAGE_GE_4   (1 << S4)/* | STAGE_GE_5)*/
 #define STAGE_GE_3   ((1 << S3) | STAGE_GE_4)
 #define STAGE_GE_2   ((1 << S2) | STAGE_GE_3)
 #define STAGE_GE_1   ((1 << S1) | STAGE_GE_2)
@@ -198,7 +198,7 @@ static const buildableAttributes_t bg_buildableList[ ] =
     TR_GRAVITY,            //trType_t  traj;
     0.0,                   //float     bounce;
     BOOSTER_BP,            //int       buildPoints;
-    STAGE_GE_3,            //int  stages
+    STAGE_GE_2,            //int  stages
     BOOSTER_HEALTH,        //int       health;
     BOOSTER_REGEN,         //int       regenRate;
     BOOSTER_SPLASHDAMAGE,  //int       splashDamage;
@@ -232,7 +232,7 @@ static const buildableAttributes_t bg_buildableList[ ] =
     TR_GRAVITY,            //trType_t  traj;
     0.0,                   //float     bounce;
     HIVE_BP,               //int       buildPoints;
-    STAGE_GE_4,            //int  stages
+    STAGE_GE_3,            //int  stages
     HIVE_HEALTH,           //int       health;
     HIVE_REGEN,            //int       regenRate;
     HIVE_SPLASHDAMAGE,     //int       splashDamage;
@@ -300,7 +300,7 @@ static const buildableAttributes_t bg_buildableList[ ] =
     TR_GRAVITY,           	    //trType_t  traj;
     0,                 		    //float     bounce;
     PANZER_MEDIUM_BP,           //int       buildPoints;
-    STAGE_GE_3,                 //int  stages
+    STAGE_GE_2,                 //int  stages
     PANZER_MEDIUM_HEALTH,       //int       health;
     PANZER_MEDIUM_REGEN,        //int       regenRate;
     PANZER_MEDIUM_SPLASHDAMAGE, //int       splashDamage;
@@ -334,7 +334,7 @@ static const buildableAttributes_t bg_buildableList[ ] =
     TR_GRAVITY,                 //trType_t  traj;
     0,                          //float     bounce;
     PANZER_LARGE_BP,            //int       buildPoints;
-    STAGE_GE_4,                 //int  stages
+    STAGE_GE_3,                 //int  stages
     PANZER_LARGE_HEALTH,        //int       health;
     PANZER_LARGE_REGEN,         //int       regenRate;
     PANZER_LARGE_SPLASHDAMAGE,  //int       splashDamage;
@@ -474,7 +474,7 @@ static const buildableAttributes_t bg_buildableList[ ] =
     TR_GRAVITY,            //trType_t  traj;
     0,                   //float     bounce;
     NET_BP,           //int       buildPoints;
-    STAGE_GE_3,       //int  stages
+    STAGE_GE_1,       //int  stages
     NET_HEALTH,       //int       health;
     NET_REGEN,        //int       regenRate;
     NET_SPLASHDAMAGE, //int       splashDamage;
@@ -547,7 +547,7 @@ static const buildableAttributes_t bg_buildableList[ ] =
     TR_GRAVITY,            //trType_t  traj;
     0,                   //float     bounce;
     INFESTATION_SLIME_BP,           //int       buildPoints;
-    STAGE_GE_5,                     //int  stages
+    STAGE_GE_4,                     //int  stages
     INFESTATION_SLIME_HEALTH,       //int       health;
     INFESTATION_SLIME_REGEN,        //int       regenRate;
     INFESTATION_SLIME_SPLASHDAMAGE, //int       splashDamage;
@@ -724,7 +724,7 @@ static const buildableAttributes_t bg_buildableList[ ] =
     TR_GRAVITY,           			  //trType_t  traj;
     0.0,                   			  //float     bounce;
     SPITEFUL_ABCESS_BP,         	  //int       buildPoints;
-    STAGE_GE_2,		                  //int  stages
+    STAGE_GE_1,		                  //int  stages
     SPITEFUL_ABCESS_HEALTH,      	  //int       health;
     SPITEFUL_ABCESS_REGEN,       	  //int       regenRate;
     SPITEFUL_ABCESS_SPLASHDAMAGE, 	  //int       splashDamage;
@@ -760,7 +760,7 @@ static const buildableAttributes_t bg_buildableList[ ] =
     TR_GRAVITY,            			 //trType_t  traj;
     0,                   			 //float     bounce;
     COCOON_BP,           			 //int       buildPoints;
-    STAGE_GE_4, 				 //int  stages
+    STAGE_GE_3, 				 //int  stages
     COCOON_HEALTH,       			 //int       health;
     COCOON_REGEN,        			 //int       regenRate;
     COCOON_SPLASHDAMAGE, 			 //int       splashDamage;
@@ -794,7 +794,7 @@ static const buildableAttributes_t bg_buildableList[ ] =
     TR_GRAVITY,            			//trType_t  traj;
     0.0,                   			//float     bounce;
     ORGANIC_BULB_BP,           		//int       buildPoints;
-    STAGE_GE_3,           		//int  stages
+    STAGE_GE_1,           		//int  stages
     ORGANIC_BULB_HEALTH,       		//int       health;
     ORGANIC_BULB_REGEN,        		//int       regenRate;
     ORGANIC_BULB_SPLASHDAMAGE, 		//int       splashDamage;
@@ -896,7 +896,7 @@ static const buildableAttributes_t bg_buildableList[ ] =
     TR_GRAVITY,            			//trType_t  traj;
     0.0,                   			//float     bounce;
     CREEPCOLONY_BP,        			//int       buildPoints;
-    STAGE_GE_3, 		                //int  stages
+    STAGE_GE_2, 		                //int  stages
     CREEPCOLONY_HEALTH,    			//int       health;
     CREEPCOLONY_REGEN,     			//int       regenRate;
     CREEPCOLONY_SPLASHDAMAGE, 		//int       splashDamage;
@@ -1284,7 +1284,7 @@ static const buildableAttributes_t bg_buildableList[ ] =
     TR_GRAVITY,            			//trType_t  traj;
     0.0,                   			//float     bounce;
     CONTAINER_MEDIUM_BP,            //int       buildPoints;
-    STAGE_GE_3, 		    //int  stages
+    STAGE_GE_2, 		    //int  stages
     CONTAINER_MEDIUM_HEALTH,        //int       health;
     0,                     			//int       regenRate;
     CONTAINER_MEDIUM_SPLASHDAMAGE,  //int       splashDamage;
@@ -1319,7 +1319,7 @@ static const buildableAttributes_t bg_buildableList[ ] =
     TR_GRAVITY,            			//trType_t  traj;
     0.0,                   			//float     bounce;
     CONTAINER_LARGE_BP,           	//int       buildPoints;
-    STAGE_GE_4, 					//int  stages
+    STAGE_GE_3, 					//int  stages
     CONTAINER_LARGE_HEALTH,       	//int       health;
     0,                    		 	//int       regenRate;
     CONTAINER_LARGE_SPLASHDAMAGE, 	//int       splashDamage;
@@ -1599,7 +1599,7 @@ static const buildableAttributes_t bg_buildableList[ ] =
     TR_GRAVITY,            			//trType_t  traj;
     0.0,                   			//float     bounce;
     SHIELD_BP,           			//int       buildPoints;
-    STAGE_GE_5,				        //int  stages
+    STAGE_GE_4,				        //int  stages
     SHIELD_HEALTH,       			//int       health;
     0,                     			//int       regenRate;
     SHIELD_SPLASHDAMAGE, 			//int       splashDamage;
@@ -1634,7 +1634,7 @@ static const buildableAttributes_t bg_buildableList[ ] =
     TR_GRAVITY,            			//trType_t  traj;
     0,                   			//float     bounce;
     LADDER_BP,           			//int       buildPoints;
-    STAGE_GE_3, 		                //int  stages
+    STAGE_GE_1, 		                //int  stages
     LADDER_HEALTH,       			//int       health;
     0,                     			//int       regenRate;
     LADDER_SPLASHDAMAGE, 			//int       splashDamage;
@@ -1739,7 +1739,7 @@ static const buildableAttributes_t bg_buildableList[ ] =
     TR_GRAVITY,            			//trType_t  traj;
     0.0,                   			//float     bounce;
     LIGHT_BP,           			//int       buildPoints;
-    STAGE_GE_5, 				//int  stages
+    STAGE_GE_4, 				//int  stages
     LIGHT_HEALTH,       			//int       health;
     0,                     			//int       regenRate;
     LIGHT_SPLASHDAMAGE, 			//int       splashDamage;
@@ -1844,7 +1844,7 @@ static const buildableAttributes_t bg_buildableList[ ] =
     TR_GRAVITY,            			//trType_t  traj;
     0.0,                   			//float     bounce;
     REFINERY_BP,           			//int       buildPoints;
-    STAGE_GE_3, 		                //int  stages
+    STAGE_GE_2, 		                //int  stages
     REFINERY_HEALTH,       			//int       health;
     0,                     			//int       regenRate;
     REFINERY_SPLASHDAMAGE, 			//int       splashDamage;
@@ -2320,7 +2320,7 @@ static const classAttributes_t bg_classList[ ] =
     "The Advanced Marauder has all the abilities of the basic Marauder "
       "with the addition of a zap attack that chains through other "
       "adv. marauders and can explode mines.",
-    STAGE_GE_3,                                     //int  stages
+    STAGE_GE_2,                                     //int  stages
     LEVEL2_UPG_HEALTH,                              //int     health;
     0.0f,                                           //float   fallDamage;
     LEVEL2_UPG_REGEN,                               //float   regenRate;
@@ -2348,7 +2348,7 @@ static const classAttributes_t bg_classList[ ] =
     "The Hummel is a flying alien with air pounce ability, "
       "fast melee attacks and unlimited low damage shooting attack "
       "that does not spread poison.",
-    STAGE_GE_4,                                     //int  stages
+    STAGE_GE_3,                                     //int  stages
     LEVEL5_UPG_HEALTH,                              //int     health;
     0.0f,                                           //float   fallDamage;
     LEVEL5_UPG_REGEN,                               //float   regenRate;
@@ -2404,7 +2404,7 @@ static const classAttributes_t bg_classList[ ] =
     "In addition to the basic Dragoon abilities, the Advanced "
       "Dragoon has 3 barbs which may be used to attack humans "
       "from a distance and it has a higher jump height.",
-    STAGE_GE_4,                                     //int  stages
+    STAGE_GE_3,                                     //int  stages
     LEVEL3_UPG_HEALTH,                              //int     health;
     0.0f,                                           //float   fallDamage;
     LEVEL3_UPG_REGEN,                               //float   regenRate;
@@ -2433,7 +2433,7 @@ static const classAttributes_t bg_classList[ ] =
       "This class can also charge at enemy players and structures, "
       "inflicting great damage. Any humans caught under a falling "
       "Tyrant will be crushed by its weight.",
-    STAGE_GE_5,                                     //int  stages
+    STAGE_GE_4,                                     //int  stages
     LEVEL4_HEALTH,                                  //int     health;
     0.0f,                                           //float   fallDamage;
     LEVEL4_REGEN,                                   //float   regenRate;
@@ -2485,7 +2485,7 @@ static const classAttributes_t bg_classList[ ] =
     PCL_HUMAN_BSUIT,                                //int     classnum;
     "human_bsuit",                                  //char    *classname;
     "",
-    STAGE_GE_5,                                     //int  stages
+    STAGE_GE_4,                                     //int  stages
     100,                                            //int     health;
     1.0f,                                           //float   fallDamage;
     0.0f,                                           //float   regenRate;
@@ -3068,7 +3068,7 @@ static const weaponAttributes_t bg_weapons[ ] =
   {
     WP_ALEVEL2_UPG,       //int       weaponNum;
     0,                    //int       price;
-    STAGE_GE_3,           //int  stages
+    STAGE_GE_2,           //int  stages
     SLOT_WEAPON,          //int       slots;
     "level2upg",          //char      *weaponName;
     "Zap",                //char      *humanName;
@@ -3093,7 +3093,7 @@ static const weaponAttributes_t bg_weapons[ ] =
   {
     WP_ALEVEL5,       						//int       weaponNum;
     0,                    					//int       price;
-    STAGE_GE_4, 	  //int  stages
+    STAGE_GE_3, 	  //int  stages
     SLOT_WEAPON,          					//int       slots;
     "level5",             					//char      *weaponName;
     "prickles",                				//char      *humanName;
@@ -3143,7 +3143,7 @@ static const weaponAttributes_t bg_weapons[ ] =
   {
     WP_ALEVEL3_UPG,       //int       weaponNum;
     0,                    //int       price;
-    STAGE_GE_4,           //int  stages
+    STAGE_GE_3,           //int  stages
     SLOT_WEAPON,          //int       slots;
     "level3upg",          //char      *weaponName;
     "Pounce (upgrade)",   //char      *humanName;
@@ -3168,7 +3168,7 @@ static const weaponAttributes_t bg_weapons[ ] =
   {
     WP_ALEVEL4,           //int       weaponNum;
     0,                    //int       price;
-    STAGE_GE_5,           //int  stages
+    STAGE_GE_4,           //int  stages
     SLOT_WEAPON,          //int       slots;
     "level4",             //char      *weaponName;
     "Charge",             //char      *humanName;
@@ -3405,7 +3405,7 @@ static const weaponAttributes_t bg_weapons[ ] =
   {
     WP_PULSE_RIFLE,       //int       weaponNum;
     PRIFLE_PRICE,         //int       price;
-    STAGE_GE_4,           //int  stages
+    STAGE_GE_2,           //int  stages
     SLOT_WEAPON,          //int       slots;
     "prifle",             //char      *weaponName;
     "[yefarms]Pulse Rifle",        //char      *humanName;
@@ -3430,7 +3430,7 @@ static const weaponAttributes_t bg_weapons[ ] =
   {
     WP_LIGHTNING_GUN,     //int       weaponNum;
     LIGHTNING_PRICE,      //int       price;
-    STAGE_GE_5,           //int  stages
+    STAGE_GE_3,           //int  stages
     SLOT_WEAPON,          //int       slots;
     "lightning",          //char      *weaponName;
     "[yefarms]Lightning Gun",     //char      *humanName;
@@ -3455,7 +3455,7 @@ static const weaponAttributes_t bg_weapons[ ] =
   {
     WP_LUCIFER_CANNON,    //int       weaponNum;
     LCANNON_PRICE,        //int       price;
-    STAGE_GE_5,           //int  stages
+    STAGE_GE_4,           //int  stages
     SLOT_WEAPON,          //int       slots;
     "lcannon",            //char      *weaponName;
     "[yefarms]Lucifer Cannon",     //char      *humanName;
@@ -3482,7 +3482,7 @@ static const weaponAttributes_t bg_weapons[ ] =
   {
     WP_ROCKET_LAUNCHER,   //int       weaponNum;
     ROCKETL_PRICE,        //int       price;
-    STAGE_GE_5,           //int  stages
+    STAGE_GE_4,           //int  stages
     SLOT_WEAPON,          //int       slots;
     "rocketl",            //char      *weaponName;
     "[yefarms]Rocket Launcher",     //char      *humanName;
@@ -3507,7 +3507,7 @@ static const weaponAttributes_t bg_weapons[ ] =
   {
     WP_GRENADE,           //int       weaponNum;
     0,                    //int       price;
-    STAGE_GE_1,           //int       stages
+    STAGE_GE_3,           //int       stages
     0,                    //int       slots;
     "grenade",            //char      *weaponName;
     "[yenade]Grenades",   //char      *humanName;
@@ -3747,7 +3747,7 @@ static const upgradeAttributes_t bg_upgrades[ ] =
   {
     UP_HELMET,              //int   upgradeNum;
     HELMET_PRICE,           //int   price;
-    STAGE_GE_3,             //int  stages
+    STAGE_GE_2,             //int  stages
     SLOT_HEAD,              //int   slots;
     "helmet",               //char  *upgradeName;
     "[yeshield]Helmet",               //char  *humanName;
@@ -3804,7 +3804,7 @@ static const upgradeAttributes_t bg_upgrades[ ] =
   {
     UP_JETPACK,             //int   upgradeNum;
     JETPACK_PRICE,          //int   price;
-    STAGE_GE_4,             //int  stages
+    STAGE_GE_3,             //int  stages
     SLOT_BACKPACK,          //int   slots;
     "jetpack",              //char  *upgradeName;
     "[yejet]Jet Pack",             //char  *humanName;
@@ -3819,7 +3819,7 @@ static const upgradeAttributes_t bg_upgrades[ ] =
   {
     UP_BATTLESUIT,          //int   upgradeNum;
     BSUIT_PRICE,            //int   price;
-    STAGE_GE_5,             //int  stages
+    STAGE_GE_4,             //int  stages
     SLOT_HEAD|SLOT_TORSO|SLOT_ARMS|SLOT_LEGS|SLOT_BACKPACK, //int   slots;
     "bsuit",                //char  *upgradeName;
     "[yeshield]Battlesuit",           //char  *humanName;
