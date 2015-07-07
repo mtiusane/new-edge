@@ -3834,7 +3834,7 @@ static const upgradeAttributes_t bg_upgrades[ ] =
   {
     UP_GRENADE,             //int   upgradeNum;
     GRENADE_PRICE,          //int   price;
-    STAGE_GE_4,             //int  stages
+    STAGE_GE_3,             //int  stages
     SLOT_NONE,              //int   slots;
     "gren",                 //char  *upgradeName;
     "[yenade]Grenade",      //char  *humanName;
