@@ -32,7 +32,7 @@ TREMULOUS EDGE MOD SRC FILE
 
 // because games can change separately from the main system version, we need a
 // second version that must match between game and cgame
-#define GAME_VERSION            "base"
+#define GAME_VERSION            "newedge"
 #define DEFAULT_GRAVITY         800
 
 #define VOTE_TIME               30000 // 30 seconds before vote times out

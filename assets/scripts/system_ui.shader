@@ -61,7 +61,7 @@ ui/assets/score_baseb
 scripts/loading_add
 {
   {
-	map ui/assets/loading_add.png
+	map ui/assets/loading_add.jpg
 	blendfunc add
   }
 }
@@ -69,7 +69,7 @@ scripts/loading_add
 scripts/stage_add
 {
   {
-	map ui/assets/stage_add.png
+	map ui/assets/stage_add.jpg
 	blendfunc add
   }
 }
@@ -77,7 +77,7 @@ scripts/stage_add
 scripts/main_add
 {
   {
-	map ui/assets/main_add.png
+	map ui/assets/main_add.jpg
 	blendfunc add
   }
 }
@@ -85,7 +85,7 @@ scripts/main_add
 scripts/main_add_pulse
 {
   {
-	map ui/assets/main_add_pulse.png
+	map ui/assets/main_add_pulse.jpg
 	blendfunc add
     rgbGen wave sin 0.6 .7 5 0.2
   }
@@ -94,7 +94,7 @@ scripts/main_add_pulse
 scripts/scoreaddlight
 {
   {
-	map ui/assets/score_flicker.png
+	map ui/assets/score_flicker.jpg
 	blendfunc add
     rgbGen wave sin 0.4 1 8 0.1
   }
@@ -103,7 +103,7 @@ scripts/scoreaddlight
 scripts/scoreadd
 {
   {
-	map ui/assets/score_add.png
+	map ui/assets/score_add.jpg
 	blendfunc add
   }
 }
@@ -158,12 +158,12 @@ gfx/misc/yaltsedges
 scripts/ye_full
 {
   {
-	map ui/assets/ye_full.png
+	map ui/assets/ye_full.jpg
 	blendfunc add
 
   }
     {
-	map ui/assets/ye_full.png
+	map ui/assets/ye_full.jpg
 	blendfunc add
     rgbGen wave sin 0.1 0.2 0 15
   }
