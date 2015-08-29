@@ -183,6 +183,7 @@ CG_SetClipRegion
 */
 void CG_SetClipRegion( float x, float y, float w, float h )
 {
+/*
   vec4_t clip;
 
   CG_AdjustFrom640( &x, &y, &w, &h );
@@ -193,6 +194,7 @@ void CG_SetClipRegion( float x, float y, float w, float h )
   clip[ 3 ] = y + h;
 
   trap_R_SetClipRegion( clip );
+*/
 }
 
 /*
@@ -202,7 +204,7 @@ CG_ClearClipRegion
 */
 void CG_ClearClipRegion( void )
 {
-  trap_R_SetClipRegion( NULL );
+  //trap_R_SetClipRegion( NULL );
 }
 
 /*

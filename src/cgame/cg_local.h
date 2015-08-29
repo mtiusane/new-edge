@@ -1072,8 +1072,6 @@ typedef struct
   int           itemPickupBlendTime;                // the pulse around the crosshair is timed seperately
 
   int           weaponSelectTime;
-  int           weaponAnimation;
-  int           weaponAnimationTime;
 
   // blend blobs
   float         damageTime;
@@ -2151,8 +2149,6 @@ int           trap_Key_GetKey( const char *binding );
 void          trap_Key_KeynumToStringBuf( int keynum, char *buf, int buflen );
 void          trap_Key_GetBindingBuf( int keynum, char *buf, int buflen );
 void          trap_Key_SetBinding( int keynum, const char *binding );
-void          trap_Key_SetOverstrikeMode( qboolean state );
-qboolean      trap_Key_GetOverstrikeMode( void );
 
 int           trap_CIN_PlayCinematic( const char *arg0, int xpos, int ypos, int width, int height, int bits );
 e_status      trap_CIN_StopCinematic( int handle );

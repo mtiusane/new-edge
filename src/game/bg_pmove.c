@@ -110,20 +110,6 @@ void PM_StartTorsoAnim( int anim )
 
 /*
 ===================
-PM_StartWeaponAnim
-===================
-*/
-static void PM_StartWeaponAnim( int anim )
-{
-  if( PM_Paralyzed( pm->ps->pm_type ) )
-    return;
-
-  pm->ps->weaponAnim = ( ( pm->ps->weaponAnim & ANIM_TOGGLEBIT ) ^ ANIM_TOGGLEBIT )
-    | anim;
-}
-
-/*
-===================
 PM_StartLegsAnim
 ===================
 */
@@ -187,19 +173,6 @@ static void PM_ContinueTorsoAnim( int anim )
     return;   // a high priority animation is running
 
   PM_StartTorsoAnim( anim );
-}
-
-/*
-===================
-PM_ContinueWeaponAnim
-===================
-*/
-static void PM_ContinueWeaponAnim( int anim )
-{
-  if( ( pm->ps->weaponAnim & ~ANIM_TOGGLEBIT ) == anim )
-    return;
-
-  PM_StartWeaponAnim( anim );
 }
 
 /*
@@ -2886,7 +2859,6 @@ static void PM_BeginWeaponChange( int weapon )
   if( !( pm->ps->persistant[ PERS_STATE ] & PS_NONSEGMODEL ) )
   {
     PM_StartTorsoAnim( TORSO_DROP );
-    PM_StartWeaponAnim( WANIM_DROP );
   }
 }
 
@@ -2915,7 +2887,6 @@ static void PM_FinishWeaponChange( void )
   if( !( pm->ps->persistant[ PERS_STATE ] & PS_NONSEGMODEL ) )
   {
     PM_StartTorsoAnim( TORSO_RAISE );
-    PM_StartWeaponAnim( WANIM_RAISE );
   }
 }
 
@@ -2945,8 +2916,6 @@ static void PM_TorsoAnimation( void )
         PM_ContinueTorsoAnim( TORSO_STAND );
       }
     }
-
-    PM_ContinueWeaponAnim( WANIM_IDLE );
   }
 }
 
@@ -3225,8 +3194,6 @@ static void PM_Weapon( void )
         PM_ContinueTorsoAnim( TORSO_STAND );
     }
 
-    PM_ContinueWeaponAnim( WANIM_IDLE );
-
     return;
   }
 
@@ -3278,7 +3245,6 @@ static void PM_Weapon( void )
 
     //drop the weapon
     PM_StartTorsoAnim( TORSO_DROP );
-    PM_StartWeaponAnim( WANIM_RELOAD );
 
     pm->ps->weaponTime += BG_Weapon( pm->ps->weapon )->reloadTime;
     return;
@@ -3531,17 +3497,14 @@ static void PM_Weapon( void )
     {
       case WP_GRENADE:
         PM_StartTorsoAnim( TORSO_ATTACK3 );
-        PM_StartWeaponAnim( WANIM_ATTACK1 );
         break;
 
       case WP_BLASTER:
         PM_StartTorsoAnim( TORSO_ATTACK2 );
-        PM_StartWeaponAnim( WANIM_ATTACK1 );
         break;
 
       default:
         PM_StartTorsoAnim( TORSO_ATTACK );
-        PM_StartWeaponAnim( WANIM_ATTACK1 );
         break;
     }
   }
@@ -3556,9 +3519,7 @@ static void PM_Weapon( void )
       case WP_ALEVEL1:
         if( attack1 )
         {
-          num /= RAND_MAX / 6 + 1;
           PM_ForceLegsAnim( NSPA_ATTACK1 );
-          PM_StartWeaponAnim( WANIM_ATTACK1 + num );
         }
         break;
 
@@ -3566,38 +3527,31 @@ static void PM_Weapon( void )
         if( attack2 )
         {
           PM_ForceLegsAnim( NSPA_ATTACK2 );
-          PM_StartWeaponAnim( WANIM_ATTACK7 );
         }
       case WP_ALEVEL2:
         if( attack1 )
         {
-          num /= RAND_MAX / 6 + 1;
           PM_ForceLegsAnim( NSPA_ATTACK1 );
-          PM_StartWeaponAnim( WANIM_ATTACK1 + num );
         }
         break;
 
       case WP_ALEVEL4:
         num /= RAND_MAX / 3 + 1;
         PM_ForceLegsAnim( NSPA_ATTACK1 + num );
-        PM_StartWeaponAnim( WANIM_ATTACK1 + num );
         break;
 
       default:
         if( attack1 )
         {
           PM_ForceLegsAnim( NSPA_ATTACK1 );
-          PM_StartWeaponAnim( WANIM_ATTACK1 );
         }
         else if( attack2 )
         {
           PM_ForceLegsAnim( NSPA_ATTACK2 );
-          PM_StartWeaponAnim( WANIM_ATTACK2 );
         }
         else if( attack3 )
         {
           PM_ForceLegsAnim( NSPA_ATTACK3 );
-          PM_StartWeaponAnim( WANIM_ATTACK3 );
         }
         break;
     }
@@ -3686,8 +3640,6 @@ static void PM_Animate( void )
 
   if( pm->cmd.buttons & BUTTON_GESTURE )
   {
-    if( pm->ps->tauntTimer > 0 )
-        return;
 
     if( !( pm->ps->persistant[ PERS_STATE ] & PS_NONSEGMODEL ) )
     {
@@ -3695,7 +3647,6 @@ static void PM_Animate( void )
       {
         PM_StartTorsoAnim( TORSO_GESTURE );
         pm->ps->torsoTimer = TIMER_GESTURE;
-        pm->ps->tauntTimer = TIMER_GESTURE;
 
         PM_AddEvent( EV_TAUNT );
       }
@@ -3706,7 +3657,6 @@ static void PM_Animate( void )
       {
         PM_ForceLegsAnim( NSPA_GESTURE );
         pm->ps->torsoTimer = TIMER_GESTURE;
-        pm->ps->tauntTimer = TIMER_GESTURE;
 
         PM_AddEvent( EV_TAUNT );
       }
@@ -3749,16 +3699,6 @@ static void PM_DropTimers( void )
 
     if( pm->ps->torsoTimer < 0 )
       pm->ps->torsoTimer = 0;
-  }
-
-  if( pm->ps->tauntTimer > 0 )
-  {
-    pm->ps->tauntTimer -= pml.msec;
-
-    if( pm->ps->tauntTimer < 0 )
-    {
-      pm->ps->tauntTimer = 0;
-    }
   }
 }
 

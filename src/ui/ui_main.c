@@ -4631,7 +4631,8 @@ void UI_UpdateNews( qboolean begin )
   }
 
   // start the news fetching
-  finished = trap_GetNews( begin );
+  // TODO: get rid of all the code or find a replacement for trap_GetNews
+  finished = qfalse; //trap_GetNews( begin );
 
   // parse what comes back. Parse newlines and otherwise chop when necessary
   trap_Cvar_VariableStringBuffer( "cl_newsString", newsString, 

@@ -1415,5 +1415,9 @@ void      trap_GetUsercmd( int clientNum, usercmd_t *cmd );
 qboolean  trap_GetEntityToken( char *buffer, int bufferSize );
 void      trap_SnapVector( float *v );
 void      trap_SendGameStat( const char *data );
-void      trap_AddCommand( const char *cmdName );
-void      trap_RemoveCommand( const char *cmdName );
+
+//TODO: implement these syscalls
+//void      trap_AddCommand( const char *cmdName );
+//void      trap_RemoveCommand( const char *cmdName );
+#define trap_AddCommand(x) do { } while( 0 )
+#define trap_RemoveCommand(x) do { } while( 0 )

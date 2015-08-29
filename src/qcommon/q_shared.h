@@ -1132,10 +1132,6 @@ typedef struct playerState_s {
 	int			torsoTimer;		// don't change low priority animations until this runs out
 	int			torsoAnim;		// mask off ANIM_TOGGLEBIT
 
-	int			tauntTimer;		// don't allow another taunt until this runs out
-
-	int			weaponAnim;		// mask off ANIM_TOGGLEBIT
-
 	int			movementDir;	// a number 0 to 7 that represents the reletive angle
 								// of movement to the view angle (axial and diagonals)
 								// when at rest, the value will remain unchanged
@@ -1169,8 +1165,9 @@ typedef struct playerState_s {
 	int			stats[MAX_STATS];
 	int			persistant[MAX_PERSISTANT];	// stats that aren't cleared on death
 	int			misc[MAX_MISC];	// misc data
-	int			ammo;			// ammo held
-	int			clips;			// clips held
+	int			ammo;
+	int			clips;
+	int			stuff[MAX_WEAPONS - 2];
 
 	int			generic1;
 	int			loopSound;
@@ -1289,7 +1286,6 @@ typedef struct entityState_s {
 	int		weapon;			// determines weapon and flash model, etc
 	int		legsAnim;		// mask off ANIM_TOGGLEBIT
 	int		torsoAnim;		// mask off ANIM_TOGGLEBIT
-	int		weaponAnim;		// mask off ANIM_TOGGLEBIT
 
 	int		generic1;
 } entityState_t;

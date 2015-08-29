@@ -85,9 +85,6 @@ Q_EXPORT intptr_t vmMain( int command, int arg0, int arg1, int arg2, int arg3,
       CG_EventHandling( arg0 );
       return 0;
 
-    case CG_VOIP_STRING:
-      return (intptr_t)CG_VoIPString( );
-
     default:
       CG_Error( "vmMain: unknown command %i", command );
       break;
@@ -1796,8 +1793,6 @@ void CG_LoadHudMenu( void )
   cgDC.setCVar              = trap_Cvar_Set;
   cgDC.getCVarString        = trap_Cvar_VariableStringBuffer;
   cgDC.getCVarValue         = CG_Cvar_Get;
-  cgDC.setOverstrikeMode    = &trap_Key_SetOverstrikeMode;
-  cgDC.getOverstrikeMode    = &trap_Key_GetOverstrikeMode;
   cgDC.startLocalSound      = &trap_S_StartLocalSound;
   cgDC.ownerDrawHandleKey   = &CG_OwnerDrawHandleKey;
   cgDC.feederCount          = &CG_FeederCount;

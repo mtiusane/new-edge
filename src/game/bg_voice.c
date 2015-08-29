@@ -40,7 +40,6 @@ int trap_Parse_SourceFileAndLine( int handle, char *filename, int *line );
 
 #ifdef CGAME
 sfxHandle_t trap_S_RegisterSound( const char *sample, qboolean compressed );
-int trap_S_SoundDuration( sfxHandle_t handle );
 #endif
 
 
@@ -332,7 +331,7 @@ static voiceTrack_t *BG_VoiceParseCommand( int handle )
     {
 #ifdef CGAME
       voiceTracks->track = trap_S_RegisterSound( token.string, qfalse );
-      voiceTracks->duration = trap_S_SoundDuration( voiceTracks->track );
+      voiceTracks->duration = 1000; //FIXME: trap_S_SoundDuration is not supported
 #endif
     }
 

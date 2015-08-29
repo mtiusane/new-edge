@@ -2113,6 +2113,7 @@ UI_SetClipRegion
 */
 void UI_SetClipRegion( float x, float y, float w, float h )
 {
+/*
   vec4_t clip;
 
   UI_AdjustFrom640( &x, &y, &w, &h );
@@ -2123,6 +2124,7 @@ void UI_SetClipRegion( float x, float y, float w, float h )
   clip[ 3 ] = y + h;
 
   trap_R_SetClipRegion( clip );
+*/
 }
 
 /*
@@ -2132,7 +2134,7 @@ UI_ClearClipRegion
 */
 void UI_ClearClipRegion( void )
 {
-  trap_R_SetClipRegion( NULL );
+//  trap_R_SetClipRegion( NULL );
 }
 
 static void UI_Text_PaintChar( float x, float y, float scale,
