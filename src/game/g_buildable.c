@@ -3277,7 +3277,7 @@ void G_BuildableThink( gentity_t *ent, int msec )
   ent->dcc = ( ent->buildableTeam != TEAM_HUMANS ) ? 0 : G_FindDCC( ent );
 
   // Set health
-  ent->s.generic1 = MAX( ent->health, 0 );
+  ent->s.constantLight = MAX( ent->health, 0 );
 
   // Set flags
   ent->s.eFlags &= ~( EF_B_POWERED | EF_B_SPAWNED | EF_B_MARKED );
@@ -4459,7 +4459,7 @@ static gentity_t *G_Build( gentity_t *builder, buildable_t buildable,
   built->physicsBounce = BG_Buildable( buildable )->bounce;
   built->s.groundEntityNum = -1;
 
-  built->s.generic1 = MAX( built->health, 0 );
+  built->s.constantLight = MAX( built->health, 0 );
 
   if( BG_Buildable( buildable )->team == TEAM_ALIENS )
   {

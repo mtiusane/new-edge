@@ -147,6 +147,7 @@ void G_UpdateTeamConfigStrings( void )
     Com_Memset( &humanTeam, 0, sizeof( clientList_t ) );
   }
 
+/*
   trap_SetConfigstringRestrictions( CS_VOTE_TIME + TEAM_ALIENS,   &humanTeam );
   trap_SetConfigstringRestrictions( CS_VOTE_STRING + TEAM_ALIENS, &humanTeam );
   trap_SetConfigstringRestrictions( CS_VOTE_YES + TEAM_ALIENS,    &humanTeam );
@@ -159,6 +160,7 @@ void G_UpdateTeamConfigStrings( void )
 
   trap_SetConfigstringRestrictions( CS_ALIEN_STAGES, &humanTeam );
   trap_SetConfigstringRestrictions( CS_HUMAN_STAGES, &alienTeam );
+*/
 }
 
 /*

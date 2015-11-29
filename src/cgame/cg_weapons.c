@@ -746,27 +746,6 @@ static void CG_SetWeaponLerpFrameAnimation( weapon_t weapon, lerpFrame_t *lf, in
 }
 
 /*
-===============
-CG_WeaponAnimation
-===============
-*/
-static void CG_WeaponAnimation( centity_t *cent, int *old, int *now, float *backLerp )
-{
-  lerpFrame_t   *lf = &cent->pe.weapon;
-  entityState_t *es = &cent->currentState;
-
-  // see if the animation sequence is switching
-  if( es->weaponAnim != lf->animationNumber || !lf->animation )
-    CG_SetWeaponLerpFrameAnimation( es->weapon, lf, es->weaponAnim );
-
-  CG_RunLerpFrame( lf, 1.0f );
-
-  *old      = lf->oldFrame;
-  *now      = lf->frame;
-  *backLerp = lf->backlerp;
-}
-
-/*
 =================
 CG_MapTorsoToWeaponFrame
 
@@ -1072,8 +1051,6 @@ void CG_AddPlayerWeapon( refEntity_t *parent, playerState_t *ps, centity_t *cent
       else
         gun.customShader = cgs.media.invisibleShaderTeam;
     }
-
-    CG_WeaponAnimation( cent, &gun.oldframe, &gun.frame, &gun.backlerp );
 
     trap_R_AddRefEntityToScene( &gun );
 
