@@ -290,11 +290,6 @@ sfxHandle_t trap_S_RegisterSound( const char *sample, qboolean compressed )
   return syscall( CG_S_REGISTERSOUND, sample, compressed );
 }
 
-int trap_S_SoundDuration( sfxHandle_t handle )
-{
-  return syscall( CG_S_SOUNDDURATION, handle );
-}
-
 void  trap_S_StartBackgroundTrack( const char *intro, const char *loop )
 {
   syscall( CG_S_STARTBACKGROUNDTRACK, intro, loop );
@@ -378,11 +373,6 @@ void  trap_R_RenderScene( const refdef_t *fd )
 void  trap_R_SetColor( const float *rgba )
 {
   syscall( CG_R_SETCOLOR, rgba );
-}
-
-void  trap_R_SetClipRegion( const float *region )
-{
-  syscall( CG_R_SETCLIPREGION, region );
 }
 
 void  trap_R_DrawStretchPic( float x, float y, float w, float h,
@@ -581,12 +571,4 @@ void trap_Key_GetBindingBuf( int keynum, char *buf, int buflen ) {
 
 void trap_Key_SetBinding( int keynum, const char *binding ) {
   syscall( CG_KEY_SETBINDING, keynum, binding );
-}
-
-void trap_Key_SetOverstrikeMode( qboolean state ) {
-  syscall( CG_KEY_SETOVERSTRIKEMODE, state );
-}
-
-qboolean trap_Key_GetOverstrikeMode( void ) {
-  return syscall( CG_KEY_GETOVERSTRIKEMODE );
 }

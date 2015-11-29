@@ -2961,3 +2961,16 @@ void G_RunFrame( int levelTime )
   level.frameMsec = trap_Milliseconds();
 }
 
+// missing syscalls
+
+void trap_SetConfigstringRestrictions( int num, const clientList_t *clientList )
+{
+}
+
+void trap_AddCommand( const char *cmdName )
+{
+}
+
+void trap_RemoveCommand( const char *cmdName )
+{
+}

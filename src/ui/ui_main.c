@@ -4668,7 +4668,13 @@ void UI_UpdateNews( qboolean begin )
     uiInfo.newsInfo.refreshActive = qfalse;
 }
 
+// missing syscalls
+
 void trap_R_SetClipRegion( const float *region )
 {
-  // syscall missing in 1.1
+}
+
+qboolean  trap_GetNews( qboolean force )
+{
+	return qfalse;
 }

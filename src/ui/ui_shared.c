@@ -8079,19 +8079,3 @@ static qboolean Menu_OverActiveItem( menuDef_t *menu, float x, float y )
 
   return qfalse;
 }
-
-
-/*
-NOTE: conflicts with the not yet ported cgame
-
-void trap_R_SetClipRegion( const float *region )
-{
-  // syscall missing in 1.1
-}
-*/
-
-qboolean  trap_GetNews( qboolean force )
-{
-  // syscall missing in 1.1
-  return qfalse;
-}

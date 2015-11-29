@@ -5238,3 +5238,10 @@ qboolean BG_ForceFieldForEntity( playerState_t *ps, entityState_t *es, forceFiel
 
   return qfalse;
 }
+
+// missing syscalls
+
+int trap_S_SoundDuration( sfxHandle_t handle )
+{
+  return 1000;
+}
