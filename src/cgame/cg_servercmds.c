@@ -1021,10 +1021,10 @@ static void CG_Say( int clientNum, saymode_t mode, const char *text )
       break;
     case SAY_ADMINS:
     case SAY_ADMINS_PUBLIC:
-      CG_Printf( "%s%s%s" S_COLOR_WHITE "%s %c" S_COLOR_MAGENTA "%s\n",
+      CG_Printf( "%s%s%s" S_COLOR_WHITE "%s " S_COLOR_MAGENTA "%s\n",
                  prefix,
                  ( mode == SAY_ADMINS ) ? "[ADMIN]" : "[PLAYER]",
-                 name, maybeColon, INDENT_MARKER, text );
+                 name, maybeColon, text );
       break;
     case SAY_AREA:
       CG_Printf( "%s<%s" S_COLOR_WHITE ">%s%s " S_COLOR_BLUE "%s\n",

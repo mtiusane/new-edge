@@ -2483,14 +2483,14 @@ qboolean cp_broadcast( gentity_t *ent, qboolean cp ) {
         if( !admin )
           trap_SendServerCommand( i, va( "cp \"^%s%s\"",
             ( team < 0 ) ? "2" : "5", message ) );
-        trap_SendServerCommand( i, va( "print \"%s^3CPA: ^7%s%s^7%s%s%s: %c%s\n\"",
+        trap_SendServerCommand( i, va( "print \"%s^3CPA: ^7%s%s^7%s%s%s: %s\n\"",
           ( admin ) ? "[ADMIN] " : "",
           ( team >= 0 ) ? "(" : "",
           admin_name( ent ),
           ( team >= 0 ) ? ")" : "",
           ( admin ) ? " to " : "",
           ( admin ) ? BG_TeamName( team ) : "",
-          INDENT_MARKER,
+
           message ) );
       }
       else if( !admin )
