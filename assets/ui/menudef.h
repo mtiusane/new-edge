@@ -65,30 +65,30 @@
 #define LISTBOX_IMAGE 1
 
 // list feeders
-#define FEEDER_SERVERS        0  // servers
-#define FEEDER_MAPS           1  // all maps available in graphic format
-#define FEEDER_ALIENTEAM_LIST 2  // alien team members
-#define FEEDER_HUMANTEAM_LIST 3  // human team members
-#define FEEDER_TEAM_LIST      4  // team members for team voting
-#define FEEDER_PLAYER_LIST    5  // players
-#define FEEDER_NEWS           6  // news
-#define FEEDER_MODS           7  // list of available mods
-#define FEEDER_DEMOS          8  // list of available demo files
-#define FEEDER_SERVERSTATUS   9  // server status
-#define FEEDER_FINDPLAYER     10 // find player
-#define FEEDER_CINEMATICS     11 // cinematics
+#define FEEDER_SERVERS              0  // servers
+#define FEEDER_MAPS                 1  // all maps available in graphic format
+#define FEEDER_ALIENTEAM_LIST       2  // alien team members
+#define FEEDER_HUMANTEAM_LIST       3  // human team members
+#define FEEDER_TEAM_LIST            4  // team members for team voting
+#define FEEDER_PLAYER_LIST          5  // players
+#define FEEDER_NEWS                 6  // news
+#define FEEDER_MODS                 7  // list of available mods
+#define FEEDER_DEMOS                8  // list of available demo files
+#define FEEDER_SERVERSTATUS         9  // server status
+#define FEEDER_FINDPLAYER           10 // find player
+#define FEEDER_CINEMATICS           11 // cinematics
 
-#define FEEDER_TREMTEAMS            0  // teams
-#define FEEDER_TREMALIENCLASSES     1  // alien classes
-#define FEEDER_TREMHUMANITEMS       2  // human items
-#define FEEDER_TREMHUMANARMOURYBUY  3  // human buy
-#define FEEDER_TREMHUMANARMOURYSELL 4  // human sell
-#define FEEDER_TREMALIENUPGRADE     5  // alien upgrade
-#define FEEDER_TREMALIENBUILD       6  // alien buildables
-#define FEEDER_TREMHUMANBUILD       7  // human buildables
-#define FEEDER_IGNORE_LIST          8  // ignored players
-#define FEEDER_HELP_LIST            9  // help topics
-#define FEEDER_RESOLUTIONS          10 // display resolutions
+#define FEEDER_TREMTEAMS            12 // teams
+#define FEEDER_TREMALIENCLASSES     13 // alien classes
+#define FEEDER_TREMHUMANITEMS       14 // human items
+#define FEEDER_TREMHUMANARMOURYBUY  15 // human buy
+#define FEEDER_TREMHUMANARMOURYSELL 16 // human sell
+#define FEEDER_TREMALIENUPGRADE     17 // alien upgrade
+#define FEEDER_TREMALIENBUILD       18 // alien buildables
+#define FEEDER_TREMHUMANBUILD       19 // human buildables
+#define FEEDER_IGNORE_LIST          20 // ignored players
+#define FEEDER_HELP_LIST            21 // help topics
+#define FEEDER_RESOLUTIONS          22 // display resolutions
 
 // display flags
 #define UI_SHOW_FAVORITESERVERS           0x00000001
