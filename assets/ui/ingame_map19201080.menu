@@ -44,16 +44,6 @@
 	  background "ui/menu_main_aurora_base"
       decoration
     }
-	
-	itemDef
-    {
-      name "dist"
-      style WINDOW_STYLE_SHADER
-      rect -50 0 1000 480
-      visible 1
-	  background "gfx/edge/basi_invisble_overlay"
-      decoration
-    }
 
 	itemDef
     {
