@@ -4197,7 +4197,6 @@ void BG_PlayerStateToEntityState( playerState_t *ps, entityState_t *s, qboolean 
   s->time2 = ps->movementDir;
   s->legsAnim = ps->legsAnim;
   s->torsoAnim = ps->torsoAnim;
-  s->weaponAnim = ps->weaponAnim;
   s->clientNum = ps->clientNum;   // ET_PLAYER looks here instead of at number
                     // so corpses can also reference the proper config
   s->eFlags = ps->eFlags;
@@ -4297,7 +4296,6 @@ void BG_PlayerStateToEntityStateExtraPolate( playerState_t *ps, entityState_t *s
   s->time2 = ps->movementDir;
   s->legsAnim = ps->legsAnim;
   s->torsoAnim = ps->torsoAnim;
-  s->weaponAnim = ps->weaponAnim;
   s->clientNum = ps->clientNum;   // ET_PLAYER looks here instead of at number
                     // so corpses can also reference the proper config
   s->eFlags = ps->eFlags;
@@ -5237,4 +5235,11 @@ qboolean BG_ForceFieldForEntity( playerState_t *ps, entityState_t *es, forceFiel
   }
 
   return qfalse;
+}
+
+// missing syscalls
+
+int trap_S_SoundDuration( sfxHandle_t handle )
+{
+  return 1000;
 }

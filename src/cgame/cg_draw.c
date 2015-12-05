@@ -4072,7 +4072,7 @@ static void CG_DrawHealthBars( void )
         if( CG_PlayerIsBuilder( es->modelindex ) )
           continue;
 
-        bar->value = es->generic1;
+        bar->value = es->constantLight;
         bar->max = BG_Buildable( es->modelindex )->health;
         BG_BuildableBoundingBox( es->modelindex, mins, maxs );
         break;

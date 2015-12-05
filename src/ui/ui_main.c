@@ -4211,6 +4211,7 @@ void UI_SetActiveMenu( uiMenuCommand_t menu )
   // this should be the ONLY way the menu system is brought up
   // enusure minumum menu data is cached
 
+
   if( Menu_Count() > 0 )
   {
     vec3_t v;
@@ -4667,3 +4668,13 @@ void UI_UpdateNews( qboolean begin )
     uiInfo.newsInfo.refreshActive = qfalse;
 }
 
+// missing syscalls
+
+void trap_R_SetClipRegion( const float *region )
+{
+}
+
+qboolean  trap_GetNews( qboolean force )
+{
+	return qfalse;
+}

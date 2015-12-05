@@ -529,8 +529,6 @@ void Controls_GetConfig( void );
 void Controls_SetConfig( qboolean restart );
 void Controls_SetDefaults( void );
 
-void trap_R_SetClipRegion( const float *region );
-
 //for cg_draw.c
 void Item_Text_Wrapped_Paint( itemDef_t *item );
 const char *Item_Text_Wrap( const char *text, float scale, float width );
@@ -556,4 +554,5 @@ int      trap_Parse_SourceFileAndLine( int handle, char *filename, int *line );
 void    BindingFromName( const char *cvar );
 extern char g_nameBind1[ 32 ];
 extern char g_nameBind2[ 32 ];
+
 #endif

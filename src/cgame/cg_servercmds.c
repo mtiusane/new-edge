@@ -1012,12 +1012,12 @@ static void CG_Say( int clientNum, saymode_t mode, const char *text )
   switch( mode )
   {
     case SAY_ALL:
-      CG_Printf( "%s%s" S_COLOR_WHITE "%s %c" S_COLOR_GREEN "%s\n",
-                 prefix, name, maybeColon, INDENT_MARKER, text );
+      CG_Printf( "%s%s" S_COLOR_WHITE "%s " S_COLOR_GREEN "%s\n",
+                 prefix, name, maybeColon, text );
       break;
     case SAY_TEAM:
-      CG_Printf( "%s(%s" S_COLOR_WHITE ")%s%s %c" S_COLOR_CYAN "%s\n",
-                 prefix, name, location, maybeColon, INDENT_MARKER, text );
+      CG_Printf( "%s(%s" S_COLOR_WHITE ")%s%s " S_COLOR_CYAN "%s\n",
+                 prefix, name, location, maybeColon, text );
       break;
     case SAY_ADMINS:
     case SAY_ADMINS_PUBLIC:
@@ -1027,15 +1027,15 @@ static void CG_Say( int clientNum, saymode_t mode, const char *text )
                  name, maybeColon, INDENT_MARKER, text );
       break;
     case SAY_AREA:
-      CG_Printf( "%s<%s" S_COLOR_WHITE ">%s%s %c" S_COLOR_BLUE "%s\n",
-                 prefix, name, location, maybeColon, INDENT_MARKER, text );
+      CG_Printf( "%s<%s" S_COLOR_WHITE ">%s%s " S_COLOR_BLUE "%s\n",
+                 prefix, name, location, maybeColon, text );
       break;
     case SAY_PRIVMSG:
     case SAY_TPRIVMSG:
       color = ( mode == SAY_TPRIVMSG ) ? S_COLOR_CYAN : S_COLOR_GREEN;
-      CG_Printf( "%s[%s" S_COLOR_WHITE " -> %s" S_COLOR_WHITE "]%s %c%s%s\n",
+      CG_Printf( "%s[%s" S_COLOR_WHITE " -> %s" S_COLOR_WHITE "]%s %s%s\n",
                  prefix, name, cgs.clientinfo[ cg.clientNum ].name,
-                 maybeColon, INDENT_MARKER, color, text );
+                 maybeColon, color, text );
       CG_CenterPrint( va( "%sPrivate message from: " S_COLOR_WHITE "%s", 
                           color, name ), 200, GIANTCHAR_WIDTH * 4 );
       break;

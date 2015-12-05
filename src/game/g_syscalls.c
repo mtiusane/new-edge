@@ -151,11 +151,6 @@ void trap_GetConfigstring( int num, char *buffer, int bufferSize )
   syscall( G_GET_CONFIGSTRING, num, buffer, bufferSize );
 }
 
-void trap_SetConfigstringRestrictions( int num, const clientList_t *clientList )
-{
-  syscall( G_SET_CONFIGSTRING_RESTRICTIONS, num, clientList );
-}
-
 void trap_GetUserinfo( int num, char *buffer, int bufferSize )
 {
   syscall( G_GET_USERINFO, num, buffer, bufferSize );
@@ -290,14 +285,3 @@ int trap_Parse_SourceFileAndLine( int handle, char *filename, int *line )
 {
   return syscall( G_PARSE_SOURCE_FILE_AND_LINE, handle, filename, line );
 }
-
-void trap_AddCommand( const char *cmdName )
-{
-  syscall( G_ADDCOMMAND, cmdName );
-}
-
-void trap_RemoveCommand( const char *cmdName )
-{
-  syscall( G_REMOVECOMMAND, cmdName );
-}
-
