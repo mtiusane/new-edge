@@ -449,7 +449,9 @@ particleSystem_t *CG_SpawnNewParticleSystem( qhandle_t psHandle )
 
   if( !bps->registered )
   {
-    CG_Printf( S_COLOR_RED "ERROR: a particle system has not been registered yet\n" );
+    if( cg_debugParticles.integer >= 1)
+      CG_Printf( S_COLOR_RED "ERROR: a particle system has not been registered yet\n" );
+
     return NULL;
   }
 
