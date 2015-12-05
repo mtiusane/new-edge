@@ -1366,6 +1366,8 @@ void UI_ParseMenu( const char *menuFile )
 
   handle = trap_Parse_LoadSource( menuFile );
 
+  Com_Printf("^5ui: UI_ParseMenu(%s)\n", menuFile);
+
   if( !handle )
   {
     Com_Printf( S_COLOR_YELLOW "WARNING: Menu file %s not found\n",
@@ -1379,6 +1381,8 @@ void UI_ParseMenu( const char *menuFile )
 
     if( !trap_Parse_ReadToken( handle, &token ) )
       break;
+
+    Com_Printf("^5--- token.string = %s\n", token.string);
 
     //if( Q_stricmp( token, "{" ) ) {
     //  Com_Printf( "Missing { in menu file\n" );
@@ -1395,6 +1399,7 @@ void UI_ParseMenu( const char *menuFile )
 
     if( Q_stricmp( token.string, "assetGlobalDef" ) == 0 )
     {
+      Com_Printf("^5--- assetGlobalDef\n");
       if( Asset_Parse( handle ) )
         continue;
       else
@@ -1403,6 +1408,7 @@ void UI_ParseMenu( const char *menuFile )
 
     if( Q_stricmp( token.string, "menudef" ) == 0 )
     {
+      Com_Printf("^5--- Menu_New\n");
       // start a new menu
       Menu_New( handle );
     }
@@ -4210,6 +4216,10 @@ void UI_SetActiveMenu( uiMenuCommand_t menu )
 
   // this should be the ONLY way the menu system is brought up
   // enusure minumum menu data is cached
+
+  Com_Printf("^5ui: UI_SetActiveMenu(%i)\n", menu);
+  Com_Printf("^5--: Menu_Count() = %i\n", Menu_Count());
+  
 
 
   if( Menu_Count() > 0 )
