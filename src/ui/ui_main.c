@@ -4123,6 +4123,8 @@ void UI_Init( qboolean inGameLoad )
   uiInfo.previewMovie = -1;
 
   UI_ParseResolutions( );
+
+  trap_Cvar_Set( "ui_useMessagemode", "1" );
 }
 
 

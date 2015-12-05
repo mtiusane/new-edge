@@ -157,7 +157,7 @@ static void UI_MessageMode_f( void )
 
   trap_Cvar_Set( "ui_sayBuffer", "" );
 
-  switch( arg[ 11 ] )
+  switch( arg[ strlen( arg ) - 1 ] )
   {
     default:
     case '\0':
@@ -201,7 +201,9 @@ struct uicmd
   { "messagemode", UI_MessageMode_f },
   { "messagemode2", UI_MessageMode_f },
   { "ui_cache", UI_Cache_f },
-  { "ui_load", UI_Load },
+  { "ui_load", UI_Load },    
+  { "ui_messagemode", UI_MessageMode_f },
+  { "ui_messagemode2", UI_MessageMode_f },
   { "ui_report", UI_Report }
 };
 
